@@ -1,6 +1,7 @@
 """
 선행기술조사 — 방법 4 구현
 흐름: KIPRIS 검색 → 키워드 필터링 → 전체 청구항 임베딩 비교 → 유사도 판단 → DB 저장
+IPC 코드: G06N(AI모델), G06F(데이터처리), G06V(이미지처리), G06Q(AI서비스) 전체 검색
 """
 
 import os
@@ -26,24 +27,27 @@ KIPRIS_BASE_URL      = "http://plus.kipris.or.kr/openapi/rest/patUtiModInfoSearc
 SIMILARITY_THRESHOLD = 0.75
 USE_MOCK             = True   # KIPRIS 키 없을 때 True
 
+# 검색할 IPC 코드 전체
+IPC_CODES = ["G06N", "G06F", "G06V", "G06Q"]
 
-# ── Step 1: KIPRIS 검색
+
+# ── Step 1: KIPRIS 검색 (단일 IPC)
 def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[dict]:
     if USE_MOCK:
         return [
             {
-                "app_num":  "10-2023-0001234",
-                "title":    "AI 기반 특허 상담 시스템",
+                "app_num":  f"10-2023-000{ipc_code[-1]}",
+                "title":    f"AI 기반 특허 상담 시스템 ({ipc_code})",
                 "abstract": "대규모 언어 모델을 이용한 특허 상담 및 분석 서비스",
                 "claim":    "사용자 입력을 수신하는 인터페이스; LLM을 이용해 분석하는 처리부; 결과를 출력하는 피드백부;를 포함하는 AI 상담 시스템.",
-                "ipc":      "G06N",
+                "ipc":      ipc_code,
             },
             {
-                "app_num":  "10-2022-0098765",
-                "title":    "자연어 처리 기반 법률 상담 시스템",
-                "abstract": "NLP 모델을 활용한 법률 문서 분석 및 상담 자동화",
-                "claim":    "자연어 질의를 입력받는 수신부; 법률 문서를 분석하는 NLP 처리부; 상담 결과를 제공하는 출력부;를 포함하는 법률 상담 시스템.",
-                "ipc":      "G06F",
+                "app_num":  f"10-2022-000{ipc_code[-1]}",
+                "title":    f"자연어 처리 기반 상담 시스템 ({ipc_code})",
+                "abstract": "NLP 모델을 활용한 문서 분석 및 상담 자동화",
+                "claim":    "자연어 질의를 입력받는 수신부; NLP 처리부; 상담 결과를 제공하는 출력부;를 포함하는 상담 시스템.",
+                "ipc":      ipc_code,
             },
         ]
 
@@ -79,8 +83,28 @@ def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[
             for item in items
         ]
     except Exception as e:
-        print(f"[KIPRIS 오류] {e}")
+        print(f"[KIPRIS 오류] ipc={ipc_code} {e}")
         return []
+
+
+# ── Step 1-2: IPC 4개 전체 검색 후 합치기
+def search_all_ipc(keyword: str, ipc_codes: list[str] = IPC_CODES) -> list[dict]:
+    all_patents = []
+    for ipc in ipc_codes:
+        results = search_kipris(keyword, ipc_code=ipc)
+        all_patents += results
+        print(f"  [{ipc}] {len(results)}건 검색됨")
+
+    # 출원번호 기준 중복 제거
+    seen = set()
+    unique = []
+    for p in all_patents:
+        if p["app_num"] not in seen:
+            seen.add(p["app_num"])
+            unique.append(p)
+
+    print(f"[IPC 전체 검색] 총 {len(unique)}건 (중복 제거 후)")
+    return unique
 
 
 # ── Step 2: 키워드 필터링
@@ -143,7 +167,7 @@ def analyze_differentiation(my_claim: str, similar_patent: dict) -> str:
     return res.choices[0].message.content
 
 
-# ── Step 6: Supabase 저장 (실제 DB 컬럼명 반영)
+# ── Step 6: Supabase 저장
 def save_to_db(
     user_id:         str,
     consult_seq:     int,
@@ -185,18 +209,21 @@ def run_prior_art_search(
     consult_seq: int,
     my_claim:    str,
     keywords:    list[str],
-    ipc_code:    str = "G06N",
+    ipc_codes:   list[str] = IPC_CODES,   # G06N, G06F, G06V, G06Q 전체
 ) -> dict:
     print("\n=== 선행기술조사 시작 ===")
-    print(f"키워드: {keywords}, IPC: {ipc_code}")
+    print(f"키워드: {keywords}")
+    print(f"IPC 코드: {ipc_codes}")
 
+    # 1. IPC 4개 전체 검색
     search_query = " ".join(keywords)
-    patents      = search_kipris(search_query, ipc_code=ipc_code)
+    patents      = search_all_ipc(search_query, ipc_codes=ipc_codes)
 
     if not patents:
         print("[결과 없음] KIPRIS 검색 결과가 없습니다.")
         return {"is_novel": True, "results": [], "differentiation": ""}
 
+    # 2. 키워드 필터링
     filtered = filter_by_keywords(patents, keywords)
 
     if not filtered:
@@ -204,13 +231,15 @@ def run_prior_art_search(
         save_to_db(user_id, consult_seq, [], "관련 선행특허 없음", is_novel=True)
         return {"is_novel": True, "results": [], "differentiation": "관련 선행특허 없음"}
 
+    # 3 & 4. 전체 청구항 임베딩 비교
     print(f"\n[임베딩 비교] {len(filtered)}건 비교 중...")
     results = compare_claims(my_claim, filtered)
 
     print("\n[유사도 상위 결과]")
-    for i, r in enumerate(results[:3]):
-        print(f"  {i+1}. [{r['similarity']:.3f}] {r['title'][:40]}...")
+    for i, r in enumerate(results[:5]):
+        print(f"  {i+1}. [{r['similarity']:.3f}] [{r['ipc']}] {r['title'][:35]}...")
 
+    # 5. 신규성 판단
     top      = results[0]
     is_novel = top["similarity"] < SIMILARITY_THRESHOLD
 
@@ -222,6 +251,7 @@ def run_prior_art_search(
         differentiation = "유사 선행특허 없음 — 신규성 확보 가능"
         print(f"\n[신규성 확보] 최고 유사도 {top['similarity']:.3f}")
 
+    # 6. DB 저장
     save_to_db(user_id, consult_seq, results, differentiation, is_novel)
 
     return {
@@ -249,5 +279,5 @@ if __name__ == "__main__":
         consult_seq=1,
         my_claim=my_claim,
         keywords=keywords,
-        ipc_code="G06N",
+        ipc_codes=["G06N", "G06F", "G06V", "G06Q"],  # 4개 전체 검색
     )
