@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}대시보드 | PatentMind{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <!-- Navbar -->
+    <nav class="dashboard-nav" id="main-nav">
+        <div class="nav-brand">
+            <span class="brand-icon-sm">⚖️</span>
+            <span>PatentMind</span>
+        </div>
+        <div class="nav-user">
+            <div class="user-avatar" id="user-avatar">
+                {{ user.name|slice:":1" }}
+            </div>
+            <span class="user-email">{{ user.username }}</span>
+            <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout" id="logout-btn">로그아웃</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+
+        <!-- Welcome Card -->
+        <div class="welcome-card" id="welcome-card">
+            <div class="welcome-text">
+                <h2>안녕하세요, <span class="highlight">{{ user.name }}</span>님! 👋</h2>
+                <p>PatentMind에 오신 것을 환영합니다. AI와 함께 특허 청구항을 작성해보세요. ✍️</p>
+            </div>
+            <div class="welcome-emoji">📜</div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <div class="info-card" id="info-uid">
+                <div class="info-icon">#️⃣</div>
+                <div class="info-content">
+                    <p class="info-label">고유 번호 (DB ID)</p>
+                    <p class="info-value">{{ user.id }}</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-username">
+                <div class="info-icon">🆔</div>
+                <div class="info-content">
+                    <p class="info-label">아이디</p>
+                    <p class="info-value">{{ user.username }}</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-name">
+                <div class="info-icon">✏️</div>
+                <div class="info-content">
+                    <p class="info-label">이름</p>
+                    <p class="info-value">{{ user.name }}</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-gender">
+                <div class="info-icon">⚧</div>
+                <div class="info-content">
+                    <p class="info-label">성별</p>
+                    <p class="info-value">{{ user.get_gender_display }}</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-age">
+                <div class="info-icon">🎂</div>
+                <div class="info-content">
+                    <p class="info-label">나이</p>
+                    <p class="info-value">{{ user.age }}세</p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-login-status">
+                <div class="info-icon">🟢</div>
+                <div class="info-content">
+                    <p class="info-label">로그인 상태 (is_login)</p>
+                    <p class="info-value status-active">
+                        {% if user.is_login %}1 (로그인 중){% else %}0 (로그아웃){% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-card" id="info-joined">
+                <div class="info-icon">📅</div>
+                <div class="info-content">
+                    <p class="info-label">가입일</p>
+                    <p class="info-value">{{ user.date_joined|date:"Y년 m월 d일" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Link (only for staff) -->
+        {% if user.is_staff %}
+        <div class="admin-card" id="admin-card">
+            <div class="admin-icon">⚙️</div>
+            <div class="admin-content">
+                <h3>관리자 페이지</h3>
+                <p>Django Admin에서 전체 회원 정보를 관리할 수 있습니다.</p>
+            </div>
+            <a href="/admin/" class="btn-admin" id="go-admin" target="_blank">Admin 열기 →</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
