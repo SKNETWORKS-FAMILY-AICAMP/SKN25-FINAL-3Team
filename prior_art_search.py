@@ -14,20 +14,39 @@ from supabase import create_client
 
 load_dotenv()
 
-# ── 클라이언트 초기화 ─────────────────────────────────────────
+# ── 클라이언트 초기화
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 supabase      = create_client(
     os.getenv("SUPABASE_URL"),
     os.getenv("SUPABASE_KEY")
 )
 
-KIPRIS_API_KEY      = os.getenv("KIPRIS_API_KEY")
-KIPRIS_BASE_URL     = "http://plus.kipris.or.kr/openapi/rest/patUtiModInfoSearchSevice/patUtiModInfoSearch"
-SIMILARITY_THRESHOLD = 0.75   # 유사 특허 판단 기준값
+KIPRIS_API_KEY       = os.getenv("KIPRIS_API_KEY")
+KIPRIS_BASE_URL      = "http://plus.kipris.or.kr/openapi/rest/patUtiModInfoSearchSevice/patUtiModInfoSearch"
+SIMILARITY_THRESHOLD = 0.75
+USE_MOCK             = True   # KIPRIS 키 없을 때 True
 
 
-# ── Step 1: KIPRIS 검색 ───────────────────────────────────────
+# ── Step 1: KIPRIS 검색
 def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[dict]:
+    if USE_MOCK:
+        return [
+            {
+                "app_num":  "10-2023-0001234",
+                "title":    "AI 기반 특허 상담 시스템",
+                "abstract": "대규모 언어 모델을 이용한 특허 상담 및 분석 서비스",
+                "claim":    "사용자 입력을 수신하는 인터페이스; LLM을 이용해 분석하는 처리부; 결과를 출력하는 피드백부;를 포함하는 AI 상담 시스템.",
+                "ipc":      "G06N",
+            },
+            {
+                "app_num":  "10-2022-0098765",
+                "title":    "자연어 처리 기반 법률 상담 시스템",
+                "abstract": "NLP 모델을 활용한 법률 문서 분석 및 상담 자동화",
+                "claim":    "자연어 질의를 입력받는 수신부; 법률 문서를 분석하는 NLP 처리부; 상담 결과를 제공하는 출력부;를 포함하는 법률 상담 시스템.",
+                "ipc":      "G06F",
+            },
+        ]
+
     params = {
         "ServiceKey": KIPRIS_API_KEY,
         "searchWord": keyword,
@@ -49,7 +68,6 @@ def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[
         )
         if isinstance(items, dict):
             items = [items]
-
         return [
             {
                 "app_num":  item.get("applicationNumber", ""),
@@ -65,19 +83,18 @@ def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[
         return []
 
 
-# ── Step 2: 키워드 필터링 ─────────────────────────────────────
+# ── Step 2: 키워드 필터링
 def filter_by_keywords(patents: list[dict], keywords: list[str]) -> list[dict]:
     filtered = []
     for patent in patents:
         full_text = f"{patent['title']} {patent['abstract']} {patent['claim']}"
         if any(kw in full_text for kw in keywords):
             filtered.append(patent)
-
     print(f"[필터링] {len(patents)}건 → {len(filtered)}건 (키워드: {keywords})")
     return filtered
 
 
-# ── Step 3: 임베딩 ────────────────────────────────────────────
+# ── Step 3: 임베딩
 def get_embedding(text: str) -> list[float]:
     text = text.strip().replace("\n", " ")
     res  = openai_client.embeddings.create(
@@ -87,25 +104,22 @@ def get_embedding(text: str) -> list[float]:
     return res.data[0].embedding
 
 
-# ── Step 4: 전체 청구항 임베딩 비교 ──────────────────────────
+# ── Step 4: 전체 청구항 임베딩 비교
 def compare_claims(my_claim: str, patents: list[dict]) -> list[dict]:
     my_vec  = np.array(get_embedding(my_claim)).reshape(1, -1)
     results = []
-
     for patent in patents:
         compare_text = patent["claim"] if patent["claim"] else patent["abstract"]
         if not compare_text:
             continue
-
         patent_vec = np.array(get_embedding(compare_text)).reshape(1, -1)
         score      = cosine_similarity(my_vec, patent_vec)[0][0]
         results.append({**patent, "similarity": round(float(score), 4)})
-
     results.sort(key=lambda x: x["similarity"], reverse=True)
     return results
 
 
-# ── Step 5: LLM 차별성 분석 ──────────────────────────────────
+# ── Step 5: LLM 차별성 분석
 def analyze_differentiation(my_claim: str, similar_patent: dict) -> str:
     prompt = f"""
 다음 두 특허 청구항을 비교하여 분석해줘.
@@ -129,7 +143,7 @@ def analyze_differentiation(my_claim: str, similar_patent: dict) -> str:
     return res.choices[0].message.content
 
 
-# ── Step 6: Supabase 저장 ─────────────────────────────────────
+# ── Step 6: Supabase 저장 (실제 DB 컬럼명 반영)
 def save_to_db(
     user_id:         str,
     consult_seq:     int,
@@ -137,7 +151,7 @@ def save_to_db(
     differentiation: str,
     is_novel:        bool,
 ) -> None:
-    overall_flow = json.dumps(
+    summary_flow = json.dumps(
         [
             {
                 "rank":       i + 1,
@@ -150,22 +164,22 @@ def save_to_db(
         ],
         ensure_ascii=False,
     )
-    effect = "신규성 확보 가능" if is_novel else "청구항 수정 필요"
+    summary_effect = "신규성 확보 가능" if is_novel else "청구항 수정 필요"
 
     supabase.table("consulting").upsert(
         {
-            "user_id":         user_id,
-            "consult_seq":     consult_seq,
-            "differentiation": differentiation,
-            "overall_flow":    overall_flow,
-            "effect":          effect,
+            "user_id":            user_id,
+            "consultation_idx":   consult_seq,
+            "summary_difference": differentiation,
+            "summary_flow":       summary_flow,
+            "summary_effect":     summary_effect,
         }
     ).execute()
 
-    print(f"[DB 저장 완료] user_id={user_id}, consult_seq={consult_seq}, 신규성={is_novel}")
+    print(f"[DB 저장 완료] user_id={user_id}, consultation_idx={consult_seq}, 신규성={is_novel}")
 
 
-# ── 메인 파이프라인 ───────────────────────────────────────────
+# ── 메인 파이프라인
 def run_prior_art_search(
     user_id:     str,
     consult_seq: int,
@@ -176,7 +190,6 @@ def run_prior_art_search(
     print("\n=== 선행기술조사 시작 ===")
     print(f"키워드: {keywords}, IPC: {ipc_code}")
 
-    # 1. KIPRIS 검색
     search_query = " ".join(keywords)
     patents      = search_kipris(search_query, ipc_code=ipc_code)
 
@@ -184,7 +197,6 @@ def run_prior_art_search(
         print("[결과 없음] KIPRIS 검색 결과가 없습니다.")
         return {"is_novel": True, "results": [], "differentiation": ""}
 
-    # 2. 키워드 필터링
     filtered = filter_by_keywords(patents, keywords)
 
     if not filtered:
@@ -192,7 +204,6 @@ def run_prior_art_search(
         save_to_db(user_id, consult_seq, [], "관련 선행특허 없음", is_novel=True)
         return {"is_novel": True, "results": [], "differentiation": "관련 선행특허 없음"}
 
-    # 3 & 4. 전체 청구항 임베딩 비교
     print(f"\n[임베딩 비교] {len(filtered)}건 비교 중...")
     results = compare_claims(my_claim, filtered)
 
@@ -200,7 +211,6 @@ def run_prior_art_search(
     for i, r in enumerate(results[:3]):
         print(f"  {i+1}. [{r['similarity']:.3f}] {r['title'][:40]}...")
 
-    # 5. 신규성 판단
     top      = results[0]
     is_novel = top["similarity"] < SIMILARITY_THRESHOLD
 
@@ -212,7 +222,6 @@ def run_prior_art_search(
         differentiation = "유사 선행특허 없음 — 신규성 확보 가능"
         print(f"\n[신규성 확보] 최고 유사도 {top['similarity']:.3f}")
 
-    # 6. DB 저장
     save_to_db(user_id, consult_seq, results, differentiation, is_novel)
 
     return {
@@ -224,7 +233,7 @@ def run_prior_art_search(
     }
 
 
-# ── 실행 ──────────────────────────────────────────────────────
+# ── 실행
 if __name__ == "__main__":
     my_claim = """
     사용자로부터 상담 요청을 수신하는 입력부;
