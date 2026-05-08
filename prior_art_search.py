@@ -1,11 +1,11 @@
 """
 선행기술조사 — 방법 4 구현
 흐름: PDF→TXT 추출된 실제 특허 데이터 → 키워드 필터링 → 임베딩 비교 → 유사도 판단 → DB 저장
+도면 분석(drawing_analysis/) 결과도 유사도 계산에 반영
 IPC 코드: G06N, G06F, G06V, G06Q 전체 검색
 """
 
 import os
-import re
 import glob
 import json
 import requests
@@ -28,54 +28,73 @@ KIPRIS_BASE_URL      = "http://plus.kipris.or.kr/openapi/rest/patUtiModInfoSearc
 SIMILARITY_THRESHOLD = 0.75
 USE_MOCK             = True
 
-IPC_CODES = ["G06N", "G06F", "G06V", "G06Q"]
+IPC_CODES       = ["G06N", "G06F", "G06V", "G06Q"]
+TXT_BASE_DIR    = "."
+DRAWING_DIR     = "drawing_analysis"
 
 
-def extract_claim_from_txt(txt_file: str) -> dict | None:
+# ──────────────────────────────────────────────
+# 1. TXT 파일에서 특허 정보 추출
+# ──────────────────────────────────────────────
+def extract_claim_from_txt(txt_file: str, ipc: str = "") -> dict | None:
     try:
         with open(txt_file, "r", encoding="utf-8-sig") as f:
             text = f.read()
-        if "청구범위" not in text:
-            return None
-        start = text.find("청구범위")
-        end   = text.find("발명의 내용", start)
-        if end == -1:
-            end = start + 3000
-        claim = text[start:end].strip()
+
+        claim = ""
+        if "청구범위" in text:
+            start = text.find("청구범위")
+            end   = text.find("발명의 내용", start)
+            if end == -1:
+                end = start + 3000
+            claim = text[start:end].strip()
+
         title = ""
         for marker in ["(54)", "발명의 명칭"]:
             idx = text.find(marker)
             if idx != -1:
-                title = text[idx:idx+80].replace(marker, "").strip()
+                title = text[idx:idx + 80].replace(marker, "").strip()
                 title = title.split("\n")[0].strip()
                 break
+
         abstract = ""
         if "요약" in text:
             abs_start = text.find("요약")
-            abstract  = text[abs_start:abs_start+300].strip()
-        app_num = txt_file.replace("raw_pdf-", "").replace(".txt", "")
+            abstract  = text[abs_start:abs_start + 300].strip()
+
+        app_num = os.path.basename(txt_file).replace(".txt", "")
+
         return {
             "app_num":  app_num,
             "title":    title or f"특허 {app_num}",
             "abstract": abstract[:200],
             "claim":    claim[:1500],
-            "ipc":      "G06N",
+            "ipc":      ipc,
         }
     except Exception as e:
         print(f"[TXT 추출 오류] {txt_file}: {e}")
         return None
 
 
+# ──────────────────────────────────────────────
+# 2. 특허 검색 (Mock: 로컬 txt / Real: KIPRIS API)
+# ──────────────────────────────────────────────
 def search_kipris(keyword: str, ipc_code: str = "", num_rows: int = 20) -> list[dict]:
     if USE_MOCK:
         patents = []
-        for txt_file in glob.glob("raw_pdf-*.txt"):
-            patent = extract_claim_from_txt(txt_file)
-            if patent:
-                patent["ipc"] = ipc_code or "G06N"
-                patents.append(patent)
-        print(f"  [{ipc_code}] 실제 txt {len(patents)}건 로드됨")
+        search_dirs = [ipc_code] if ipc_code else IPC_CODES
+        for ipc_dir in search_dirs:
+            dir_path = os.path.join(TXT_BASE_DIR, ipc_dir)
+            if not os.path.isdir(dir_path):
+                print(f"  [경고] 폴더 없음: {dir_path}")
+                continue
+            for txt_file in glob.glob(os.path.join(dir_path, "*.txt")):
+                patent = extract_claim_from_txt(txt_file, ipc=ipc_dir)
+                if patent:
+                    patents.append(patent)
+        print(f"  [{ipc_code or '전체'}] 로컬 txt {len(patents)}건 로드됨")
         return patents
+
     params = {
         "ServiceKey": KIPRIS_API_KEY,
         "searchWord": keyword,
@@ -117,28 +136,55 @@ def search_all_ipc(keyword: str, ipc_codes: list[str] = IPC_CODES) -> list[dict]
     for ipc in ipc_codes:
         results = search_kipris(keyword, ipc_code=ipc)
         all_patents += results
+
     seen, unique = set(), []
     for p in all_patents:
         if p["app_num"] not in seen:
             seen.add(p["app_num"])
             unique.append(p)
+
     print(f"[IPC 전체 검색] 총 {len(unique)}건 (중복 제거 후)")
     return unique
 
 
+# ──────────────────────────────────────────────
+# 3. 키워드 필터링
+# ──────────────────────────────────────────────
 def filter_by_keywords(patents: list[dict], keywords: list[str]) -> list[dict]:
     filtered = []
     for patent in patents:
         full_text = f"{patent['title']} {patent['abstract']} {patent['claim']}"
         if any(kw in full_text for kw in keywords):
             filtered.append(patent)
+
     if not filtered:
         print(f"[필터링] 키워드 매칭 없음 → 전체 {len(patents)}건으로 진행")
         return patents
+
     print(f"[필터링] {len(patents)}건 → {len(filtered)}건 (키워드: {keywords})")
     return filtered
 
 
+# ──────────────────────────────────────────────
+# 4. 도면 분석 결과 로드
+# ──────────────────────────────────────────────
+def load_drawing_text(app_num: str) -> str:
+    drawing_file = os.path.join(DRAWING_DIR, f"{app_num}_drawings.json")
+    if not os.path.exists(drawing_file):
+        return ""
+    try:
+        with open(drawing_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        keywords = " ".join([d["analysis"] for d in data.get("drawings", [])])
+        return keywords[:1000]  # 너무 길면 임베딩 비용 증가하므로 제한
+    except Exception as e:
+        print(f"[도면 로드 오류] {app_num}: {e}")
+        return ""
+
+
+# ──────────────────────────────────────────────
+# 5. 임베딩 & 유사도 비교 (도면 포함)
+# ──────────────────────────────────────────────
 def get_embedding(text: str) -> list[float]:
     text = text.strip().replace("\n", " ")[:3000]
     res  = openai_client.embeddings.create(
@@ -151,17 +197,35 @@ def get_embedding(text: str) -> list[float]:
 def compare_claims(my_claim: str, patents: list[dict]) -> list[dict]:
     my_vec  = np.array(get_embedding(my_claim)).reshape(1, -1)
     results = []
+    drawing_count = 0
+
     for patent in patents:
         compare_text = patent["claim"] if patent["claim"] else patent["abstract"]
         if not compare_text:
             continue
+
+        # ✅ 도면 분석 결과 합치기
+        drawing_text = load_drawing_text(patent["app_num"])
+        if drawing_text:
+            compare_text = f"{compare_text} {drawing_text}"
+            drawing_count += 1
+
         patent_vec = np.array(get_embedding(compare_text)).reshape(1, -1)
         score      = cosine_similarity(my_vec, patent_vec)[0][0]
-        results.append({**patent, "similarity": round(float(score), 4)})
+        results.append({
+            **patent,
+            "similarity":    round(float(score), 4),
+            "has_drawing":   bool(drawing_text),
+        })
+
+    print(f"  (도면 데이터 활용: {drawing_count}건)")
     results.sort(key=lambda x: x["similarity"], reverse=True)
     return results
 
 
+# ──────────────────────────────────────────────
+# 6. LLM 차별성 분석
+# ──────────────────────────────────────────────
 def analyze_differentiation(my_claim: str, similar_patent: dict) -> str:
     prompt = f"""
 다음 두 특허 청구항을 비교하여 분석해줘.
@@ -185,6 +249,9 @@ def analyze_differentiation(my_claim: str, similar_patent: dict) -> str:
     return res.choices[0].message.content
 
 
+# ──────────────────────────────────────────────
+# 7. DB 저장
+# ──────────────────────────────────────────────
 def save_to_db(
     user_id:         str,
     consult_seq:     int,
@@ -204,6 +271,9 @@ def save_to_db(
     print(f"[DB 저장 완료] user_id={user_id}, consultation_idx={consult_seq}, 신규성={is_novel}")
 
 
+# ──────────────────────────────────────────────
+# 8. 메인 파이프라인
+# ──────────────────────────────────────────────
 def run_prior_art_search(
     user_id:     str,
     consult_seq: int,
@@ -229,7 +299,8 @@ def run_prior_art_search(
 
     print("\n[유사도 상위 결과]")
     for i, r in enumerate(results[:5]):
-        print(f"  {i+1}. [{r['similarity']:.3f}] [{r['ipc']}] {r['title'][:35]}...")
+        drawing_mark = "🖼" if r.get("has_drawing") else "  "
+        print(f"  {i+1}. [{r['similarity']:.3f}] {drawing_mark} [{r['ipc']}] {r['title'][:35]}...")
 
     top      = results[0]
     is_novel = top["similarity"] < SIMILARITY_THRESHOLD
@@ -253,6 +324,9 @@ def run_prior_art_search(
     }
 
 
+# ──────────────────────────────────────────────
+# 실행 예시
+# ──────────────────────────────────────────────
 if __name__ == "__main__":
     my_claim = """
     사용자로부터 상담 요청을 수신하는 입력부;
