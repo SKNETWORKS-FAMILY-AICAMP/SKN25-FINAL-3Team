@@ -20,8 +20,16 @@
             <a href="#">서비스 소개</a>
             <a href="#">기능</a>
             <a href="#">문의</a>
-            <a href="/accounts/login/" class="login-btn">로그인</a>
-            <a href="/accounts/signup/" class="login-btn">회원가입</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" style="color: #38bdf8; font-weight: bold;">대시보드</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="login-btn" style="background: none; cursor: pointer;">로그아웃</button>
+                </form>
+            {% else %}
+                <a href="/accounts/login/" class="login-btn">로그인</a>
+                <a href="/accounts/signup/" class="login-btn">회원가입</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -40,7 +48,11 @@
             </p>
 
             <div class="buttons">
-                <button class="start-btn">지금 시작하기</button>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="start-btn" style="text-decoration: none; display: inline-block;">대시보드로 가기</a>
+                {% else %}
+                    <a href="/accounts/login/" class="start-btn" style="text-decoration: none; display: inline-block;">지금 시작하기</a>
+                {% endif %}
                 <button class="demo-btn">데모 보기</button>
             </div>
 

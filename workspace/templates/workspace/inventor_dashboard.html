@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+<div class="dashboard-container" style="padding: 100px 50px;">
+    <h1>내 특허 프로젝트</h1>
+    <a href="{% url 'create_project' %}" class="start-btn">새 특허 프로젝트 시작하기</a>
+    
+    <div class="project-list" style="margin-top: 30px;">
+        {% for project in projects %}
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>{{ project.title }}</h2>
+            <p>상태: {{ project.get_status_display }}</p>
+            <p>생성일: {{ project.created_at|date:"Y-m-d" }}</p>
+        </div>
+        {% empty %}
+        <p>아직 진행 중인 프로젝트가 없습니다.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
