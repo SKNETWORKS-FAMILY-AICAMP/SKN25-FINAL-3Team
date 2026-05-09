@@ -1,18 +1,32 @@
-{% extends "base.html" %} {% block content %}
-<div class="dashboard-container" style="padding: 100px 50px;">
-    <h1>내 특허 프로젝트</h1>
-    <a href="{% url 'create_project' %}" class="start-btn">새 특허 프로젝트 시작하기</a>
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="dashboard-container" style="padding: 120px 80px 50px 80px; max-width: 1200px; margin: 0 auto;">
     
-    <div class="project-list" style="margin-top: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 style="margin: 0; font-size: 32px;">내 특허 프로젝트</h1>
+        <a href="{% url 'create_project' %}" class="start-btn" style="text-decoration: none; display: inline-block;">새 특허 프로젝트 시작하기</a>
+    </div>
+    
+    <div class="project-list" style="display: flex; flex-direction: column; gap: 20px;">
         {% for project in projects %}
-        <div class="card" style="margin-bottom: 20px;">
-            <h2>{{ project.title }}</h2>
-            <p>상태: {{ project.get_status_display }}</p>
-            <p>생성일: {{ project.created_at|date:"Y-m-d" }}</p>
+        <div class="card" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin-bottom: 10px; font-size: 24px;">{{ project.title }}</h2>
+                <p style="color: #94a3b8;">생성일: {{ project.created_at|date:"Y-m-d" }}</p>
+            </div>
+            <div>
+                <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                    {{ project.get_status_display }}
+                </span>
+            </div>
         </div>
         {% empty %}
-        <p>아직 진행 중인 프로젝트가 없습니다.</p>
+        <div style="text-align: center; padding: 60px 0; background: #1e293b; border-radius: 18px;">
+            <p style="color: #94a3b8; font-size: 18px; margin-bottom: 20px;">아직 진행 중인 프로젝트가 없습니다.</p>
+        </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}

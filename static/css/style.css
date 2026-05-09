@@ -52,6 +52,10 @@ nav a:hover {
     padding: 10px 18px;
     border: 1px solid #38bdf8;
     border-radius: 8px;
+    color: white;
+    background: transparent;
+
+    text-decoration: none;
 }
 
 /* 메인 */
