@@ -23,3 +23,4 @@ class InventionInput(models.Model):
     problem_to_solve = models.TextField(verbose_name="해결하고자 하는 과제")
     prior_art_problem = models.TextField(verbose_name="기존 기술의 문제점")
     core_tech = models.TextField(verbose_name="핵심 기술 구성")
+    expected_effect = models.TextField(verbose_name="기대 효과", blank=True, null=True)

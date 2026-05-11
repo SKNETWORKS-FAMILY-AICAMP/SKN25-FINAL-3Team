@@ -7,18 +7,13 @@ def dashboard(request):
     try:
         user_role = request.user.userprofile.role
     except:
-        # 프로필이 없는 경우 기본값으로 설정
         user_role = 'inventor'
 
-    # 2. 역할에 따라 다른 템플릿 파일 경로를 지정합니다.
     if user_role == 'attorney':
-        # 변리사용 템플릿 (나중에 만드시면 됩니다)
         template_name = 'workspace/attorney_dashboard.html'
     else:
-        # 발명가용 템플릿
         template_name = 'workspace/inventor_dashboard.html'
 
-    # 3. 해당 템플릿을 화면에 그립니다.
     return render(request, template_name)
 
 @login_required(login_url='/accounts/login/')
@@ -28,6 +23,7 @@ def create_project(request):
         problem = request.POST.get('problem_to_solve')
         prior_art = request.POST.get('prior_art_problem')
         core = request.POST.get('core_tech')
+        effect = request.POST.get('expected_effect')
 
         project = PatentProject.objects.create(title=title,owner=request.user)
         
@@ -37,7 +33,8 @@ def create_project(request):
             project=project,
             problem_to_solve=problem,
             prior_art_problem=prior_art,
-            core_tech=core
+            core_tech=core,
+            expected_effect=effect 
         )
         
         return redirect('dashboard')

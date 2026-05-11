@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 120px 20px; max-width: 800px; margin: 0 auto; color: white;">
+    <h1 style="text-align: center; margin-bottom: 40px; color: #38bdf8;">새 특허 프로젝트 시작하기</h1>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; position: relative;">
+        <div id="step-line" style="position: absolute; top: 20px; left: 0; height: 2px; background: #334155; width: 100%; z-index: 1;"></div>
+        <div class="step-indicator" style="z-index: 2; background: #0f172a; padding: 10px; border: 2px solid #38bdf8; border-radius: 50%; width: 45px; height: 45px; text-align: center; font-weight: bold;">1</div>
+        <div class="step-indicator" style="z-index: 2; background: #0f172a; padding: 10px; border: 2px solid #334155; border-radius: 50%; width: 45px; height: 45px; text-align: center; color: #94a3b8;">2</div>
+        <div class="step-indicator" style="z-index: 2; background: #0f172a; padding: 10px; border: 2px solid #334155; border-radius: 50%; width: 45px; height: 45px; text-align: center; color: #94a3b8;">3</div>
+    </div>
+
+    <form id="project-form" method="POST" action="{% url 'create_project' %}">
+        {% csrf_token %}
+
+        <div class="form-step" id="step-1">
+            <div class="field" style="margin-bottom: 30px;">
+                <label style="font-size: 18px; display: block; margin-bottom: 10px;">프로젝트 명칭</label>
+                <input type="text" name="title" placeholder="예: 시각 장애인을 위한 실시간 사물 인식 시스템" required 
+                       style="width: 100%; padding: 15px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: white;">
+                <p style="color: #94a3b8; font-size: 14px; margin-top: 10px;">발명을 잘 나타내는 제목을 적어주세요.</p>
+            </div>
+            <button type="button" class="start-btn" onclick="nextStep(2)" style="width: 100%;">다음 단계로</button>
+        </div>
+
+        <div class="form-step" id="step-2" style="display: none;">
+            <div class="field" style="margin-bottom: 30px;">
+                <label style="font-size: 18px; display: block; margin-bottom: 10px;">1. 해결하고자 하는 과제</label>
+                <textarea name="problem_to_solve" rows="4" placeholder="이 발명을 통해 달성하고자 하는 목적을 적어주세요."
+                          style="width: 100%; padding: 15px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: white;"></textarea>
+            </div>
+            <div class="field" style="margin-bottom: 30px;">
+                <label style="font-size: 18px; display: block; margin-bottom: 10px;">2. 기존 기술의 문제점 (종래 기술)</label>
+                <textarea name="prior_art_problem" rows="4" placeholder="기존 기술들은 어떤 한계가 있었나요?"
+                          style="width: 100%; padding: 15px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: white;"></textarea>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <button type="button" class="demo-btn" onclick="nextStep(1)" style="flex: 1;">이전</button>
+                <button type="button" class="start-btn" onclick="nextStep(3)" style="flex: 2;">다음 단계로</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step-3" style="display: none;">
+            <div class="field" style="margin-bottom: 30px;">
+                <label style="font-size: 18px; display: block; margin-bottom: 10px;">3. 핵심 기술 구성 (Solution)</label>
+                <textarea name="core_tech" rows="6" placeholder="발명의 구체적인 구성과 작동 원리를 설명해 주세요."
+                        style="width: 100%; padding: 15px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: white;"></textarea>
+            </div>
+
+            <div class="field" style="margin-bottom: 30px;">
+                <label style="font-size: 18px; display: block; margin-bottom: 10px;">4. 발명의 효과 (Expected Effect)</label>
+                <textarea name="expected_effect" rows="4" placeholder="예: 기존 기술 대비 처리속도 20% 향상, 제작 비용 15% 절감 등"
+                        style="width: 100%; padding: 15px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; color: white;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <button type="button" class="demo-btn" onclick="nextStep(2)" style="flex: 1;">이전</button>
+                <button type="submit" class="start-btn" style="flex: 2;">프로젝트 생성 및 AI 초안 요청</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function nextStep(step) {
+        // 모든 스텝 숨기기
+        document.querySelectorAll('.form-step').forEach(el => el.style.display = 'none');
+        // 해당 스텝 보이기
+        document.getElementById('step-' + step).style.display = 'block';
+        
+        // 인디케이터 스타일 변경
+        const indicators = document.querySelectorAll('.step-indicator');
+        indicators.forEach((ind, idx) => {
+            if (idx + 1 === step) {
+                ind.style.borderColor = '#38bdf8';
+                ind.style.color = 'white';
+            } else if (idx + 1 < step) {
+                ind.style.borderColor = '#38bdf8';
+                ind.style.background = '#38bdf8';
+                ind.style.color = '#0f172a';
+            } else {
+                ind.style.borderColor = '#334155';
+                ind.style.color = '#94a3b8';
+                ind.style.background = '#0f172a';
+            }
+        });
+    }
+</script>
+{% endblock %}
