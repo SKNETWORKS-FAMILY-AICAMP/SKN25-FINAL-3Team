@@ -4,6 +4,7 @@ import json
 import time
 import agent_payloads
 from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS
+from prior_art_agent import run_prior_art_agent
 
 
 # ─────────────────────────────────────────────
@@ -346,10 +347,43 @@ if st.session_state.agent and st.session_state.phase >= 2:
                 claims_payload = agent_payloads.build_claim_payload(master_payload)
                 spec_payload = agent_payloads.build_specification_payload(master_payload)
                 
-                # (TODO: 여기서 각 Payload를 Kafka에 발행하거나 후속 에이전트 API로 전송)
-                print(f"[Payload 분배] 선행조사({prior_art_payload['payload_id']}), 청구항({claims_payload['payload_id']}), 발설({spec_payload['payload_id']}) 전송 준비 완료.")
-                
                 st.success(res)
                 st.balloons()
-                time.sleep(2)
-                st.info("상담이 성공적으로 종료되었으며, 후속 에이전트로 데이터가 이관되었습니다.")
+
+            # 선행기술조사 에이전트 실행
+            with st.spinner("🔍 선행기술조사 에이전트가 분석 중입니다... (1~2분 소요)"):
+                prior_art_result = run_prior_art_agent(master_payload)
+
+            st.subheader("📋 선행기술조사 결과")
+
+            overall = prior_art_result.get("overall_risk", {})
+            risk_color = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(overall.get("level"), "⚪")
+            st.markdown(f"**전체 리스크: {risk_color} {overall.get('level', '').upper()}**")
+            st.info(overall.get("summary", ""))
+
+            for item in prior_art_result.get("prior_art_results", []):
+                risk_icon = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(item.get("risk_level"), "⚪")
+                with st.expander(f"{item['rank']}위 | {risk_icon} {item.get('title', item['file_name'])} (유사도: {item['similarity_score']:.2%})"):
+                    st.markdown(f"**출원번호:** {item.get('patent_number', '-')}")
+                    st.markdown(f"**리스크:** {item.get('risk_level', '-').upper()}")
+
+                    if item.get("risk_reasons"):
+                        st.markdown("**리스크 이유:**")
+                        for r in item["risk_reasons"]:
+                            st.markdown(f"- {r}")
+
+                    if item.get("evidence_sentences"):
+                        st.markdown("**근거 문장:**")
+                        for e in item["evidence_sentences"]:
+                            st.markdown(f"- 선행특허: *{e.get('patent_text', '')}*")
+                            st.markdown(f"  → 본 발명: {e.get('invention_text', '')}")
+
+                    if item.get("differentiating_points"):
+                        st.markdown("**본 발명의 차별점:**")
+                        for d in item["differentiating_points"]:
+                            st.markdown(f"- {d}")
+
+                    if item.get("recommendation"):
+                        st.markdown(f"**대응 전략:** {item['recommendation']}")
+
+            st.info("상담이 성공적으로 종료되었으며, 선행기술조사까지 완료되었습니다.")
