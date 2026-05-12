@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="workstation-container" style="display: flex; height: calc(100vh - 80px); margin-top: 80px; background: #0f172a; color: white;">
+
+    <div class="left-panel" style="flex: 1; border-right: 1px solid #334155; padding: 30px; overflow-y: auto; background: #111827;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; color: #38bdf8; margin: 0;">📋 원본 발명 데이터</h2>
+            <span style="font-size: 12px; background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #94a3b8;">무결성 검증됨 (Origin)</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">1. 해결하고자 하는 과제</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.problem_to_solve|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">2. 종래 기술의 문제점</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.prior_art_problem|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">3. 핵심 기술 구성</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.core_tech|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">4. 기대 효과</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.expected_effect|default:"(입력되지 않음)"|linebreaksbr }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel" style="flex: 1.5; display: flex; flex-direction: column; position: relative;">
+        
+        <div style="padding: 20px 30px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 22px; margin: 0;">{{ project.title }}</h2>
+            <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
+        </div>
+
+        <div id="chat-box" style="flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+            {% if not chat_messages %}
+                <div class="msg ai-msg" style="align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%;">
+                    <p style="margin: 0; line-height: 1.6;">안녕하세요! 전문 특허 상담 AI입니다. 좌측의 발명 내용을 바탕으로 명세서 작성을 위한 심층 분석을 시작하겠습니다. <br><br>준비되셨다면 아래에 <b>"상담을 시작합니다."</b> 라고 입력해주세요!</p>
+                </div>
+            {% else %}
+                {% for msg in chat_messages %}
+                    {% if msg.role == 'assistant' %}
+                        <div class="msg ai-msg" style="align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%;">
+                            <p style="margin: 0; line-height: 1.6;">{{ msg.content|linebreaksbr }}</p>
+                        </div>
+                    {% elif msg.role == 'user' %}
+                        <div class="msg user-msg" style="align-self: flex-end; background: #38bdf8; color: #0f172a; padding: 15px 20px; border-radius: 15px 15px 0 15px; max-width: 80%; font-weight: 500;">
+                            <p style="margin: 0; line-height: 1.6;">{{ msg.content|linebreaksbr }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div style="padding: 20px; background: #111827; border-top: 1px solid #334155;">
+            <form id="chat-form" style="display: flex; gap: 10px;">
+                {% csrf_token %}
+                <input type="text" id="chat-input" placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
+                       style="flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; outline: none;">
+                <button type="submit" class="start-btn" style="padding: 0 30px; font-size: 16px;">전송</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatBox = document.getElementById('chat-box');
+
+    // 화면 로드 시 스크롤 하단 이동
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 수정된 부분: .strip() -> .trim()
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // 내 메시지 즉시 추가
+            addMessage('user', message);
+            chatInput.value = '';
+
+            // AI 에이전트 API 호출
+            fetch("{% url 'chat_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'message': message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    addMessage('assistant', data.ai_message);
+                } else {
+                    alert("AI 응답을 가져오는 중 서버 오류가 발생했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("통신 중 문제가 발생했습니다. 브라우저 콘솔(F12)을 확인해 보세요.");
+            });
+        });
+    }
+
+    function addMessage(role, text) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (role === 'assistant' ? 'ai-msg' : 'user-msg');
+        
+        if (role === 'assistant') {
+            div.style = "align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%; margin-bottom: 15px; white-space: pre-wrap;";
+        } else {
+            div.style = "align-self: flex-end; background: #38bdf8; color: #0f172a; padding: 15px 20px; border-radius: 15px 15px 0 15px; max-width: 80%; font-weight: 500; margin-bottom: 15px; white-space: pre-wrap;";
+        }
+        
+        div.innerHTML = `<p style="margin: 0; line-height: 1.6;">${text}</p>`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}

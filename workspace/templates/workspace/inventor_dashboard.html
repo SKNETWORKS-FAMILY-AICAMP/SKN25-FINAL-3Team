@@ -12,7 +12,11 @@
         {% for project in projects %}
         <div class="card" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h2 style="margin-bottom: 10px; font-size: 24px;">{{ project.title }}</h2>
+                <h2 style="margin-bottom: 10px; font-size: 24px;">
+                    <a href="{% url 'workstation' project.id %}" style="color: #38bdf8; text-decoration: none;">
+                        {{ project.title }}
+                    </a>
+                </h2>
                 <p style="color: #94a3b8;">생성일: {{ project.created_at|date:"Y-m-d" }}</p>
             </div>
             <div>
