@@ -17,24 +17,39 @@
   ],
   "references": [
     {
+      "ref_no": "10",
+      "name": "사용자 단말기",
+      "source_text": "10: 사용자 단말기"
+    },
+    {
       "ref_no": "100",
+      "name": "이미지 분류 시스템",
+      "source_text": "100: 이미지 분류 시스템"
+    },
+    {
+      "ref_no": "110",
       "name": "입력부",
-      "source_text": "100: 입력부"
+      "source_text": "110: 입력부"
     },
     {
-      "ref_no": "200",
+      "ref_no": "120",
       "name": "전처리부",
-      "source_text": "200: 전처리부"
+      "source_text": "120: 전처리부"
     },
     {
-      "ref_no": "300",
+      "ref_no": "130",
       "name": "CNN 모델부",
-      "source_text": "300: CNN 모델부"
+      "source_text": "130: CNN 모델부"
     },
     {
-      "ref_no": "400",
+      "ref_no": "140",
+      "name": "저장부",
+      "source_text": "140: 저장부"
+    },
+    {
+      "ref_no": "150",
       "name": "출력부",
-      "source_text": "400: 출력부"
+      "source_text": "150: 출력부"
     }
   ]
 }
