@@ -93,3 +93,14 @@ Changed files:
 - `docs/llm-wiki/concepts/developer-workflow-scenario.md`
 - `docs/llm-wiki/concepts/team-collaboration-guide.md`
 - `docs/llm-wiki/concepts/llm-wiki-beginner-guide.md`
+
+## [2026-05-12] update | branch naming rule simplified
+
+- Simplified `BRANCH_RULES.md` to focus only on branch naming.
+- Adopted personal integration branch style: `hw`, then task branches like `hw/docs/llm-wiki`, `hw/data/pilot-manifest`, `hw/feat/consultation-agent`.
+- Removed the old `feature/hyunwoo-g06f-data` branch after it had already been merged.
+- Created `hw` as the current personal integration branch.
+
+Changed files:
+
+- `BRANCH_RULES.md`
