@@ -93,3 +93,14 @@ Changed files:
 - `docs/llm-wiki/concepts/developer-workflow-scenario.md`
 - `docs/llm-wiki/concepts/team-collaboration-guide.md`
 - `docs/llm-wiki/concepts/llm-wiki-beginner-guide.md`
+
+## [2026-05-12] update | branch naming rule simplified
+
+- Simplified `BRANCH_RULES.md` to focus only on branch naming.
+- Adopted a generic personal integration branch style: `<name>`, then task branches like `<name>/docs/llm-wiki`, `<name>/data/pilot-manifest`, `<name>/feat/consultation-agent`.
+- Removed the old feature branch after it had already been merged.
+- Created a personal integration branch for ongoing work.
+
+Changed files:
+
+- `BRANCH_RULES.md`

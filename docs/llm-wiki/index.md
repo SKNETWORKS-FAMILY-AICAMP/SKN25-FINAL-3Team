@@ -12,7 +12,7 @@
 
 ## Sources
 
-- [[google-drive-final-folder-2026-05-12]] — 현우가 공유한 Google Drive 폴더 분석 결과: PDF 779개, TXT 1,219개, 총 1,998개 파일.
+- [[google-drive-final-folder-2026-05-12]] — 공유된 Google Drive 폴더 분석 결과: PDF 779개, TXT 1,219개, 총 1,998개 파일.
 
 ## Concepts
 
