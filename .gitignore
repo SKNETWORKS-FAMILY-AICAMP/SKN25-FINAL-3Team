@@ -14,4 +14,4 @@ temp_imgs/
 .prior_art_index.pkl
 
 # 대용량/바이너리 (필요시 주석 해제)
-# *.pdf
+*.pdf
