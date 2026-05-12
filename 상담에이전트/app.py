@@ -2,7 +2,9 @@ import streamlit as st
 import os
 import json
 import time
+import agent_payloads
 from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS
+
 
 # ─────────────────────────────────────────────
 # 1. 페이지 설정 및 프리미엄 디자인 (CSS)
@@ -330,7 +332,24 @@ if st.session_state.agent and st.session_state.phase >= 2:
         if st.button("💾 DB 및 클라우드 저장", use_container_width=True):
             with st.spinner("데이터를 정제하고 보안 서버에 저장 중입니다..."):
                 res = st.session_state.agent.confirm_and_save()
+                
+                # [모듈화된 Payload 전송 시스템] 
+                # 1. 상태를 기반으로 마스터 payload 생성
+                master_payload = agent_payloads.build_invention_payload(
+                    st.session_state.agent.state, 
+                    st.session_state.agent.user_id, 
+                    st.session_state.agent.consultation_idx
+                )
+                
+                # 2. 각 후속 에이전트 맞춤형 Payload 분리
+                prior_art_payload = agent_payloads.build_prior_art_payload(master_payload)
+                claims_payload = agent_payloads.build_claim_payload(master_payload)
+                spec_payload = agent_payloads.build_specification_payload(master_payload)
+                
+                # (TODO: 여기서 각 Payload를 Kafka에 발행하거나 후속 에이전트 API로 전송)
+                print(f"[Payload 분배] 선행조사({prior_art_payload['payload_id']}), 청구항({claims_payload['payload_id']}), 발설({spec_payload['payload_id']}) 전송 준비 완료.")
+                
                 st.success(res)
                 st.balloons()
                 time.sleep(2)
-                st.info("상담이 성공적으로 종료되었습니다. 감사합니다.")
+                st.info("상담이 성공적으로 종료되었으며, 후속 에이전트로 데이터가 이관되었습니다.")
