@@ -3,7 +3,7 @@ import os
 import json
 import time
 import agent_payloads
-from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS
+from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS, PHASE2_SKIP_KEYWORDS
 from prior_art_agent import run_prior_art_agent
 
 
@@ -281,35 +281,39 @@ if prompt := st.chat_input("발명에 대해 자유롭게 설명해 주세요...
             # Phase 2: 심화 정보 수집
             elif st.session_state.phase == 2:
                 agent.state["raw_log"].append({"role": "user", "content": prompt})
-                prompt_p2 = PHASE2_EXTRACT_PROMPT.format(
-                    solution=agent.state["solution"] or "", 
-                    algorithm_steps=agent.state["algorithm_steps"] or [], 
-                    user_input=prompt
-                )
-                
-                # gpt-4o-mini를 통한 심화 정보 추출
-                resp = agent.client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": PHASE1_SYSTEM},
-                        {"role": "user", "content": prompt_p2}
-                    ],
-                    response_format={"type": "json_object"}
-                )
-                res = json.loads(resp.choices[0].message.content)
-                
-                found_new = False
-                for key in ["implementations", "parameters", "algorithms", "optional_features", "error_handling"]:
-                    extracted = res.get(key, [])
-                    validated = [item for item in extracted if item and item.strip()]
-                    if validated:
-                        agent.state[key].extend(validated)
-                        found_new = True
-                
-                if found_new:
-                    response = "상세 정보가 잘 기록되었습니다! 📝 추가로 덧붙일 내용이 있으신가요? 없으시면 사이드바의 **'최종 요약 리포트 발행'** 버튼을 눌러주세요."
+
+                # 종료 키워드 입력 시 바로 마무리 안내
+                if any(kw in prompt.strip() for kw in PHASE2_SKIP_KEYWORDS):
+                    response = "알겠습니다! 입력하신 내용으로 상담을 마무리하겠습니다. 👍\n\n사이드바의 **'최종 요약 리포트 발행'** 버튼을 눌러주세요."
                 else:
-                    response = "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황에 대해 들려주실 말씀이 있을까요?"
+                    prompt_p2 = PHASE2_EXTRACT_PROMPT.format(
+                        solution=agent.state["solution"] or "",
+                        algorithm_steps=agent.state["algorithm_steps"] or [],
+                        user_input=prompt
+                    )
+
+                    resp = agent.client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": PHASE1_SYSTEM},
+                            {"role": "user", "content": prompt_p2}
+                        ],
+                        response_format={"type": "json_object"}
+                    )
+                    res = json.loads(resp.choices[0].message.content)
+
+                    found_new = False
+                    for key in ["implementations", "parameters", "algorithms", "optional_features", "error_handling"]:
+                        extracted = res.get(key, [])
+                        validated = [item for item in extracted if item and item.strip()]
+                        if validated:
+                            agent.state[key].extend(validated)
+                            found_new = True
+
+                    if found_new:
+                        response = "상세 정보가 잘 기록되었습니다! 📝 추가로 덧붙일 내용이 있으신가요?\n없으시면 **'없어'** 또는 **'패스'** 라고 하시거나, 사이드바의 **'최종 요약 리포트 발행'** 버튼을 눌러주세요."
+                    else:
+                        response = "말씀하신 내용에서 추출할 기술 정보가 없었습니다. 구현 수단, 데이터, 예외 처리 등을 구체적으로 말씀해주시거나, **'없어'** 라고 하시면 마무리할게요."
 
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})

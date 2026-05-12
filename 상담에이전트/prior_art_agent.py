@@ -23,9 +23,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 PATENTS_DIR = Path(__file__).parent / "patents_txt"
 INDEX_CACHE  = Path(__file__).parent / ".prior_art_index.pkl"
 
-EMBED_MODEL  = "text-embedding-3-small"
-EXTRACT_MODEL = "gpt-4o"
-ANALYZE_MODEL = "gpt-4o"
+EMBED_MODEL   = "text-embedding-3-small"
+EXTRACT_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+ANALYZE_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -303,7 +303,7 @@ def _analyze_patent(invention_payload: dict, patent: dict) -> dict:
         model=ANALYZE_MODEL,
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
-        max_tokens=1500,
+        max_completion_tokens=1500,
     )
     return json.loads(resp.choices[0].message.content)
 

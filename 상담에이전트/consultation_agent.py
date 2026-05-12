@@ -18,6 +18,14 @@ from document_utils import (
 load_dotenv()
 
 # ─────────────────────────────────────────────
+# 모델 설정 (.env의 OPENAI_MODEL로 일괄 변경 가능)
+# ─────────────────────────────────────────────
+_DEFAULT_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+EXTRACT_MODEL  = _DEFAULT_MODEL
+CHAT_MODEL     = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
+POLISH_MODEL   = _DEFAULT_MODEL
+
+# ─────────────────────────────────────────────
 # DB 연결
 # ─────────────────────────────────────────────
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -160,7 +168,7 @@ PHASE2_QUESTION = """
 """
 
 PHASE2_EXTRACT_PROMPT = """
-당신은 특허 전문 변리사입니다. 발명가의 답변에서 심화 정보를 추출하세요. (JSON 응답)
+당신은 특허 전문 변리사입니다. 발명가의 답변에서 심화 정보를 추출하세요.
 
 [발명 맥락]
 - 해결방법: {solution}
@@ -169,8 +177,18 @@ PHASE2_EXTRACT_PROMPT = """
 사용자 입력: {user_input}
 
 [추출 규칙]
-- 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목이 있으면 리스트로 추출하세요.
+- 사용자의 입력에서 각 항목에 해당하는 내용을 리스트로 추출하세요.
+- 언급되지 않은 항목은 빈 리스트 []로 두세요.
 - 절대로 추측하지 마세요. 언급된 내용만 추출하세요.
+
+반드시 아래 JSON 형식으로만 응답하세요:
+{{
+  "implementations": ["구현 수단 (예: YOLO v8, Python, FastAPI 등)"],
+  "parameters": ["데이터 파라미터 (예: 사용자 알레르기 정보, 유통기한 등)"],
+  "algorithms": ["핵심 로직/수식 (예: 코사인 유사도, 가중치 함수 등)"],
+  "optional_features": ["부가적/선택적 기능 (예: 자동 주문 연동 등)"],
+  "error_handling": ["예외 처리 (예: 인식 실패 시 수동 입력 UI 등)"]
+}}
 """
 
 PHASE2_SKIP_KEYWORDS = ["모르", "없어", "없음", "나중에", "패스", "skip", "생략"]
@@ -225,12 +243,12 @@ class PatentConsultant:
     def _analyze_vision(self, image_path: str) -> str:
         base64_img = encode_image_to_base64(image_path)
         resp = self.client.chat.completions.create(
-            model="gpt-4o",
+            model=EXTRACT_MODEL,
             messages=[{"role": "user", "content": [
                 {"type": "text",      "text": "이 도면에서 기술적 특징과 작동 단계를 설명해줘."},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_img}"}}
             ]}],
-            max_tokens=1000,
+            max_completion_tokens=1000,
         )
         return resp.choices[0].message.content
 
@@ -270,7 +288,7 @@ class PatentConsultant:
             effect=self.state["effect"] or "미파악"
         )
         ext_resp = self.client.chat.completions.create(
-            model="gpt-4o", 
+            model=EXTRACT_MODEL,
             messages=[{"role": "system", "content": PHASE1_SYSTEM}, {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
             response_format={"type": "json_object"}
         )
@@ -294,7 +312,7 @@ class PatentConsultant:
         state_summary = "\n".join([f"- {FIELD_LABELS[k]}: {self.state[k] or '미파악'}" for k in ["problem", "solution", "differentiation", "effect"]])
         target_label = FIELD_LABELS.get(target_field, "전반적인 내용")
         chat_resp = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=CHAT_MODEL,
             messages=[
                 {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
                 *history,
@@ -331,7 +349,7 @@ class PatentConsultant:
         for field, label in FIELD_LABELS.items():
             raw = self.state.get(field)
             if raw:
-                resp = self.client.chat.completions.create(model="gpt-4o", messages=[{"role": "user", "content": POLISH_PROMPT.format(field_name=label, raw_text=raw)}], max_tokens=300)
+                resp = self.client.chat.completions.create(model=POLISH_MODEL, messages=[{"role": "user", "content": POLISH_PROMPT.format(field_name=label, raw_text=raw)}], max_completion_tokens=300)
                 self.state[field] = resp.choices[0].message.content.strip()
         db = SessionLocal()
         try:
