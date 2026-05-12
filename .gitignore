@@ -1,0 +1,17 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# OS
+.DS_Store
+
+# 임시/캐시
+temp_imgs/
+.prior_art_index.pkl
+
+# 대용량/바이너리 (필요시 주석 해제)
+# *.pdf
