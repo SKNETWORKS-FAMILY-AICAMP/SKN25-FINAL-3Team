@@ -1,3 +1,4 @@
+
 # Python
 venv/
 __pycache__/
@@ -15,3 +16,46 @@ temp_imgs/
 
 # 대용량/바이너리 (필요시 주석 해제)
 *.pdf
+=======
+.env
+__pycache__/
+temp_uploads/
+temp_imgs/
+*.pyc
+.DS_Store
+
+# Local Python / app caches
+.venv/
+.pytest_cache/
+*.sqlite3
+*.db
+
+# Patent data policy
+# Track manifests and small docs, but do not track bulk raw/processed/report/tmp outputs.
+!data/
+!data/README.md
+!data/manifests/
+!data/manifests/**
+
+data/raw/**
+data/processed/**
+data/reports/**
+data/tmp/**
+
+# Keep folder skeletons and README files visible.
+!data/raw/**/
+!data/raw/**/.gitkeep
+!data/raw/**/README.md
+!data/processed/**/
+!data/processed/**/.gitkeep
+!data/processed/**/README.md
+!data/reports/**/
+!data/reports/**/.gitkeep
+!data/reports/**/README.md
+!data/tmp/**/
+!data/tmp/**/.gitkeep
+!data/tmp/**/README.md
+
+# Generated review artifacts
+*.html
+
