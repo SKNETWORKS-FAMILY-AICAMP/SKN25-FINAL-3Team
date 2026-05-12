@@ -1,3 +1,5 @@
 Django==5.0.6
 Pillow==10.3.0
 python-dotenv==1.0.1
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.5.1

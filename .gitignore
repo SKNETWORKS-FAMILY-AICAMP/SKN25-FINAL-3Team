@@ -16,6 +16,7 @@ temp_imgs/
 
 # 대용량/바이너리 (필요시 주석 해제)
 *.pdf
+<<<<<<< Updated upstream
 =======
 .env
 __pycache__/
@@ -58,4 +59,7 @@ data/tmp/**
 
 # Generated review artifacts
 *.html
+
+=======
+.claude/
 
