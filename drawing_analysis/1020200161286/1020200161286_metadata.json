@@ -1,0 +1,188 @@
+{
+  "app_num": "1020200161286",
+  "invention_type": "hardware",
+  "main_concept": "개선된 Spiking Neural Networks (SNN) 알고리즘 모델을 이용한 뉴로모픽 컴퓨팅 장치 및 학습 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "뉴로모픽 컴퓨팅 모듈",
+      "component_type": "device",
+      "description": "입력 데이터를 기반으로 결과를 추론하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "뉴로모픽 컴퓨팅과 관련된 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "입력 데이터",
+      "component_type": "data",
+      "description": "뉴로모픽 컴퓨팅 모듈에 입력되는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "흥분성 뉴런 레이어",
+      "component_type": "actor",
+      "description": "스파이크를 발화하는 뉴런 레이어",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "스파이크 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "억제성 뉴런 레이어",
+      "component_type": "actor",
+      "description": "흥분성 뉴런으로부터 스파이크를 받는 뉴런 레이어",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200161286",
+      "diagram_type": "flowchart",
+      "diagram_title": "뉴로모픽 컴퓨팅 장치의 작동 흐름도",
+      "mermaid_code": "flowchart TD\n    300[\"입력 데이터\"]\n    100[\"뉴로모픽 컴퓨팅 모듈\"]\n    200[\"메모리\"]\n    400[\"흥분성 뉴런 레이어\"]\n    500[\"억제성 뉴런 레이어\"]\n    \n    300 -->|\"입력\"| 100\n    100 -->|\"정보 저장\"| 200\n    100 -->|\"스파이크 전달\"| 400\n    400 -->|\"스파이크 전달\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "뉴로모픽 컴퓨팅 모듈",
+          "component_type": "device",
+          "description": "입력 데이터를 기반으로 결과를 추론하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "뉴로모픽 컴퓨팅과 관련된 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "뉴로모픽 컴퓨팅 모듈에 입력되는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "흥분성 뉴런 레이어",
+          "component_type": "actor",
+          "description": "스파이크를 발화하는 뉴런 레이어",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "스파이크 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "억제성 뉴런 레이어",
+          "component_type": "actor",
+          "description": "흥분성 뉴런으로부터 스파이크를 받는 뉴런 레이어",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200161286/1020200161286_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200161286",
+      "diagram_type": "classDiagram",
+      "diagram_title": "뉴로모픽 컴퓨팅 모듈 구성도",
+      "mermaid_code": "classDiagram\n    class 뉴로모픽컴퓨팅모듈 {\n        +String 입력데이터\n        +추론()\n    }\n    class 메모리 {\n        +String 저장정보\n    }\n    class 입력데이터 {\n        +String 데이터\n    }\n    class 흥분성뉴런레이어 {\n        +스파이크발화()\n    }\n    class 억제성뉴런레이어 {\n        +스파이크수신()\n    }\n    뉴로모픽컴퓨팅모듈 --> 메모리 : \"정보 저장\"\n    입력데이터 --> 뉴로모픽컴퓨팅모듈 : \"입력\"\n    흥분성뉴런레이어 --> 억제성뉴런레이어 : \"스파이크 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "뉴로모픽 컴퓨팅 모듈",
+          "component_type": "device",
+          "description": "입력 데이터를 기반으로 결과를 추론하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "뉴로모픽 컴퓨팅과 관련된 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "뉴로모픽 컴퓨팅 모듈에 입력되는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "흥분성 뉴런 레이어",
+          "component_type": "actor",
+          "description": "스파이크를 발화하는 뉴런 레이어",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "스파이크 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "억제성 뉴런 레이어",
+          "component_type": "actor",
+          "description": "흥분성 뉴런으로부터 스파이크를 받는 뉴런 레이어",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200161286/1020200161286_fig_2.mmd"
+    }
+  ]
+}

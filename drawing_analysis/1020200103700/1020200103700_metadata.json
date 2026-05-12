@@ -1,0 +1,401 @@
+{
+  "app_num": "1020200103700",
+  "invention_type": "system",
+  "main_concept": "원룸 임대관리 서비스 공동구매 플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플랫폼 서버",
+      "component_type": "device",
+      "description": "건물주와 서비스 업체를 중개하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "건물주 단말기",
+      "component_type": "device",
+      "description": "건물주가 관리 서비스를 구매하는 단말기",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "업체 단말기",
+      "component_type": "device",
+      "description": "서비스 업체가 관리 서비스를 제공하는 단말기",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "110",
+      "name": "회원 관리 모듈",
+      "component_type": "process",
+      "description": "건물주 정보를 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "상품 관리 모듈",
+      "component_type": "process",
+      "description": "관리 서비스를 등록 및 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "130",
+      "name": "공동구매 진행 모듈",
+      "component_type": "process",
+      "description": "공동구매를 진행하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "140",
+      "name": "중개 모듈",
+      "component_type": "process",
+      "description": "서비스 요청 정보를 전송하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "150",
+      "name": "큐레이팅 모듈",
+      "component_type": "process",
+      "description": "관리 서비스를 추천하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "160",
+      "name": "비서 서비스 모듈",
+      "component_type": "process",
+      "description": "건물주의 요청사항을 분석하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "170",
+      "name": "커뮤니티 모듈",
+      "component_type": "process",
+      "description": "건물주 간의 소통을 지원하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200103700",
+      "diagram_type": "classDiagram",
+      "diagram_title": "원룸 임대관리 서비스 플랫폼 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 플랫폼서버 {\n        +String 중개기능\n    }\n    class 건물주단말기 {\n        +String 사용자정보\n    }\n    class 업체단말기 {\n        +String 서비스정보\n    }\n    class 회원관리모듈 {\n        +manageMember()\n    }\n    class 상품관리모듈 {\n        +manageService()\n    }\n    class 공동구매진행모듈 {\n        +startGroupBuy()\n    }\n    class 중개모듈 {\n        +sendRequest()\n    }\n    class 큐레이팅모듈 {\n        +recommendService()\n    }\n    class 비서서비스모듈 {\n        +analyzeRequest()\n    }\n    class 커뮤니티모듈 {\n        +supportCommunication()\n    }\n\n    건물주단말기 -->|연결| 플랫폼서버\n    업체단말기 -->|연결| 플랫폼서버\n    회원관리모듈 -->|구성 요소| 플랫폼서버\n    상품관리모듈 -->|구성 요소| 플랫폼서버\n    공동구매진행모듈 -->|구성 요소| 플랫폼서버\n    중개모듈 -->|구성 요소| 플랫폼서버\n    큐레이팅모듈 -->|구성 요소| 플랫폼서버\n    비서서비스모듈 -->|구성 요소| 플랫폼서버\n    커뮤니티모듈 -->|구성 요소| 플랫폼서버",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "device",
+          "description": "건물주와 서비스 업체를 중개하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "건물주 단말기",
+          "component_type": "device",
+          "description": "건물주가 관리 서비스를 구매하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "업체 단말기",
+          "component_type": "device",
+          "description": "서비스 업체가 관리 서비스를 제공하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "회원 관리 모듈",
+          "component_type": "process",
+          "description": "건물주 정보를 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "상품 관리 모듈",
+          "component_type": "process",
+          "description": "관리 서비스를 등록 및 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "공동구매 진행 모듈",
+          "component_type": "process",
+          "description": "공동구매를 진행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "140",
+          "name": "중개 모듈",
+          "component_type": "process",
+          "description": "서비스 요청 정보를 전송하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "150",
+          "name": "큐레이팅 모듈",
+          "component_type": "process",
+          "description": "관리 서비스를 추천하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "160",
+          "name": "비서 서비스 모듈",
+          "component_type": "process",
+          "description": "건물주의 요청사항을 분석하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "170",
+          "name": "커뮤니티 모듈",
+          "component_type": "process",
+          "description": "건물주 간의 소통을 지원하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200103700/1020200103700_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200103700",
+      "diagram_type": "flowchart",
+      "diagram_title": "원룸 관리 서비스 구매 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플랫폼 서버\"]\n    200[\"건물주 단말기\"]\n    300[\"업체 단말기\"]\n    110[\"회원 관리 모듈\"]\n    120[\"상품 관리 모듈\"]\n    130[\"공동구매 진행 모듈\"]\n    140[\"중개 모듈\"]\n    150[\"큐레이팅 모듈\"]\n    160[\"비서 서비스 모듈\"]\n    170[\"커뮤니티 모듈\"]\n\n    200 -->|\"연결\"| 100\n    300 -->|\"연결\"| 100\n    100 -->|\"구성 요소\"| 110\n    100 -->|\"구성 요소\"| 120\n    100 -->|\"구성 요소\"| 130\n    100 -->|\"구성 요소\"| 140\n    100 -->|\"구성 요소\"| 150\n    100 -->|\"구성 요소\"| 160\n    100 -->|\"구성 요소\"| 170",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "device",
+          "description": "건물주와 서비스 업체를 중개하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "건물주 단말기",
+          "component_type": "device",
+          "description": "건물주가 관리 서비스를 구매하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "업체 단말기",
+          "component_type": "device",
+          "description": "서비스 업체가 관리 서비스를 제공하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "회원 관리 모듈",
+          "component_type": "process",
+          "description": "건물주 정보를 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "상품 관리 모듈",
+          "component_type": "process",
+          "description": "관리 서비스를 등록 및 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "공동구매 진행 모듈",
+          "component_type": "process",
+          "description": "공동구매를 진행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "140",
+          "name": "중개 모듈",
+          "component_type": "process",
+          "description": "서비스 요청 정보를 전송하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "150",
+          "name": "큐레이팅 모듈",
+          "component_type": "process",
+          "description": "관리 서비스를 추천하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "160",
+          "name": "비서 서비스 모듈",
+          "component_type": "process",
+          "description": "건물주의 요청사항을 분석하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "170",
+          "name": "커뮤니티 모듈",
+          "component_type": "process",
+          "description": "건물주 간의 소통을 지원하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200103700/1020200103700_fig_2.mmd"
+    }
+  ]
+}

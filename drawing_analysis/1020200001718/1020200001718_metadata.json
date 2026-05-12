@@ -1,0 +1,182 @@
+{
+  "app_num": "1020200001718",
+  "invention_type": "method",
+  "main_concept": "딥 뉴럴 네트워크 기반의 얼굴 인식 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "얼굴 인식 장치",
+      "component_type": "actor",
+      "description": "얼굴 이미지를 처리하여 인식하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "특징 추출 네트워크",
+      "component_type": "process",
+      "description": "얼굴 이미지에서 특징을 추출하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "뉴럴 애그리게이션 네트워크",
+      "component_type": "process",
+      "description": "추출된 특징을 애그리게이트하여 최적 특징을 출력하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "풀링 레이어",
+      "component_type": "process",
+      "description": "특징 맵에 슬라이딩 풀링 연산을 적용하는 레이어",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200001718",
+      "diagram_type": "flowchart",
+      "diagram_title": "얼굴 인식 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"얼굴 인식 장치\"]\n    200[\"특징 추출 네트워크\"]\n    300[\"뉴럴 애그리게이션 네트워크\"]\n    400[\"풀링 레이어\"]\n    \n    100 -->|\"입력\"| 200\n    200 -->|\"특징 입력\"| 400\n    400 -->|\"풀링 결과\"| 200\n    200 -->|\"특징 맵 생성\"| 300\n    300 -->|\"최적 특징 출력\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "얼굴 인식 장치",
+          "component_type": "actor",
+          "description": "얼굴 이미지를 처리하여 인식하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "특징 추출 네트워크",
+          "component_type": "process",
+          "description": "얼굴 이미지에서 특징을 추출하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "뉴럴 애그리게이션 네트워크",
+          "component_type": "process",
+          "description": "추출된 특징을 애그리게이트하여 최적 특징을 출력하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "풀링 레이어",
+          "component_type": "process",
+          "description": "특징 맵에 슬라이딩 풀링 연산을 적용하는 레이어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200001718/1020200001718_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200001718",
+      "diagram_type": "classDiagram",
+      "diagram_title": "얼굴 인식 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 얼굴인식장치 {\n        +String 이미지\n        +processImage()\n    }\n    class 특징추출네트워크 {\n        +extractFeatures()\n    }\n    class 뉴럴애그리게이션네트워크 {\n        +aggregateFeatures()\n        +outputOptimalFeatures()\n    }\n    class 풀링레이어 {\n        +applyPooling()\n    }\n    얼굴인식장치 --> 특징추출네트워크 : \"입력\"\n    특징추출네트워크 --> 풀링레이어 : \"입력\"\n    풀링레이어 --> 뉴럴애그리게이션네트워크 : \"입력\"\n    얼굴인식장치 --> 뉴럴애그리게이션네트워크 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "얼굴 인식 장치",
+          "component_type": "actor",
+          "description": "얼굴 이미지를 처리하여 인식하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "특징 추출 네트워크",
+          "component_type": "process",
+          "description": "얼굴 이미지에서 특징을 추출하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "뉴럴 애그리게이션 네트워크",
+          "component_type": "process",
+          "description": "추출된 특징을 애그리게이트하여 최적 특징을 출력하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "풀링 레이어",
+          "component_type": "process",
+          "description": "특징 맵에 슬라이딩 풀링 연산을 적용하는 레이어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200001718/1020200001718_fig_2.mmd"
+    }
+  ]
+}

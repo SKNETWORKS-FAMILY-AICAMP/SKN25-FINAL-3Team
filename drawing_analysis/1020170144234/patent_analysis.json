@@ -1,0 +1,513 @@
+{
+  "invention_type": "hardware",
+  "main_concept": "사용자 입력에 기반한 문장을 제공하는 장치",
+  "technical_problem": "사용자로부터 입력된 축약어에 대응되는 문장을 생성하여 사용자에게 제공함에 있어서, 상황 정보를 더 고려하여 현재 상황에 가장 적합한 문장을 사용자에게 제공하는 장치 및 방법",
+  "solution_summary": "사용자로부터 입력된 축약어와 상황 정보를 분석하여 축약어에 대응되는 문장을 생성하는 장치 및 방법",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다",
+      "purpose": "사용자 입력에 기반한 문장을 제공하는 장치의 구조를 설명하기 위함",
+      "source_text": "도 1은 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다"
+    },
+    {
+      "fig_number": "도 10",
+      "diagram_type": "flowchart",
+      "title": "일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 방법을 나타내는 흐름도이다",
+      "purpose": "사용자 입력에 기반한 문장을 제공하는 방법의 흐름을 설명하기 위함",
+      "source_text": "도 10은 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 방법을 나타내는 흐름도이다"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "1000",
+      "name": "장치",
+      "component_type": "device",
+      "description": "사용자 입력에 기반한 문장을 제공하는 장치",
+      "source_text": "1000:\n 장치",
+      "relationships": [
+        {
+          "target": "1100",
+          "label": "저장",
+          "direction": "->",
+          "source_text": "메모리(1100)는 제어부(1200)의 처리 및 제어를 위한 프로그램을 저장할 수 있다."
+        },
+        {
+          "target": "1200",
+          "label": "제어",
+          "direction": "->",
+          "source_text": "제어부(1200)는 사용자 입력에 기반한 문장을 제공하는 장치(1000)의 전반적인 동작을 제어한다."
+        },
+        {
+          "target": "1300",
+          "label": "입출력",
+          "direction": "->",
+          "source_text": "입출력부(1300)는 사용자로부터 축약어를 입력받고, 축약어에 대응되는 문장을 사용자에게 제공할 수 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "1100",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "컴퓨터 실행가능 명령어를 저장하는 메모리",
+      "source_text": "1100: 메모리",
+      "relationships": []
+    },
+    {
+      "component_id": "1200",
+      "name": "제어부",
+      "component_type": "module",
+      "description": "장치의 전반적인 동작을 제어하는 제어부",
+      "source_text": "1200: 제어부",
+      "relationships": []
+    },
+    {
+      "component_id": "1300",
+      "name": "입출력부",
+      "component_type": "module",
+      "description": "사용자와 상호작용하는 입출력부",
+      "source_text": "1300: 입출력부",
+      "relationships": []
+    },
+    {
+      "component_id": "10",
+      "name": "2426435",
+      "component_type": "module",
+      "description": "2426435",
+      "source_text": "10-2426435",
+      "relationships": []
+    },
+    {
+      "component_id": "25",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "25 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "26",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "26 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "27",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "27 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "28",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "28 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "29",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "29 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "30",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "30 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "1210",
+      "name": "1)",
+      "component_type": "module",
+      "description": "1)",
+      "source_text": "1210-1)",
+      "relationships": []
+    },
+    {
+      "component_id": "11",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "11 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "12",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "12 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "1220",
+      "name": "1)",
+      "component_type": "module",
+      "description": "1)",
+      "source_text": "1220-1)",
+      "relationships": []
+    },
+    {
+      "component_id": "13",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "13 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "14",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "14 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "15",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "15 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "2210",
+      "name": "1)",
+      "component_type": "module",
+      "description": "1)",
+      "source_text": "2210-1)",
+      "relationships": []
+    },
+    {
+      "component_id": "1320",
+      "name": "4)",
+      "component_type": "module",
+      "description": "4)",
+      "source_text": "1320-4)는 서버(2000)에 의해 생",
+      "relationships": []
+    },
+    {
+      "component_id": "16",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "16 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "17",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "17 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "18",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "18 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "19",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "19 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "20 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "21",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "21 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "22",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "22 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "23",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "23 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "24",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "24 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "13102",
+      "name": "데이터 획득부",
+      "component_type": "module",
+      "description": "데이터 획득부",
+      "source_text": "데이터 획득부(13102)",
+      "relationships": []
+    },
+    {
+      "component_id": "2000",
+      "name": "및 서버",
+      "component_type": "module",
+      "description": "및 서버",
+      "source_text": "및 서버(2000)",
+      "relationships": []
+    },
+    {
+      "component_id": "1400",
+      "name": "센싱부",
+      "component_type": "module",
+      "description": "센싱부",
+      "source_text": "센싱부(1400)",
+      "relationships": []
+    },
+    {
+      "component_id": "1500",
+      "name": "통신부",
+      "component_type": "module",
+      "description": "통신부",
+      "source_text": "통신부(1500)",
+      "relationships": []
+    },
+    {
+      "component_id": "1600",
+      "name": "V 입력부",
+      "component_type": "module",
+      "description": "V 입력부",
+      "source_text": "V 입력부(1600)",
+      "relationships": []
+    },
+    {
+      "component_id": "1322",
+      "name": "알림 모듈",
+      "component_type": "module",
+      "description": "알림 모듈",
+      "source_text": "알림 모듈은 디스플레이부(1322)",
+      "relationships": []
+    },
+    {
+      "component_id": "1324",
+      "name": "음향 출력부",
+      "component_type": "module",
+      "description": "음향 출력부",
+      "source_text": "음향 출력부(1324)",
+      "relationships": []
+    },
+    {
+      "component_id": "1326",
+      "name": "진동 모터",
+      "component_type": "module",
+      "description": "진동 모터",
+      "source_text": "진동 모터(1326)",
+      "relationships": []
+    },
+    {
+      "component_id": "1310",
+      "name": "",
+      "component_type": "module",
+      "description": "",
+      "source_text": "는 사용자 입력부(1310)",
+      "relationships": []
+    },
+    {
+      "component_id": "1314",
+      "name": "터치 패널",
+      "component_type": "module",
+      "description": "터치 패널",
+      "source_text": "터치 패널(1314)",
+      "relationships": []
+    },
+    {
+      "component_id": "1316",
+      "name": "팬인식 패널",
+      "component_type": "module",
+      "description": "팬인식 패널",
+      "source_text": "팬인식 패널(1316)",
+      "relationships": []
+    },
+    {
+      "component_id": "1430",
+      "name": "서",
+      "component_type": "module",
+      "description": "서",
+      "source_text": "서(1430)",
+      "relationships": []
+    },
+    {
+      "component_id": "1440",
+      "name": "적외선 센서",
+      "component_type": "module",
+      "description": "적외선 센서",
+      "source_text": "적외선 센서(1440)",
+      "relationships": []
+    },
+    {
+      "component_id": "1450",
+      "name": "자이로스코프 센서",
+      "component_type": "module",
+      "description": "자이로스코프 센서",
+      "source_text": "자이로스코프 센서(1450)",
+      "relationships": []
+    },
+    {
+      "component_id": "1470",
+      "name": "기압 센서",
+      "component_type": "module",
+      "description": "기압 센서",
+      "source_text": "기압 센서(1470)",
+      "relationships": []
+    },
+    {
+      "component_id": "1480",
+      "name": "접 센서",
+      "component_type": "module",
+      "description": "접 센서",
+      "source_text": "접 센서(1480)",
+      "relationships": []
+    },
+    {
+      "component_id": "1510",
+      "name": "근거리 통신부",
+      "component_type": "module",
+      "description": "근거리 통신부",
+      "source_text": "근거리 통신부(1510)",
+      "relationships": []
+    },
+    {
+      "component_id": "1520",
+      "name": "이동 통신부",
+      "component_type": "module",
+      "description": "이동 통신부",
+      "source_text": "이동 통신부\n(1520)",
+      "relationships": []
+    },
+    {
+      "component_id": "1530",
+      "name": "방송 수신부",
+      "component_type": "module",
+      "description": "방송 수신부",
+      "source_text": "방송 수신부(1530)",
+      "relationships": []
+    },
+    {
+      "component_id": "1610",
+      "name": "이에",
+      "component_type": "module",
+      "description": "이에",
+      "source_text": "이에는 카메라(1610)",
+      "relationships": []
+    },
+    {
+      "component_id": "1620",
+      "name": "마이크로폰",
+      "component_type": "module",
+      "description": "마이크로폰",
+      "source_text": "마이크로폰(1620)",
+      "relationships": []
+    },
+    {
+      "component_id": "1101",
+      "name": "네트워크 시스템",
+      "component_type": "module",
+      "description": "네트워크 시스템",
+      "source_text": "네트워크 시스템은 제1 구성 요소(1101)",
+      "relationships": []
+    },
+    {
+      "component_id": "1102",
+      "name": "및 제2 구성 요소",
+      "component_type": "module",
+      "description": "및 제2 구성 요소",
+      "source_text": "및 제2 구성 요소(1102)",
+      "relationships": []
+    },
+    {
+      "component_id": "1201",
+      "name": "네트워크 시스템",
+      "component_type": "module",
+      "description": "네트워크 시스템",
+      "source_text": "네트워크 시스템은 제1 구성 요소(1201)",
+      "relationships": []
+    },
+    {
+      "component_id": "1202",
+      "name": "제2 구성 요소",
+      "component_type": "module",
+      "description": "제2 구성 요소",
+      "source_text": "제2 구성 요소(1202)",
+      "relationships": []
+    },
+    {
+      "component_id": "1203",
+      "name": "및 제3 구성 요소",
+      "component_type": "module",
+      "description": "및 제3 구성 요소",
+      "source_text": "및 제3 구성 요소(1203)",
+      "relationships": []
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "축약어 입력",
+      "description": "사용자로부터 축약어를 입력받는 단계",
+      "source_text": "사용자로부터 축약어를 입력받는 단계"
+    },
+    {
+      "step_id": "S200",
+      "name": "상황 정보 획득",
+      "description": "사용자의 상황 정보를 획득하는 단계",
+      "source_text": "상기 축약어 입력 이전에 채팅에 입력된 콘텐츠의 내용과 상기 사용자와의 상기 채팅에 참여한 상대방에 대한 정보를 포함하는 상황 정보를 획득하는 단계"
+    },
+    {
+      "step_id": "S300",
+      "name": "문장 제공",
+      "description": "축약어에 대응되는 문장을 사용자에게 제공하는 단계",
+      "source_text": "상기 축약어, 상기 축약어 입력 이전에 입력된 콘텐츠의 내용, 및 상기 사용자와 상기 상대방의 관계에 기초하여, 상기 축약어에 대응되는 문장을 상기 사용자에게 제공하는 단계"
+    },
+    {
+      "step_id": "S400",
+      "name": "문장 대체",
+      "description": "사용자의 선택에 따라 축약어를 문장으로 대체하여 표시하는 단계",
+      "source_text": "상기 사용자의 선택에 따라, 상기 축약어를 상기 축약어에 대응되는 문장으로 대체하여 표시하는 단계"
+    }
+  ],
+  "key_actors": [
+    "사용자",
+    "서버"
+  ]
+}

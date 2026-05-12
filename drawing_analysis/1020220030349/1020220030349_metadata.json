@@ -1,0 +1,206 @@
+{
+  "app_num": "1020220030349",
+  "invention_type": "method",
+  "main_concept": "SCM 코드를 이용한 리뷰 NFT와 밸류 체인 간의 경로 생성 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플랫폼 서버",
+      "component_type": "actor",
+      "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "소비자",
+      "component_type": "actor",
+      "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 경로를 요청하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "거래 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "판매자",
+      "component_type": "actor",
+      "description": "소비자와의 거래를 통해 제품을 제공하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "거래 정보 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "리뷰 NFT",
+      "component_type": "data",
+      "description": "소비자가 생성한 리뷰 정보를 담고 있는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "경로 생성에 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "블록체인 노드",
+      "component_type": "data",
+      "description": "리뷰 NFT의 거래를 검증하고 기록하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "거래 검증",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220030349",
+      "diagram_type": "flowchart",
+      "diagram_title": "경로 생성 서비스 제공 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플랫폼 서버\"]\n    200[\"소비자\"]\n    300[\"판매자\"]\n    400[\"리뷰 NFT\"]\n    500[\"블록체인 노드\"]\n    \n    200 -->| \"거래 요청\" | 100\n    300 <--| \"거래 정보 제공\" | 100\n    100 -->| \"SCM 코드 생성\" | 200\n    200 -->| \"리뷰 NFT 생성\" | 400\n    400 -->| \"경로 생성에 사용\" | 100\n    400 <--| \"거래 검증\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "소비자",
+          "component_type": "actor",
+          "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 경로를 요청하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매자",
+          "component_type": "actor",
+          "description": "소비자와의 거래를 통해 제품을 제공하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 리뷰 정보를 담고 있는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "블록체인 노드",
+          "component_type": "data",
+          "description": "리뷰 NFT의 거래를 검증하고 기록하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "거래 검증",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220030349/1020220030349_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220030349",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랫폼 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 플랫폼서버 {\n        +String 거래상황관리()\n        +String SCM코드생성()\n    }\n    class 소비자 {\n        +String 리뷰NFT생성()\n        +String 경로요청()\n    }\n    class 판매자 {\n        +String 제품제공()\n    }\n    class 리뷰NFT {\n        +String 리뷰정보\n    }\n    class 블록체인노드 {\n        +String 거래검증()\n    }\n    소비자 -->|거래 요청| 플랫폼서버 : \n    판매자 <--|거래 정보 제공| 플랫폼서버 : \n    리뷰NFT -->|경로 생성에 사용| 플랫폼서버 : \n    블록체인노드 <--|거래 검증| 리뷰NFT :",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "소비자",
+          "component_type": "actor",
+          "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 경로를 요청하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매자",
+          "component_type": "actor",
+          "description": "소비자와의 거래를 통해 제품을 제공하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 리뷰 정보를 담고 있는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "블록체인 노드",
+          "component_type": "data",
+          "description": "리뷰 NFT의 거래를 검증하고 기록하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "거래 검증",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220030349/1020220030349_fig_2.mmd"
+    }
+  ]
+}

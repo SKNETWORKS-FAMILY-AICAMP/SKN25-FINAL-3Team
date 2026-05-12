@@ -1,0 +1,254 @@
+{
+  "app_num": "1020150065878",
+  "invention_type": "method",
+  "main_concept": "온라인 커뮤니티를 통한 공동구매 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "회원 단말기",
+      "component_type": "device",
+      "description": "회원들이 공동구매를 요청하고 상품을 선택하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "회원가입 요청 및 상품 선택",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "온라인 커뮤니티 구매 서비스 제공 장치",
+      "component_type": "device",
+      "description": "회원가입 처리, 데이터 수집 및 분석, 상품 광고 및 공동구매 수행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "회원 단말기로부터 요청 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "데이터 서버와 통신",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "판매자 단말기로 상품 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "데이터 서버",
+      "component_type": "data",
+      "description": "회원 및 커뮤니티 구성원의 데이터를 수집하고 분석하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "판매자 단말기",
+      "component_type": "device",
+      "description": "상품 정보를 제공하고 배송 요청을 수신하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 정보 전송",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "금융기관 서버",
+      "component_type": "data",
+      "description": "회비 납부 및 대금 지급을 처리하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "대금 지급 요청",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020150065878",
+      "diagram_type": "flowchart",
+      "diagram_title": "온라인 커뮤니티 구매 서비스 제공 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"회원 단말기\"]\n    200[\"온라인 커뮤니티 구매 서비스 제공 장치\"]\n    300[\"데이터 서버\"]\n    400[\"판매자 단말기\"]\n    500[\"금융기관 서버\"]\n    \n    100 -->|\"회원가입 요청 및 상품 선택\"| 200\n    200 -->|\"데이터 제공\"| 300\n    200 -->|\"상품 정보 전송\"| 400\n    200 -->|\"대금 지급 요청\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "회원 단말기",
+          "component_type": "device",
+          "description": "회원들이 공동구매를 요청하고 상품을 선택하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "회원가입 요청 및 상품 선택",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "온라인 커뮤니티 구매 서비스 제공 장치",
+          "component_type": "device",
+          "description": "회원가입 처리, 데이터 수집 및 분석, 상품 광고 및 공동구매 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "회원 단말기로부터 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "데이터 서버와 통신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "판매자 단말기로 상품 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 서버",
+          "component_type": "data",
+          "description": "회원 및 커뮤니티 구성원의 데이터를 수집하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판매자 단말기",
+          "component_type": "device",
+          "description": "상품 정보를 제공하고 배송 요청을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "금융기관 서버",
+          "component_type": "data",
+          "description": "회비 납부 및 대금 지급을 처리하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "대금 지급 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020150065878/1020150065878_fig_1.mmd"
+    },
+    {
+      "app_num": "1020150065878",
+      "diagram_type": "classDiagram",
+      "diagram_title": "온라인 커뮤니티 구매 서비스 구성도",
+      "mermaid_code": "classDiagram\n    class 회원단말기 {\n        +회원가입 요청 및 상품 선택()\n    }\n    class 온라인커뮤니티구매서비스제공장치 {\n        +회원가입 처리()\n        +데이터 수집 및 분석()\n        +상품 광고 및 공동구매 수행()\n    }\n    class 데이터서버 {\n        +회원 및 커뮤니티 구성원 데이터 수집 및 분석()\n    }\n    class 판매자단말기 {\n        +상품 정보 제공()\n        +배송 요청 수신()\n    }\n    class 금융기관서버 {\n        +회비 납부 및 대금 지급 처리()\n    }\n    회원단말기 --> 온라인커뮤니티구매서비스제공장치 : \"회원가입 요청 및 상품 선택\"\n    온라인커뮤니티구매서비스제공장치 --> 데이터서버 : \"데이터 제공\"\n    온라인커뮤니티구매서비스제공장치 --> 판매자단말기 : \"상품 요청\"\n    온라인커뮤니티구매서비스제공장치 --> 금융기관서버 : \"대금 지급 요청\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "회원 단말기",
+          "component_type": "device",
+          "description": "회원들이 공동구매를 요청하고 상품을 선택하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "회원가입 요청 및 상품 선택",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "온라인 커뮤니티 구매 서비스 제공 장치",
+          "component_type": "device",
+          "description": "회원가입 처리, 데이터 수집 및 분석, 상품 광고 및 공동구매 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "회원 단말기로부터 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "데이터 서버와 통신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "판매자 단말기로 상품 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 서버",
+          "component_type": "data",
+          "description": "회원 및 커뮤니티 구성원의 데이터를 수집하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판매자 단말기",
+          "component_type": "device",
+          "description": "상품 정보를 제공하고 배송 요청을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "금융기관 서버",
+          "component_type": "data",
+          "description": "회비 납부 및 대금 지급을 처리하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "대금 지급 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020150065878/1020150065878_fig_2.mmd"
+    }
+  ]
+}

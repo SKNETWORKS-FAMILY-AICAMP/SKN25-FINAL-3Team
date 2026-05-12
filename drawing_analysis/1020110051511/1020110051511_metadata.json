@@ -1,0 +1,89 @@
+{
+  "app_num": "1020110051511",
+  "invention_type": "method",
+  "main_concept": "특허청구범위의 의미 및 범위를 해석하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "특허청구범위",
+      "component_type": "data",
+      "description": "특허의 범위와 의미를 정의하는 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "변경/변형 해석",
+      "component_type": "process",
+      "description": "특허청구범위에 따른 변경 또는 변형을 해석하는 과정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "해석 대상",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020110051511",
+      "diagram_type": "flowchart",
+      "diagram_title": "특허청구범위 해석 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"특허청구범위\"]\n    200[\"변경/변형 해석\"]\n    300[\"해석 결과 도출\"]\n    400[\"특허 심사관\"]\n    500[\"발명자\"]\n    \n    400 -->|\"특허청구범위 확인\"| 100\n    100 -->|\"해석 대상\"| 200\n    200 -->|\"결과 도출\"| 300\n    300 -->|\"결과 전달\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "특허청구범위",
+          "component_type": "data",
+          "description": "특허의 범위와 의미를 정의하는 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "변경/변형 해석",
+          "component_type": "process",
+          "description": "특허청구범위에 따른 변경 또는 변형을 해석하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "해석 대상",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020110051511/1020110051511_fig_1.mmd"
+    },
+    {
+      "app_num": "1020110051511",
+      "diagram_type": "flowchart",
+      "diagram_title": "변경 및 변형 해석 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"특허청구범위\"]\n    200[\"변경/변형 해석\"]\n    300[\"해석 결과 도출\"]\n    400[\"특허 심사관\"]\n    500[\"발명자\"]\n    \n    400 -->|\"청구범위 확인\"| 100\n    100 -->|\"해석 대상\"| 200\n    200 -->|\"결과 도출\"| 300\n    300 -->|\"결과 전달\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "특허청구범위",
+          "component_type": "data",
+          "description": "특허의 범위와 의미를 정의하는 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "변경/변형 해석",
+          "component_type": "process",
+          "description": "특허청구범위에 따른 변경 또는 변형을 해석하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "해석 대상",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020110051511/1020110051511_fig_2.mmd"
+    }
+  ]
+}

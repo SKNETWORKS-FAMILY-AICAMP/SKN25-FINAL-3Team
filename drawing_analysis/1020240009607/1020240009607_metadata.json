@@ -1,0 +1,182 @@
+{
+  "app_num": "1020240009607",
+  "invention_type": "method",
+  "main_concept": "대체 불가능 토큰(NFT)을 처리하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 장치",
+      "component_type": "device",
+      "description": "NFT를 처리하는 스마트 계약을 실행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "스마트 계약",
+      "component_type": "process",
+      "description": "NFT 발행 요청을 처리하는 계약",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "실행하는 장치",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "블록체인 네트워크",
+      "component_type": "data",
+      "description": "NFT와 영수증 정보를 기록하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결된 네트워크",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "정보 기록",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "영수증",
+      "component_type": "data",
+      "description": "NFT와 연관된 구매 정보를 포함하는 데이터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연관된 데이터",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240009607",
+      "diagram_type": "flowchart",
+      "diagram_title": "NFT 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전자 장치\"]\n    200[\"스마트 계약\"]\n    300[\"블록체인 네트워크\"]\n    400[\"영수증\"]\n    100 -->|\"실행하는 장치\"| 200\n    200 -->|\"연관된 데이터\"| 400\n    200 -->|\"정보 기록\"| 300\n    100 -->|\"연결된 네트워크\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "NFT를 처리하는 스마트 계약을 실행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "스마트 계약",
+          "component_type": "process",
+          "description": "NFT 발행 요청을 처리하는 계약",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행하는 장치",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "블록체인 네트워크",
+          "component_type": "data",
+          "description": "NFT와 영수증 정보를 기록하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결된 네트워크",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "정보 기록",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "영수증",
+          "component_type": "data",
+          "description": "NFT와 연관된 구매 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연관된 데이터",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240009607/1020240009607_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240009607",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 전자장치 {\n        +String NFT처리\n    }\n    class 스마트계약 {\n        +String 발행요청처리\n    }\n    class 블록체인네트워크 {\n        +String NFT기록\n    }\n    class 영수증 {\n        +String 구매정보\n    }\n    전자장치 --> 스마트계약 : \"실행하는 장치\"\n    전자장치 --> 블록체인네트워크 : \"연결된 네트워크\"\n    스마트계약 --> 블록체인네트워크 : \"정보 기록\"\n    영수증 --> 스마트계약 : \"연관된 데이터\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "NFT를 처리하는 스마트 계약을 실행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "스마트 계약",
+          "component_type": "process",
+          "description": "NFT 발행 요청을 처리하는 계약",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행하는 장치",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "블록체인 네트워크",
+          "component_type": "data",
+          "description": "NFT와 영수증 정보를 기록하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결된 네트워크",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "정보 기록",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "영수증",
+          "component_type": "data",
+          "description": "NFT와 연관된 구매 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연관된 데이터",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240009607/1020240009607_fig_2.mmd"
+    }
+  ]
+}

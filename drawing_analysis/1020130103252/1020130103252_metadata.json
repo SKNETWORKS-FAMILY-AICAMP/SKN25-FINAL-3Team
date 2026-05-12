@@ -1,0 +1,143 @@
+{
+  "app_num": "1020130103252",
+  "invention_type": "hardware",
+  "main_concept": "복수의 컨텐츠를 효율적으로 표시하는 터치스크린 기반의 컨텐츠 재생 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "터치스크린",
+      "component_type": "device",
+      "description": "사용자의 터치 입력을 감지하고 컨텐츠를 표시하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "컨텐츠 재생 명령어를 저장하는 메모리",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "저장된 명령어 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "터치스크린을 제어하고 명령어에 따라 컨텐츠를 표시하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어 신호 전송",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "명령어 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020130103252",
+      "diagram_type": "flowchart",
+      "diagram_title": "컨텐츠 재생 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"터치스크린\"]\n    200[\"메모리\"]\n    300[\"프로세서\"]\n    400[\"사용자\"]\n    400 -->|\"터치 입력\"| 100\n    100 -->|\"하나 이상의 컨텐츠를 미리 지정된 크기로 표시\"| 300\n    200 -->|\"저장된 명령어 제공\"| 300\n    300 -->|\"제어 신호 전송\"| 100\n    100 -->|\"터치 입력에 따라 컨텐츠 이동 및 크기 확대\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "터치스크린",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하고 컨텐츠를 표시하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "컨텐츠 재생 명령어를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "저장된 명령어 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "터치스크린을 제어하고 명령어에 따라 컨텐츠를 표시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "명령어 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020130103252/1020130103252_fig_1.mmd"
+    },
+    {
+      "app_num": "1020130103252",
+      "diagram_type": "classDiagram",
+      "diagram_title": "컨텐츠 재생 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 터치스크린 {\n        +String 터치입력\n        +displayContent()\n    }\n    class 메모리 {\n        +String 명령어\n        +storeCommand()\n    }\n    class 프로세서 {\n        +String 제어신호\n        +processInput()\n    }\n    터치스크린 --> 프로세서 : \"제어 신호 전송\"\n    프로세서 <-- 메모리 : \"저장된 명령어 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "터치스크린",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하고 컨텐츠를 표시하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "컨텐츠 재생 명령어를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "저장된 명령어 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "터치스크린을 제어하고 명령어에 따라 컨텐츠를 표시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "명령어 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020130103252/1020130103252_fig_2.mmd"
+    }
+  ]
+}

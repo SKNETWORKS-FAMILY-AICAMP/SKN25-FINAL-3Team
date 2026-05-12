@@ -1,0 +1,304 @@
+{
+  "app_num": "1020220140197",
+  "invention_type": "method",
+  "main_concept": "적대적 생성 모델을 활용한 태스크 점진 학습 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "샘플링부",
+      "component_type": "process",
+      "description": "사전 학습된 모델로부터 샘플링된 데이터를 획득하는 단계",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "재생성부",
+      "component_type": "process",
+      "description": "샘플링된 파라미터를 이용하여 새로운 신경망을 재생성하는 단계",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "샘플링부에서 데이터를 획득하여",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "적대적 생성 모델",
+      "component_type": "actor",
+      "description": "생성 신경망과 판별 신경망으로 구성된 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "재생성부에서 사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "베이지안 신경망",
+      "component_type": "data",
+      "description": "사전 학습된 모델로서 샘플링에 사용됨",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "샘플링부에서 사용됨",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "재생성부에서 사용됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220140197",
+      "diagram_type": "flowchart",
+      "diagram_title": "태스크 점진 학습 개괄",
+      "mermaid_code": "flowchart TD\n    100[\"샘플링부\"]\n    200[\"재생성부\"]\n    300[\"적대적 생성 모델\"]\n    400[\"베이지안 신경망\"]\n    400 -->|\"샘플링부에서 사용됨\"| 100\n    100 -->|\"샘플링부에서 데이터를 획득하여\"| 200\n    300 -->|\"재생성부에서 사용됨\"| 200\n    400 -->|\"재생성부에서 사용됨\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플링부",
+          "component_type": "process",
+          "description": "사전 학습된 모델로부터 샘플링된 데이터를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "재생성부",
+          "component_type": "process",
+          "description": "샘플링된 파라미터를 이용하여 새로운 신경망을 재생성하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 데이터를 획득하여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "적대적 생성 모델",
+          "component_type": "actor",
+          "description": "생성 신경망과 판별 신경망으로 구성된 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "베이지안 신경망",
+          "component_type": "data",
+          "description": "사전 학습된 모델로서 샘플링에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 사용됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220140197/1020220140197_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220140197",
+      "diagram_type": "flowchart",
+      "diagram_title": "태스크 점진 학습 상세 동작",
+      "mermaid_code": "flowchart TD\n    100[\"샘플링부\"]\n    200[\"재생성부\"]\n    300[\"적대적 생성 모델\"]\n    400[\"베이지안 신경망\"]\n    400 -->|\"샘플링부에서 사용됨\"| 100\n    100 -->|\"샘플링부에서 데이터를 획득하여\"| 200\n    300 -->|\"재생성부에서 사용됨\"| 200\n    400 -->|\"재생성부에서 사용됨\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플링부",
+          "component_type": "process",
+          "description": "사전 학습된 모델로부터 샘플링된 데이터를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "재생성부",
+          "component_type": "process",
+          "description": "샘플링된 파라미터를 이용하여 새로운 신경망을 재생성하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 데이터를 획득하여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "적대적 생성 모델",
+          "component_type": "actor",
+          "description": "생성 신경망과 판별 신경망으로 구성된 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "베이지안 신경망",
+          "component_type": "data",
+          "description": "사전 학습된 모델로서 샘플링에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 사용됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220140197/1020220140197_fig_2.mmd"
+    },
+    {
+      "app_num": "1020220140197",
+      "diagram_type": "classDiagram",
+      "diagram_title": "학습 시스템 구성",
+      "mermaid_code": "classDiagram\n    class 샘플링부 {\n        +데이터 획득()\n    }\n    class 재생성부 {\n        +신경망 재생성()\n    }\n    class 적대적 생성 모델 {\n        +생성()\n        +판별()\n    }\n    class 베이지안 신경망 {\n        +샘플링()\n    }\n    샘플링부 --> 베이지안 신경망 : \"샘플링부에서 사용됨\"\n    재생성부 --> 샘플링부 : \"샘플링부에서 데이터를 획득하여\"\n    재생성부 --> 적대적 생성 모델 : \"재생성부에서 사용됨\"\n    베이지안 신경망 --> 재생성부 : \"재생성부에서 사용됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플링부",
+          "component_type": "process",
+          "description": "사전 학습된 모델로부터 샘플링된 데이터를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "재생성부",
+          "component_type": "process",
+          "description": "샘플링된 파라미터를 이용하여 새로운 신경망을 재생성하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 데이터를 획득하여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "적대적 생성 모델",
+          "component_type": "actor",
+          "description": "생성 신경망과 판별 신경망으로 구성된 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "베이지안 신경망",
+          "component_type": "data",
+          "description": "사전 학습된 모델로서 샘플링에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 사용됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020220140197/1020220140197_fig_3.mmd"
+    },
+    {
+      "app_num": "1020220140197",
+      "diagram_type": "flowchart",
+      "diagram_title": "태스크 점진 학습 방법",
+      "mermaid_code": "flowchart TD\n    100[\"샘플링부\"]\n    200[\"재생성부\"]\n    300[\"적대적 생성 모델\"]\n    400[\"베이지안 신경망\"]\n    400 -->|\"샘플링부에서 사용됨\"| 100\n    100 -->|\"샘플링부에서 데이터를 획득하여\"| 200\n    300 -->|\"재생성부에서 사용됨\"| 200\n    400 -->|\"재생성부에서 사용됨\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플링부",
+          "component_type": "process",
+          "description": "사전 학습된 모델로부터 샘플링된 데이터를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "재생성부",
+          "component_type": "process",
+          "description": "샘플링된 파라미터를 이용하여 새로운 신경망을 재생성하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 데이터를 획득하여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "적대적 생성 모델",
+          "component_type": "actor",
+          "description": "생성 신경망과 판별 신경망으로 구성된 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "베이지안 신경망",
+          "component_type": "data",
+          "description": "사전 학습된 모델로서 샘플링에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "샘플링부에서 사용됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "재생성부에서 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 4",
+      "output_path": "drawing_analysis/1020220140197/1020220140197_fig_4.mmd"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "app_num": "1020210101757",
+  "invention_type": "system",
+  "main_concept": "실시간 결제 시스템을 통한 라이브 콘텐츠 기반의 구매 지원",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "device",
+      "description": "라이브 콘텐츠를 관리하고 구매자와 판매자 간의 결제를 지원하는 중앙 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어 및 데이터 제공",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "정보 수신 및 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "구매자 기기",
+      "component_type": "device",
+      "description": "사용자가 라이브 콘텐츠를 시청하고 결제를 진행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 요청 및 결제 진행",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "결제 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "호스트 기기",
+      "component_type": "device",
+      "description": "라이브 콘텐츠를 생성하고 판매 물품을 소개하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "콘텐츠 제공",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "판매 물품 정보 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210101757",
+      "diagram_type": "flowchart",
+      "diagram_title": "실시간 결제 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"구매자 기기\"]\n    300[\"호스트 기기\"]\n    100 -->|\"제어 및 데이터 제공\"| 200\n    100 -->|\"콘텐츠 제공\"| 300\n    200 <--|\"데이터 요청 및 결제 진행\"| 100\n    200 <--|\"결제 정보 수신\"| 300\n    300 -->|\"판매 물품 정보 제공\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "라이브 콘텐츠를 관리하고 구매자와 판매자 간의 결제를 지원하는 중앙 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어 및 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "정보 수신 및 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 기기",
+          "component_type": "device",
+          "description": "사용자가 라이브 콘텐츠를 시청하고 결제를 진행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 요청 및 결제 진행",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "호스트 기기",
+          "component_type": "device",
+          "description": "라이브 콘텐츠를 생성하고 판매 물품을 소개하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "콘텐츠 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "판매 물품 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210101757/1020210101757_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210101757",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 서버 {\n        +String 콘텐츠관리\n        +결제지원()\n    }\n    class 구매자기기 {\n        +String 사용자인터페이스\n        +결제진행()\n    }\n    class 호스트기기 {\n        +String 콘텐츠생성\n        +판매물품소개()\n    }\n    서버 --> 구매자기기 : \"제어 및 데이터 제공\"\n    서버 --> 호스트기기 : \"정보 수신 및 처리\"\n    호스트기기 --> 서버 : \"콘텐츠 제공\"\n    호스트기기 --> 구매자기기 : \"판매 물품 정보 제공\"\n    구매자기기 --> 서버 : \"데이터 요청 및 결제 진행\"\n    구매자기기 --> 호스트기기 : \"결제 정보 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "라이브 콘텐츠를 관리하고 구매자와 판매자 간의 결제를 지원하는 중앙 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어 및 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "정보 수신 및 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 기기",
+          "component_type": "device",
+          "description": "사용자가 라이브 콘텐츠를 시청하고 결제를 진행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 요청 및 결제 진행",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "호스트 기기",
+          "component_type": "device",
+          "description": "라이브 콘텐츠를 생성하고 판매 물품을 소개하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "콘텐츠 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "판매 물품 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210101757/1020210101757_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "app_num": "1020240155799",
+  "invention_type": "method",
+  "main_concept": "검색 질의를 기반으로 검색 의도를 결정하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "검색 질의",
+      "component_type": "data",
+      "description": "사용자가 입력한 검색어 또는 문장",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "검색 결과 정보",
+      "component_type": "data",
+      "description": "검색 질의에 기반하여 획득한 관련 컨텐츠 정보",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "기초하여 결정됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프롬프트",
+      "component_type": "data",
+      "description": "검색 의도를 결정하기 위해 생성된 질의",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기초하여 생성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "언어 모델",
+      "component_type": "actor",
+      "description": "프롬프트를 입력받아 검색 의도를 결정하는 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력받음",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240155799",
+      "diagram_type": "flowchart",
+      "diagram_title": "검색 의도 결정 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"검색 질의\"]\n    200[\"검색 결과 정보\"]\n    300[\"프롬프트\"]\n    400[\"언어 모델\"]\n    100 -->|\"기초하여 결정됨\"| 200\n    200 -->|\"기초하여 생성됨\"| 300\n    300 -->|\"입력받음\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검색 질의",
+          "component_type": "data",
+          "description": "사용자가 입력한 검색어 또는 문장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색 결과 정보",
+          "component_type": "data",
+          "description": "검색 질의에 기반하여 획득한 관련 컨텐츠 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기초하여 결정됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프롬프트",
+          "component_type": "data",
+          "description": "검색 의도를 결정하기 위해 생성된 질의",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기초하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "언어 모델",
+          "component_type": "actor",
+          "description": "프롬프트를 입력받아 검색 의도를 결정하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력받음",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240155799/1020240155799_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240155799",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 검색질의 {\n        +String 검색어\n    }\n    class 검색결과정보 {\n        +String 관련컨텐츠정보\n    }\n    class 프롬프트 {\n        +String 질의\n    }\n    class 언어모델 {\n        +결정검색의도()\n    }\n    검색질의 --> 검색결과정보 : \"기초하여 결정됨\"\n    검색결과정보 --> 프롬프트 : \"기초하여 생성됨\"\n    프롬프트 --> 언어모델 : \"입력받음\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검색 질의",
+          "component_type": "data",
+          "description": "사용자가 입력한 검색어 또는 문장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색 결과 정보",
+          "component_type": "data",
+          "description": "검색 질의에 기반하여 획득한 관련 컨텐츠 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기초하여 결정됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프롬프트",
+          "component_type": "data",
+          "description": "검색 의도를 결정하기 위해 생성된 질의",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기초하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "언어 모델",
+          "component_type": "actor",
+          "description": "프롬프트를 입력받아 검색 의도를 결정하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력받음",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240155799/1020240155799_fig_2.mmd"
+    }
+  ]
+}

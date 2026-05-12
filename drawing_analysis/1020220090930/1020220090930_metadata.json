@@ -1,0 +1,398 @@
+{
+  "app_num": "1020220090930",
+  "invention_type": "system",
+  "main_concept": "메타버스 공간에서 가상 전자명함을 판매하고 공유하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "언리얼 엔진형 메타버스 플랫폼모듈",
+      "component_type": "device",
+      "description": "메타버스 공간을 형성하고 객체 및 아바타를 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "가상 전자명함 판매 중개 모듈",
+      "component_type": "device",
+      "description": "가상 전자명함을 공유하고 판매 분위기를 형성",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "형성된 메타버스 공간에 위치",
+          "direction": "->"
+        },
+        {
+          "target": "210",
+          "label": "판매존망 형성",
+          "direction": "->"
+        },
+        {
+          "target": "220",
+          "label": "비즈니스 플랫폼 관리",
+          "direction": "->"
+        },
+        {
+          "target": "230",
+          "label": "결제 수행",
+          "direction": "->"
+        },
+        {
+          "target": "240",
+          "label": "NFT 거래 제어",
+          "direction": "->"
+        },
+        {
+          "target": "250",
+          "label": "포인트 형성 제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "가상 전자명함 툴엔진모듈",
+      "component_type": "device",
+      "description": "가상 전자명함을 제작하고 메타데이터로 변환",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "메타버스 플랫폼과 연계",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "210",
+      "name": "가상 전자명함 판매존망 형성부",
+      "component_type": "process",
+      "description": "가상 전자명함 판매존망을 형성",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "판매 중개 모듈의 일부",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "220",
+      "name": "비즈니스 플랫폼형성부",
+      "component_type": "process",
+      "description": "중개수수료 및 광고료 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "판매 중개 모듈의 일부",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "230",
+      "name": "스마트 결제제어부",
+      "component_type": "process",
+      "description": "결제 창을 활성화하여 구매 및 결제 수행",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "판매 중개 모듈의 일부",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "240",
+      "name": "NFT 거래 제어부",
+      "component_type": "process",
+      "description": "NFT 거래 내역을 블록체인 방식으로 제어",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "판매 중개 모듈의 일부",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "250",
+      "name": "포인트형성제어부",
+      "component_type": "process",
+      "description": "아바타에 포인트를 형성하도록 제어",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "판매 중개 모듈의 일부",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220090930",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상 전자명함 판매 활성화 과정",
+      "mermaid_code": "flowchart TD\n    100[\"언리얼 엔진형 메타버스 플랫폼모듈\"]\n    200[\"가상 전자명함 판매 중개 모듈\"]\n    300[\"가상 전자명함 툴엔진모듈\"]\n    210[\"가상 전자명함 판매존망 형성부\"]\n    220[\"비즈니스 플랫폼형성부\"]\n    230[\"스마트 결제제어부\"]\n    240[\"NFT 거래 제어부\"]\n    250[\"포인트형성제어부\"]\n\n    100 -->|\"메타버스 공간 형성\"| 200\n    200 -->|\"가상 전자명함 제작\"| 300\n    300 -->|\"메타데이터 변환\"| 200\n    200 -->|\"판매존망 형성\"| 210\n    200 -->|\"비즈니스 플랫폼 관리\"| 220\n    200 -->|\"결제 수행\"| 230\n    200 -->|\"NFT 거래 제어\"| 240\n    200 -->|\"포인트 형성 제어\"| 250",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "언리얼 엔진형 메타버스 플랫폼모듈",
+          "component_type": "device",
+          "description": "메타버스 공간을 형성하고 객체 및 아바타를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상 전자명함 판매 중개 모듈",
+          "component_type": "device",
+          "description": "가상 전자명함을 공유하고 판매 분위기를 형성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "형성된 메타버스 공간에 위치",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "판매존망 형성",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "비즈니스 플랫폼 관리",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "결제 수행",
+              "direction": "->"
+            },
+            {
+              "target": "240",
+              "label": "NFT 거래 제어",
+              "direction": "->"
+            },
+            {
+              "target": "250",
+              "label": "포인트 형성 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상 전자명함 툴엔진모듈",
+          "component_type": "device",
+          "description": "가상 전자명함을 제작하고 메타데이터로 변환",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "메타버스 플랫폼과 연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "가상 전자명함 판매존망 형성부",
+          "component_type": "process",
+          "description": "가상 전자명함 판매존망을 형성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "비즈니스 플랫폼형성부",
+          "component_type": "process",
+          "description": "중개수수료 및 광고료 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "스마트 결제제어부",
+          "component_type": "process",
+          "description": "결제 창을 활성화하여 구매 및 결제 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "240",
+          "name": "NFT 거래 제어부",
+          "component_type": "process",
+          "description": "NFT 거래 내역을 블록체인 방식으로 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "250",
+          "name": "포인트형성제어부",
+          "component_type": "process",
+          "description": "아바타에 포인트를 형성하도록 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220090930/1020220090930_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220090930",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가상 전자명함 판매 활성화 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 언리얼엔진형메타버스플랫폼모듈 {\n        +형성()\n        +객체생성()\n    }\n    class 가상전자명함판매중개모듈 {\n        +가상전자명함공유()\n        +판매분위기형성()\n    }\n    class 가상전자명함툴엔진모듈 {\n        +제작()\n        +메타데이터변환()\n    }\n    class 가상전자명함판매존망형성부 {\n        +판매존망형성()\n    }\n    class 비즈니스플랫폼형성부 {\n        +중개수수료관리()\n        +광고료관리()\n    }\n    class 스마트결제제어부 {\n        +결제수행()\n    }\n    class NFT거래제어부 {\n        +거래제어()\n    }\n    class 포인트형성제어부 {\n        +포인트형성()\n    }\n\n    언리얼엔진형메타버스플랫폼모듈 --> 가상전자명함판매중개모듈 : \"형성된 메타버스 공간에 위치\"\n    가상전자명함판매중개모듈 --> 가상전자명함판매존망형성부 : \"판매존망 형성\"\n    가상전자명함판매중개모듈 --> 비즈니스플랫폼형성부 : \"비즈니스 플랫폼 관리\"\n    가상전자명함판매중개모듈 --> 스마트결제제어부 : \"결제 수행\"\n    가상전자명함판매중개모듈 --> NFT거래제어부 : \"NFT 거래 제어\"\n    가상전자명함판매중개모듈 --> 포인트형성제어부 : \"포인트 형성 제어\"\n    가상전자명함툴엔진모듈 --> 언리얼엔진형메타버스플랫폼모듈 : \"메타버스 플랫폼과 연계\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "언리얼 엔진형 메타버스 플랫폼모듈",
+          "component_type": "device",
+          "description": "메타버스 공간을 형성하고 객체 및 아바타를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상 전자명함 판매 중개 모듈",
+          "component_type": "device",
+          "description": "가상 전자명함을 공유하고 판매 분위기를 형성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "형성된 메타버스 공간에 위치",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "판매존망 형성",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "비즈니스 플랫폼 관리",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "결제 수행",
+              "direction": "->"
+            },
+            {
+              "target": "240",
+              "label": "NFT 거래 제어",
+              "direction": "->"
+            },
+            {
+              "target": "250",
+              "label": "포인트 형성 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상 전자명함 툴엔진모듈",
+          "component_type": "device",
+          "description": "가상 전자명함을 제작하고 메타데이터로 변환",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "메타버스 플랫폼과 연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "가상 전자명함 판매존망 형성부",
+          "component_type": "process",
+          "description": "가상 전자명함 판매존망을 형성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "비즈니스 플랫폼형성부",
+          "component_type": "process",
+          "description": "중개수수료 및 광고료 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "스마트 결제제어부",
+          "component_type": "process",
+          "description": "결제 창을 활성화하여 구매 및 결제 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "240",
+          "name": "NFT 거래 제어부",
+          "component_type": "process",
+          "description": "NFT 거래 내역을 블록체인 방식으로 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "250",
+          "name": "포인트형성제어부",
+          "component_type": "process",
+          "description": "아바타에 포인트를 형성하도록 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "판매 중개 모듈의 일부",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220090930/1020220090930_fig_2.mmd"
+    }
+  ]
+}

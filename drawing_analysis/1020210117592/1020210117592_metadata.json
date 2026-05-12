@@ -1,0 +1,197 @@
+{
+  "app_num": "1020210117592",
+  "invention_type": "method",
+  "main_concept": "사용자 입력에 따라 페이지의 특정 영역 크기를 변경하는 정보 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 장치",
+      "component_type": "device",
+      "description": "사용자 입력을 수신하고 애니메이션을 제공하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "통신 모듈",
+      "component_type": "device",
+      "description": "사용자 입력을 수신하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "데이터베이스",
+      "component_type": "data",
+      "description": "콘텐츠 정보를 저장하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "process",
+      "description": "사용자 입력에 따라 애니메이션을 처리하는 프로세서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "사용자 입력 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "데이터 처리",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210117592",
+      "diagram_type": "flowchart",
+      "diagram_title": "정보 제공 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전자 장치\"]\n    200[\"통신 모듈\"]\n    300[\"데이터베이스\"]\n    400[\"프로세서\"]\n    100 -->|\"연결\"| 200\n    100 -->|\"연결\"| 300\n    200 -->|\"사용자 입력 수신\"| 400\n    300 -->|\"데이터 처리\"| 400\n    400 -->|\"애니메이션 제공\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "사용자 입력을 수신하고 애니메이션을 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "통신 모듈",
+          "component_type": "device",
+          "description": "사용자 입력을 수신하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "콘텐츠 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "process",
+          "description": "사용자 입력에 따라 애니메이션을 처리하는 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자 입력 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210117592/1020210117592_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210117592",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 전자장치 {\n        +String 사용자입력\n        +애니메이션제공()\n    }\n    class 통신모듈 {\n        +String 입력데이터\n        +입력수신()\n    }\n    class 데이터베이스 {\n        +String 콘텐츠정보\n        +정보저장()\n    }\n    class 프로세서 {\n        +String 애니메이션상태\n        +입력처리()\n    }\n    전자장치 --> 통신모듈 : \"연결\"\n    전자장치 --> 데이터베이스 : \"연결\"\n    전자장치 --> 프로세서 : \"구성 요소\"\n    통신모듈 --> 프로세서 : \"사용자 입력 수신\"\n    데이터베이스 --> 프로세서 : \"데이터 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "사용자 입력을 수신하고 애니메이션을 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "통신 모듈",
+          "component_type": "device",
+          "description": "사용자 입력을 수신하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "콘텐츠 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "process",
+          "description": "사용자 입력에 따라 애니메이션을 처리하는 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자 입력 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210117592/1020210117592_fig_2.mmd"
+    }
+  ]
+}

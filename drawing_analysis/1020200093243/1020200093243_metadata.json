@@ -1,0 +1,143 @@
+{
+  "app_num": "1020200093243",
+  "invention_type": "method",
+  "main_concept": "이상상황 탐지를 위한 순환신경망 기반 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력부",
+      "component_type": "actor",
+      "description": "실시간으로 발생하는 제1 시계열 데이터를 입력하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "순환신경망",
+      "component_type": "device",
+      "description": "제1 시계열 데이터를 처리하여 이상상황 발생 여부를 판단하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "판단부",
+      "component_type": "actor",
+      "description": "순환신경망의 결과를 바탕으로 이상상황을 판단하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결과 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200093243",
+      "diagram_type": "flowchart",
+      "diagram_title": "이상상황 탐지 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력부\"]\n    200[\"순환신경망\"]\n    300[\"판단부\"]\n    100 -->|\"제1 시계열 데이터 입력\"| 200\n    200 -->|\"이상상황 판단 결과\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력부",
+          "component_type": "actor",
+          "description": "실시간으로 발생하는 제1 시계열 데이터를 입력하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "순환신경망",
+          "component_type": "device",
+          "description": "제1 시계열 데이터를 처리하여 이상상황 발생 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판단부",
+          "component_type": "actor",
+          "description": "순환신경망의 결과를 바탕으로 이상상황을 판단하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200093243/1020200093243_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200093243",
+      "diagram_type": "classDiagram",
+      "diagram_title": "순환신경망 구성도",
+      "mermaid_code": "classDiagram\n    class 입력부 {\n        +String 시계열데이터\n        +입력()\n    }\n    class 순환신경망 {\n        +String 처리결과\n        +처리()\n    }\n    class 판단부 {\n        +String 판단결과\n        +판단()\n    }\n    입력부 --> 순환신경망 : \"입력\"\n    순환신경망 --> 판단부 : \"결과 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력부",
+          "component_type": "actor",
+          "description": "실시간으로 발생하는 제1 시계열 데이터를 입력하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "순환신경망",
+          "component_type": "device",
+          "description": "제1 시계열 데이터를 처리하여 이상상황 발생 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판단부",
+          "component_type": "actor",
+          "description": "순환신경망의 결과를 바탕으로 이상상황을 판단하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200093243/1020200093243_fig_2.mmd"
+    }
+  ]
+}

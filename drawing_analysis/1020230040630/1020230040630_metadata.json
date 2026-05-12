@@ -1,0 +1,167 @@
+{
+  "app_num": "1020230040630",
+  "invention_type": "method",
+  "main_concept": "이미지 변환을 위한 개선된 적대적 어텐션 네트워크 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "인코더",
+      "component_type": "process",
+      "description": "입력 이미지로부터 유의미한 피쳐를 추출하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "피쳐를 번역기로 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "번역기",
+      "component_type": "process",
+      "description": "추출된 피쳐를 소스 도메인에서 타겟 도메인으로 변경하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "변환된 피쳐를 디코더로 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "디코더",
+      "component_type": "process",
+      "description": "변환된 피쳐를 기반으로 최종 이미지를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "생성된 이미지를 판별기로 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "판별기",
+      "component_type": "process",
+      "description": "생성된 이미지의 진위 여부를 판별하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230040630",
+      "diagram_type": "flowchart",
+      "diagram_title": "이미지 생성 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"인코더\"]\n    200[\"번역기\"]\n    300[\"디코더\"]\n    400[\"판별기\"]\n    100 -->|\"피쳐를 번역기로 전달\"| 200\n    200 -->|\"변환된 피쳐를 디코더로 전달\"| 300\n    300 -->|\"생성된 이미지를 판별기로 전달\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인코더",
+          "component_type": "process",
+          "description": "입력 이미지로부터 유의미한 피쳐를 추출하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "피쳐를 번역기로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "번역기",
+          "component_type": "process",
+          "description": "추출된 피쳐를 소스 도메인에서 타겟 도메인으로 변경하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "변환된 피쳐를 디코더로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "변환된 피쳐를 기반으로 최종 이미지를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "생성된 이미지를 판별기로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판별기",
+          "component_type": "process",
+          "description": "생성된 이미지의 진위 여부를 판별하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230040630/1020230040630_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230040630",
+      "diagram_type": "classDiagram",
+      "diagram_title": "적대적 어텐션 네트워크 구성도",
+      "mermaid_code": "classDiagram\n    class 인코더 {\n        +피쳐 추출()\n    }\n    class 번역기 {\n        +피쳐 변환()\n    }\n    class 디코더 {\n        +이미지 생성()\n    }\n    class 판별기 {\n        +이미지 판별()\n    }\n    인코더 --> 번역기 : \"피쳐를 번역기로 전달\"\n    번역기 --> 디코더 : \"변환된 피쳐를 디코더로 전달\"\n    디코더 --> 판별기 : \"생성된 이미지를 판별기로 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인코더",
+          "component_type": "process",
+          "description": "입력 이미지로부터 유의미한 피쳐를 추출하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "피쳐를 번역기로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "번역기",
+          "component_type": "process",
+          "description": "추출된 피쳐를 소스 도메인에서 타겟 도메인으로 변경하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "변환된 피쳐를 디코더로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "변환된 피쳐를 기반으로 최종 이미지를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "생성된 이미지를 판별기로 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판별기",
+          "component_type": "process",
+          "description": "생성된 이미지의 진위 여부를 판별하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230040630/1020230040630_fig_2.mmd"
+    }
+  ]
+}

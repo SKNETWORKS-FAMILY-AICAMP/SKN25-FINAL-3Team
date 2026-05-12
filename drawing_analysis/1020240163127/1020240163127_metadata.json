@@ -1,0 +1,221 @@
+{
+  "app_num": "1020240163127",
+  "invention_type": "system",
+  "main_concept": "지식재산 디지털 정보 기반 국내브랜드사와 해외 정품셀러 간의 매치 메이킹 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "상품 공급자 단말",
+      "component_type": "device",
+      "description": "정품 정보를 제공하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "해외 셀러 단말",
+      "component_type": "device",
+      "description": "상품을 온라인으로 판매하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상품 공급자 단말과 연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "서버",
+      "component_type": "device",
+      "description": "가품 탐지 모델을 구현하고 매칭 점수를 산출하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상품 공급자 단말로부터 정보 수집",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "해외 셀러 단말에 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "process",
+      "description": "명령어에 따라 동작을 수행하는 처리 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "서버의 주요 동작 수행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "명령어를 저장하는 저장 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "서버의 명령어 저장",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240163127",
+      "diagram_type": "flowchart",
+      "diagram_title": "매치 메이킹 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"상품 공급자 단말\"]\n    200[\"해외 셀러 단말\"]\n    300[\"서버\"]\n    400[\"프로세서\"]\n    500[\"메모리\"]\n    \n    100 -->|\"상품 공급자 단말로부터 정보 수집\"| 300\n    200 -->|\"상품 공급자 단말과 연결\"| 300\n    300 -->|\"서버의 주요 동작 수행\"| 400\n    300 -->|\"서버의 명령어 저장\"| 500\n    300 -->|\"해외 셀러 단말에 정보 제공\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "상품 공급자 단말",
+          "component_type": "device",
+          "description": "정품 정보를 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "해외 셀러 단말",
+          "component_type": "device",
+          "description": "상품을 온라인으로 판매하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상품 공급자 단말과 연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "가품 탐지 모델을 구현하고 매칭 점수를 산출하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상품 공급자 단말로부터 정보 수집",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "해외 셀러 단말에 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "process",
+          "description": "명령어에 따라 동작을 수행하는 처리 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "서버의 주요 동작 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "명령어를 저장하는 저장 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "서버의 명령어 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240163127/1020240163127_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240163127",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 상품공급자단말 {\n        +String 정품정보\n    }\n    class 해외셀러단말 {\n        +String 상품정보\n    }\n    class 서버 {\n        +String 가품탐지모델\n        +산출매칭점수()\n    }\n    class 프로세서 {\n        +String 명령어\n        +동작수행()\n    }\n    class 메모리 {\n        +String 저장명령어\n    }\n    상품공급자단말 --> 해외셀러단말 : \"상품 공급자 단말과 연결\"\n    서버 --> 상품공급자단말 : \"상품 공급자 단말로부터 정보 수집\"\n    서버 --> 해외셀러단말 : \"해외 셀러 단말에 정보 제공\"\n    프로세서 --> 서버 : \"서버의 주요 동작 수행\"\n    메모리 --> 서버 : \"서버의 명령어 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "상품 공급자 단말",
+          "component_type": "device",
+          "description": "정품 정보를 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "해외 셀러 단말",
+          "component_type": "device",
+          "description": "상품을 온라인으로 판매하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상품 공급자 단말과 연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "가품 탐지 모델을 구현하고 매칭 점수를 산출하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상품 공급자 단말로부터 정보 수집",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "해외 셀러 단말에 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "process",
+          "description": "명령어에 따라 동작을 수행하는 처리 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "서버의 주요 동작 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "명령어를 저장하는 저장 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "서버의 명령어 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240163127/1020240163127_fig_2.mmd"
+    }
+  ]
+}

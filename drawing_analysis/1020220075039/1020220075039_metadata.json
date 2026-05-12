@@ -1,0 +1,158 @@
+{
+  "app_num": "1020220075039",
+  "invention_type": "system",
+  "main_concept": "조리 및 취식 공간 대여 플랫폼을 통한 조리 공간 예약 및 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "조리 공간 예약 및 대여 코드를 발급받는 사용자",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "키오스크",
+      "component_type": "device",
+      "description": "조리 공간의 대여 코드 유효성 확인 및 정보 표시",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자 단말과 상호작용",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "플랫폼 관리서버와 데이터 통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "플랫폼 관리서버",
+      "component_type": "data",
+      "description": "조리 공간 대여 플랫폼의 데이터 관리 및 분석",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "키오스크와 정보 관리",
+          "direction": "<-"
+        },
+        {
+          "target": "100",
+          "label": "사용자 단말과 SNS 연동",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220075039",
+      "diagram_type": "flowchart",
+      "diagram_title": "조리 공간 대여 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"키오스크\"]\n    300[\"플랫폼 관리서버\"]\n    400[\"조리 공간 사용 및 비용 정산\"]\n    \n    100 -->|\"조리 공간 검색 및 예약\"| 200\n    200 -->|\"대여 코드 유효성 확인\"| 300\n    300 -->|\"정보 관리\"| 200\n    200 -->|\"조리 공간 사용 및 비용 정산\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "조리 공간 예약 및 대여 코드를 발급받는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "키오스크",
+          "component_type": "device",
+          "description": "조리 공간의 대여 코드 유효성 확인 및 정보 표시",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 단말과 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "플랫폼 관리서버와 데이터 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "플랫폼 관리서버",
+          "component_type": "data",
+          "description": "조리 공간 대여 플랫폼의 데이터 관리 및 분석",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키오스크와 정보 관리",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "사용자 단말과 SNS 연동",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220075039/1020220075039_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220075039",
+      "diagram_type": "classDiagram",
+      "diagram_title": "조리 공간 대여 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +예약()\n        +대여코드발급()\n    }\n    class 키오스크 {\n        +유효성확인()\n        +정보표시()\n    }\n    class 플랫폼관리서버 {\n        +데이터관리()\n        +분석()\n    }\n    사용자단말 --> 키오스크 : \"사용자 단말과 상호작용\"\n    키오스크 --> 플랫폼관리서버 : \"플랫폼 관리서버와 데이터 통신\"\n    플랫폼관리서버 --> 키오스크 : \"키오스크와 정보 관리\"\n    플랫폼관리서버 --> 사용자단말 : \"사용자 단말과 SNS 연동\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "조리 공간 예약 및 대여 코드를 발급받는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "키오스크",
+          "component_type": "device",
+          "description": "조리 공간의 대여 코드 유효성 확인 및 정보 표시",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 단말과 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "플랫폼 관리서버와 데이터 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "플랫폼 관리서버",
+          "component_type": "data",
+          "description": "조리 공간 대여 플랫폼의 데이터 관리 및 분석",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키오스크와 정보 관리",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "사용자 단말과 SNS 연동",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220075039/1020220075039_fig_2.mmd"
+    }
+  ]
+}

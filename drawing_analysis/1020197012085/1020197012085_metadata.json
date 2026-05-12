@@ -1,0 +1,167 @@
+{
+  "app_num": "1020197012085",
+  "invention_type": "method",
+  "main_concept": "신경망 계층의 입력 활성화를 처리하는 컴퓨터 구현 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨팅 디바이스",
+      "component_type": "device",
+      "description": "신경망 계층의 입력 활성화를 처리하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제어기",
+      "component_type": "device",
+      "description": "입력 활성화의 처리 및 메모리 관리 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "메모리 뱅크",
+      "component_type": "data",
+      "description": "입력 활성화를 저장하는 메모리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "계산 어레이",
+      "component_type": "device",
+      "description": "신경망 추론 계산을 수행하는 유닛들",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "액세스",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197012085",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경망 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨팅 디바이스\"]\n    200[\"제어기\"]\n    300[\"메모리 뱅크\"]\n    400[\"계산 어레이\"]\n    \n    100 -->|\"제어\"| 200\n    200 -->|\"저장\"| 300\n    200 -->|\"액세스\"| 400\n    200 -->|\"입력 활성화 수신\"| 100\n    200 -->|\"입력 활성화의 제로/비-제로 결정\"| 100\n    200 -->|\"비-제로 입력 활성화 인덱스 생성\"| 100\n    200 -->|\"데이터 버스를 통해 입력 활성화 제공\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 디바이스",
+          "component_type": "device",
+          "description": "신경망 계층의 입력 활성화를 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어기",
+          "component_type": "device",
+          "description": "입력 활성화의 처리 및 메모리 관리 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리 뱅크",
+          "component_type": "data",
+          "description": "입력 활성화를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "계산 어레이",
+          "component_type": "device",
+          "description": "신경망 추론 계산을 수행하는 유닛들",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "액세스",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197012085/1020197012085_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197012085",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경망 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 컴퓨팅디바이스 {\n        +String 입력활성화\n        +processActivation()\n    }\n    class 제어기 {\n        +manageMemory()\n        +processInput()\n    }\n    class 메모리뱅크 {\n        +String 저장된활성화\n        +storeActivation()\n    }\n    class 계산어레이 {\n        +performInference()\n    }\n    제어기 --> 컴퓨팅디바이스 : \"제어\"\n    메모리뱅크 <-- 제어기 : \"저장\"\n    계산어레이 <-- 제어기 : \"액세스\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 디바이스",
+          "component_type": "device",
+          "description": "신경망 계층의 입력 활성화를 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어기",
+          "component_type": "device",
+          "description": "입력 활성화의 처리 및 메모리 관리 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리 뱅크",
+          "component_type": "data",
+          "description": "입력 활성화를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "계산 어레이",
+          "component_type": "device",
+          "description": "신경망 추론 계산을 수행하는 유닛들",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "액세스",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197012085/1020197012085_fig_2.mmd"
+    }
+  ]
+}

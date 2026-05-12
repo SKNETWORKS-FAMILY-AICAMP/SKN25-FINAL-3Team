@@ -1,0 +1,4 @@
+flowchart TD
+    A[일 텍스트를 상기 BERT 모델에 입력하는 단계] --> B[상기 BERT 모델이 출력하는 hidden state vector를 상기 convolutional layer에 입력하는 단계]
+    B --> C[상기 convolutional layer가 출력하는 feature map을 상기 pooling layer에 입력하는 단계]
+    C --> D[상기 pooling layer에 의해 축소된 feature map을 상기 fully-connected layer에 입력하는 단계]

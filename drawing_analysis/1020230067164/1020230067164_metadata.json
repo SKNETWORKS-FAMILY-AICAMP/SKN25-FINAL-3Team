@@ -1,0 +1,167 @@
+{
+  "app_num": "1020230067164",
+  "invention_type": "system",
+  "main_concept": "신체동작 유사도 판단 시스템을 통한 사용자 동작 데이터와 기준 동작 데이터의 유사도 평가",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "다중 입력모듈",
+      "component_type": "device",
+      "description": "기준 신체동작 및 사용자 신체동작 데이터를 생성하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "모션 정규화 모듈",
+      "component_type": "process",
+      "description": "사용자 동작 데이터를 기준 동작 데이터에 맞게 정규화하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 생성",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "가중치 설정모듈",
+      "component_type": "process",
+      "description": "자세, 조인트, 시간 구간에 대한 가중치를 설정하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정규화 데이터에 가중치 적용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "유사도 판단모듈",
+      "component_type": "process",
+      "description": "정규화된 사용자 동작 데이터와 기준 동작 데이터의 유사도를 평가하는 모듈",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "가중치 기반 유사도 평가",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230067164",
+      "diagram_type": "flowchart",
+      "diagram_title": "신체동작 유사도 판단 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"다중 입력모듈\"]\n    200[\"모션 정규화 모듈\"]\n    300[\"가중치 설정모듈\"]\n    400[\"유사도 판단모듈\"]\n    100 -->|\"데이터 생성\"| 200\n    200 -->|\"정규화 데이터에 가중치 적용\"| 300\n    300 -->|\"가중치 기반 유사도 평가\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "다중 입력모듈",
+          "component_type": "device",
+          "description": "기준 신체동작 및 사용자 신체동작 데이터를 생성하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "모션 정규화 모듈",
+          "component_type": "process",
+          "description": "사용자 동작 데이터를 기준 동작 데이터에 맞게 정규화하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 생성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가중치 설정모듈",
+          "component_type": "process",
+          "description": "자세, 조인트, 시간 구간에 대한 가중치를 설정하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정규화 데이터에 가중치 적용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "유사도 판단모듈",
+          "component_type": "process",
+          "description": "정규화된 사용자 동작 데이터와 기준 동작 데이터의 유사도를 평가하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "가중치 기반 유사도 평가",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230067164/1020230067164_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230067164",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신체동작 유사도 판단 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 다중입력모듈 {\n        +String 기준신체동작데이터\n        +String 사용자신체동작데이터\n        +generateData()\n    }\n    class 모션정규화모듈 {\n        +String 정규화된사용자동작데이터\n        +normalizeData()\n    }\n    class 가중치설정모듈 {\n        +String 가중치\n        +setWeights()\n    }\n    class 유사도판단모듈 {\n        +float 유사도점수\n        +evaluateSimilarity()\n    }\n    다중입력모듈 --> 모션정규화모듈 : \"데이터 생성\"\n    모션정규화모듈 --> 가중치설정모듈 : \"정규화 데이터에 가중치 적용\"\n    가중치설정모듈 --> 유사도판단모듈 : \"가중치 기반 유사도 평가\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "다중 입력모듈",
+          "component_type": "device",
+          "description": "기준 신체동작 및 사용자 신체동작 데이터를 생성하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "모션 정규화 모듈",
+          "component_type": "process",
+          "description": "사용자 동작 데이터를 기준 동작 데이터에 맞게 정규화하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 생성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가중치 설정모듈",
+          "component_type": "process",
+          "description": "자세, 조인트, 시간 구간에 대한 가중치를 설정하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정규화 데이터에 가중치 적용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "유사도 판단모듈",
+          "component_type": "process",
+          "description": "정규화된 사용자 동작 데이터와 기준 동작 데이터의 유사도를 평가하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "가중치 기반 유사도 평가",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230067164/1020230067164_fig_2.mmd"
+    }
+  ]
+}

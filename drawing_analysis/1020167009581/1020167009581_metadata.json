@@ -1,0 +1,248 @@
+{
+  "app_num": "1020167009581",
+  "invention_type": "method",
+  "main_concept": "복수의 정합 지점 쌍을 식별하고 정합 점수를 계산하는 컴퓨터 구현 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "검증 템플릿",
+      "component_type": "data",
+      "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "등록 템플릿",
+      "component_type": "data",
+      "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "정합 지점 쌍",
+      "component_type": "data",
+      "description": "검증 템플릿과 등록 템플릿에서 식별된 정합 지점 쌍",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "기반",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "기반",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "정합 점수",
+      "component_type": "data",
+      "description": "정합 지점 쌍의 유사성을 나타내는 점수",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "계산됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "정합 지점 쌍을 식별하고 정합 점수를 계산하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "사용",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "생성",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "계산",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020167009581",
+      "diagram_type": "flowchart",
+      "diagram_title": "정합 지점 쌍 식별 및 정합 점수 계산 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"검증 템플릿\"]\n    200[\"등록 템플릿\"]\n    300[\"정합 지점 쌍\"]\n    400[\"정합 점수\"]\n    500[\"프로세서\"]\n    500 -->|\"사용\"| 100\n    500 -->|\"사용\"| 200\n    100 -->|\"기반\"| 300\n    200 -->|\"기반\"| 300\n    300 -->|\"계산됨\"| 400\n    500 -->|\"생성\"| 300\n    500 -->|\"계산\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검증 템플릿",
+          "component_type": "data",
+          "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "등록 템플릿",
+          "component_type": "data",
+          "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "정합 지점 쌍",
+          "component_type": "data",
+          "description": "검증 템플릿과 등록 템플릿에서 식별된 정합 지점 쌍",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기반",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정합 점수",
+          "component_type": "data",
+          "description": "정합 지점 쌍의 유사성을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "계산됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "정합 지점 쌍을 식별하고 정합 점수를 계산하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "생성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "계산",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020167009581/1020167009581_fig_1.mmd"
+    },
+    {
+      "app_num": "1020167009581",
+      "diagram_type": "flowchart",
+      "diagram_title": "정합 점수 계산 세부 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"검증 템플릿\"]\n    200[\"등록 템플릿\"]\n    300[\"정합 지점 쌍\"]\n    400[\"정합 점수\"]\n    500[\"프로세서\"]\n    500 -->|\"사용\"| 100\n    500 -->|\"사용\"| 200\n    100 -->|\"기반\"| 300\n    200 -->|\"기반\"| 300\n    300 -->|\"계산됨\"| 400\n    500 -->|\"생성\"| 300\n    500 -->|\"계산\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검증 템플릿",
+          "component_type": "data",
+          "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "등록 템플릿",
+          "component_type": "data",
+          "description": "정합 지점 쌍을 식별하기 위한 기준 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "정합 지점 쌍",
+          "component_type": "data",
+          "description": "검증 템플릿과 등록 템플릿에서 식별된 정합 지점 쌍",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기반",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정합 점수",
+          "component_type": "data",
+          "description": "정합 지점 쌍의 유사성을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "계산됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "정합 지점 쌍을 식별하고 정합 점수를 계산하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "생성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "계산",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020167009581/1020167009581_fig_2.mmd"
+    }
+  ]
+}

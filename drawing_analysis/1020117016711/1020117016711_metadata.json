@@ -1,0 +1,161 @@
+{
+  "app_num": "1020117016711",
+  "invention_type": "method",
+  "main_concept": "확장 가능한 웹 기반 도표 시각화 서비스를 위한 데이터 처리 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "웹 프론트엔드 서버",
+      "component_type": "device",
+      "description": "클라이언트 애플리케이션의 요청을 수신하고 갱신 엔진에 전달",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "요청 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "갱신 엔진",
+      "component_type": "process",
+      "description": "데이터 소스 판별 및 커스텀 데이터 모듈 호출을 담당",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "데이터 전달",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "결과 반환",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "커스텀 데이터 모듈",
+      "component_type": "process",
+      "description": "지원되지 않는 데이터 소스로부터 데이터 검색 및 처리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 반환",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020117016711",
+      "diagram_type": "flowchart",
+      "diagram_title": "도표 시각화 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"웹 프론트엔드 서버\"]\n    200[\"갱신 엔진\"]\n    300[\"커스텀 데이터 모듈\"]\n    400[\"렌더링된 도표\"]\n    \n    100 -->|\"요청 전달\"| 200\n    200 -->|\"데이터 전달\"| 300\n    300 -->|\"데이터 반환\"| 200\n    200 -->|\"결과 반환\"| 100\n    200 -->|\"렌더링된 도표 제공\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "웹 프론트엔드 서버",
+          "component_type": "device",
+          "description": "클라이언트 애플리케이션의 요청을 수신하고 갱신 엔진에 전달",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "갱신 엔진",
+          "component_type": "process",
+          "description": "데이터 소스 판별 및 커스텀 데이터 모듈 호출을 담당",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 전달",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "결과 반환",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "커스텀 데이터 모듈",
+          "component_type": "process",
+          "description": "지원되지 않는 데이터 소스로부터 데이터 검색 및 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 반환",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020117016711/1020117016711_fig_1.mmd"
+    },
+    {
+      "app_num": "1020117016711",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 웹프론트엔드서버 {\n        +String 요청\n        +요청전달()\n    }\n    class 갱신엔진 {\n        +String 데이터소스\n        +데이터전달()\n        +결과반환()\n    }\n    class 커스텀데이터모듈 {\n        +String 데이터\n        +데이터검색()\n        +데이터처리()\n    }\n    웹프론트엔드서버 --> 갱신엔진 : \"요청 전달\"\n    갱신엔진 --> 커스텀데이터모듈 : \"데이터 전달\"\n    커스텀데이터모듈 --> 갱신엔진 : \"데이터 반환\"\n    갱신엔진 <-- 웹프론트엔드서버 : \"결과 반환\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "웹 프론트엔드 서버",
+          "component_type": "device",
+          "description": "클라이언트 애플리케이션의 요청을 수신하고 갱신 엔진에 전달",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "갱신 엔진",
+          "component_type": "process",
+          "description": "데이터 소스 판별 및 커스텀 데이터 모듈 호출을 담당",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 전달",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "결과 반환",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "커스텀 데이터 모듈",
+          "component_type": "process",
+          "description": "지원되지 않는 데이터 소스로부터 데이터 검색 및 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 반환",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020117016711/1020117016711_fig_2.mmd"
+    }
+  ]
+}

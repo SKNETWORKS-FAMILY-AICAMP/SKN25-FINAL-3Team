@@ -1,0 +1,260 @@
+{
+  "app_num": "1020240001497",
+  "invention_type": "method",
+  "main_concept": "SCM 코드를 이용한 리뷰 NFT와 밸류 체인 간의 경로 생성 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플랫폼 서버",
+      "component_type": "actor",
+      "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "거래 상황 관리",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "SCM 코드 제공",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "리뷰 NFT 경로 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "소비자",
+      "component_type": "actor",
+      "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 거래를 수행하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "거래 요청",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "리뷰 NFT 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "SCM 코드",
+      "component_type": "data",
+      "description": "소비자에게 제공되는 거래 품목에 대한 고유 코드",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성됨",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "리뷰 NFT",
+      "component_type": "data",
+      "description": "소비자가 생성한 대체 불가능 토큰으로 거래 정보를 포함",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "경로 생성",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "거래에 사용됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240001497",
+      "diagram_type": "flowchart",
+      "diagram_title": "경로 생성 서비스 제공 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플랫폼 서버\"]\n    200[\"소비자\"]\n    300[\"SCM 코드\"]\n    400[\"리뷰 NFT\"]\n    100 -->|\"거래 상황 관리\"| 200\n    200 -->|\"리뷰 NFT 생성\"| 400\n    100 -->|\"SCM 코드 제공\"| 300\n    300 -->|\"사용됨\"| 200\n    100 -->|\"경로 생성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 상황 관리",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "SCM 코드 제공",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "리뷰 NFT 경로 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "소비자",
+          "component_type": "actor",
+          "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 거래를 수행하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 요청",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "리뷰 NFT 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "SCM 코드",
+          "component_type": "data",
+          "description": "소비자에게 제공되는 거래 품목에 대한 고유 코드",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 대체 불가능 토큰으로 거래 정보를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "거래에 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240001497/1020240001497_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240001497",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랫폼 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 플랫폼서버 {\n        +거래상황관리()\n        +SCM코드제공()\n        +리뷰NFT경로생성()\n    }\n    class 소비자 {\n        +거래요청()\n        +리뷰NFT생성()\n    }\n    class SCM코드 {\n        +고유코드생성()\n    }\n    class 리뷰NFT {\n        +거래정보포함()\n    }\n    플랫폼서버 --> 소비자 : \"거래 상황 관리\"\n    플랫폼서버 --> SCM코드 : \"SCM 코드 제공\"\n    플랫폼서버 --> 리뷰NFT : \"리뷰 NFT 경로 생성\"\n    소비자 --> 플랫폼서버 : \"거래 요청\"\n    소비자 --> 리뷰NFT : \"리뷰 NFT 생성\"\n    SCM코드 --> 플랫폼서버 : \"생성됨\"\n    SCM코드 --> 소비자 : \"사용됨\"\n    리뷰NFT --> 플랫폼서버 : \"경로 생성\"\n    리뷰NFT --> 소비자 : \"거래에 사용됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "판매자와 소비자 간의 거래 상황을 관리하고 SCM 코드를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 상황 관리",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "SCM 코드 제공",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "리뷰 NFT 경로 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "소비자",
+          "component_type": "actor",
+          "description": "SCM 코드를 이용하여 리뷰 NFT를 생성하고 거래를 수행하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "거래 요청",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "리뷰 NFT 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "SCM 코드",
+          "component_type": "data",
+          "description": "소비자에게 제공되는 거래 품목에 대한 고유 코드",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 대체 불가능 토큰으로 거래 정보를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "거래에 사용됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240001497/1020240001497_fig_2.mmd"
+    }
+  ]
+}

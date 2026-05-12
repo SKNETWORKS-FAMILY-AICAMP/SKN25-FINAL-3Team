@@ -1,0 +1,167 @@
+{
+  "app_num": "1020230068885",
+  "invention_type": "system",
+  "main_concept": "국내 사업 지원 및 언어 매칭 통합 서비스 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "device",
+      "description": "국내 사업 지원 및 언어 매칭 통합 서비스 시스템을 제공하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "고객 단말",
+      "component_type": "actor",
+      "description": "서비스를 이용하는 고객의 단말기",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서비스 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "공유오피스 서버",
+      "component_type": "device",
+      "description": "공유오피스 관련 정보를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 송출",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "전문 인력 단말",
+      "component_type": "actor",
+      "description": "전문 인력이 사용하는 단말기",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "소통",
+          "direction": "<->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230068885",
+      "diagram_type": "flowchart",
+      "diagram_title": "국내 사업 지원 및 언어 매칭 통합 서비스 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"고객 단말\"]\n    300[\"공유오피스 서버\"]\n    400[\"전문 인력 단말\"]\n    200 -->|\"서비스 요청\"| 100\n    100 -->|\"정보 송출\"| 300\n    300 -->|\"임대 정보 및 결제 처리\"| 100\n    100 -->|\"임대차계약서 제공 및 우편물 이미지 처리\"| 400\n    400 <--> 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "국내 사업 지원 및 언어 매칭 통합 서비스 시스템을 제공하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "고객 단말",
+          "component_type": "actor",
+          "description": "서비스를 이용하는 고객의 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서비스 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공유오피스 서버",
+          "component_type": "device",
+          "description": "공유오피스 관련 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 송출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "전문 인력 단말",
+          "component_type": "actor",
+          "description": "전문 인력이 사용하는 단말기",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "<->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230068885/1020230068885_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230068885",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 서버 {\n        +String 서비스\n        +processRequest()\n    }\n    class 고객단말 {\n        +String 사용자ID\n        +requestService()\n    }\n    class 공유오피스서버 {\n        +String 정보\n        +sendInfo()\n    }\n    class 전문인력단말 {\n        +String 전문인력ID\n        +communicate()\n    }\n    고객단말 -->|서비스 요청| 서버 : \"서비스 요청\"\n    공유오피스서버 <--|정보 송출| 서버 : \"정보 송출\"\n    전문인력단말 <--> 고객단말 : \"소통\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "국내 사업 지원 및 언어 매칭 통합 서비스 시스템을 제공하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "고객 단말",
+          "component_type": "actor",
+          "description": "서비스를 이용하는 고객의 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서비스 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공유오피스 서버",
+          "component_type": "device",
+          "description": "공유오피스 관련 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 송출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "전문 인력 단말",
+          "component_type": "actor",
+          "description": "전문 인력이 사용하는 단말기",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "<->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230068885/1020230068885_fig_2.mmd"
+    }
+  ]
+}

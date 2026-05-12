@@ -1,0 +1,143 @@
+{
+  "app_num": "1020160065686",
+  "invention_type": "method",
+  "main_concept": "터치 입력 장치에서 캐릭터의 행동을 압력에 따라 제어하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "터치 입력부",
+      "component_type": "device",
+      "description": "사용자의 터치 입력을 감지하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제어부",
+      "component_type": "device",
+      "description": "터치 입력부로부터 입력된 데이터를 처리하고 행동을 제어하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "행동 제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "캐릭터",
+      "component_type": "actor",
+      "description": "사용자의 입력에 따라 행동을 수행하는 캐릭터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "행동 수행 지시",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020160065686",
+      "diagram_type": "classDiagram",
+      "diagram_title": "터치 입력 장치 구조",
+      "mermaid_code": "classDiagram\n    class 터치입력부 {\n        +String 터치데이터\n        +detectInput()\n    }\n    class 제어부 {\n        +processInput()\n        +controlCharacter()\n    }\n    class 캐릭터 {\n        +String 행동상태\n        +performAction()\n    }\n    터치입력부 --> 제어부 : \"입력 데이터 수신\"\n    제어부 --> 캐릭터 : \"행동 제어\"\n    캐릭터 <-- 제어부 : \"행동 수행 지시\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "터치 입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "터치 입력부로부터 입력된 데이터를 처리하고 행동을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "행동 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "캐릭터",
+          "component_type": "actor",
+          "description": "사용자의 입력에 따라 행동을 수행하는 캐릭터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "행동 수행 지시",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020160065686/1020160065686_fig_1.mmd"
+    },
+    {
+      "app_num": "1020160065686",
+      "diagram_type": "flowchart",
+      "diagram_title": "캐릭터 행동 제어 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"터치 입력부\"]\n    200[\"제어부\"]\n    300[\"캐릭터\"]\n    400[\"검출 단계\"]\n    500[\"터치 종류 판별 단계\"]\n    600[\"행동 제어 단계\"]\n    \n    100 -->|\"입력 데이터 수신\"| 200\n    200 -->|\"행동 수행 지시\"| 300\n    100 --> 400\n    400 --> 500\n    500 --> 600\n    600 -->|\"행동 제어\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "터치 입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "터치 입력부로부터 입력된 데이터를 처리하고 행동을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "행동 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "캐릭터",
+          "component_type": "actor",
+          "description": "사용자의 입력에 따라 행동을 수행하는 캐릭터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "행동 수행 지시",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020160065686/1020160065686_fig_2.mmd"
+    }
+  ]
+}

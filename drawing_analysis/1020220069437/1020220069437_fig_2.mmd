@@ -1,0 +1,24 @@
+%% 1020220069437 - ERP 시스템 구성 요소 클래스 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 등록부 {
+        +String 발주서정보
+        +registerOrder()
+    }
+    class 재고관리부 {
+        +String 재고현황정보
+        +updateStock()
+    }
+    class 회계관리부 {
+        +String 거래전표정보
+        +createTransaction()
+    }
+    class 통합관리부 {
+        +String 업무정보
+        +integrateTasks()
+    }
+    등록부 --> 재고관리부 : "발주서 정보 제공"
+    등록부 --> 회계관리부 : "발주서 정보 사용"
+    재고관리부 --> 통합관리부 : "재고관리부와 연계"
+    회계관리부 --> 통합관리부 : "회계관리부와 연계"

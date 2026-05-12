@@ -1,0 +1,143 @@
+{
+  "app_num": "1020157015119",
+  "invention_type": "method",
+  "main_concept": "사람의 등록 및 인증을 위한 연산화된 바이오메트릭 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "신체 일부의 이미지를 캡쳐링하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "디스플레이",
+      "component_type": "device",
+      "description": "등록 이미지 및 후보 이미지를 사용자에게 제시하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이미지 제시",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "사용자",
+      "component_type": "actor",
+      "description": "등록 및 인증 과정에 참여하는 사람",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "신체 일부 제시",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "이미지 확인",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020157015119",
+      "diagram_type": "flowchart",
+      "diagram_title": "바이오메트릭 등록 및 인증 과정",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"디스플레이\"]\n    300[\"사용자\"]\n    400[\"등록 이미지 캡쳐링\"]\n    500[\"후보 이미지 캡쳐링\"]\n    600[\"이미지 정렬 및 인증\"]\n    \n    300 -->| \"신체 일부 제시\" | 100\n    100 -->| \"이미지 제시\" | 200\n    200 -->| \"이미지 확인\" | 300\n    300 -->| \"등록 이미지 캡쳐링\" | 400\n    400 -->| \"후보 이미지 캡쳐링\" | 500\n    500 -->| \"이미지 정렬 및 인증\" | 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "신체 일부의 이미지를 캡쳐링하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "등록 이미지 및 후보 이미지를 사용자에게 제시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 제시",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "사용자",
+          "component_type": "actor",
+          "description": "등록 및 인증 과정에 참여하는 사람",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "신체 일부 제시",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "이미지 확인",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020157015119/1020157015119_fig_1.mmd"
+    },
+    {
+      "app_num": "1020157015119",
+      "diagram_type": "classDiagram",
+      "diagram_title": "바이오메트릭 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 카메라 {\n        +String 이미지\n        +captureImage()\n    }\n    class 디스플레이 {\n        +String 등록이미지\n        +String 후보이미지\n        +showImages()\n    }\n    class 사용자 {\n        +String 신체부위\n        +register()\n        +authenticate()\n    }\n    사용자 --> 카메라 : \"신체 일부 제시\"\n    디스플레이 <-- 카메라 : \"이미지 제시\"\n    사용자 --> 디스플레이 : \"이미지 확인\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "신체 일부의 이미지를 캡쳐링하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "등록 이미지 및 후보 이미지를 사용자에게 제시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 제시",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "사용자",
+          "component_type": "actor",
+          "description": "등록 및 인증 과정에 참여하는 사람",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "신체 일부 제시",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "이미지 확인",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020157015119/1020157015119_fig_2.mmd"
+    }
+  ]
+}

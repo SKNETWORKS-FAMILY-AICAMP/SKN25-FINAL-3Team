@@ -1,0 +1,23 @@
+%% 1020237010470 - AR 시스템 구성 요소
+%% 생성일: 2026-05-11
+
+classDiagram
+    class ARSystem {
+        +String description
+    }
+    class ExternalCamera {
+        +String description
+    }
+    class OpticalSensor {
+        +String description
+    }
+    class Document {
+        +String description
+    }
+    class Person {
+        +String description
+    }
+    ARSystem --> ExternalCamera : "구성 요소"
+    ARSystem --> OpticalSensor : "구성 요소"
+    Document <-- ARSystem : "링키지 대상"
+    Person <-- ARSystem : "링키지 대상"

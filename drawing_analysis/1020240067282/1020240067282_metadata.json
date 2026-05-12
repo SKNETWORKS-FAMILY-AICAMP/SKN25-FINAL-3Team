@@ -1,0 +1,164 @@
+{
+  "app_num": "1020240067282",
+  "invention_type": "method",
+  "main_concept": "이미지 데이터와 열화상 데이터를 활용한 멀티모달 학습모델 생성 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "이미지 데이터",
+      "component_type": "data",
+      "description": "관심 영역에 대응하는 이미지 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "열화상 데이터",
+      "component_type": "data",
+      "description": "관심 영역에 대응하는 열화상 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "제1 멀티모달 학습모델",
+      "component_type": "process",
+      "description": "이미지 데이터와 열화상 데이터를 피처로 하여 객체를 식별하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "신경망 레이어",
+      "component_type": "process",
+      "description": "객체 식별을 위한 가중치를 학습하는 레이어",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구성",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240067282",
+      "diagram_type": "flowchart",
+      "diagram_title": "멀티모달 학습모델 생성 과정",
+      "mermaid_code": "flowchart TD\n    100[\"이미지 데이터\"]\n    200[\"열화상 데이터\"]\n    300[\"제1 멀티모달 학습모델\"]\n    400[\"신경망 레이어\"]\n    100 -->|\"사용\"| 300\n    200 -->|\"사용\"| 300\n    300 -->|\"구성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "관심 영역에 대응하는 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "열화상 데이터",
+          "component_type": "data",
+          "description": "관심 영역에 대응하는 열화상 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "제1 멀티모달 학습모델",
+          "component_type": "process",
+          "description": "이미지 데이터와 열화상 데이터를 피처로 하여 객체를 식별하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신경망 레이어",
+          "component_type": "process",
+          "description": "객체 식별을 위한 가중치를 학습하는 레이어",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240067282/1020240067282_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240067282",
+      "diagram_type": "classDiagram",
+      "diagram_title": "멀티모달 학습모델 구조",
+      "mermaid_code": "classDiagram\n    class 이미지데이터 {\n        +String 관심영역\n    }\n    class 열화상데이터 {\n        +String 관심영역\n    }\n    class 제1멀티모달학습모델 {\n        +String 피처\n        +식별()\n    }\n    class 신경망레이어 {\n        +String 가중치\n        +학습()\n    }\n    이미지데이터 <|-- 제1멀티모달학습모델 : \"사용\"\n    열화상데이터 <|-- 제1멀티모달학습모델 : \"사용\"\n    제1멀티모달학습모델 <|-- 신경망레이어 : \"구성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "관심 영역에 대응하는 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "열화상 데이터",
+          "component_type": "data",
+          "description": "관심 영역에 대응하는 열화상 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "제1 멀티모달 학습모델",
+          "component_type": "process",
+          "description": "이미지 데이터와 열화상 데이터를 피처로 하여 객체를 식별하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신경망 레이어",
+          "component_type": "process",
+          "description": "객체 식별을 위한 가중치를 학습하는 레이어",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240067282/1020240067282_fig_2.mmd"
+    }
+  ]
+}

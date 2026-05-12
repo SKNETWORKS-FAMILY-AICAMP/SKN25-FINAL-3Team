@@ -1,0 +1,17 @@
+                          Table "public.consulting"
+       Column       |         Type          | Collation | Nullable | Default 
+--------------------+-----------------------+-----------+----------+---------
+ user_id            | character varying(50) |           | not null | 
+ consultation_idx   | integer               |           | not null | 
+ raw_chat_log       | jsonb                 |           |          | 
+ uploaded_file_path | text                  |           |          | 
+ summary_problem    | text                  |           |          | 
+ summary_solution   | text                  |           |          | 
+ summary_difference | text                  |           |          | 
+ summary_effect     | text                  |           |          | 
+Indexes:
+    "consulting_pkey" PRIMARY KEY, btree (user_id, consultation_idx)
+Referenced by:
+    TABLE "algorithm_steps" CONSTRAINT "algorithm_steps_user_id_consultation_idx_fkey" FOREIGN KEY (user_id, consultation_idx) REFERENCES consulting(user_id, consultation_idx) ON DELETE CASCADE
+    TABLE "detail_elements" CONSTRAINT "detail_elements_user_id_consultation_idx_fkey" FOREIGN KEY (user_id, consultation_idx) REFERENCES consulting(user_id, consultation_idx) ON DELETE CASCADE
+

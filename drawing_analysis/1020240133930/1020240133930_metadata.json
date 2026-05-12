@@ -1,0 +1,224 @@
+{
+  "app_num": "1020240133930",
+  "invention_type": "method",
+  "main_concept": "인공지능 기반 스마트 감시 방법을 통한 특정 상황 자동 감지 및 알림",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "감시 카메라",
+      "component_type": "device",
+      "description": "영상 데이터를 수신하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "딥러닝 기반 학습 모델",
+      "component_type": "process",
+      "description": "영상에서 특정 상황을 판단하는 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "객체 탐지 모델",
+      "component_type": "process",
+      "description": "영상에서 객체를 검출하는 모델",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "재인식 모델",
+      "component_type": "process",
+      "description": "검출된 객체를 추적하는 모델",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "행동 인식 모델",
+      "component_type": "process",
+      "description": "특정 사람의 행동을 인식하는 모델",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "관제 서버",
+      "component_type": "device",
+      "description": "알림 메시지를 출력하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "700",
+      "name": "현장 알림 기기",
+      "component_type": "device",
+      "description": "현장에서 경고 메시지를 출력하는 기기",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240133930",
+      "diagram_type": "flowchart",
+      "diagram_title": "스마트 감시 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"감시 카메라\"]\n    200[\"딥러닝 기반 학습 모델\"]\n    300[\"객체 탐지 모델\"]\n    400[\"재인식 모델\"]\n    500[\"행동 인식 모델\"]\n    600[\"관제 서버\"]\n    700[\"현장 알림 기기\"]\n    \n    100 -->|\"영상 수신\"| 200\n    200 -->|\"특정 상황 판단\"| 300\n    200 --> 400\n    200 --> 500\n    300 -->|\"결과 전달\"| 600\n    600 -->|\"알림 메시지 출력\"| 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "감시 카메라",
+          "component_type": "device",
+          "description": "영상 데이터를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "딥러닝 기반 학습 모델",
+          "component_type": "process",
+          "description": "영상에서 특정 상황을 판단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "객체 탐지 모델",
+          "component_type": "process",
+          "description": "영상에서 객체를 검출하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "재인식 모델",
+          "component_type": "process",
+          "description": "검출된 객체를 추적하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "행동 인식 모델",
+          "component_type": "process",
+          "description": "특정 사람의 행동을 인식하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "관제 서버",
+          "component_type": "device",
+          "description": "알림 메시지를 출력하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "700",
+          "name": "현장 알림 기기",
+          "component_type": "device",
+          "description": "현장에서 경고 메시지를 출력하는 기기",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240133930/1020240133930_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240133930",
+      "diagram_type": "classDiagram",
+      "diagram_title": "딥러닝 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 감시카메라 {\n        +String 영상데이터\n    }\n    class 딥러닝기반학습모델 {\n        +판단()\n    }\n    class 객체탐지모델 {\n        +검출()\n    }\n    class 재인식모델 {\n        +추적()\n    }\n    class 행동인식모델 {\n        +인식()\n    }\n    class 관제서버 {\n        +String 알림메시지\n        +출력()\n    }\n    class 현장알림기기 {\n        +String 경고메시지\n        +출력()\n    }\n    감시카메라 --> 딥러닝기반학습모델 : \"영상 수신\"\n    딥러닝기반학습모델 --> 객체탐지모델 : \"포함\"\n    딥러닝기반학습모델 --> 재인식모델 : \"포함\"\n    딥러닝기반학습모델 --> 행동인식모델 : \"포함\"\n    딥러닝기반학습모델 --> 관제서버 : \"알림 메시지 전송\"\n    관제서버 --> 현장알림기기 : \"경고 메시지 출력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "감시 카메라",
+          "component_type": "device",
+          "description": "영상 데이터를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "딥러닝 기반 학습 모델",
+          "component_type": "process",
+          "description": "영상에서 특정 상황을 판단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "객체 탐지 모델",
+          "component_type": "process",
+          "description": "영상에서 객체를 검출하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "재인식 모델",
+          "component_type": "process",
+          "description": "검출된 객체를 추적하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "행동 인식 모델",
+          "component_type": "process",
+          "description": "특정 사람의 행동을 인식하는 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "관제 서버",
+          "component_type": "device",
+          "description": "알림 메시지를 출력하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "700",
+          "name": "현장 알림 기기",
+          "component_type": "device",
+          "description": "현장에서 경고 메시지를 출력하는 기기",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240133930/1020240133930_fig_2.mmd"
+    }
+  ]
+}

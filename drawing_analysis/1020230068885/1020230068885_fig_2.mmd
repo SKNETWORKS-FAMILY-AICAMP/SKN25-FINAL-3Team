@@ -1,0 +1,23 @@
+%% 1020230068885 - 시스템 구성 요소 클래스 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 서버 {
+        +String 서비스
+        +processRequest()
+    }
+    class 고객단말 {
+        +String 사용자ID
+        +requestService()
+    }
+    class 공유오피스서버 {
+        +String 정보
+        +sendInfo()
+    }
+    class 전문인력단말 {
+        +String 전문인력ID
+        +communicate()
+    }
+    고객단말 -->|서비스 요청| 서버 : "서비스 요청"
+    공유오피스서버 <--|정보 송출| 서버 : "정보 송출"
+    전문인력단말 <--> 고객단말 : "소통"

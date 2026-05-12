@@ -1,0 +1,221 @@
+{
+  "app_num": "1020190093807",
+  "invention_type": "method",
+  "main_concept": "3D EDM을 이용한 수어 또는 제스처 인식 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "2D EDM 생성부",
+      "component_type": "process",
+      "description": "영상정보에서 신체의 특징점을 추출하고 2D EDM을 생성하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "3D EDM 생성부",
+      "component_type": "process",
+      "description": "2D EDM을 입력받아 3D EDM을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "관절 정보 생성부",
+      "component_type": "process",
+      "description": "3D EDM에 기초하여 관절 정보를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "오류보정부",
+      "component_type": "process",
+      "description": "관절 정보를 보정하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "인식부",
+      "component_type": "process",
+      "description": "3D EDM을 기반으로 수어 또는 제스처를 인식하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190093807",
+      "diagram_type": "flowchart",
+      "diagram_title": "수어 또는 제스처 인식 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"2D EDM 생성부\"]\n    200[\"3D EDM 생성부\"]\n    300[\"관절 정보 생성부\"]\n    400[\"오류보정부\"]\n    500[\"인식부\"]\n    100 -->|\"입력\"| 200\n    200 -->|\"입력\"| 300\n    300 -->|\"입력\"| 400\n    200 -->|\"입력\"| 500\n    400 -->|\"입력\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "2D EDM 생성부",
+          "component_type": "process",
+          "description": "영상정보에서 신체의 특징점을 추출하고 2D EDM을 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "3D EDM 생성부",
+          "component_type": "process",
+          "description": "2D EDM을 입력받아 3D EDM을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관절 정보 생성부",
+          "component_type": "process",
+          "description": "3D EDM에 기초하여 관절 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오류보정부",
+          "component_type": "process",
+          "description": "관절 정보를 보정하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "인식부",
+          "component_type": "process",
+          "description": "3D EDM을 기반으로 수어 또는 제스처를 인식하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190093807/1020190093807_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190093807",
+      "diagram_type": "classDiagram",
+      "diagram_title": "3D EDM 생성 및 인식 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class \"2D EDM 생성부\" {\n        +String 영상정보\n        +generate2DEDM()\n    }\n    class \"3D EDM 생성부\" {\n        +String 2DEDM\n        +generate3DEDM()\n    }\n    class \"관절 정보 생성부\" {\n        +String 3DEDM\n        +generateJointInfo()\n    }\n    class \"오류보정부\" {\n        +String jointInfo\n        +correctErrors()\n    }\n    class \"인식부\" {\n        +String 3DEDM\n        +String correctedInfo\n        +recognize()\n    }\n    \"2D EDM 생성부\" --> \"3D EDM 생성부\" : \"입력\"\n    \"3D EDM 생성부\" --> \"관절 정보 생성부\" : \"입력\"\n    \"관절 정보 생성부\" --> \"오류보정부\" : \"입력\"\n    \"3D EDM 생성부\" --> \"인식부\" : \"입력\"\n    \"오류보정부\" --> \"인식부\" : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "2D EDM 생성부",
+          "component_type": "process",
+          "description": "영상정보에서 신체의 특징점을 추출하고 2D EDM을 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "3D EDM 생성부",
+          "component_type": "process",
+          "description": "2D EDM을 입력받아 3D EDM을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관절 정보 생성부",
+          "component_type": "process",
+          "description": "3D EDM에 기초하여 관절 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오류보정부",
+          "component_type": "process",
+          "description": "관절 정보를 보정하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "인식부",
+          "component_type": "process",
+          "description": "3D EDM을 기반으로 수어 또는 제스처를 인식하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190093807/1020190093807_fig_2.mmd"
+    }
+  ]
+}

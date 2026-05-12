@@ -1,0 +1,28 @@
+%% 1020220189350 - 수어영상 분석 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 수어영상수신부 {
+        +String 수어영상
+        +receive()
+    }
+    class 수어영상단편화부 {
+        +String 단편화된영상
+        +fragment()
+    }
+    class 정규화부 {
+        +String 정규화된데이터
+        +normalize()
+    }
+    class ROI취득부 {
+        +String ROI데이터
+        +acquireROI()
+    }
+    class 모션데이터분석부 {
+        +String 요소데이터
+        +analyzeMotion()
+    }
+    수어영상수신부 --> 수어영상단편화부 : "수신된 수어영상을 처리"
+    수어영상단편화부 --> 정규화부 : "단편화된 영상의 데이터를 사용"
+    정규화부 --> ROI취득부 : "정규화된 데이터를 사용"
+    ROI취득부 --> 모션데이터분석부 : "ROI 데이터를 사용"

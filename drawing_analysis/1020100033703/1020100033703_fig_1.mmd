@@ -1,0 +1,28 @@
+%% 1020100033703 - 디스플레이 및 호스트 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 입력장치 {
+        +String 사용자입력
+        +receiveInput()
+    }
+    class 디스플레이제어부 {
+        +String 제어신호
+        +processDisplay()
+    }
+    class 디스플레이인터페이스 {
+        +String 데이터전송
+        +connectToHost()
+    }
+    class 표시부 {
+        +String 화면출력
+        +showOutput()
+    }
+    class 호스트제어부 {
+        +String 호스트신호
+        +controlHost()
+    }
+    입력장치 --> 디스플레이제어부 : "입력 신호 전송"
+    디스플레이제어부 --> 디스플레이인터페이스 : "디스플레이 인터페이스와 연결"
+    디스플레이제어부 --> 표시부 : "표시부와 연결"
+    디스플레이인터페이스 --> 호스트제어부 : "호스트 제어부와 연결"

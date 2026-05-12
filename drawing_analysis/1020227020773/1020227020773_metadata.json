@@ -1,0 +1,245 @@
+{
+  "app_num": "1020227020773",
+  "invention_type": "method",
+  "main_concept": "이미지 데이터로부터 3D 데이터를 도출하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "환경을 표현하는 이미지 데이터를 수신하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "이미지 데이터",
+      "component_type": "data",
+      "description": "환경을 표현하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "수신됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "객체 검출기",
+      "component_type": "process",
+      "description": "이미지 데이터로부터 객체를 검출하는 프로세스",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "객체 분류기",
+      "component_type": "process",
+      "description": "검출된 객체를 분류하는 프로세스",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "신경망",
+      "component_type": "process",
+      "description": "2D 스켈레톤을 결정하기 위한 신경망",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "3D 스켈레톤",
+      "component_type": "data",
+      "description": "결정된 2D 스켈레톤을 3D로 매핑한 데이터",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "생성됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227020773",
+      "diagram_type": "flowchart",
+      "diagram_title": "3D 데이터 도출 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"이미지 데이터\"]\n    300[\"객체 검출기\"]\n    400[\"객체 분류기\"]\n    500[\"신경망\"]\n    600[\"3D 스켈레톤\"]\n    \n    100 -->|\"수신됨\"| 200\n    200 -->|\"사용됨\"| 300\n    300 -->|\"사용됨\"| 400\n    400 -->|\"사용됨\"| 500\n    500 -->|\"생성됨\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "환경을 표현하는 이미지 데이터를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "환경을 표현하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "수신됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "객체 검출기",
+          "component_type": "process",
+          "description": "이미지 데이터로부터 객체를 검출하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 분류기",
+          "component_type": "process",
+          "description": "검출된 객체를 분류하는 프로세스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "신경망",
+          "component_type": "process",
+          "description": "2D 스켈레톤을 결정하기 위한 신경망",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "3D 스켈레톤",
+          "component_type": "data",
+          "description": "결정된 2D 스켈레톤을 3D로 매핑한 데이터",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227020773/1020227020773_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227020773",
+      "diagram_type": "flowchart",
+      "diagram_title": "객체 검출 및 분류 과정",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"이미지 데이터\"]\n    300[\"객체 검출기\"]\n    400[\"객체 분류기\"]\n    500[\"신경망\"]\n    600[\"3D 스켈레톤\"]\n    \n    100 -->|\"수신됨\"| 200\n    200 -->|\"사용됨\"| 300\n    300 -->|\"사용됨\"| 400\n    400 -->|\"사용됨\"| 500\n    500 -->|\"생성됨\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "환경을 표현하는 이미지 데이터를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "환경을 표현하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "수신됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "객체 검출기",
+          "component_type": "process",
+          "description": "이미지 데이터로부터 객체를 검출하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 분류기",
+          "component_type": "process",
+          "description": "검출된 객체를 분류하는 프로세스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "신경망",
+          "component_type": "process",
+          "description": "2D 스켈레톤을 결정하기 위한 신경망",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "3D 스켈레톤",
+          "component_type": "data",
+          "description": "결정된 2D 스켈레톤을 3D로 매핑한 데이터",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227020773/1020227020773_fig_2.mmd"
+    }
+  ]
+}

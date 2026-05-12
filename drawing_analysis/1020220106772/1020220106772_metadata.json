@@ -1,0 +1,257 @@
+{
+  "app_num": "1020220106772",
+  "invention_type": "system",
+  "main_concept": "가상계좌와 연계된 회원카드 결제 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "가상계좌관리부",
+      "component_type": "process",
+      "description": "회원가입된 사용자에게 가상계좌를 렌탈 또는 발급하여 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "회원카드관리부",
+      "component_type": "process",
+      "description": "가상계좌와 연결된 회원카드를 렌탈하여 관리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연계",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "결제관리부",
+      "component_type": "process",
+      "description": "결제정보를 수신하고 승인 여부를 결정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "잔액 조회",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "결제정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "이체처리부",
+      "component_type": "process",
+      "description": "결제정보에 따른 사용금액을 차감하여 이체",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결제완료정보 수신",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "사용금액 차감",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "검증부",
+      "component_type": "process",
+      "description": "검증정보를 전송하고 확인 여부에 따라 가상계좌 비활성화",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "검증정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "보상부",
+      "component_type": "process",
+      "description": "사용자의 활동정보를 수집하고 보상수단을 지급",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220106772",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상계좌 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"가상계좌관리부\"]\n    200[\"회원카드관리부\"]\n    300[\"결제관리부\"]\n    400[\"이체처리부\"]\n    500[\"검증부\"]\n    600[\"보상부\"]\n    \n    100 -->|\"연계\"| 200\n    100 -->|\"잔액 조회\"| 300\n    200 -->|\"결제정보 수신\"| 300\n    300 -->|\"결제완료정보 수신\"| 400\n    300 -->|\"사용금액 차감\"| 100\n    100 -->|\"검증정보 전송\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가상계좌관리부",
+          "component_type": "process",
+          "description": "회원가입된 사용자에게 가상계좌를 렌탈 또는 발급하여 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회원카드관리부",
+          "component_type": "process",
+          "description": "가상계좌와 연결된 회원카드를 렌탈하여 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제관리부",
+          "component_type": "process",
+          "description": "결제정보를 수신하고 승인 여부를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "잔액 조회",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "결제정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이체처리부",
+          "component_type": "process",
+          "description": "결제정보에 따른 사용금액을 차감하여 이체",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제완료정보 수신",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "사용금액 차감",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "검증부",
+          "component_type": "process",
+          "description": "검증정보를 전송하고 확인 여부에 따라 가상계좌 비활성화",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검증정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "보상부",
+          "component_type": "process",
+          "description": "사용자의 활동정보를 수집하고 보상수단을 지급",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220106772/1020220106772_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220106772",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가상계좌 관리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 가상계좌관리부 {\n        +회원가입된 사용자에게 가상계좌 발급\n    }\n    class 회원카드관리부 {\n        +가상계좌와 연결된 회원카드 렌탈 및 관리\n    }\n    class 결제관리부 {\n        +결제정보 수신 및 승인 결정\n    }\n    class 이체처리부 {\n        +결제완료정보 수신 후 이체 처리\n    }\n    class 검증부 {\n        +검증정보 전송 및 확인\n    }\n    class 보상부 {\n        +활동정보 수집 및 보상 지급\n    }\n    가상계좌관리부 --> 회원카드관리부 : \"연계\"\n    가상계좌관리부 --> 결제관리부 : \"잔액 조회\"\n    결제관리부 --> 회원카드관리부 : \"결제정보 수신\"\n    결제관리부 --> 이체처리부 : \"결제완료정보 수신\"\n    이체처리부 --> 가상계좌관리부 : \"사용금액 차감\"\n    가상계좌관리부 --> 검증부 : \"검증정보 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가상계좌관리부",
+          "component_type": "process",
+          "description": "회원가입된 사용자에게 가상계좌를 렌탈 또는 발급하여 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회원카드관리부",
+          "component_type": "process",
+          "description": "가상계좌와 연결된 회원카드를 렌탈하여 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제관리부",
+          "component_type": "process",
+          "description": "결제정보를 수신하고 승인 여부를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "잔액 조회",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "결제정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이체처리부",
+          "component_type": "process",
+          "description": "결제정보에 따른 사용금액을 차감하여 이체",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제완료정보 수신",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "사용금액 차감",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "검증부",
+          "component_type": "process",
+          "description": "검증정보를 전송하고 확인 여부에 따라 가상계좌 비활성화",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검증정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "보상부",
+          "component_type": "process",
+          "description": "사용자의 활동정보를 수집하고 보상수단을 지급",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220106772/1020220106772_fig_2.mmd"
+    }
+  ]
+}

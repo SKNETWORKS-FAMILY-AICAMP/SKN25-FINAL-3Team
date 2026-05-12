@@ -1,0 +1,221 @@
+{
+  "app_num": "1020220181263",
+  "invention_type": "system",
+  "main_concept": "도로 상태이상을 식별하는 모델을 생성하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "이미지 획득장치",
+      "component_type": "device",
+      "description": "도로가 촬영된 저화질 도로 이미지를 획득하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "식별모델 생성장치",
+      "component_type": "device",
+      "description": "저화질 도로 이미지의 전처리를 통해 학습 데이터를 생성하고 상태이상 식별 모델을 생성하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이미지 획득",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "210",
+      "name": "화질 변환부",
+      "component_type": "process",
+      "description": "저화질 도로 이미지를 고화질로 변환하는 과정",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "220",
+      "name": "라벨링 이미지 생성부",
+      "component_type": "process",
+      "description": "고화질 도로 이미지에서 상태이상을 라벨링하여 학습 데이터를 생성하는 과정",
+      "relationships": [
+        {
+          "target": "210",
+          "label": "입력",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "230",
+      "name": "모델 생성부",
+      "component_type": "process",
+      "description": "라벨링 이미지를 학습 데이터로 사용하여 상태이상 식별 모델을 생성하는 과정",
+      "relationships": [
+        {
+          "target": "220",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220181263",
+      "diagram_type": "flowchart",
+      "diagram_title": "도로 상태이상 식별 모델 생성 과정",
+      "mermaid_code": "flowchart TD\n    100[\"이미지 획득장치\"]\n    200[\"식별모델 생성장치\"]\n    210[\"화질 변환부\"]\n    220[\"라벨링 이미지 생성부\"]\n    230[\"모델 생성부\"]\n    \n    100 -->|\"이미지 획득\"| 200\n    200 -->|\"입력\"| 210\n    210 -->|\"출력\"| 220\n    220 -->|\"입력\"| 230",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이미지 획득장치",
+          "component_type": "device",
+          "description": "도로가 촬영된 저화질 도로 이미지를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "식별모델 생성장치",
+          "component_type": "device",
+          "description": "저화질 도로 이미지의 전처리를 통해 학습 데이터를 생성하고 상태이상 식별 모델을 생성하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "화질 변환부",
+          "component_type": "process",
+          "description": "저화질 도로 이미지를 고화질로 변환하는 과정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "라벨링 이미지 생성부",
+          "component_type": "process",
+          "description": "고화질 도로 이미지에서 상태이상을 라벨링하여 학습 데이터를 생성하는 과정",
+          "relationships": [
+            {
+              "target": "210",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "모델 생성부",
+          "component_type": "process",
+          "description": "라벨링 이미지를 학습 데이터로 사용하여 상태이상 식별 모델을 생성하는 과정",
+          "relationships": [
+            {
+              "target": "220",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220181263/1020220181263_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220181263",
+      "diagram_type": "classDiagram",
+      "diagram_title": "도로 상태이상 식별 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 이미지획득장치 {\n        +String 저화질이미지\n        +이미지획득()\n    }\n    class 식별모델생성장치 {\n        +String 학습데이터\n        +모델생성()\n    }\n    class 화질변환부 {\n        +String 고화질이미지\n        +변환()\n    }\n    class 라벨링이미지생성부 {\n        +String 라벨링이미지\n        +라벨링()\n    }\n    class 모델생성부 {\n        +String 상태이상식별모델\n        +모델생성()\n    }\n    이미지획득장치 --> 식별모델생성장치 : \"이미지 획득\"\n    식별모델생성장치 --> 화질변환부 : \"입력\"\n    화질변환부 --> 라벨링이미지생성부 : \"입력\"\n    라벨링이미지생성부 --> 식별모델생성장치 : \"출력\"\n    라벨링이미지생성부 --> 모델생성부 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이미지 획득장치",
+          "component_type": "device",
+          "description": "도로가 촬영된 저화질 도로 이미지를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "식별모델 생성장치",
+          "component_type": "device",
+          "description": "저화질 도로 이미지의 전처리를 통해 학습 데이터를 생성하고 상태이상 식별 모델을 생성하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "화질 변환부",
+          "component_type": "process",
+          "description": "저화질 도로 이미지를 고화질로 변환하는 과정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "라벨링 이미지 생성부",
+          "component_type": "process",
+          "description": "고화질 도로 이미지에서 상태이상을 라벨링하여 학습 데이터를 생성하는 과정",
+          "relationships": [
+            {
+              "target": "210",
+              "label": "입력",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "모델 생성부",
+          "component_type": "process",
+          "description": "라벨링 이미지를 학습 데이터로 사용하여 상태이상 식별 모델을 생성하는 과정",
+          "relationships": [
+            {
+              "target": "220",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220181263/1020220181263_fig_2.mmd"
+    }
+  ]
+}

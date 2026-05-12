@@ -1,0 +1,19 @@
+%% 1020207034340 - 뉴럴 네트워크 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class OpticalSensor {
+        +String imageData
+        +captureImage()
+    }
+    class NeuralNetwork {
+        +String processedData
+        +classify()
+    }
+    class MobileDevice {
+        +executeMethod()
+    }
+    OpticalSensor --> MobileDevice : "광학 센서 포함"
+    MobileDevice --> OpticalSensor : "이미지 입력"
+    MobileDevice --> NeuralNetwork : "방법 실행"
+    NeuralNetwork --> MobileDevice : "결과 반환"

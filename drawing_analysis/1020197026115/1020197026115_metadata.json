@@ -1,0 +1,221 @@
+{
+  "app_num": "1020197026115",
+  "invention_type": "method",
+  "main_concept": "복수의 하드웨어 디바이스에 대한 기계 학습 모델의 분산 처리를 위한 스케줄링 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨터",
+      "component_type": "actor",
+      "description": "기계 학습 모델을 처리하고 스케줄링하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "하드웨어 디바이스",
+      "component_type": "device",
+      "description": "기계 학습 모델의 분산 처리를 수행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "스케줄링 대상",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "기계 학습 모델",
+      "component_type": "data",
+      "description": "분산 처리를 위해 특정되는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리 대상",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "동작 임베딩",
+      "component_type": "data",
+      "description": "기계 학습 모델의 처리 수행의 일부인 개별 동작을 특징화하는 데이터",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "생성됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "배치 순환 신경망",
+      "component_type": "process",
+      "description": "동작 임베딩의 시퀀스를 처리하여 네트워크 출력을 생성하는 프로세스",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "처리 대상",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "사용됨",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197026115",
+      "diagram_type": "flowchart",
+      "diagram_title": "기계 학습 모델 스케줄링 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨터\"]\n    200[\"하드웨어 디바이스\"]\n    300[\"기계 학습 모델\"]\n    400[\"동작 임베딩\"]\n    500[\"배치 순환 신경망\"]\n    \n    100 -->|\"스케줄링 대상\"| 200\n    100 -->|\"처리 대상\"| 300\n    300 -->|\"생성됨\"| 400\n    400 -->|\"처리 대상\"| 500\n    500 -->|\"사용됨\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨터",
+          "component_type": "actor",
+          "description": "기계 학습 모델을 처리하고 스케줄링하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "하드웨어 디바이스",
+          "component_type": "device",
+          "description": "기계 학습 모델의 분산 처리를 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "스케줄링 대상",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계 학습 모델",
+          "component_type": "data",
+          "description": "분산 처리를 위해 특정되는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리 대상",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "동작 임베딩",
+          "component_type": "data",
+          "description": "기계 학습 모델의 처리 수행의 일부인 개별 동작을 특징화하는 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "배치 순환 신경망",
+          "component_type": "process",
+          "description": "동작 임베딩의 시퀀스를 처리하여 네트워크 출력을 생성하는 프로세스",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "처리 대상",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197026115/1020197026115_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197026115",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 컴퓨터 {\n        +스케줄링()\n        +모델처리()\n    }\n    class 하드웨어디바이스 {\n        +분산처리()\n    }\n    class 기계학습모델 {\n        +모델정의()\n    }\n    class 동작임베딩 {\n        +특징화()\n    }\n    class 배치순환신경망 {\n        +처리()\n        +출력생성()\n    }\n    컴퓨터 --> 하드웨어디바이스 : \"스케줄링 대상\"\n    컴퓨터 --> 기계학습모델 : \"처리 대상\"\n    기계학습모델 --> 동작임베딩 : \"생성됨\"\n    배치순환신경망 --> 동작임베딩 : \"처리 대상\"\n    배치순환신경망 --> 컴퓨터 : \"사용됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨터",
+          "component_type": "actor",
+          "description": "기계 학습 모델을 처리하고 스케줄링하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "하드웨어 디바이스",
+          "component_type": "device",
+          "description": "기계 학습 모델의 분산 처리를 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "스케줄링 대상",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계 학습 모델",
+          "component_type": "data",
+          "description": "분산 처리를 위해 특정되는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리 대상",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "동작 임베딩",
+          "component_type": "data",
+          "description": "기계 학습 모델의 처리 수행의 일부인 개별 동작을 특징화하는 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "배치 순환 신경망",
+          "component_type": "process",
+          "description": "동작 임베딩의 시퀀스를 처리하여 네트워크 출력을 생성하는 프로세스",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "처리 대상",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197026115/1020197026115_fig_2.mmd"
+    }
+  ]
+}

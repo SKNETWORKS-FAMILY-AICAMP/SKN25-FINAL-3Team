@@ -1,0 +1,89 @@
+{
+  "app_num": "1020220147688",
+  "invention_type": "method",
+  "main_concept": "식품의 의학적 효능을 산출하는 인공지능 기반 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "저장부",
+      "component_type": "data",
+      "description": "식품 성분 정보 및 효능 점수를 저장하는 데이터베이스",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "성분 점수 및 효능 점수를 산출하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "성분 정보를 기반으로 점수를 산출",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220147688",
+      "diagram_type": "flowchart",
+      "diagram_title": "식품 의학적 효능 산출 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"저장부\"]\n    200[\"프로세서\"]\n    300[\"성분 점수 산출\"]\n    400[\"효능 점수 산출\"]\n    500[\"최종 효능 점수 산출\"]\n    \n    100 -->|\"성분 정보를 기반으로 점수를 산출\"| 200\n    200 -->|\"성분 점수 산출\"| 300\n    300 -->|\"효능 점수 산출\"| 400\n    400 -->|\"최종 효능 점수 산출\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "식품 성분 정보 및 효능 점수를 저장하는 데이터베이스",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "성분 점수 및 효능 점수를 산출하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "성분 정보를 기반으로 점수를 산출",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220147688/1020220147688_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220147688",
+      "diagram_type": "classDiagram",
+      "diagram_title": "식품 의학적 효능 장치 구조",
+      "mermaid_code": "classDiagram\n    class 저장부 {\n        +String 성분정보\n        +String 효능점수\n    }\n    class 프로세서 {\n        +calculateScore()\n        +calculateEfficacy()\n    }\n    저장부 --> 프로세서 : \"성분 정보를 기반으로 점수를 산출\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "식품 성분 정보 및 효능 점수를 저장하는 데이터베이스",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "성분 점수 및 효능 점수를 산출하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "성분 정보를 기반으로 점수를 산출",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220147688/1020220147688_fig_2.mmd"
+    }
+  ]
+}

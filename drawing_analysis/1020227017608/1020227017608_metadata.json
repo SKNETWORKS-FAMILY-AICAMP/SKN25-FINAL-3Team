@@ -1,0 +1,395 @@
+{
+  "app_num": "1020227017608",
+  "invention_type": "method",
+  "main_concept": "비디오 데이터를 코딩하는 방법 및 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "비디오 데이터",
+      "component_type": "data",
+      "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "신경망",
+      "component_type": "actor",
+      "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비디오 데이터 품질 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "이진 마스크",
+      "component_type": "data",
+      "description": "가중치 계수를 마스킹하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "가중치 계수 생성에 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "컨볼루션 연산",
+      "component_type": "process",
+      "description": "비디오 데이터를 디코딩하는 과정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비디오 데이터 입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "가중치 계수 사용",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "마스킹된 가중치 계수 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227017608",
+      "diagram_type": "classDiagram",
+      "diagram_title": "네트워크화된 컴퓨터 환경",
+      "mermaid_code": "classDiagram\n    class 비디오데이터 {\n        +String 해상도\n        +String 품질정보\n    }\n    class 신경망 {\n        +generateWeights()\n    }\n    class 이진마스크 {\n        +maskWeights()\n    }\n    class 컨볼루션연산 {\n        +decodeVideo()\n    }\n    비디오데이터 --> 신경망 : \"비디오 데이터 품질 수신\"\n    신경망 --> 이진마스크 : \"가중치 계수 생성에 사용\"\n    비디오데이터 --> 컨볼루션연산 : \"비디오 데이터 입력\"\n    신경망 --> 컨볼루션연산 : \"가중치 계수 사용\"\n    이진마스크 --> 컨볼루션연산 : \"마스킹된 가중치 계수 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비디오 데이터",
+          "component_type": "data",
+          "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "actor",
+          "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 품질 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이진 마스크",
+          "component_type": "data",
+          "description": "가중치 계수를 마스킹하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가중치 계수 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컨볼루션 연산",
+          "component_type": "process",
+          "description": "비디오 데이터를 디코딩하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "가중치 계수 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "마스킹된 가중치 계수 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227017608/1020227017608_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227017608",
+      "diagram_type": "flowchart",
+      "diagram_title": "SR 프레임워크의 테스트 스테이지 작업 흐름",
+      "mermaid_code": "flowchart TD\n    100[\"비디오 데이터\"]\n    200[\"신경망\"]\n    300[\"이진 마스크\"]\n    400[\"컨볼루션 연산\"]\n    100 -->|\"비디오 데이터 품질 수신\"| 200\n    200 -->|\"가중치 계수 생성에 사용\"| 300\n    100 -->|\"비디오 데이터 입력\"| 400\n    200 -->|\"가중치 계수 사용\"| 400\n    300 -->|\"마스킹된 가중치 계수 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비디오 데이터",
+          "component_type": "data",
+          "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "actor",
+          "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 품질 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이진 마스크",
+          "component_type": "data",
+          "description": "가중치 계수를 마스킹하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가중치 계수 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컨볼루션 연산",
+          "component_type": "process",
+          "description": "비디오 데이터를 디코딩하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "가중치 계수 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "마스킹된 가중치 계수 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2a",
+      "output_path": "drawing_analysis/1020227017608/1020227017608_fig_2a.mmd"
+    },
+    {
+      "app_num": "1020227017608",
+      "diagram_type": "flowchart",
+      "diagram_title": "다중-스테이지 트레이닝 프레임워크 작업 흐름",
+      "mermaid_code": "flowchart TD\n    100[\"비디오 데이터\"]\n    200[\"신경망\"]\n    300[\"이진 마스크\"]\n    400[\"컨볼루션 연산\"]\n    100 -->|\"비디오 데이터 품질 수신\"| 200\n    200 -->|\"가중치 계수 생성에 사용\"| 300\n    100 -->|\"비디오 데이터 입력\"| 400\n    200 -->|\"가중치 계수 사용\"| 400\n    300 -->|\"마스킹된 가중치 계수 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비디오 데이터",
+          "component_type": "data",
+          "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "actor",
+          "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 품질 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이진 마스크",
+          "component_type": "data",
+          "description": "가중치 계수를 마스킹하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가중치 계수 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컨볼루션 연산",
+          "component_type": "process",
+          "description": "비디오 데이터를 디코딩하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "가중치 계수 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "마스킹된 가중치 계수 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2b",
+      "output_path": "drawing_analysis/1020227017608/1020227017608_fig_2b.mmd"
+    },
+    {
+      "app_num": "1020227017608",
+      "diagram_type": "flowchart",
+      "diagram_title": "가중치 충전 모듈 작업 흐름",
+      "mermaid_code": "flowchart TD\n    100[\"비디오 데이터\"]\n    200[\"신경망\"]\n    300[\"이진 마스크\"]\n    400[\"컨볼루션 연산\"]\n    100 -->|\"비디오 데이터 품질 수신\"| 200\n    200 -->|\"가중치 계수 생성에 사용\"| 300\n    100 -->|\"비디오 데이터 입력\"| 400\n    200 -->|\"가중치 계수 사용\"| 400\n    300 -->|\"마스킹된 가중치 계수 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비디오 데이터",
+          "component_type": "data",
+          "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "actor",
+          "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 품질 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이진 마스크",
+          "component_type": "data",
+          "description": "가중치 계수를 마스킹하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가중치 계수 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컨볼루션 연산",
+          "component_type": "process",
+          "description": "비디오 데이터를 디코딩하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "가중치 계수 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "마스킹된 가중치 계수 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3a",
+      "output_path": "drawing_analysis/1020227017608/1020227017608_fig_3a.mmd"
+    },
+    {
+      "app_num": "1020227017608",
+      "diagram_type": "flowchart",
+      "diagram_title": "마이크로-구조 프루닝 모듈 작업 흐름",
+      "mermaid_code": "flowchart TD\n    100[\"비디오 데이터\"]\n    200[\"신경망\"]\n    300[\"이진 마스크\"]\n    400[\"컨볼루션 연산\"]\n    200 -->|\"비디오 데이터 품질 수신\"| 100\n    200 -->|\"가중치 계수 생성에 사용\"| 300\n    400 -->|\"비디오 데이터 입력\"| 100\n    400 -->|\"가중치 계수 사용\"| 200\n    400 -->|\"마스킹된 가중치 계수 사용\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비디오 데이터",
+          "component_type": "data",
+          "description": "제1 해상도의 비디오 데이터 및 품질 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "actor",
+          "description": "비디오 데이터의 품질에 따라 가중치 계수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 품질 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이진 마스크",
+          "component_type": "data",
+          "description": "가중치 계수를 마스킹하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가중치 계수 생성에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컨볼루션 연산",
+          "component_type": "process",
+          "description": "비디오 데이터를 디코딩하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비디오 데이터 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "가중치 계수 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "마스킹된 가중치 계수 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3b",
+      "output_path": "drawing_analysis/1020227017608/1020227017608_fig_3b.mmd"
+    }
+  ]
+}

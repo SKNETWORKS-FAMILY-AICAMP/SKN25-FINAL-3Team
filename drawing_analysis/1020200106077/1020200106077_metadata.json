@@ -1,0 +1,167 @@
+{
+  "app_num": "1020200106077",
+  "invention_type": "system",
+  "main_concept": "메모리 장치와 통신하는 메모리 컨트롤러를 포함하는 메모리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메모리 장치",
+      "component_type": "device",
+      "description": "데이터를 저장하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리 컨트롤러",
+      "component_type": "device",
+      "description": "메모리 장치를 제어하고 펌웨어를 실행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "맵 캐시",
+      "component_type": "data",
+      "description": "맵 데이터를 캐싱하는 공간",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "타이머",
+      "component_type": "process",
+      "description": "맵 캐시 풀에 설정된 타이머",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200106077",
+      "diagram_type": "flowchart",
+      "diagram_title": "메모리 시스템 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"메모리 장치\"]\n    200[\"메모리 컨트롤러\"]\n    300[\"맵 캐시\"]\n    400[\"타이머\"]\n    200 -->|\"제어\"| 100\n    200 -->|\"사용\"| 300\n    300 -->|\"연결\"| 400\n    400 -->|\"맵 데이터 플러시\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메모리 장치",
+          "component_type": "device",
+          "description": "데이터를 저장하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리 컨트롤러",
+          "component_type": "device",
+          "description": "메모리 장치를 제어하고 펌웨어를 실행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "맵 캐시",
+          "component_type": "data",
+          "description": "맵 데이터를 캐싱하는 공간",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "타이머",
+          "component_type": "process",
+          "description": "맵 캐시 풀에 설정된 타이머",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200106077/1020200106077_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200106077",
+      "diagram_type": "classDiagram",
+      "diagram_title": "메모리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class MemoryDevice {\n        +String description\n    }\n    class MemoryController {\n        +String description\n        +control()\n    }\n    class MapCache {\n        +String description\n    }\n    class Timer {\n        +String description\n        +setTimer()\n    }\n    MemoryDevice <|-- MemoryController : \"제어\"\n    MemoryController --> MapCache : \"사용\"\n    MapCache --> Timer : \"연결\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메모리 장치",
+          "component_type": "device",
+          "description": "데이터를 저장하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리 컨트롤러",
+          "component_type": "device",
+          "description": "메모리 장치를 제어하고 펌웨어를 실행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "맵 캐시",
+          "component_type": "data",
+          "description": "맵 데이터를 캐싱하는 공간",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "타이머",
+          "component_type": "process",
+          "description": "맵 캐시 풀에 설정된 타이머",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200106077/1020200106077_fig_2.mmd"
+    }
+  ]
+}

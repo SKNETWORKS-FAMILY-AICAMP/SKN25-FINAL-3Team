@@ -1,0 +1,41 @@
+%% 1020247000620 - AI 모델 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1이미지 {
+        +String 렌즈에지이미지
+        +processEdge()
+    }
+    class 에지컨볼루션신경망 {
+        +String 모델
+        +analyzeEdge()
+    }
+    class 클래스활성화맵CAM {
+        +String 결함영역
+        +labeling()
+    }
+    class 제1분류된이미지 {
+        +String 결함분류결과
+    }
+    class 제2이미지 {
+        +String 렌즈표면이미지
+        +processSurface()
+    }
+    class 표면컨볼루션신경망 {
+        +String 모델
+        +analyzeSurface()
+    }
+    class 라벨링된CAM {
+        +String 결함영역
+        +labeling()
+    }
+    class 제2분류된이미지 {
+        +String 결함분류결과
+    }
+
+    제1이미지 --> 에지컨볼루션신경망 : "처리하여 결함 분석"
+    에지컨볼루션신경망 --> 클래스활성화맵CAM : "CAM 생성"
+    클래스활성화맵CAM --> 제1분류된이미지 : "분류 생성"
+    제2이미지 --> 표면컨볼루션신경망 : "처리하여 결함 분석"
+    표면컨볼루션신경망 --> 라벨링된CAM : "CAM 생성"
+    라벨링된CAM --> 제2분류된이미지 : "분류 생성"

@@ -1,0 +1,167 @@
+{
+  "app_num": "1020250045991",
+  "invention_type": "method",
+  "main_concept": "벼 지도 작성을 위한 딥러닝 기반의 이미지 생성 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "특징 선택부",
+      "component_type": "process",
+      "description": "벼와 기타 작물의 필드 데이터로부터 VV 및 VH 밴드의 이미지와 식생지수를 추출하는 단계",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "데이터 전처리부",
+      "component_type": "process",
+      "description": "VV 및 VH 밴드의 이미지를 지형 보정 및 스페클 노이즈 필터링하여 전처리하는 단계",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "모델 구현부",
+      "component_type": "process",
+      "description": "GAN 모델을 이용하여 식생지수의 결측치를 보완하는 단계",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "전처리된 데이터 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "벼 지도 생성부",
+      "component_type": "process",
+      "description": "랜덤 포레스트 모델을 이용하여 벼 지도를 생성하는 단계",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "보완된 이미지 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250045991",
+      "diagram_type": "flowchart",
+      "diagram_title": "벼 지도 작성 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"특징 선택부\"]\n    200[\"데이터 전처리부\"]\n    300[\"모델 구현부\"]\n    400[\"벼 지도 생성부\"]\n    100 -->|\"입력 데이터\"| 200\n    200 -->|\"전처리된 데이터 사용\"| 300\n    300 -->|\"보완된 이미지 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "특징 선택부",
+          "component_type": "process",
+          "description": "벼와 기타 작물의 필드 데이터로부터 VV 및 VH 밴드의 이미지와 식생지수를 추출하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 전처리부",
+          "component_type": "process",
+          "description": "VV 및 VH 밴드의 이미지를 지형 보정 및 스페클 노이즈 필터링하여 전처리하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "모델 구현부",
+          "component_type": "process",
+          "description": "GAN 모델을 이용하여 식생지수의 결측치를 보완하는 단계",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전처리된 데이터 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "벼 지도 생성부",
+          "component_type": "process",
+          "description": "랜덤 포레스트 모델을 이용하여 벼 지도를 생성하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "보완된 이미지 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250045991/1020250045991_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250045991",
+      "diagram_type": "classDiagram",
+      "diagram_title": "벼 지도 작성 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 특징선택부 {\n        +String 필드데이터\n        +extractImages()\n    }\n    class 데이터전처리부 {\n        +String VV이미지\n        +String VH이미지\n        +preprocess()\n    }\n    class 모델구현부 {\n        +String 식생지수\n        +fillMissingValues()\n    }\n    class 벼지도생성부 {\n        +String 최종지도\n        +generateMap()\n    }\n    특징선택부 --> 데이터전처리부 : \"입력 데이터\"\n    데이터전처리부 --> 모델구현부 : \"전처리된 데이터 사용\"\n    모델구현부 --> 벼지도생성부 : \"보완된 이미지 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "특징 선택부",
+          "component_type": "process",
+          "description": "벼와 기타 작물의 필드 데이터로부터 VV 및 VH 밴드의 이미지와 식생지수를 추출하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 전처리부",
+          "component_type": "process",
+          "description": "VV 및 VH 밴드의 이미지를 지형 보정 및 스페클 노이즈 필터링하여 전처리하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "모델 구현부",
+          "component_type": "process",
+          "description": "GAN 모델을 이용하여 식생지수의 결측치를 보완하는 단계",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전처리된 데이터 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "벼 지도 생성부",
+          "component_type": "process",
+          "description": "랜덤 포레스트 모델을 이용하여 벼 지도를 생성하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "보완된 이미지 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250045991/1020250045991_fig_2.mmd"
+    }
+  ]
+}

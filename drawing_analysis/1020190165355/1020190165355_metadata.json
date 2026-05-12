@@ -1,0 +1,167 @@
+{
+  "app_num": "1020190165355",
+  "invention_type": "method",
+  "main_concept": "여러 사용자의 결제 요청을 통합하여 처리하는 결제 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "결제 요청을 처리하는 컴퓨터 장치의 핵심 구성 요소",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "결제 요청 저장부",
+      "component_type": "data",
+      "description": "결제 요청을 저장하는 데이터 구조",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장 및 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "결제 요청 제공부",
+      "component_type": "data",
+      "description": "저장된 결제 요청 목록을 사용자에게 제공하는 기능",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제공 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "결제 처리부",
+      "component_type": "process",
+      "description": "결제 요청을 처리하는 기능",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 요청 처리",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190165355",
+      "diagram_type": "flowchart",
+      "diagram_title": "결제 요청 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"결제 요청 저장부\"]\n    300[\"결제 요청 제공부\"]\n    400[\"결제 처리부\"]\n    100 -->|\"결제 요청 수신\"| 200\n    200 -->|\"저장 및 처리\"| 100\n    100 -->|\"제공 요청\"| 300\n    300 -->|\"결제 요청 목록 제공\"| 400\n    400 -->|\"결제 요청 처리\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "결제 요청을 처리하는 컴퓨터 장치의 핵심 구성 요소",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "결제 요청 저장부",
+          "component_type": "data",
+          "description": "결제 요청을 저장하는 데이터 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장 및 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제 요청 제공부",
+          "component_type": "data",
+          "description": "저장된 결제 요청 목록을 사용자에게 제공하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제공 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "결제 처리부",
+          "component_type": "process",
+          "description": "결제 요청을 처리하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190165355/1020190165355_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190165355",
+      "diagram_type": "classDiagram",
+      "diagram_title": "결제 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +String 결제요청\n        +processRequest()\n    }\n    class 결제 요청 저장부 {\n        +List<String> 저장된요청\n        +saveRequest()\n    }\n    class 결제 요청 제공부 {\n        +List<String> 제공된요청\n        +provideRequests()\n    }\n    class 결제 처리부 {\n        +String 처리결과\n        +processPayment()\n    }\n    프로세서 --> 결제 요청 저장부 : \"저장 및 처리\"\n    프로세서 --> 결제 요청 제공부 : \"제공 요청\"\n    프로세서 --> 결제 처리부 : \"결제 요청 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "결제 요청을 처리하는 컴퓨터 장치의 핵심 구성 요소",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "결제 요청 저장부",
+          "component_type": "data",
+          "description": "결제 요청을 저장하는 데이터 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장 및 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제 요청 제공부",
+          "component_type": "data",
+          "description": "저장된 결제 요청 목록을 사용자에게 제공하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제공 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "결제 처리부",
+          "component_type": "process",
+          "description": "결제 요청을 처리하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190165355/1020190165355_fig_2.mmd"
+    }
+  ]
+}

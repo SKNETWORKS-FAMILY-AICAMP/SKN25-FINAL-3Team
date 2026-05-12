@@ -1,0 +1,143 @@
+{
+  "app_num": "1020250090654",
+  "invention_type": "method",
+  "main_concept": "사용자의 문서 작성 요청에 따라 지식 베이스를 검색하고, 대규모 언어 모델을 이용해 문서를 자동 생성하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "문서 작성 요청을 입력하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "지식 베이스",
+      "component_type": "data",
+      "description": "문서 작성에 필요한 리소스를 저장하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "검색 대상 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "대규모 언어 모델",
+      "component_type": "process",
+      "description": "문서 초안을 생성하는 AI 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "요청 처리",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "데이터 입력",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250090654",
+      "diagram_type": "classDiagram",
+      "diagram_title": "문서 작업 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 요청\n        +요청수신()\n    }\n    class 지식베이스 {\n        +String 리소스\n        +검색대상검색()\n    }\n    class 대규모언어모델 {\n        +String 초안\n        +초안생성()\n    }\n    사용자단말 --> 지식베이스 : \"검색 대상 제공\"\n    사용자단말 --> 대규모언어모델 : \"요청 처리\"\n    지식베이스 --> 대규모언어모델 : \"데이터 입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "문서 작성 요청을 입력하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "지식 베이스",
+          "component_type": "data",
+          "description": "문서 작성에 필요한 리소스를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검색 대상 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대규모 언어 모델",
+          "component_type": "process",
+          "description": "문서 초안을 생성하는 AI 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 처리",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250090654/1020250090654_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250090654",
+      "diagram_type": "flowchart",
+      "diagram_title": "문서 작성 시스템 UI 구성",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"지식 베이스\"]\n    300[\"대규모 언어 모델\"]\n    400[\"문서 초안 생성\"]\n    \n    100 -->|\"문서 작성 요청 수신\"| 200\n    200 -->|\"검색 대상 제공\"| 300\n    300 -->|\"전처리 데이터 입력\"| 400\n    400 -->|\"초안 컨텐츠 생성\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "문서 작성 요청을 입력하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "지식 베이스",
+          "component_type": "data",
+          "description": "문서 작성에 필요한 리소스를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검색 대상 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대규모 언어 모델",
+          "component_type": "process",
+          "description": "문서 초안을 생성하는 AI 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 처리",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250090654/1020250090654_fig_2.mmd"
+    }
+  ]
+}

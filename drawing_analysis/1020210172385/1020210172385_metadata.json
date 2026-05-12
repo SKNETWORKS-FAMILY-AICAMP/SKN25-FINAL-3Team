@@ -1,0 +1,242 @@
+{
+  "app_num": "1020210172385",
+  "invention_type": "system",
+  "main_concept": "정점의 특성을 예측하는 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입출력부",
+      "component_type": "device",
+      "description": "데이터를 입력 받고 결과를 출력하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "저장부",
+      "component_type": "data",
+      "description": "예측 프로그램이 저장되는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "제어부",
+      "component_type": "device",
+      "description": "입력된 데이터에 대해 정점의 특성을 예측하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입출력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "프로그램 실행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "인코더",
+      "component_type": "device",
+      "description": "가우시안 마르코프 랜덤 필드를 사용하여 잠재 변수를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "데이터 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "특성 디코더",
+      "component_type": "device",
+      "description": "정점의 특성 벡터를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "모델링",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "레이블 디코더",
+      "component_type": "device",
+      "description": "정점의 레이블을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "모델링",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210172385",
+      "diagram_type": "flowchart",
+      "diagram_title": "정점 특성 예측 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입출력부\"]\n    200[\"저장부\"]\n    300[\"제어부\"]\n    400[\"인코더\"]\n    500[\"특성 디코더\"]\n    600[\"레이블 디코더\"]\n    \n    100 -->|\"입출력\"| 300\n    300 -->|\"프로그램 실행\"| 200\n    300 -->|\"데이터 처리\"| 400\n    400 -->|\"모델링\"| 500\n    400 -->|\"모델링\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입출력부",
+          "component_type": "device",
+          "description": "데이터를 입력 받고 결과를 출력하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "예측 프로그램이 저장되는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "입력된 데이터에 대해 정점의 특성을 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "프로그램 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인코더",
+          "component_type": "device",
+          "description": "가우시안 마르코프 랜덤 필드를 사용하여 잠재 변수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "특성 디코더",
+          "component_type": "device",
+          "description": "정점의 특성 벡터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "레이블 디코더",
+          "component_type": "device",
+          "description": "정점의 레이블을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델링",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210172385/1020210172385_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210172385",
+      "diagram_type": "classDiagram",
+      "diagram_title": "정점 특성 예측 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 입출력부 {\n        +String 데이터\n        +outputResult()\n    }\n    class 저장부 {\n        +String 예측프로그램\n    }\n    class 제어부 {\n        +predictVertexCharacteristics()\n    }\n    class 인코더 {\n        +generateLatentVariables()\n    }\n    class 특성디코더 {\n        +generateCharacteristicVector()\n    }\n    class 레이블디코더 {\n        +generateLabel()\n    }\n    입출력부 --> 제어부 : \"입출력\"\n    제어부 --> 저장부 : \"프로그램 실행\"\n    제어부 --> 인코더 : \"데이터 처리\"\n    제어부 --> 특성디코더 : \"모델링\"\n    제어부 --> 레이블디코더 : \"모델링\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입출력부",
+          "component_type": "device",
+          "description": "데이터를 입력 받고 결과를 출력하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "예측 프로그램이 저장되는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "입력된 데이터에 대해 정점의 특성을 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "프로그램 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인코더",
+          "component_type": "device",
+          "description": "가우시안 마르코프 랜덤 필드를 사용하여 잠재 변수를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "특성 디코더",
+          "component_type": "device",
+          "description": "정점의 특성 벡터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "레이블 디코더",
+          "component_type": "device",
+          "description": "정점의 레이블을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델링",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210172385/1020210172385_fig_2.mmd"
+    }
+  ]
+}

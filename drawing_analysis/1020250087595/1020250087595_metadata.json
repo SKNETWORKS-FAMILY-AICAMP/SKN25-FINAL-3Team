@@ -1,0 +1,275 @@
+{
+  "app_num": "1020250087595",
+  "invention_type": "system",
+  "main_concept": "하이퍼레져 패브릭 블록체인 기반 저온압착 참기름의 품질 검증 및 커머스 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "현장 스마트 저온압착참기름방앗간모듈",
+      "component_type": "device",
+      "description": "저온압착형 참기름을 생산하는 장비로, 센싱 데이터를 수집하여 블록체인에 전송",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 전송",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "제어 신호 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "참기름 판매매칭라우터 형성제어모듈",
+      "component_type": "device",
+      "description": "판매 매칭 및 정산을 담당하며, 주문 신호를 처리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어 신호 송신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "판매 중개",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "데이터 검증",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "참기름 구매·QR스캔 기반 리워드형 커머스앱모듈",
+      "component_type": "device",
+      "description": "구매자와 연결되어 주문 및 리워드를 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "주문 신호 송신",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "리워드 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "하이퍼레져 패브릭형 네트워크 형성제어모듈",
+      "component_type": "device",
+      "description": "블록체인 네트워크를 형성하고 데이터의 안전성을 보장",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "데이터 검증",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "리워드 검증",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250087595",
+      "diagram_type": "flowchart",
+      "diagram_title": "저온압착 참기름 생산 및 판매 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"현장 스마트 저온압착참기름방앗간모듈\"]\n    200[\"참기름 판매매칭라우터 형성제어모듈\"]\n    300[\"참기름 구매·QR스캔 기반 리워드형 커머스앱모듈\"]\n    400[\"하이퍼레져 패브릭형 네트워크 형성제어모듈\"]\n    100 -->|\"데이터 전송\"| 200\n    200 -->|\"제어 신호 송신\"| 100\n    200 -->|\"판매 중개\"| 300\n    200 -->|\"데이터 검증\"| 400\n    300 -->|\"주문 신호 송신\"| 200\n    300 -->|\"리워드 제공\"| 400\n    400 -->|\"데이터 수신\"| 100\n    400 -->|\"리워드 검증\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "현장 스마트 저온압착참기름방앗간모듈",
+          "component_type": "device",
+          "description": "저온압착형 참기름을 생산하는 장비로, 센싱 데이터를 수집하여 블록체인에 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "제어 신호 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "참기름 판매매칭라우터 형성제어모듈",
+          "component_type": "device",
+          "description": "판매 매칭 및 정산을 담당하며, 주문 신호를 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 송신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "판매 중개",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "데이터 검증",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "참기름 구매·QR스캔 기반 리워드형 커머스앱모듈",
+          "component_type": "device",
+          "description": "구매자와 연결되어 주문 및 리워드를 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "주문 신호 송신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "리워드 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "하이퍼레져 패브릭형 네트워크 형성제어모듈",
+          "component_type": "device",
+          "description": "블록체인 네트워크를 형성하고 데이터의 안전성을 보장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 검증",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "리워드 검증",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250087595/1020250087595_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250087595",
+      "diagram_type": "classDiagram",
+      "diagram_title": "저온압착 참기름 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 저온압착참기름방앗간모듈 {\n        +String 센싱데이터\n        +생산()\n    }\n    class 판매매칭라우터형성제어모듈 {\n        +String 주문신호\n        +정산()\n    }\n    class 구매QR스캔기반리워드형커머스앱모듈 {\n        +String 리워드정보\n        +주문관리()\n    }\n    class 하이퍼레져패브릭형네트워크형성제어모듈 {\n        +String 블록체인데이터\n        +데이터검증()\n    }\n    저온압착참기름방앗간모듈 --> 판매매칭라우터형성제어모듈 : \"데이터 전송\"\n    판매매칭라우터형성제어모듈 --> 저온압착참기름방앗간모듈 : \"제어 신호 송신\"\n    판매매칭라우터형성제어모듈 --> 구매QR스캔기반리워드형커머스앱모듈 : \"판매 중개\"\n    구매QR스캔기반리워드형커머스앱모듈 --> 판매매칭라우터형성제어모듈 : \"주문 신호 송신\"\n    하이퍼레져패브릭형네트워크형성제어모듈 --> 저온압착참기름방앗간모듈 : \"데이터 수신\"\n    하이퍼레져패브릭형네트워크형성제어모듈 --> 판매매칭라우터형성제어모듈 : \"데이터 검증\"\n    하이퍼레져패브릭형네트워크형성제어모듈 --> 구매QR스캔기반리워드형커머스앱모듈 : \"리워드 검증\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "현장 스마트 저온압착참기름방앗간모듈",
+          "component_type": "device",
+          "description": "저온압착형 참기름을 생산하는 장비로, 센싱 데이터를 수집하여 블록체인에 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "제어 신호 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "참기름 판매매칭라우터 형성제어모듈",
+          "component_type": "device",
+          "description": "판매 매칭 및 정산을 담당하며, 주문 신호를 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 송신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "판매 중개",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "데이터 검증",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "참기름 구매·QR스캔 기반 리워드형 커머스앱모듈",
+          "component_type": "device",
+          "description": "구매자와 연결되어 주문 및 리워드를 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "주문 신호 송신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "리워드 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "하이퍼레져 패브릭형 네트워크 형성제어모듈",
+          "component_type": "device",
+          "description": "블록체인 네트워크를 형성하고 데이터의 안전성을 보장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 검증",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "리워드 검증",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250087595/1020250087595_fig_2.mmd"
+    }
+  ]
+}

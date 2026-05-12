@@ -1,0 +1,206 @@
+{
+  "app_num": "1020227009700",
+  "invention_type": "hardware",
+  "main_concept": "신경망 추론을 위한 정규화 회로를 포함하는 하드웨어 회로",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "정규화 회로",
+      "component_type": "device",
+      "description": "복수의 입력 값을 수신하고 정규화 값을 생성하는 회로",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "정규화 레지스터 컬럼",
+      "component_type": "device",
+      "description": "정규화 값을 저장하고 처리하는 레지스터 컬럼",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "정규화 레지스터",
+      "component_type": "device",
+      "description": "정규화 값을 계산하고 인접 레지스터로 전달하는 레지스터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "활성화 회로",
+      "component_type": "device",
+      "description": "입력 값에 함수를 적용하여 활성화 값을 생성하는 회로",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "커플링",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "풀링 회로",
+      "component_type": "device",
+      "description": "정규화 값들을 풀링하여 풀링 값을 생성하는 회로",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227009700",
+      "diagram_type": "classDiagram",
+      "diagram_title": "정규화 회로 구조도",
+      "mermaid_code": "classDiagram\n    class 정규화회로 {\n        +수신값()\n        +정규화값생성()\n    }\n    class 정규화레지스터컬럼 {\n        +정규화값저장()\n        +처리()\n    }\n    class 정규화레지스터 {\n        +정규화값계산()\n        +전달()\n    }\n    class 활성화회로 {\n        +함수적용()\n        +활성화값생성()\n    }\n    class 풀링회로 {\n        +정규화값풀링()\n        +풀링값생성()\n    }\n    정규화회로 --> 정규화레지스터컬럼 : \"구성 요소\"\n    정규화레지스터컬럼 --> 정규화레지스터 : \"소속\"\n    정규화회로 --> 활성화회로 : \"커플링\"\n    정규화회로 --> 풀링회로 : \"구성 요소\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "정규화 회로",
+          "component_type": "device",
+          "description": "복수의 입력 값을 수신하고 정규화 값을 생성하는 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정규화 레지스터 컬럼",
+          "component_type": "device",
+          "description": "정규화 값을 저장하고 처리하는 레지스터 컬럼",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "정규화 레지스터",
+          "component_type": "device",
+          "description": "정규화 값을 계산하고 인접 레지스터로 전달하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "활성화 회로",
+          "component_type": "device",
+          "description": "입력 값에 함수를 적용하여 활성화 값을 생성하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "커플링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "풀링 회로",
+          "component_type": "device",
+          "description": "정규화 값들을 풀링하여 풀링 값을 생성하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227009700/1020227009700_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227009700",
+      "diagram_type": "flowchart",
+      "diagram_title": "정규화 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"정규화 회로\"]\n    200[\"정규화 레지스터 컬럼\"]\n    300[\"정규화 레지스터\"]\n    400[\"활성화 회로\"]\n    500[\"풀링 회로\"]\n    \n    100 -->|\"구성 요소\"| 200\n    200 -->|\"소속\"| 300\n    100 -->|\"커플링\"| 400\n    100 -->|\"구성 요소\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "정규화 회로",
+          "component_type": "device",
+          "description": "복수의 입력 값을 수신하고 정규화 값을 생성하는 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정규화 레지스터 컬럼",
+          "component_type": "device",
+          "description": "정규화 값을 저장하고 처리하는 레지스터 컬럼",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "정규화 레지스터",
+          "component_type": "device",
+          "description": "정규화 값을 계산하고 인접 레지스터로 전달하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "활성화 회로",
+          "component_type": "device",
+          "description": "입력 값에 함수를 적용하여 활성화 값을 생성하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "커플링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "풀링 회로",
+          "component_type": "device",
+          "description": "정규화 값들을 풀링하여 풀링 값을 생성하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227009700/1020227009700_fig_2.mmd"
+    }
+  ]
+}

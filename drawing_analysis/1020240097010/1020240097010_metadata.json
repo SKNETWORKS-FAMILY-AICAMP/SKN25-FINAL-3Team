@@ -1,0 +1,167 @@
+{
+  "app_num": "1020240097010",
+  "invention_type": "method",
+  "main_concept": "축사에서 사육되는 가축 개체군의 비정상 사육 상태 정보를 산출하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "가축 개체군의 비정상 사육 상태 정보를 산출하는 과정을 수행",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "device",
+      "description": "프로세서가 실행할 명령을 저장",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "명령을 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "축사 이미지",
+      "component_type": "data",
+      "description": "가축 개체군의 상태를 분석하기 위한 입력 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "분석 대상",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "인덱스 계열 정보",
+      "component_type": "data",
+      "description": "가축 개체군의 비정상 사육 상태를 판단하기 위한 정보",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비정상 상태 판단에 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240097010",
+      "diagram_type": "flowchart",
+      "diagram_title": "가축 개체군 비정상 사육 상태 정보 산출 방법",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"메모리\"]\n    300[\"축사 이미지\"]\n    400[\"인덱스 계열 정보\"]\n    300 -->|\"분석 대상\"| 100\n    200 <--|\"명령을 제공\"| 100\n    400 -->|\"비정상 상태 판단에 사용\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "가축 개체군의 비정상 사육 상태 정보를 산출하는 과정을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "프로세서가 실행할 명령을 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "명령을 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "축사 이미지",
+          "component_type": "data",
+          "description": "가축 개체군의 상태를 분석하기 위한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "분석 대상",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인덱스 계열 정보",
+          "component_type": "data",
+          "description": "가축 개체군의 비정상 사육 상태를 판단하기 위한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비정상 상태 판단에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240097010/1020240097010_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240097010",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가축 개체군 비정상 사육 상태 정보 산출 장치",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +산출비정상상태정보()\n    }\n    class 메모리 {\n        +저장명령()\n    }\n    class 축사이미지 {\n        +수집데이터()\n    }\n    class 인덱스계열정보 {\n        +산출정보()\n    }\n    프로세서 --> 메모리 : \"명령을 제공\"\n    프로세서 --> 축사이미지 : \"분석 대상\"\n    프로세서 --> 인덱스계열정보 : \"비정상 상태 판단에 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "가축 개체군의 비정상 사육 상태 정보를 산출하는 과정을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "프로세서가 실행할 명령을 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "명령을 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "축사 이미지",
+          "component_type": "data",
+          "description": "가축 개체군의 상태를 분석하기 위한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "분석 대상",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인덱스 계열 정보",
+          "component_type": "data",
+          "description": "가축 개체군의 비정상 사육 상태를 판단하기 위한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비정상 상태 판단에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240097010/1020240097010_fig_2.mmd"
+    }
+  ]
+}

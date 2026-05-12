@@ -1,0 +1,323 @@
+{
+  "app_num": "1020240102060",
+  "invention_type": "system",
+  "main_concept": "안심 중계 시스템을 통한 분할 결제 처리",
+  "components": [
+    {
+      "component_id": "10",
+      "name": "정보입력부",
+      "component_type": "process",
+      "description": "구매자 정보, 판매자 정보 및 구매 정보를 입력받는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "계약서제공부",
+      "component_type": "process",
+      "description": "전자계약서를 생성하고 판매자와 구매자에게 전달하는 역할",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "정보를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "30",
+      "name": "계약서수신부",
+      "component_type": "process",
+      "description": "전자계약서를 수신하고 수신 정보를 제공하는 역할",
+      "relationships": [
+        {
+          "target": "20",
+          "label": "전자계약서를 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "40",
+      "name": "가상계좌제공부",
+      "component_type": "process",
+      "description": "구매자에게 가상계좌를 제공하는 역할",
+      "relationships": [
+        {
+          "target": "30",
+          "label": "구매정보를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "50",
+      "name": "입금정보제공부",
+      "component_type": "process",
+      "description": "입금된 정보를 판매자에게 제공하는 역할",
+      "relationships": [
+        {
+          "target": "40",
+          "label": "입금 정보를 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "60",
+      "name": "비용지급부",
+      "component_type": "process",
+      "description": "구매금액을 분할 지급하는 역할",
+      "relationships": [
+        {
+          "target": "50",
+          "label": "입금 정보를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "70",
+      "name": "서비스완료부",
+      "component_type": "process",
+      "description": "중계서비스의 이행 완료를 통보하는 역할",
+      "relationships": [
+        {
+          "target": "60",
+          "label": "분할 지급 완료 시",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "80",
+      "name": "정보저장부",
+      "component_type": "data",
+      "description": "구매자 및 판매자 정보를 저장하는 역할",
+      "relationships": [
+        {
+          "target": "70",
+          "label": "서비스 완료 정보를 저장",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240102060",
+      "diagram_type": "flowchart",
+      "diagram_title": "분할 결제 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    10[\"정보입력부\"]\n    20[\"계약서제공부\"]\n    30[\"계약서수신부\"]\n    40[\"가상계좌제공부\"]\n    50[\"입금정보제공부\"]\n    60[\"비용지급부\"]\n    70[\"서비스완료부\"]\n    80[\"정보저장부\"]\n\n    10 -->|\"구매자 정보 입력\"| 20\n    20 -->|\"전자계약서 생성\"| 30\n    30 -->|\"전자계약서 수신\"| 40\n    40 -->|\"가상계좌 제공\"| 50\n    50 -->|\"입금 정보 전달\"| 60\n    60 -->|\"분할 지급 처리\"| 70\n    70 -->|\"서비스 완료 통보\"| 80",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "정보입력부",
+          "component_type": "process",
+          "description": "구매자 정보, 판매자 정보 및 구매 정보를 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "계약서제공부",
+          "component_type": "process",
+          "description": "전자계약서를 생성하고 판매자와 구매자에게 전달하는 역할",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "계약서수신부",
+          "component_type": "process",
+          "description": "전자계약서를 수신하고 수신 정보를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "전자계약서를 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "가상계좌제공부",
+          "component_type": "process",
+          "description": "구매자에게 가상계좌를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "구매정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "50",
+          "name": "입금정보제공부",
+          "component_type": "process",
+          "description": "입금된 정보를 판매자에게 제공하는 역할",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "입금 정보를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "60",
+          "name": "비용지급부",
+          "component_type": "process",
+          "description": "구매금액을 분할 지급하는 역할",
+          "relationships": [
+            {
+              "target": "50",
+              "label": "입금 정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "70",
+          "name": "서비스완료부",
+          "component_type": "process",
+          "description": "중계서비스의 이행 완료를 통보하는 역할",
+          "relationships": [
+            {
+              "target": "60",
+              "label": "분할 지급 완료 시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "80",
+          "name": "정보저장부",
+          "component_type": "data",
+          "description": "구매자 및 판매자 정보를 저장하는 역할",
+          "relationships": [
+            {
+              "target": "70",
+              "label": "서비스 완료 정보를 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240102060/1020240102060_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240102060",
+      "diagram_type": "classDiagram",
+      "diagram_title": "안심 중계 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 정보입력부 {\n        +String 구매자정보\n        +String 판매자정보\n        +String 구매정보\n    }\n    class 계약서제공부 {\n        +createContract()\n        +sendContract()\n    }\n    class 계약서수신부 {\n        +receiveContract()\n        +provideReceiptInfo()\n    }\n    class 가상계좌제공부 {\n        +provideVirtualAccount()\n    }\n    class 입금정보제공부 {\n        +provideDepositInfo()\n    }\n    class 비용지급부 {\n        +processPayment()\n    }\n    class 서비스완료부 {\n        +notifyCompletion()\n    }\n    class 정보저장부 {\n        +saveInformation()\n    }\n\n    정보입력부 --> 계약서제공부 : \"정보를 기반으로\"\n    계약서제공부 --> 계약서수신부 : \"전자계약서를 수신\"\n    계약서수신부 --> 가상계좌제공부 : \"구매정보를 기반으로\"\n    가상계좌제공부 --> 입금정보제공부 : \"입금 정보를 전달\"\n    입금정보제공부 --> 비용지급부 : \"입금 정보를 기반으로\"\n    비용지급부 --> 서비스완료부 : \"분할 지급 완료 시\"\n    서비스완료부 --> 정보저장부 : \"서비스 완료 정보를 저장\"",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "정보입력부",
+          "component_type": "process",
+          "description": "구매자 정보, 판매자 정보 및 구매 정보를 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "계약서제공부",
+          "component_type": "process",
+          "description": "전자계약서를 생성하고 판매자와 구매자에게 전달하는 역할",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "계약서수신부",
+          "component_type": "process",
+          "description": "전자계약서를 수신하고 수신 정보를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "전자계약서를 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "가상계좌제공부",
+          "component_type": "process",
+          "description": "구매자에게 가상계좌를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "구매정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "50",
+          "name": "입금정보제공부",
+          "component_type": "process",
+          "description": "입금된 정보를 판매자에게 제공하는 역할",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "입금 정보를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "60",
+          "name": "비용지급부",
+          "component_type": "process",
+          "description": "구매금액을 분할 지급하는 역할",
+          "relationships": [
+            {
+              "target": "50",
+              "label": "입금 정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "70",
+          "name": "서비스완료부",
+          "component_type": "process",
+          "description": "중계서비스의 이행 완료를 통보하는 역할",
+          "relationships": [
+            {
+              "target": "60",
+              "label": "분할 지급 완료 시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "80",
+          "name": "정보저장부",
+          "component_type": "data",
+          "description": "구매자 및 판매자 정보를 저장하는 역할",
+          "relationships": [
+            {
+              "target": "70",
+              "label": "서비스 완료 정보를 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240102060/1020240102060_fig_2.mmd"
+    }
+  ]
+}

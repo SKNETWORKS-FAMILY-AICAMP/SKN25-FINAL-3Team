@@ -1,0 +1,128 @@
+{
+  "app_num": "1020217023623",
+  "invention_type": "method",
+  "main_concept": "비휘발성 메모리 셀의 가중치 값을 디지털 비트로 변환하여 검증하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "비휘발성 메모리 셀",
+      "component_type": "device",
+      "description": "가중치 값을 저장하고 출력하는 메모리 셀",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "기준 전류 소스",
+      "component_type": "device",
+      "description": "비휘발성 메모리 셀의 출력을 기준 값으로 변환하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "출력을 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "디지털 출력 비트",
+      "component_type": "data",
+      "description": "비휘발성 메모리 셀의 가중치 값을 표현하는 비트",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "가중치 값으로부터 생성",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020217023623",
+      "diagram_type": "flowchart",
+      "diagram_title": "비휘발성 메모리 셀 검증 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"비휘발성 메모리 셀\"]\n    200[\"기준 전류 소스\"]\n    300[\"디지털 출력 비트\"]\n    400[\"추가 비교 수행\"]\n    \n    100 -->|\"출력을 제공\"| 200\n    200 -->|\"비교 결과\"| 300\n    300 -->|\"가중치 값으로부터 생성\"| 100\n    300 -->|\"생성된 비트를 기반으로\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비휘발성 메모리 셀",
+          "component_type": "device",
+          "description": "가중치 값을 저장하고 출력하는 메모리 셀",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "기준 전류 소스",
+          "component_type": "device",
+          "description": "비휘발성 메모리 셀의 출력을 기준 값으로 변환하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력을 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디지털 출력 비트",
+          "component_type": "data",
+          "description": "비휘발성 메모리 셀의 가중치 값을 표현하는 비트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가중치 값으로부터 생성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020217023623/1020217023623_fig_1.mmd"
+    },
+    {
+      "app_num": "1020217023623",
+      "diagram_type": "classDiagram",
+      "diagram_title": "비휘발성 메모리 셀 및 구성 요소",
+      "mermaid_code": "classDiagram\n    class NonVolatileMemoryCell {\n        +String weightValue\n        +output()\n    }\n    class ReferenceCurrentSource {\n        +String referenceValue\n        +provideOutput()\n    }\n    class DigitalOutputBit {\n        +String bitValue\n        +generateFromWeight()\n    }\n    NonVolatileMemoryCell --> ReferenceCurrentSource : \"출력을 제공\"\n    DigitalOutputBit <-- NonVolatileMemoryCell : \"가중치 값으로부터 생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비휘발성 메모리 셀",
+          "component_type": "device",
+          "description": "가중치 값을 저장하고 출력하는 메모리 셀",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "기준 전류 소스",
+          "component_type": "device",
+          "description": "비휘발성 메모리 셀의 출력을 기준 값으로 변환하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력을 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디지털 출력 비트",
+          "component_type": "data",
+          "description": "비휘발성 메모리 셀의 가중치 값을 표현하는 비트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가중치 값으로부터 생성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020217023623/1020217023623_fig_2.mmd"
+    }
+  ]
+}

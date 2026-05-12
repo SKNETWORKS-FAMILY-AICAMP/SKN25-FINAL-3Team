@@ -1,0 +1,206 @@
+{
+  "app_num": "1020210085431",
+  "invention_type": "method",
+  "main_concept": "전자 장치에서 뉴럴 네트워크를 이용한 객체 제어 및 상호작용 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 장치",
+      "component_type": "device",
+      "description": "제1 객체와 제2 객체 간의 상호작용을 제어하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 뉴럴 네트워크",
+      "component_type": "process",
+      "description": "제1 객체를 제어하기 위한 뉴럴 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 뉴럴 네트워크",
+      "component_type": "process",
+      "description": "제1 객체와 제2 객체 간의 상호작용을 나타내는 뉴럴 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상호작용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "제1 및 제2 뉴럴 네트워크의 파라미터를 저장하는 메모리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "메모리 내의 정보를 처리하는 프로세서",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "작동",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210085431",
+      "diagram_type": "flowchart",
+      "diagram_title": "전자 장치의 객체 제어 방법",
+      "mermaid_code": "flowchart TD\n    100[\"전자 장치\"]\n    200[\"제1 뉴럴 네트워크\"]\n    300[\"제2 뉴럴 네트워크\"]\n    400[\"메모리\"]\n    500[\"프로세서\"]\n    \n    100 -->| \"제어\" | 200\n    100 -->| \"상호작용\" | 300\n    200 -->| \"파라미터 저장\" | 400\n    300 -->| \"정보 처리\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "제1 객체와 제2 객체 간의 상호작용을 제어하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 뉴럴 네트워크",
+          "component_type": "process",
+          "description": "제1 객체를 제어하기 위한 뉴럴 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 뉴럴 네트워크",
+          "component_type": "process",
+          "description": "제1 객체와 제2 객체 간의 상호작용을 나타내는 뉴럴 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "제1 및 제2 뉴럴 네트워크의 파라미터를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "메모리 내의 정보를 처리하는 프로세서",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "작동",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210085431/1020210085431_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210085431",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 전자장치 {\n        +제어()\n        +상호작용()\n    }\n    class 제1뉴럴네트워크 {\n        +파라미터식별()\n    }\n    class 제2뉴럴네트워크 {\n        +파라미터식별()\n    }\n    class 메모리 {\n        +저장()\n    }\n    class 프로세서 {\n        +작동()\n    }\n    전자장치 --> 제1뉴럴네트워크 : \"제어\"\n    전자장치 --> 제2뉴럴네트워크 : \"상호작용\"\n    전자장치 --> 메모리 : \"저장\"\n    프로세서 --> 메모리 : \"작동\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "제1 객체와 제2 객체 간의 상호작용을 제어하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 뉴럴 네트워크",
+          "component_type": "process",
+          "description": "제1 객체를 제어하기 위한 뉴럴 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 뉴럴 네트워크",
+          "component_type": "process",
+          "description": "제1 객체와 제2 객체 간의 상호작용을 나타내는 뉴럴 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "제1 및 제2 뉴럴 네트워크의 파라미터를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "메모리 내의 정보를 처리하는 프로세서",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "작동",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210085431/1020210085431_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "app_num": "1020230106520",
+  "invention_type": "system",
+  "main_concept": "인플루언서와 판매자를 위한 통합 플랫폼 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "인플루언서-판매자 통합 플랫폼 제공 서버",
+      "component_type": "device",
+      "description": "사용자 정보 관리, 권한 부여, 대시보드 관리 및 이벤트 관리를 수행하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "인플루언서 단말",
+      "component_type": "device",
+      "description": "인플루언서가 사용하는 단말기로, 플랫폼과 상호작용",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "판매자 단말",
+      "component_type": "device",
+      "description": "판매자가 사용하는 단말기로, 플랫폼과 상호작용",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "구매자 단말",
+      "component_type": "device",
+      "description": "구매자가 사용하는 단말기로, 이벤트 정보를 수신",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "이벤트 관리부",
+      "component_type": "process",
+      "description": "이벤트 정보를 관리하고 인플루언서 및 판매자에게 전달",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "사용자 정보 관리부",
+      "component_type": "process",
+      "description": "사용자 정보를 관리하고 평가 정보를 생성",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "사용자 권한 부여부",
+      "component_type": "process",
+      "description": "사용자 권한을 관리하고 인플루언서-판매자 쌍을 형성",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "인플루언서-판매자 통합 대시보드 관리부",
+      "component_type": "process",
+      "description": "대시보드 인터페이스를 관리하고 정보를 표시",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230106520",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인플루언서-판매자 통합 플랫폼 구조",
+      "mermaid_code": "classDiagram\n    class 인플루언서판매자통합플랫폼제공서버 {\n        +사용자 정보 관리\n        +권한 부여\n        +대시보드 관리\n        +이벤트 관리\n    }\n    class 인플루언서단말 {\n        +상호작용()\n    }\n    class 판매자단말 {\n        +상호작용()\n    }\n    class 구매자단말 {\n        +이벤트 정보 수신()\n    }\n    class 이벤트관리부 {\n        +이벤트 정보 관리()\n        +전달()\n    }\n    class 사용자정보관리부 {\n        +사용자 정보 관리()\n        +평가 정보 생성()\n    }\n    class 사용자권한부여부 {\n        +사용자 권한 관리()\n        +쌍 형성()\n    }\n    class 인플루언서판매자통합대시보드관리부 {\n        +대시보드 인터페이스 관리()\n        +정보 표시()\n    }\n\n    인플루언서단말 --> 인플루언서판매자통합플랫폼제공서버 : \"연결\"\n    판매자단말 --> 인플루언서판매자통합플랫폼제공서버 : \"연결\"\n    구매자단말 --> 인플루언서판매자통합플랫폼제공서버 : \"연결\"\n    이벤트관리부 --> 인플루언서판매자통합플랫폼제공서버 : \"소속\"\n    사용자정보관리부 --> 인플루언서판매자통합플랫폼제공서버 : \"소속\"\n    사용자권한부여부 --> 인플루언서판매자통합플랫폼제공서버 : \"소속\"\n    인플루언서판매자통합대시보드관리부 --> 인플루언서판매자통합플랫폼제공서버 : \"소속\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인플루언서-판매자 통합 플랫폼 제공 서버",
+          "component_type": "device",
+          "description": "사용자 정보 관리, 권한 부여, 대시보드 관리 및 이벤트 관리를 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인플루언서 단말",
+          "component_type": "device",
+          "description": "인플루언서가 사용하는 단말기로, 플랫폼과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매자 단말",
+          "component_type": "device",
+          "description": "판매자가 사용하는 단말기로, 플랫폼과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "구매자 단말",
+          "component_type": "device",
+          "description": "구매자가 사용하는 단말기로, 이벤트 정보를 수신",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "이벤트 관리부",
+          "component_type": "process",
+          "description": "이벤트 정보를 관리하고 인플루언서 및 판매자에게 전달",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "사용자 정보 관리부",
+          "component_type": "process",
+          "description": "사용자 정보를 관리하고 평가 정보를 생성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "사용자 권한 부여부",
+          "component_type": "process",
+          "description": "사용자 권한을 관리하고 인플루언서-판매자 쌍을 형성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "인플루언서-판매자 통합 대시보드 관리부",
+          "component_type": "process",
+          "description": "대시보드 인터페이스를 관리하고 정보를 표시",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230106520/1020230106520_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230106520",
+      "diagram_type": "flowchart",
+      "diagram_title": "인플루언서-판매자 상호작용 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"인플루언서-판매자 통합 플랫폼 제공 서버\"]\n    200[\"인플루언서 단말\"]\n    300[\"판매자 단말\"]\n    400[\"구매자 단말\"]\n    500[\"이벤트 관리부\"]\n    600[\"사용자 정보 관리부\"]\n    700[\"사용자 권한 부여부\"]\n    800[\"인플루언서-판매자 통합 대시보드 관리부\"]\n\n    200 -->|\"연결\"| 100\n    300 -->|\"연결\"| 100\n    400 -->|\"연결\"| 100\n    100 -->|\"소속\"| 500\n    100 -->|\"소속\"| 600\n    100 -->|\"소속\"| 700\n    100 -->|\"소속\"| 800\n    600 -->|\"사용자 정보 수집\"| 700\n    700 -->|\"권한 부여 및 쌍 형성\"| 800\n    800 -->|\"대시보드 인터페이스 표시\"| 500\n    500 -->|\"이벤트 정보 관리 및 전달\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인플루언서-판매자 통합 플랫폼 제공 서버",
+          "component_type": "device",
+          "description": "사용자 정보 관리, 권한 부여, 대시보드 관리 및 이벤트 관리를 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인플루언서 단말",
+          "component_type": "device",
+          "description": "인플루언서가 사용하는 단말기로, 플랫폼과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매자 단말",
+          "component_type": "device",
+          "description": "판매자가 사용하는 단말기로, 플랫폼과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "구매자 단말",
+          "component_type": "device",
+          "description": "구매자가 사용하는 단말기로, 이벤트 정보를 수신",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "이벤트 관리부",
+          "component_type": "process",
+          "description": "이벤트 정보를 관리하고 인플루언서 및 판매자에게 전달",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "사용자 정보 관리부",
+          "component_type": "process",
+          "description": "사용자 정보를 관리하고 평가 정보를 생성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "사용자 권한 부여부",
+          "component_type": "process",
+          "description": "사용자 권한을 관리하고 인플루언서-판매자 쌍을 형성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "인플루언서-판매자 통합 대시보드 관리부",
+          "component_type": "process",
+          "description": "대시보드 인터페이스를 관리하고 정보를 표시",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230106520/1020230106520_fig_2.mmd"
+    }
+  ]
+}

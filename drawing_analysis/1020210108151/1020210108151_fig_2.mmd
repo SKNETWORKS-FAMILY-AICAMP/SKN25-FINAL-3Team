@@ -1,0 +1,25 @@
+%% 1020210108151 - 시스템 구성 요소 클래스 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 센서부 {
+        +String 생체변화
+        +detect()
+    }
+    class 제어부 {
+        +String 이벤트정보
+        +analyze()
+        +outputAlert()
+    }
+    class 데이터베이스부 {
+        +String 저장정보
+        +storeData()
+    }
+    class 알림부 {
+        +String 알림신호
+        +displayAlert()
+    }
+    센서부 --> 제어부 : "제어"
+    제어부 --> 데이터베이스부 : "데이터 처리"
+    데이터베이스부 <-- 제어부 : "데이터 제공"
+    제어부 <-- 알림부 : "알림신호 수신"

@@ -1,0 +1,36 @@
+%% 1020210137011 - 전자 장치 구성 요소 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1하우징 {
+        +String description
+    }
+    class 제2하우징 {
+        +String description
+    }
+    class 폴딩하우징 {
+        +String description
+    }
+    class 관성센서 {
+        +String description
+    }
+    class 프로세서 {
+        +String description
+    }
+    class 메모리 {
+        +String description
+    }
+    class 제1디스플레이 {
+        +String description
+    }
+    class 제2디스플레이 {
+        +String description
+    }
+    제1하우징 <--> 제2하우징 : "회전 가능하게 연결됨"
+    폴딩하우징 --> 제1하우징 : "연결됨"
+    폴딩하우징 --> 제2하우징 : "연결됨"
+    관성센서 --> 프로세서 : "데이터 제공"
+    프로세서 --> 관성센서 : "관성 센서와 연결됨"
+    프로세서 --> 메모리 : "메모리와 연결됨"
+    제1디스플레이 <-- 프로세서 : "제어됨"
+    제2디스플레이 <-- 프로세서 : "제어됨"

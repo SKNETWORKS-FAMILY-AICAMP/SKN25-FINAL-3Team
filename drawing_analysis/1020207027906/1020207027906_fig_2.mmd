@@ -1,0 +1,23 @@
+%% 1020207027906 - 영상 처리 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1문자인식유닛 {
+        +String description
+    }
+    class 측정유닛 {
+        +String description
+    }
+    class 결정유닛 {
+        +String description
+    }
+    class 선택유닛 {
+        +String description
+    }
+    class 제2문자인식유닛 {
+        +String description
+    }
+    제1문자인식유닛 --> 측정유닛 : "신뢰 척도 계산을 위한 입력"
+    측정유닛 --> 결정유닛 : "신뢰 척도에 기반한 결정"
+    결정유닛 --> 선택유닛 : "결정 결과에 따른 선택"
+    선택유닛 --> 제2문자인식유닛 : "제2 영역에 대한 추가 인식 수행"

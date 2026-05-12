@@ -1,0 +1,143 @@
+{
+  "app_num": "1020250051746",
+  "invention_type": "method",
+  "main_concept": "메타학습 기반 양자 상태 추정 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "양자 회로",
+      "component_type": "device",
+      "description": "양자 상태를 처리하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "강화학습 에이전트",
+      "component_type": "actor",
+      "description": "강화학습을 수행하여 파라미터를 업데이트하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "파라미터 업데이트 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "카운트 시스템",
+      "component_type": "process",
+      "description": "출력된 상태의 횟수를 카운트하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상태 횟수 제공",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "카운트 정보 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250051746",
+      "diagram_type": "flowchart",
+      "diagram_title": "메타학습 기반 양자 상태 추정 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"양자 회로\"]\n    200[\"강화학습 에이전트\"]\n    300[\"카운트 시스템\"]\n    400[\"양자 상태 추정\"]\n    \n    100 -->|\"양자 상태 입력 및 제 1 카운트 획득\"| 300\n    300 -->|\"상태 횟수 제공\"| 200\n    200 -->|\"강화학습 수행 및 파라미터 샘플링\"| 300\n    300 -->|\"제 2 카운트 획득\"| 200\n    200 -->|\"카운트에 따른 파라미터 업데이트\"| 400\n    400 -->|\"양자 상태 추정 완료\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "양자 회로",
+          "component_type": "device",
+          "description": "양자 상태를 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "강화학습 에이전트",
+          "component_type": "actor",
+          "description": "강화학습을 수행하여 파라미터를 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파라미터 업데이트 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "카운트 시스템",
+          "component_type": "process",
+          "description": "출력된 상태의 횟수를 카운트하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상태 횟수 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "카운트 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250051746/1020250051746_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250051746",
+      "diagram_type": "flowchart",
+      "diagram_title": "강화학습 및 파라미터 업데이트 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"양자 회로\"]\n    200[\"강화학습 에이전트\"]\n    300[\"카운트 시스템\"]\n    400[\"양자 상태 추정\"]\n    \n    100 -->|\"양자 상태 입력 및 제 1 카운트 획득\"| 300\n    300 -->|\"강화학습 수행 및 파라미터 샘플링\"| 200\n    200 -->|\"제 2 카운트 획득\"| 300\n    300 -->|\"카운트에 따른 파라미터 업데이트\"| 200\n    200 -->|\"양자 상태 추정\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "양자 회로",
+          "component_type": "device",
+          "description": "양자 상태를 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "강화학습 에이전트",
+          "component_type": "actor",
+          "description": "강화학습을 수행하여 파라미터를 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파라미터 업데이트 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "카운트 시스템",
+          "component_type": "process",
+          "description": "출력된 상태의 횟수를 카운트하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상태 횟수 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "카운트 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250051746/1020250051746_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+%% 1020080137371 - 프로세스 제어 블록 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class EPRCUSystem {
+        +String description
+    }
+    class KernelService {
+        +String description
+        +manageProcesses()
+        +deliverEvents()
+    }
+    class ProcessLoader {
+        +String description
+        +loadProcess()
+    }
+    class ProcessControlBlock {
+        +String description
+        +storeProcessInfo()
+    }
+    EPRCUSystem --> KernelService : "구성 요소"
+    EPRCUSystem --> ProcessLoader : "구성 요소"
+    ProcessLoader --> KernelService : "상호작용"
+    KernelService --> ProcessControlBlock : "관리"

@@ -1,0 +1,143 @@
+{
+  "app_num": "1020250049394",
+  "invention_type": "system",
+  "main_concept": "홍채 라벨링 작업을 위한 보조 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "디스플레이 모듈",
+      "component_type": "device",
+      "description": "홍채 라벨링 UI를 디스플레이하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "홍채 라벨링 동작을 제어하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "파라미터 산출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "딥러닝 모델",
+      "component_type": "data",
+      "description": "눈 이미지와 얼굴 이미지로부터 파라미터를 산출하는 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 제공",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250049394",
+      "diagram_type": "flowchart",
+      "diagram_title": "홍채 라벨링 보조 장치 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"디스플레이 모듈\"]\n    200[\"프로세서\"]\n    300[\"딥러닝 모델\"]\n    400[\"보조 인터페이스\"]\n    \n    200 -->|\"제어\"| 100\n    200 -->|\"파라미터 산출\"| 300\n    300 -->|\"눈 이미지 및 얼굴 이미지 수신\"| 400\n    400 -->|\"보조 인터페이스 렌더링\"| 200\n    400 -->|\"보조 인터페이스 오버레이\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이 모듈",
+          "component_type": "device",
+          "description": "홍채 라벨링 UI를 디스플레이하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "홍채 라벨링 동작을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "파라미터 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "딥러닝 모델",
+          "component_type": "data",
+          "description": "눈 이미지와 얼굴 이미지로부터 파라미터를 산출하는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250049394/1020250049394_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250049394",
+      "diagram_type": "classDiagram",
+      "diagram_title": "홍채 라벨링 보조 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 디스플레이모듈 {\n        +String UI\n    }\n    class 프로세서 {\n        +control()\n        +calculateParameters()\n    }\n    class 딥러닝모델 {\n        +String parameters\n        +extractParameters()\n    }\n    디스플레이모듈 <-- 프로세서 : \"제어\"\n    프로세서 --> 딥러닝모델 : \"파라미터 산출\"\n    딥러닝모델 <-- 프로세서 : \"데이터 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이 모듈",
+          "component_type": "device",
+          "description": "홍채 라벨링 UI를 디스플레이하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "홍채 라벨링 동작을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "파라미터 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "딥러닝 모델",
+          "component_type": "data",
+          "description": "눈 이미지와 얼굴 이미지로부터 파라미터를 산출하는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250049394/1020250049394_fig_2.mmd"
+    }
+  ]
+}

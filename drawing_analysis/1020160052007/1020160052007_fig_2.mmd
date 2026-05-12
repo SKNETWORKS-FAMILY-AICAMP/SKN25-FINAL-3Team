@@ -1,0 +1,23 @@
+%% 1020160052007 - 블록체인 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 트랜잭션생성자 {
+        +String 트랜잭션데이터
+        +generateTransaction()
+    }
+    class 블록생성자 {
+        +String 블록데이터
+        +createBlock()
+    }
+    class 블록저장자 {
+        +String 저장된블록
+        +storeBlock()
+    }
+    class 토큰관리자 {
+        +String 보상비용
+        +settleCosts()
+    }
+    트랜잭션생성자 --> 블록생성자 : "트랜잭션 생성"
+    블록생성자 --> 블록저장자 : "블록 수신"
+    블록저장자 --> 토큰관리자 : "비용 정산"

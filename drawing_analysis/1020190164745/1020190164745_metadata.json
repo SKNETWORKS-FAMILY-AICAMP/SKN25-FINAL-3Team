@@ -1,0 +1,299 @@
+{
+  "app_num": "1020190164745",
+  "invention_type": "hardware",
+  "main_concept": "진동 정보를 기반으로 피가열체의 온도를 추정하고 가열 부재의 전력 공급을 제어하는 에너지 절감 가열 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "하우징",
+      "component_type": "device",
+      "description": "내부에 수납공간을 가지며 피가열체를 지지하는 구조",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "가열 부재",
+      "component_type": "device",
+      "description": "피가열체를 가열하는 복수의 코일을 포함하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "전력을 공급받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "전력 공급부",
+      "component_type": "device",
+      "description": "가열 부재에 전력을 공급하는 장치",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "제어부에 의해 제어됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제어부",
+      "component_type": "process",
+      "description": "진동 정보를 기반으로 전력 공급을 제어하는 장치",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "진동 센서로부터 정보를 수신함",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "카메라로부터 영상을 수신함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "진동 센서",
+      "component_type": "device",
+      "description": "피가열체의 진동 정보를 감지하는 센서",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "정보를 제공함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "통신부",
+      "component_type": "device",
+      "description": "카메라로부터 피가열체의 영상을 수신하는 장치",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "정보를 제공함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "탑플레이트",
+      "component_type": "device",
+      "description": "피가열체를 지지하는 구조물",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "하우징의 상부에 배치됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190164745",
+      "diagram_type": "flowchart",
+      "diagram_title": "에너지 절감 가열 장치 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"하우징\"]\n    200[\"가열 부재\"]\n    300[\"전력 공급부\"]\n    400[\"제어부\"]\n    500[\"진동 센서\"]\n    600[\"통신부\"]\n    700[\"탑플레이트\"]\n    \n    500 -->| \"정보를 제공함\" | 400\n    600 -->| \"정보를 제공함\" | 400\n    400 -->| \"전력을 공급받음\" | 200\n    300 -->| \"제어부에 의해 제어됨\" | 400\n    100 -->| \"하우징의 상부에 배치됨\" | 700\n    700 -->| \"피가열체를 지지함\" | 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하우징",
+          "component_type": "device",
+          "description": "내부에 수납공간을 가지며 피가열체를 지지하는 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가열 부재",
+          "component_type": "device",
+          "description": "피가열체를 가열하는 복수의 코일을 포함하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "전력을 공급받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전력 공급부",
+          "component_type": "device",
+          "description": "가열 부재에 전력을 공급하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "제어부에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "진동 정보를 기반으로 전력 공급을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "진동 센서로부터 정보를 수신함",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "카메라로부터 영상을 수신함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "진동 센서",
+          "component_type": "device",
+          "description": "피가열체의 진동 정보를 감지하는 센서",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "정보를 제공함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "통신부",
+          "component_type": "device",
+          "description": "카메라로부터 피가열체의 영상을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "정보를 제공함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "탑플레이트",
+          "component_type": "device",
+          "description": "피가열체를 지지하는 구조물",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "하우징의 상부에 배치됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190164745/1020190164745_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190164745",
+      "diagram_type": "classDiagram",
+      "diagram_title": "에너지 절감 가열 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 하우징 {\n        +String 내부수납공간\n        +지지구조()\n    }\n    class 가열부재 {\n        +String 코일\n        +가열()\n    }\n    class 전력공급부 {\n        +String 전력\n        +전력공급()\n    }\n    class 제어부 {\n        +String 진동정보\n        +String 영상정보\n        +전력제어()\n    }\n    class 진동센서 {\n        +String 진동정보\n        +정보제공()\n    }\n    class 통신부 {\n        +String 영상정보\n        +정보제공()\n    }\n    class 탑플레이트 {\n        +String 지지구조\n    }\n    \n    하우징 --> 탑플레이트 : \"하우징의 상부에 배치됨\"\n    전력공급부 --> 가열부재 : \"전력을 공급받음\"\n    제어부 --> 전력공급부 : \"제어부에 의해 제어됨\"\n    제어부 --> 진동센서 : \"진동 센서로부터 정보를 수신함\"\n    제어부 --> 통신부 : \"카메라로부터 영상을 수신함\"\n    진동센서 --> 제어부 : \"정보를 제공함\"\n    통신부 --> 제어부 : \"정보를 제공함\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하우징",
+          "component_type": "device",
+          "description": "내부에 수납공간을 가지며 피가열체를 지지하는 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가열 부재",
+          "component_type": "device",
+          "description": "피가열체를 가열하는 복수의 코일을 포함하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "전력을 공급받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전력 공급부",
+          "component_type": "device",
+          "description": "가열 부재에 전력을 공급하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "제어부에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "진동 정보를 기반으로 전력 공급을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "진동 센서로부터 정보를 수신함",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "카메라로부터 영상을 수신함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "진동 센서",
+          "component_type": "device",
+          "description": "피가열체의 진동 정보를 감지하는 센서",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "정보를 제공함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "통신부",
+          "component_type": "device",
+          "description": "카메라로부터 피가열체의 영상을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "정보를 제공함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "탑플레이트",
+          "component_type": "device",
+          "description": "피가열체를 지지하는 구조물",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "하우징의 상부에 배치됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190164745/1020190164745_fig_2.mmd"
+    }
+  ]
+}

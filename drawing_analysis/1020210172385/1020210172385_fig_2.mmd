@@ -1,0 +1,28 @@
+%% 1020210172385 - 정점 특성 예측 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 입출력부 {
+        +String 데이터
+        +outputResult()
+    }
+    class 저장부 {
+        +String 예측프로그램
+    }
+    class 제어부 {
+        +predictVertexCharacteristics()
+    }
+    class 인코더 {
+        +generateLatentVariables()
+    }
+    class 특성디코더 {
+        +generateCharacteristicVector()
+    }
+    class 레이블디코더 {
+        +generateLabel()
+    }
+    입출력부 --> 제어부 : "입출력"
+    제어부 --> 저장부 : "프로그램 실행"
+    제어부 --> 인코더 : "데이터 처리"
+    제어부 --> 특성디코더 : "모델링"
+    제어부 --> 레이블디코더 : "모델링"

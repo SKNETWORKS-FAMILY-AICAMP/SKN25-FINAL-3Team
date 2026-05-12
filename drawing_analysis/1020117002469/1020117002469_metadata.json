@@ -1,0 +1,212 @@
+{
+  "app_num": "1020117002469",
+  "invention_type": "method",
+  "main_concept": "소프트웨어 애플리케이션과 암호화 파일 시스템을 이용한 데이터 저장 및 암호화 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "소프트웨어 애플리케이션",
+      "component_type": "actor",
+      "description": "데이터를 버퍼에 기록하고 암호화 요청을 수행하는 주체",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 기록 요청",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "버퍼 잠금 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "제1 버퍼",
+      "component_type": "data",
+      "description": "데이터가 임시로 저장되는 메모리 공간",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 기록",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "암호화 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "암호화 파일 시스템",
+      "component_type": "process",
+      "description": "버퍼에 저장된 데이터를 암호화하고 비휘발성 스토리지에 저장하는 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 암호화",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "암호화된 데이터 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "비휘발성 스토리지",
+      "component_type": "data",
+      "description": "암호화된 데이터가 최종적으로 저장되는 장소",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020117002469",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 저장 및 암호화 과정",
+      "mermaid_code": "flowchart TD\n    100[\"소프트웨어 애플리케이션\"]\n    200[\"제1 버퍼\"]\n    300[\"암호화 파일 시스템\"]\n    400[\"비휘발성 스토리지\"]\n    100 -->| \"데이터 기록 요청\" | 200\n    200 -->| \"암호화 요청\" | 300\n    300 -->| \"데이터 암호화\" | 200\n    300 -->| \"암호화된 데이터 저장\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "소프트웨어 애플리케이션",
+          "component_type": "actor",
+          "description": "데이터를 버퍼에 기록하고 암호화 요청을 수행하는 주체",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 기록 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "버퍼 잠금 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "제1 버퍼",
+          "component_type": "data",
+          "description": "데이터가 임시로 저장되는 메모리 공간",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 기록",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "암호화 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "암호화 파일 시스템",
+          "component_type": "process",
+          "description": "버퍼에 저장된 데이터를 암호화하고 비휘발성 스토리지에 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 암호화",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "암호화된 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "비휘발성 스토리지",
+          "component_type": "data",
+          "description": "암호화된 데이터가 최종적으로 저장되는 장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020117002469/1020117002469_fig_1.mmd"
+    },
+    {
+      "app_num": "1020117002469",
+      "diagram_type": "flowchart",
+      "diagram_title": "버퍼 관리 및 암호화 단계",
+      "mermaid_code": "flowchart TD\n    100[\"소프트웨어 애플리케이션\"]\n    200[\"제1 버퍼\"]\n    300[\"암호화 파일 시스템\"]\n    400[\"비휘발성 스토리지\"]\n    100 -->|\"데이터 기록 요청\"| 200\n    200 -->|\"암호화 요청\"| 300\n    100 -->|\"버퍼 잠금 요청\"| 200\n    300 -->|\"데이터 암호화\"| 200\n    300 -->|\"암호화된 데이터 저장\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "소프트웨어 애플리케이션",
+          "component_type": "actor",
+          "description": "데이터를 버퍼에 기록하고 암호화 요청을 수행하는 주체",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 기록 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "버퍼 잠금 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "제1 버퍼",
+          "component_type": "data",
+          "description": "데이터가 임시로 저장되는 메모리 공간",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 기록",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "암호화 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "암호화 파일 시스템",
+          "component_type": "process",
+          "description": "버퍼에 저장된 데이터를 암호화하고 비휘발성 스토리지에 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 암호화",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "암호화된 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "비휘발성 스토리지",
+          "component_type": "data",
+          "description": "암호화된 데이터가 최종적으로 저장되는 장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020117002469/1020117002469_fig_2.mmd"
+    }
+  ]
+}

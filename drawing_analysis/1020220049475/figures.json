@@ -1,0 +1,18 @@
+{
+  "figures": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "실시예에 따른 시스템온칩(System on Chip, 이하, 'SoC'라 통칭함)의 구성도이다",
+      "purpose": "시스템온칩의 전체 구성 요소를 나타내기 위함",
+      "source_text": "도 1은 실시예에 따른 시스템온칩(System on Chip, 이하, 'SoC'라 통칭함)의 구성도이다"
+    },
+    {
+      "fig_number": "도 3",
+      "diagram_type": "flowchart",
+      "title": "실시예에 따른 제어권 관리 절차를 나타낸 흐름도이다",
+      "purpose": "제어권 관리 절차의 흐름을 설명하기 위함",
+      "source_text": "도 3은 실시예에 따른 제어권 관리 절차를 나타낸 흐름도이다"
+    }
+  ]
+}

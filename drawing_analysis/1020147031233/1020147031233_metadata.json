@@ -1,0 +1,143 @@
+{
+  "app_num": "1020147031233",
+  "invention_type": "method",
+  "main_concept": "다중 처리 환경에서 트랜잭션 처리를 위한 기계어 명령 실행 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "기계어 명령을 실행하는 중앙 처리 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "비-일시적인 컴퓨터 판독 가능 저장 매체",
+      "component_type": "data",
+      "description": "명령을 저장하는 매체",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "명령을 실행하기 위해 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "기계어 명령",
+      "component_type": "data",
+      "description": "프로세서가 실행하는 명령",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "프로세서에 의해 실행됨",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "저장된 명령",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020147031233",
+      "diagram_type": "flowchart",
+      "diagram_title": "트랜잭션 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"비-일시적인 컴퓨터 판독 가능 저장 매체\"]\n    300[\"기계어 명령\"]\n    400[\"트랜잭션 실행 모드 종료 여부 판별\"]\n    \n    200 -->| \"명령을 실행하기 위해 사용\" | 100\n    300 -->| \"프로세서에 의해 실행됨\" | 100\n    300 -->| \"저장된 명령\" | 200\n    100 -->| \"명령을 실행하여 제1 오퍼랜드를 제2 오퍼랜드에 비트랜잭션적으로 배치\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "기계어 명령을 실행하는 중앙 처리 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "비-일시적인 컴퓨터 판독 가능 저장 매체",
+          "component_type": "data",
+          "description": "명령을 저장하는 매체",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "명령을 실행하기 위해 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계어 명령",
+          "component_type": "data",
+          "description": "프로세서가 실행하는 명령",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "프로세서에 의해 실행됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "저장된 명령",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020147031233/1020147031233_fig_1.mmd"
+    },
+    {
+      "app_num": "1020147031233",
+      "diagram_type": "classDiagram",
+      "diagram_title": "컴퓨터 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +executeCommand()\n    }\n    class \"비-일시적인 컴퓨터 판독 가능 저장 매체\" {\n        +storeCommand()\n    }\n    class \"기계어 명령\" {\n        +fetch()\n    }\n    프로세서 --> \"기계어 명령\" : \"프로세서에 의해 실행됨\"\n    \"비-일시적인 컴퓨터 판독 가능 저장 매체\" --> 프로세서 : \"명령을 실행하기 위해 사용\"\n    \"기계어 명령\" --> \"비-일시적인 컴퓨터 판독 가능 저장 매체\" : \"저장된 명령\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "기계어 명령을 실행하는 중앙 처리 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "비-일시적인 컴퓨터 판독 가능 저장 매체",
+          "component_type": "data",
+          "description": "명령을 저장하는 매체",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "명령을 실행하기 위해 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계어 명령",
+          "component_type": "data",
+          "description": "프로세서가 실행하는 명령",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "프로세서에 의해 실행됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "저장된 명령",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020147031233/1020147031233_fig_2.mmd"
+    }
+  ]
+}

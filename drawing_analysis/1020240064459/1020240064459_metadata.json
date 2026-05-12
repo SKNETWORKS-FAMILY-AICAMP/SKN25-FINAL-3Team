@@ -1,0 +1,245 @@
+{
+  "app_num": "1020240064459",
+  "invention_type": "method",
+  "main_concept": "사용자의 질의어를 기반으로 유사 질의어를 생성하고, 이를 통해 대표 질의어를 제공하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "수집부",
+      "component_type": "process",
+      "description": "사용자의 질의어를 수신하고 유사 질의어를 생성하여 검색어 그룹으로 그룹핑",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "분석부",
+      "component_type": "process",
+      "description": "검색어 그룹에 대해 TF-IDF 벡터를 산출하고 최종 유사도 점수를 계산",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자의 질의어와 유사 질의어를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "대표 질의어 선정부",
+      "component_type": "process",
+      "description": "최종 유사도 점수를 기반으로 대표 질의어를 선정",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "최종 유사도 점수를 이용하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "토큰 추출 모듈",
+      "component_type": "process",
+      "description": "검색 결과 리스트에서 단어 단위로 토큰을 추출",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "분석부와 연동하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "TF-IDF 생성 모듈",
+      "component_type": "process",
+      "description": "토큰에 대해 TF-IDF 벡터를 산출",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "토큰 추출 모듈과 연동하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "유사도 비교 모듈",
+      "component_type": "process",
+      "description": "코사인 유사도를 통해 최종 유사도 점수를 산출",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "TF-IDF 생성 모듈과 연동하여",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240064459",
+      "diagram_type": "flowchart",
+      "diagram_title": "대표 질의어 제공 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"수집부\"]\n    200[\"분석부\"]\n    300[\"대표 질의어 선정부\"]\n    400[\"토큰 추출 모듈\"]\n    500[\"TF-IDF 생성 모듈\"]\n    600[\"유사도 비교 모듈\"]\n    \n    100 -->|\"사용자의 질의어와 유사 질의어를 기반으로\"| 200\n    200 -->|\"분석부와 연동하여\"| 400\n    400 -->|\"토큰 추출 모듈과 연동하여\"| 500\n    500 -->|\"TF-IDF 생성 모듈과 연동하여\"| 600\n    600 -->|\"최종 유사도 점수를 이용하여\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "수집부",
+          "component_type": "process",
+          "description": "사용자의 질의어를 수신하고 유사 질의어를 생성하여 검색어 그룹으로 그룹핑",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분석부",
+          "component_type": "process",
+          "description": "검색어 그룹에 대해 TF-IDF 벡터를 산출하고 최종 유사도 점수를 계산",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자의 질의어와 유사 질의어를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대표 질의어 선정부",
+          "component_type": "process",
+          "description": "최종 유사도 점수를 기반으로 대표 질의어를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "최종 유사도 점수를 이용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 추출 모듈",
+          "component_type": "process",
+          "description": "검색 결과 리스트에서 단어 단위로 토큰을 추출",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "분석부와 연동하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "TF-IDF 생성 모듈",
+          "component_type": "process",
+          "description": "토큰에 대해 TF-IDF 벡터를 산출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "토큰 추출 모듈과 연동하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "유사도 비교 모듈",
+          "component_type": "process",
+          "description": "코사인 유사도를 통해 최종 유사도 점수를 산출",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "TF-IDF 생성 모듈과 연동하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240064459/1020240064459_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240064459",
+      "diagram_type": "classDiagram",
+      "diagram_title": "서비스 제공 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 수집부 {\n        +String 질의어\n        +generateSimilarQueries()\n    }\n    class 분석부 {\n        +String 검색어그룹\n        +calculateTFIDF()\n    }\n    class 대표질의어선정부 {\n        +String 대표질의어\n        +selectRepresentativeQuery()\n    }\n    class 토큰추출모듈 {\n        +List<String> 토큰리스트\n        +extractTokens()\n    }\n    class TFIDF생성모듈 {\n        +List<Double> tfidfVector\n        +generateTFIDF()\n    }\n    class 유사도비교모듈 {\n        +Double 유사도점수\n        +calculateSimilarityScore()\n    }\n    수집부 --> 분석부 : \"사용자의 질의어와 유사 질의어를 기반으로\"\n    분석부 --> 대표질의어선정부 : \"최종 유사도 점수를 이용하여\"\n    분석부 --> 토큰추출모듈 : \"분석부와 연동하여\"\n    토큰추출모듈 --> TFIDF생성모듈 : \"토큰 추출 모듈과 연동하여\"\n    TFIDF생성모듈 --> 유사도비교모듈 : \"TF-IDF 생성 모듈과 연동하여\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "수집부",
+          "component_type": "process",
+          "description": "사용자의 질의어를 수신하고 유사 질의어를 생성하여 검색어 그룹으로 그룹핑",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분석부",
+          "component_type": "process",
+          "description": "검색어 그룹에 대해 TF-IDF 벡터를 산출하고 최종 유사도 점수를 계산",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자의 질의어와 유사 질의어를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대표 질의어 선정부",
+          "component_type": "process",
+          "description": "최종 유사도 점수를 기반으로 대표 질의어를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "최종 유사도 점수를 이용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 추출 모듈",
+          "component_type": "process",
+          "description": "검색 결과 리스트에서 단어 단위로 토큰을 추출",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "분석부와 연동하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "TF-IDF 생성 모듈",
+          "component_type": "process",
+          "description": "토큰에 대해 TF-IDF 벡터를 산출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "토큰 추출 모듈과 연동하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "유사도 비교 모듈",
+          "component_type": "process",
+          "description": "코사인 유사도를 통해 최종 유사도 점수를 산출",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "TF-IDF 생성 모듈과 연동하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240064459/1020240064459_fig_2.mmd"
+    }
+  ]
+}

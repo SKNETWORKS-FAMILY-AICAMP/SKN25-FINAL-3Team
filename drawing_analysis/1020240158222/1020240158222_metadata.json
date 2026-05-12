@@ -1,0 +1,260 @@
+{
+  "app_num": "1020240158222",
+  "invention_type": "method",
+  "main_concept": "주행 환경과 연관된 이미지 데이터를 생성하는 GAN 기반 모델 학습 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "이미지 데이터 생성 모델 학습을 수행하는 주체",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "이미지 데이터",
+      "component_type": "data",
+      "description": "주행 환경과 연관된 제1 및 제2 도메인 스타일의 이미지 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "생성자",
+      "component_type": "device",
+      "description": "제1 도메인 스타일의 이미지 데이터를 기반으로 제3 도메인 스타일의 이미지를 생성",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "판별자",
+      "component_type": "device",
+      "description": "생성된 이미지가 실제 데이터인지 판별",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "비교",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "비교",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "저주파 성분 추출부",
+      "component_type": "device",
+      "description": "저주파 성분을 추출하여 디코더로 전달",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구성",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "고주파 성분 추출부",
+      "component_type": "device",
+      "description": "고주파 성분을 추출하여 디코더로 전송",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구성",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240158222",
+      "diagram_type": "flowchart",
+      "diagram_title": "이미지 데이터 생성 모델 학습 방법",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"이미지 데이터\"]\n    300[\"생성자\"]\n    400[\"판별자\"]\n    500[\"저주파 성분 추출부\"]\n    600[\"고주파 성분 추출부\"]\n    \n    100 -->|\"사용됨\"| 200\n    200 -->|\"입력\"| 300\n    300 -->|\"구성\"| 500\n    300 -->|\"구성\"| 600\n    200 -->|\"비교\"| 400\n    300 -->|\"비교\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "이미지 데이터 생성 모델 학습을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "주행 환경과 연관된 제1 및 제2 도메인 스타일의 이미지 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "생성자",
+          "component_type": "device",
+          "description": "제1 도메인 스타일의 이미지 데이터를 기반으로 제3 도메인 스타일의 이미지를 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판별자",
+          "component_type": "device",
+          "description": "생성된 이미지가 실제 데이터인지 판별",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "비교",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "비교",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "저주파 성분 추출부",
+          "component_type": "device",
+          "description": "저주파 성분을 추출하여 디코더로 전달",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "고주파 성분 추출부",
+          "component_type": "device",
+          "description": "고주파 성분을 추출하여 디코더로 전송",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240158222/1020240158222_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240158222",
+      "diagram_type": "classDiagram",
+      "diagram_title": "이미지 데이터 생성 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +이미지 데이터 생성 모델 학습 수행()\n    }\n    class 이미지데이터 {\n        +제1 도메인 스타일 이미지\n        +제2 도메인 스타일 이미지\n    }\n    class 생성자 {\n        +제3 도메인 스타일 이미지 생성()\n    }\n    class 판별자 {\n        +생성된 이미지 판별()\n    }\n    class 저주파성분추출부 {\n        +저주파 성분 추출()\n    }\n    class 고주파성분추출부 {\n        +고주파 성분 추출()\n    }\n    프로세서 --> 이미지데이터 : \"사용됨\"\n    이미지데이터 --> 생성자 : \"입력\"\n    이미지데이터 --> 판별자 : \"비교\"\n    생성자 --> 판별자 : \"비교\"\n    생성자 --> 저주파성분추출부 : \"구성\"\n    생성자 --> 고주파성분추출부 : \"구성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "이미지 데이터 생성 모델 학습을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "이미지 데이터",
+          "component_type": "data",
+          "description": "주행 환경과 연관된 제1 및 제2 도메인 스타일의 이미지 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "생성자",
+          "component_type": "device",
+          "description": "제1 도메인 스타일의 이미지 데이터를 기반으로 제3 도메인 스타일의 이미지를 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판별자",
+          "component_type": "device",
+          "description": "생성된 이미지가 실제 데이터인지 판별",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "비교",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "비교",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "저주파 성분 추출부",
+          "component_type": "device",
+          "description": "저주파 성분을 추출하여 디코더로 전달",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "고주파 성분 추출부",
+          "component_type": "device",
+          "description": "고주파 성분을 추출하여 디코더로 전송",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240158222/1020240158222_fig_2.mmd"
+    }
+  ]
+}

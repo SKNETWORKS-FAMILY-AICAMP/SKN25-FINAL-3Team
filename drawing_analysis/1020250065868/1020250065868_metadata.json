@@ -1,0 +1,491 @@
+{
+  "app_num": "1020250065868",
+  "invention_type": "system",
+  "main_concept": "실시간 영상 데이터를 기반으로 객체 인식 및 속성 정보를 추출하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "객체 인식 모듈",
+      "component_type": "process",
+      "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "객체 추적 모듈",
+      "component_type": "process",
+      "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "인식된 객체를 추적",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "최적 객체 선정 모듈",
+      "component_type": "process",
+      "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "추적된 객체를 기반으로 최적 객체 선정",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "객체 이미지 추출 모듈",
+      "component_type": "process",
+      "description": "최적 객체의 이미지를 추출",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "최적 객체의 이미지 추출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "객체 속성 정보 추출 모듈",
+      "component_type": "process",
+      "description": "객체 이미지로부터 속성 정보를 추출",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "추출된 이미지로부터 속성 정보 추출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "정보 전송 모듈",
+      "component_type": "process",
+      "description": "속성 정보를 외부 서버로 전송",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "추출된 속성 정보를 전송",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250065868",
+      "diagram_type": "classDiagram",
+      "diagram_title": "객체 속성 정보 추출 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 객체인식모듈 {\n        +실시간 영상 데이터\n        +신뢰도 점수 산출()\n    }\n    class 객체추적모듈 {\n        +추적된 객체 정보\n        +궤적 파악()\n    }\n    class 최적객체선정모듈 {\n        +신뢰도 점수\n        +최적 객체 선정()\n    }\n    class 객체이미지추출모듈 {\n        +최적 객체 이미지\n        +이미지 추출()\n    }\n    class 객체속성정보추출모듈 {\n        +속성 정보\n        +속성 정보 추출()\n    }\n    class 정보전송모듈 {\n        +전송할 정보\n        +정보 전송()\n    }\n\n    객체인식모듈 --> 객체추적모듈 : \"인식된 객체를 추적\"\n    객체추적모듈 --> 최적객체선정모듈 : \"추적된 객체를 기반으로 최적 객체 선정\"\n    최적객체선정모듈 --> 객체이미지추출모듈 : \"최적 객체의 이미지 추출\"\n    객체이미지추출모듈 --> 객체속성정보추출모듈 : \"추출된 이미지로부터 속성 정보 추출\"\n    객체속성정보추출모듈 --> 정보전송모듈 : \"추출된 속성 정보를 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체 인식 모듈",
+          "component_type": "process",
+          "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체 추적 모듈",
+          "component_type": "process",
+          "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인식된 객체를 추적",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "최적 객체 선정 모듈",
+          "component_type": "process",
+          "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추적된 객체를 기반으로 최적 객체 선정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 이미지 추출 모듈",
+          "component_type": "process",
+          "description": "최적 객체의 이미지를 추출",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "최적 객체의 이미지 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "객체 속성 정보 추출 모듈",
+          "component_type": "process",
+          "description": "객체 이미지로부터 속성 정보를 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "추출된 이미지로부터 속성 정보 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "정보 전송 모듈",
+          "component_type": "process",
+          "description": "속성 정보를 외부 서버로 전송",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추출된 속성 정보를 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250065868/1020250065868_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250065868",
+      "diagram_type": "flowchart",
+      "diagram_title": "객체 추적 모듈 동작 예시",
+      "mermaid_code": "flowchart TD\n    100[\"객체 인식 모듈\"]\n    200[\"객체 추적 모듈\"]\n    300[\"최적 객체 선정 모듈\"]\n    400[\"객체 이미지 추출 모듈\"]\n    500[\"객체 속성 정보 추출 모듈\"]\n    600[\"정보 전송 모듈\"]\n    \n    100 -->|\"인식된 객체를 추적\"| 200\n    200 -->|\"추적된 객체를 기반으로 최적 객체 선정\"| 300\n    300 -->|\"최적 객체의 이미지 추출\"| 400\n    400 -->|\"추출된 이미지로부터 속성 정보 추출\"| 500\n    500 -->|\"추출된 속성 정보를 전송\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체 인식 모듈",
+          "component_type": "process",
+          "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체 추적 모듈",
+          "component_type": "process",
+          "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인식된 객체를 추적",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "최적 객체 선정 모듈",
+          "component_type": "process",
+          "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추적된 객체를 기반으로 최적 객체 선정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 이미지 추출 모듈",
+          "component_type": "process",
+          "description": "최적 객체의 이미지를 추출",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "최적 객체의 이미지 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "객체 속성 정보 추출 모듈",
+          "component_type": "process",
+          "description": "객체 이미지로부터 속성 정보를 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "추출된 이미지로부터 속성 정보 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "정보 전송 모듈",
+          "component_type": "process",
+          "description": "속성 정보를 외부 서버로 전송",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추출된 속성 정보를 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250065868/1020250065868_fig_2.mmd"
+    },
+    {
+      "app_num": "1020250065868",
+      "diagram_type": "flowchart",
+      "diagram_title": "최적 객체 선정 모듈 동작 예시",
+      "mermaid_code": "flowchart TD\n    100[\"객체 인식 모듈\"]\n    200[\"객체 추적 모듈\"]\n    300[\"최적 객체 선정 모듈\"]\n    400[\"객체 이미지 추출 모듈\"]\n    500[\"객체 속성 정보 추출 모듈\"]\n    600[\"정보 전송 모듈\"]\n    \n    100 -->|\"실시간 영상 데이터 입력\"| 200\n    200 -->|\"인식된 객체를 추적\"| 300\n    300 -->|\"추적된 객체를 기반으로 최적 객체 선정\"| 400\n    400 -->|\"최적 객체의 이미지 추출\"| 500\n    500 -->|\"추출된 속성 정보를 전송\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체 인식 모듈",
+          "component_type": "process",
+          "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체 추적 모듈",
+          "component_type": "process",
+          "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인식된 객체를 추적",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "최적 객체 선정 모듈",
+          "component_type": "process",
+          "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추적된 객체를 기반으로 최적 객체 선정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 이미지 추출 모듈",
+          "component_type": "process",
+          "description": "최적 객체의 이미지를 추출",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "최적 객체의 이미지 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "객체 속성 정보 추출 모듈",
+          "component_type": "process",
+          "description": "객체 이미지로부터 속성 정보를 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "추출된 이미지로부터 속성 정보 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "정보 전송 모듈",
+          "component_type": "process",
+          "description": "속성 정보를 외부 서버로 전송",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추출된 속성 정보를 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020250065868/1020250065868_fig_3.mmd"
+    },
+    {
+      "app_num": "1020250065868",
+      "diagram_type": "flowchart",
+      "diagram_title": "객체 이미지 추출 모듈 동작 예시",
+      "mermaid_code": "flowchart TD\n    100[\"객체 인식 모듈\"]\n    200[\"객체 추적 모듈\"]\n    300[\"최적 객체 선정 모듈\"]\n    400[\"객체 이미지 추출 모듈\"]\n    500[\"객체 속성 정보 추출 모듈\"]\n    600[\"정보 전송 모듈\"]\n    \n    100 -->|\"인식된 객체를 추적\"| 200\n    200 -->|\"추적된 객체를 기반으로 최적 객체 선정\"| 300\n    300 -->|\"최적 객체의 이미지 추출\"| 400\n    400 -->|\"추출된 이미지로부터 속성 정보 추출\"| 500\n    500 -->|\"추출된 속성 정보를 전송\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체 인식 모듈",
+          "component_type": "process",
+          "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체 추적 모듈",
+          "component_type": "process",
+          "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인식된 객체를 추적",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "최적 객체 선정 모듈",
+          "component_type": "process",
+          "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추적된 객체를 기반으로 최적 객체 선정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 이미지 추출 모듈",
+          "component_type": "process",
+          "description": "최적 객체의 이미지를 추출",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "최적 객체의 이미지 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "객체 속성 정보 추출 모듈",
+          "component_type": "process",
+          "description": "객체 이미지로부터 속성 정보를 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "추출된 이미지로부터 속성 정보 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "정보 전송 모듈",
+          "component_type": "process",
+          "description": "속성 정보를 외부 서버로 전송",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추출된 속성 정보를 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 4",
+      "output_path": "drawing_analysis/1020250065868/1020250065868_fig_4.mmd"
+    },
+    {
+      "app_num": "1020250065868",
+      "diagram_type": "flowchart",
+      "diagram_title": "객체 속성 정보 추출 방법 설명",
+      "mermaid_code": "flowchart TD\n    100[\"객체 인식 모듈\"]\n    200[\"객체 추적 모듈\"]\n    300[\"최적 객체 선정 모듈\"]\n    400[\"객체 이미지 추출 모듈\"]\n    500[\"객체 속성 정보 추출 모듈\"]\n    600[\"정보 전송 모듈\"]\n    \n    100 -->|\"인식된 객체를 추적\"| 200\n    200 -->|\"추적된 객체를 기반으로 최적 객체 선정\"| 300\n    300 -->|\"최적 객체의 이미지 추출\"| 400\n    400 -->|\"추출된 이미지로부터 속성 정보 추출\"| 500\n    500 -->|\"추출된 속성 정보를 전송\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체 인식 모듈",
+          "component_type": "process",
+          "description": "실시간 영상 데이터에서 객체를 인식하고 신뢰도 점수를 산출",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체 추적 모듈",
+          "component_type": "process",
+          "description": "인식된 객체를 추적하여 궤적 및 존재 여부를 파악",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인식된 객체를 추적",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "최적 객체 선정 모듈",
+          "component_type": "process",
+          "description": "신뢰도 점수를 비교하여 최적 객체를 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추적된 객체를 기반으로 최적 객체 선정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "객체 이미지 추출 모듈",
+          "component_type": "process",
+          "description": "최적 객체의 이미지를 추출",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "최적 객체의 이미지 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "객체 속성 정보 추출 모듈",
+          "component_type": "process",
+          "description": "객체 이미지로부터 속성 정보를 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "추출된 이미지로부터 속성 정보 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "정보 전송 모듈",
+          "component_type": "process",
+          "description": "속성 정보를 외부 서버로 전송",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추출된 속성 정보를 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020250065868/1020250065868_fig_5.mmd"
+    }
+  ]
+}

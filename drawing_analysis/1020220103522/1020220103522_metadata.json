@@ -1,0 +1,233 @@
+{
+  "app_num": "1020220103522",
+  "invention_type": "system",
+  "main_concept": "빅데이터 연계 자동화를 위한 데이터 수집 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "실행 관리부",
+      "component_type": "actor",
+      "description": "비지니스 시스템으로부터 데이터 수집 요청을 수신하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "실행 처리부",
+      "component_type": "process",
+      "description": "데이터 수집 요청에 따라 수집모듈의 실행을 개시하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "요청 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "전처리 데이터 수집 요청 생성",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "수집모듈 실행 개시",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "전처리 수행부",
+      "component_type": "process",
+      "description": "전처리 데이터를 수집하여 저장하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "전처리 데이터 수집 요청 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "500",
+          "label": "밸류 레포지토리에 데이터 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "데이터 수집부",
+      "component_type": "process",
+      "description": "수집된 데이터를 통합하여 저장하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "전처리 데이터 수집 결과 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "밸류 레포지토리",
+      "component_type": "data",
+      "description": "수집된 데이터를 저장하는 저장소",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220103522",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 수집 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"실행 관리부\"]\n    200[\"실행 처리부\"]\n    300[\"전처리 수행부\"]\n    400[\"데이터 수집부\"]\n    500[\"밸류 레포지토리\"]\n    100 -->| \"요청 수신\" | 200\n    200 -->| \"전처리 데이터 수집 요청 생성\" | 300\n    200 -->| \"수집모듈 실행 개시\" | 300\n    300 -->| \"전처리 데이터 수집 결과 수신\" | 400\n    300 -->| \"밸류 레포지토리에 데이터 저장\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "실행 관리부",
+          "component_type": "actor",
+          "description": "비지니스 시스템으로부터 데이터 수집 요청을 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "실행 처리부",
+          "component_type": "process",
+          "description": "데이터 수집 요청에 따라 수집모듈의 실행을 개시하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "전처리 데이터 수집 요청 생성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "수집모듈 실행 개시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전처리 수행부",
+          "component_type": "process",
+          "description": "전처리 데이터를 수집하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전처리 데이터 수집 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "밸류 레포지토리에 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "수집된 데이터를 통합하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "전처리 데이터 수집 결과 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "밸류 레포지토리",
+          "component_type": "data",
+          "description": "수집된 데이터를 저장하는 저장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220103522/1020220103522_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220103522",
+      "diagram_type": "classDiagram",
+      "diagram_title": "데이터 수집 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 실행관리부 {\n        +요청 수신()\n    }\n    class 실행처리부 {\n        +수집모듈 실행()\n        +전처리 데이터 수집 요청 생성()\n    }\n    class 전처리수행부 {\n        +전처리 데이터 저장()\n    }\n    class 데이터수집부 {\n        +데이터 통합 저장()\n    }\n    class 밸류레포지토리 {\n        +데이터 저장()\n    }\n    실행관리부 --> 실행처리부 : \"요청 수신\"\n    실행처리부 --> 전처리수행부 : \"전처리 데이터 수집 요청 생성\"\n    전처리수행부 --> 밸류레포지토리 : \"밸류 레포지토리에 데이터 저장\"\n    전처리수행부 --> 데이터수집부 : \"전처리 데이터 수집 결과 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "실행 관리부",
+          "component_type": "actor",
+          "description": "비지니스 시스템으로부터 데이터 수집 요청을 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "실행 처리부",
+          "component_type": "process",
+          "description": "데이터 수집 요청에 따라 수집모듈의 실행을 개시하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "전처리 데이터 수집 요청 생성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "수집모듈 실행 개시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전처리 수행부",
+          "component_type": "process",
+          "description": "전처리 데이터를 수집하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전처리 데이터 수집 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "밸류 레포지토리에 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "수집된 데이터를 통합하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "전처리 데이터 수집 결과 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "밸류 레포지토리",
+          "component_type": "data",
+          "description": "수집된 데이터를 저장하는 저장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220103522/1020220103522_fig_2.mmd"
+    }
+  ]
+}

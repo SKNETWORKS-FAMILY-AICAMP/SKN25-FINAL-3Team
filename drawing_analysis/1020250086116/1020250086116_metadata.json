@@ -1,0 +1,221 @@
+{
+  "app_num": "1020250086116",
+  "invention_type": "system",
+  "main_concept": "물류센터 내 패키지 자동 분류 및 이송 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 저장 유닛",
+      "component_type": "data",
+      "description": "상품 정보와 차량 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "정보 획득 모듈",
+      "component_type": "process",
+      "description": "상품 및 차량 정보를 획득",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보를 저장 유닛으로부터 획득",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "물류 흐름 제어 모듈",
+      "component_type": "process",
+      "description": "상품 간의 적재 호환성을 제어",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 정보를 기반으로 제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "배송 계획 모듈",
+      "component_type": "process",
+      "description": "배송 그룹에 대한 차량 배차를 계획",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "배송 그룹 정보를 기반으로 계획",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "물류 흐름 제어 모듈과 상호작용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "운영 최적화 모듈",
+      "component_type": "process",
+      "description": "과거 데이터를 기반으로 최적화",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "배송 계획 모듈을 제어",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250086116",
+      "diagram_type": "flowchart",
+      "diagram_title": "물류센터 패키지 분류 및 이송 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 저장 유닛\"]\n    200[\"정보 획득 모듈\"]\n    300[\"물류 흐름 제어 모듈\"]\n    400[\"배송 계획 모듈\"]\n    500[\"운영 최적화 모듈\"]\n    \n    200 -->|\"정보를 저장 유닛으로부터 획득\"| 100\n    300 -->|\"상품 정보를 기반으로 제어\"| 200\n    400 -->|\"배송 그룹 정보를 기반으로 계획\"| 200\n    400 -->|\"물류 흐름 제어 모듈과 상호작용\"| 300\n    500 -->|\"배송 계획 모듈을 제어\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 저장 유닛",
+          "component_type": "data",
+          "description": "상품 정보와 차량 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정보 획득 모듈",
+          "component_type": "process",
+          "description": "상품 및 차량 정보를 획득",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보를 저장 유닛으로부터 획득",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "물류 흐름 제어 모듈",
+          "component_type": "process",
+          "description": "상품 간의 적재 호환성을 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보를 기반으로 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "배송 계획 모듈",
+          "component_type": "process",
+          "description": "배송 그룹에 대한 차량 배차를 계획",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "배송 그룹 정보를 기반으로 계획",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "물류 흐름 제어 모듈과 상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "운영 최적화 모듈",
+          "component_type": "process",
+          "description": "과거 데이터를 기반으로 최적화",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "배송 계획 모듈을 제어",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250086116/1020250086116_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250086116",
+      "diagram_type": "classDiagram",
+      "diagram_title": "패키지 분류 및 이송 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터저장유닛 {\n        +String 상품정보\n        +String 차량정보\n    }\n    class 정보획득모듈 {\n        +getData()\n    }\n    class 물류흐름제어모듈 {\n        +controlLoading()\n    }\n    class 배송계획모듈 {\n        +planDelivery()\n    }\n    class 운영최적화모듈 {\n        +optimize()\n    }\n    데이터저장유닛 <|-- 정보획득모듈 : \"정보를 저장 유닛으로부터 획득\"\n    정보획득모듈 <|-- 물류흐름제어모듈 : \"상품 정보를 기반으로 제어\"\n    정보획득모듈 <|-- 배송계획모듈 : \"배송 그룹 정보를 기반으로 계획\"\n    물류흐름제어모듈 <|-- 배송계획모듈 : \"물류 흐름 제어 모듈과 상호작용\"\n    배송계획모듈 <|-- 운영최적화모듈 : \"배송 계획 모듈을 제어\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 저장 유닛",
+          "component_type": "data",
+          "description": "상품 정보와 차량 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정보 획득 모듈",
+          "component_type": "process",
+          "description": "상품 및 차량 정보를 획득",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보를 저장 유닛으로부터 획득",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "물류 흐름 제어 모듈",
+          "component_type": "process",
+          "description": "상품 간의 적재 호환성을 제어",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보를 기반으로 제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "배송 계획 모듈",
+          "component_type": "process",
+          "description": "배송 그룹에 대한 차량 배차를 계획",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "배송 그룹 정보를 기반으로 계획",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "물류 흐름 제어 모듈과 상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "운영 최적화 모듈",
+          "component_type": "process",
+          "description": "과거 데이터를 기반으로 최적화",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "배송 계획 모듈을 제어",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250086116/1020250086116_fig_2.mmd"
+    }
+  ]
+}

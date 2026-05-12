@@ -1,0 +1,203 @@
+{
+  "app_num": "1020210154767",
+  "invention_type": "method",
+  "main_concept": "인공 신경망 모델을 구동하기 위한 연산 방법 및 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "인공 신경망 모델의 연산을 수행하는 주체",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "베이직 블록",
+      "component_type": "data",
+      "description": "입력 데이터 처리 및 변환을 위한 기본 구성 요소",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "트랜지션 블록",
+      "component_type": "data",
+      "description": "모델의 채널을 조정하는 구성 요소",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "입력 데이터",
+      "component_type": "data",
+      "description": "모델에 입력되는 원시 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "출력 데이터",
+      "component_type": "data",
+      "description": "모델의 최종 결과 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210154767",
+      "diagram_type": "flowchart",
+      "diagram_title": "인공 신경망 모델 구동 방법",
+      "mermaid_code": "flowchart TD\n    400[\"입력 데이터\"]\n    100[\"프로세서\"]\n    200[\"베이직 블록\"]\n    300[\"트랜지션 블록\"]\n    500[\"출력 데이터\"]\n    \n    400 -->|\"처리\"| 100\n    100 -->|\"구성\"| 200\n    200 -->|\"양자화\"| 300\n    300 -->|\"활성화 함수 적용\"| 500\n    500 -->|\"결과\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "인공 신경망 모델의 연산을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "베이직 블록",
+          "component_type": "data",
+          "description": "입력 데이터 처리 및 변환을 위한 기본 구성 요소",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "트랜지션 블록",
+          "component_type": "data",
+          "description": "모델의 채널을 조정하는 구성 요소",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "모델에 입력되는 원시 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "출력 데이터",
+          "component_type": "data",
+          "description": "모델의 최종 결과 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210154767/1020210154767_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210154767",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인공 신경망 구성 요소",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +연산()\n    }\n    class 베이직블록 {\n        +입력데이터\n        +배치정규화()\n        +양자화()\n        +컨볼루션()\n        +활성화함수적용()\n    }\n    class 트랜지션블록 {\n        +채널조정()\n    }\n    class 입력데이터 {\n        +원시데이터\n    }\n    class 출력데이터 {\n        +최종결과\n    }\n    프로세서 --> 입력데이터 : \"처리\"\n    입력데이터 --> 베이직블록 : \"전달\"\n    베이직블록 --> 트랜지션블록 : \"구성\"\n    프로세서 --> 출력데이터 : \"생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "인공 신경망 모델의 연산을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "베이직 블록",
+          "component_type": "data",
+          "description": "입력 데이터 처리 및 변환을 위한 기본 구성 요소",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "트랜지션 블록",
+          "component_type": "data",
+          "description": "모델의 채널을 조정하는 구성 요소",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "모델에 입력되는 원시 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "출력 데이터",
+          "component_type": "data",
+          "description": "모델의 최종 결과 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210154767/1020210154767_fig_2.mmd"
+    }
+  ]
+}

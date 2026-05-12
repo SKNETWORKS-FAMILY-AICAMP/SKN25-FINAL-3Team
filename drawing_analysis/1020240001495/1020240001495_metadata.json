@@ -1,0 +1,284 @@
+{
+  "app_num": "1020240001495",
+  "invention_type": "method",
+  "main_concept": "SCM 코드를 이용한 리뷰 NFT와 밸류 체인 간의 경로 생성 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플랫폼 서버",
+      "component_type": "actor",
+      "description": "SCM 코드와 리뷰 NFT를 관리하고 경로 생성 서비스를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "거래 요청 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "리뷰 NFT 로딩",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "경로 생성",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "소셜 네트워크",
+      "component_type": "data",
+      "description": "거래 대상 제품에 대한 검색 요청을 수신하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "요청 전송",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "리뷰 NFT",
+      "component_type": "data",
+      "description": "소비자가 생성한 리뷰를 기반으로 한 NFT",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "로드됨",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "경로 생성에 사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "판매자",
+      "component_type": "actor",
+      "description": "리뷰 NFT와 동일한 SCM 코드를 가진 제품을 제공하는 판매자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "경로 생성에 참여",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제3 소비자",
+      "component_type": "actor",
+      "description": "리뷰 NFT에 접속하여 정보를 받는 소비자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 요청",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240001495",
+      "diagram_type": "flowchart",
+      "diagram_title": "리뷰 NFT와 밸류 체인 경로 생성 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플랫폼 서버\"]\n    200[\"소셜 네트워크\"]\n    300[\"리뷰 NFT\"]\n    400[\"판매자\"]\n    500[\"제3 소비자\"]\n    200 -->| \"거래 요청 수신\" | 100\n    100 -->| \"리뷰 NFT 로딩\" | 300\n    300 -->| \"경로 생성에 사용됨\" | 400\n    100 -->| \"정보 제공\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "SCM 코드와 리뷰 NFT를 관리하고 경로 생성 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 요청 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "리뷰 NFT 로딩",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "경로 생성",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "소셜 네트워크",
+          "component_type": "data",
+          "description": "거래 대상 제품에 대한 검색 요청을 수신하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 리뷰를 기반으로 한 NFT",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "로드됨",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "경로 생성에 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판매자",
+          "component_type": "actor",
+          "description": "리뷰 NFT와 동일한 SCM 코드를 가진 제품을 제공하는 판매자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성에 참여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제3 소비자",
+          "component_type": "actor",
+          "description": "리뷰 NFT에 접속하여 정보를 받는 소비자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240001495/1020240001495_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240001495",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랫폼 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 플랫폼서버 {\n        +String SCM코드\n        +loadReviewNFT()\n        +generatePath()\n        +provideInfo()\n    }\n    class 소셜네트워크 {\n        +String 검색요청\n    }\n    class 리뷰NFT {\n        +String 소비자리뷰\n    }\n    class 판매자 {\n        +String 제품정보\n    }\n    class 제3소비자 {\n        +String 요청정보\n    }\n    플랫폼서버 --> 소셜네트워크 : \"거래 요청 수신\"\n    플랫폼서버 --> 리뷰NFT : \"리뷰 NFT 로딩\"\n    플랫폼서버 --> 판매자 : \"경로 생성\"\n    플랫폼서버 --> 제3소비자 : \"정보 제공\"\n    리뷰NFT --> 판매자 : \"경로 생성에 사용됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랫폼 서버",
+          "component_type": "actor",
+          "description": "SCM 코드와 리뷰 NFT를 관리하고 경로 생성 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 요청 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "리뷰 NFT 로딩",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "경로 생성",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "소셜 네트워크",
+          "component_type": "data",
+          "description": "거래 대상 제품에 대한 검색 요청을 수신하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "요청 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "리뷰 NFT",
+          "component_type": "data",
+          "description": "소비자가 생성한 리뷰를 기반으로 한 NFT",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "로드됨",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "경로 생성에 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판매자",
+          "component_type": "actor",
+          "description": "리뷰 NFT와 동일한 SCM 코드를 가진 제품을 제공하는 판매자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "경로 생성에 참여",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제3 소비자",
+          "component_type": "actor",
+          "description": "리뷰 NFT에 접속하여 정보를 받는 소비자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240001495/1020240001495_fig_2.mmd"
+    }
+  ]
+}

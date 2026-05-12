@@ -1,0 +1,13 @@
+%% 1020220147688 - 식품 의학적 효능 장치 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 저장부 {
+        +String 성분정보
+        +String 효능점수
+    }
+    class 프로세서 {
+        +calculateScore()
+        +calculateEfficacy()
+    }
+    저장부 --> 프로세서 : "성분 정보를 기반으로 점수를 산출"

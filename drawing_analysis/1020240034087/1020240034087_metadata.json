@@ -1,0 +1,125 @@
+{
+  "app_num": "1020240034087",
+  "invention_type": "system",
+  "main_concept": "RGB 영상과 라이다 정보를 활용한 그룹 행동 인식 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "RGB 카메라",
+      "component_type": "device",
+      "description": "RGB 영상을 획득하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "라이다 카메라",
+      "component_type": "device",
+      "description": "라이다 정보를 획득하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "그룹 행동 인식 처리부",
+      "component_type": "process",
+      "description": "RGB 영상과 라이다 정보를 활용하여 그룹 행동을 인식하는 처리부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "RGB 영상 입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "라이다 정보 입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240034087",
+      "diagram_type": "flowchart",
+      "diagram_title": "그룹 행동 인식 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"RGB 카메라\"]\n    200[\"라이다 카메라\"]\n    300[\"그룹 행동 인식 처리부\"]\n    100 -->|\"RGB 영상 획득\"| 300\n    200 -->|\"라이다 정보 획득\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "RGB 카메라",
+          "component_type": "device",
+          "description": "RGB 영상을 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "라이다 카메라",
+          "component_type": "device",
+          "description": "라이다 정보를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "그룹 행동 인식 처리부",
+          "component_type": "process",
+          "description": "RGB 영상과 라이다 정보를 활용하여 그룹 행동을 인식하는 처리부",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "RGB 영상 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "라이다 정보 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240034087/1020240034087_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240034087",
+      "diagram_type": "classDiagram",
+      "diagram_title": "그룹 행동 인식 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class RGBCamera {\n        +String rgbImage\n        +capture()\n    }\n    class LiDARCamera {\n        +String lidarData\n        +capture()\n    }\n    class GroupBehaviorRecognitionProcessor {\n        +String recognizedBehavior\n        +process(rgbImage, lidarData)\n    }\n    RGBCamera --> GroupBehaviorRecognitionProcessor : \"RGB 영상 입력\"\n    LiDARCamera --> GroupBehaviorRecognitionProcessor : \"라이다 정보 입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "RGB 카메라",
+          "component_type": "device",
+          "description": "RGB 영상을 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "라이다 카메라",
+          "component_type": "device",
+          "description": "라이다 정보를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "그룹 행동 인식 처리부",
+          "component_type": "process",
+          "description": "RGB 영상과 라이다 정보를 활용하여 그룹 행동을 인식하는 처리부",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "RGB 영상 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "라이다 정보 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240034087/1020240034087_fig_2.mmd"
+    }
+  ]
+}

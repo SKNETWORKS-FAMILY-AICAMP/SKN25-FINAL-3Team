@@ -1,0 +1,206 @@
+{
+  "app_num": "1020227021931",
+  "invention_type": "method",
+  "main_concept": "거리 센서를 이용한 3차원 패턴 투영 및 피처 포인트 검출 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "거리 센서",
+      "component_type": "device",
+      "description": "객체에 3차원 패턴을 투영하고 이미지를 수광하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세싱 시스템",
+      "component_type": "process",
+      "description": "거리 센서의 동작을 제어하고 이미지 처리 및 보간을 수행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "2D 이미지",
+      "component_type": "data",
+      "description": "거리 센서로부터 획득된 객체의 2차원 이미지",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "피처 포인트",
+      "component_type": "data",
+      "description": "2D 이미지에서 검출된 특징 점",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "3D 좌표",
+      "component_type": "data",
+      "description": "피처 포인트에 대한 계산된 3차원 좌표",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227021931",
+      "diagram_type": "flowchart",
+      "diagram_title": "3차원 패턴 투영 및 피처 포인트 검출 과정",
+      "mermaid_code": "flowchart TD\n    100[\"거리 센서\"]\n    200[\"프로세싱 시스템\"]\n    300[\"2D 이미지\"]\n    400[\"피처 포인트\"]\n    500[\"3D 좌표\"]\n    100 -->|\"제어\"| 200\n    200 -->|\"입력\"| 300\n    200 -->|\"입력\"| 400\n    200 -->|\"출력\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "거리 센서",
+          "component_type": "device",
+          "description": "객체에 3차원 패턴을 투영하고 이미지를 수광하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세싱 시스템",
+          "component_type": "process",
+          "description": "거리 센서의 동작을 제어하고 이미지 처리 및 보간을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "2D 이미지",
+          "component_type": "data",
+          "description": "거리 센서로부터 획득된 객체의 2차원 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "피처 포인트",
+          "component_type": "data",
+          "description": "2D 이미지에서 검출된 특징 점",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "3D 좌표",
+          "component_type": "data",
+          "description": "피처 포인트에 대한 계산된 3차원 좌표",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227021931/1020227021931_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227021931",
+      "diagram_type": "flowchart",
+      "diagram_title": "피처 포인트 보간 과정",
+      "mermaid_code": "flowchart TD\n    100[\"거리 센서\"]\n    200[\"프로세싱 시스템\"]\n    300[\"2D 이미지\"]\n    400[\"피처 포인트\"]\n    500[\"3D 좌표\"]\n    \n    100 -->|\"제어\"| 200\n    200 -->|\"입력\"| 300\n    300 -->|\"입력\"| 400\n    400 -->|\"출력\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "거리 센서",
+          "component_type": "device",
+          "description": "객체에 3차원 패턴을 투영하고 이미지를 수광하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세싱 시스템",
+          "component_type": "process",
+          "description": "거리 센서의 동작을 제어하고 이미지 처리 및 보간을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "2D 이미지",
+          "component_type": "data",
+          "description": "거리 센서로부터 획득된 객체의 2차원 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "피처 포인트",
+          "component_type": "data",
+          "description": "2D 이미지에서 검출된 특징 점",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "3D 좌표",
+          "component_type": "data",
+          "description": "피처 포인트에 대한 계산된 3차원 좌표",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227021931/1020227021931_fig_2.mmd"
+    }
+  ]
+}

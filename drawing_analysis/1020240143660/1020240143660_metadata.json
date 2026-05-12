@@ -1,0 +1,275 @@
+{
+  "app_num": "1020240143660",
+  "invention_type": "system",
+  "main_concept": "아파트 유휴 공간 및 상가 공실을 활용한 기능성 채소의 거래 매칭 및 AI 추천 플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "공급자",
+      "component_type": "actor",
+      "description": "기능성 채소를 재배하고 판매하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "수요자",
+      "component_type": "actor",
+      "description": "기능성 채소를 구매하는 소비자 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구매 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "AI 추천기",
+      "component_type": "process",
+      "description": "사용자 건강 상태에 기반한 채소 추천",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "추천 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "스케줄러",
+      "component_type": "process",
+      "description": "재배 품종 및 수량 배정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "배정 요청",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "예측 결과 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "판매처리기",
+      "component_type": "process",
+      "description": "결제 처리 및 주문 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결제 요청",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "정보 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "원격제어기",
+      "component_type": "process",
+      "description": "재배기 자동 제어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어 신호 전송",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240143660",
+      "diagram_type": "flowchart",
+      "diagram_title": "기능성 채소 거래 매칭 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"공급자\"]\n    200[\"수요자\"]\n    300[\"AI 추천기\"]\n    400[\"스케줄러\"]\n    500[\"판매처리기\"]\n    600[\"원격제어기\"]\n    \n    200 -->| \"구매 요청\" | 100\n    200 -->| \"추천 제공\" | 300\n    300 -->| \"예측 결과 제공\" | 400\n    400 -->| \"배정 요청\" | 100\n    200 -->| \"결제 요청\" | 500\n    500 -->| \"정보 제공\" | 400\n    100 -->| \"제어 신호 전송\" | 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "공급자",
+          "component_type": "actor",
+          "description": "기능성 채소를 재배하고 판매하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "수요자",
+          "component_type": "actor",
+          "description": "기능성 채소를 구매하는 소비자 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구매 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AI 추천기",
+          "component_type": "process",
+          "description": "사용자 건강 상태에 기반한 채소 추천",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추천 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "스케줄러",
+          "component_type": "process",
+          "description": "재배 품종 및 수량 배정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "배정 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "예측 결과 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "판매처리기",
+          "component_type": "process",
+          "description": "결제 처리 및 주문 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "원격제어기",
+          "component_type": "process",
+          "description": "재배기 자동 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240143660/1020240143660_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240143660",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 공급자 {\n        +String 역할\n    }\n    class 수요자 {\n        +String 역할\n    }\n    class AI추천기 {\n        +String 역할\n    }\n    class 스케줄러 {\n        +String 역할\n    }\n    class 판매처리기 {\n        +String 역할\n    }\n    class 원격제어기 {\n        +String 역할\n    }\n    공급자 --> 수요자 : \"구매 요청\"\n    수요자 --> AI추천기 : \"추천 제공\"\n    공급자 --> 스케줄러 : \"배정 요청\"\n    스케줄러 --> AI추천기 : \"예측 결과 제공\"\n    수요자 --> 판매처리기 : \"결제 요청\"\n    판매처리기 --> 스케줄러 : \"정보 제공\"\n    공급자 --> 원격제어기 : \"제어 신호 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "공급자",
+          "component_type": "actor",
+          "description": "기능성 채소를 재배하고 판매하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "수요자",
+          "component_type": "actor",
+          "description": "기능성 채소를 구매하는 소비자 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구매 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AI 추천기",
+          "component_type": "process",
+          "description": "사용자 건강 상태에 기반한 채소 추천",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추천 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "스케줄러",
+          "component_type": "process",
+          "description": "재배 품종 및 수량 배정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "배정 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "예측 결과 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "판매처리기",
+          "component_type": "process",
+          "description": "결제 처리 및 주문 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "원격제어기",
+          "component_type": "process",
+          "description": "재배기 자동 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어 신호 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240143660/1020240143660_fig_2.mmd"
+    }
+  ]
+}

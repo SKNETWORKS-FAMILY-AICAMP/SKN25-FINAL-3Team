@@ -1,0 +1,260 @@
+{
+  "app_num": "1020230153895",
+  "invention_type": "method",
+  "main_concept": "데이터 기록 장치의 데이터 무결성 검증 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 입력부",
+      "component_type": "process",
+      "description": "시간 순서에 따라 데이터 파일을 입력받는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "무결성 검증 생성부",
+      "component_type": "process",
+      "description": "입력받은 데이터 파일의 무결성 검증 데이터를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력받은 데이터 파일을 사용하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "삭제 검증 정보 생성부",
+      "component_type": "process",
+      "description": "삭제 여부를 검증하기 위한 삭제 검증 정보를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "무결성 검증 데이터를 사용하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "무결성 검증 파일 생성부",
+      "component_type": "process",
+      "description": "무결성 검증 데이터 및 삭제 검증 정보를 포함하는 파일을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "무결성 검증 데이터를 사용하여",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "삭제 검증 정보를 사용하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "데이터 저장 제어부",
+      "component_type": "process",
+      "description": "무결성 검증 파일을 저장하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "무결성 검증 파일을 저장하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "무결성 검증부",
+      "component_type": "process",
+      "description": "삭제 검증 정보를 추출하고 비교하여 삭제를 검출하는 역할",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "저장된 데이터 파일을 사용하여",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230153895",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 무결성 검증 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 입력부\"]\n    200[\"무결성 검증 생성부\"]\n    300[\"삭제 검증 정보 생성부\"]\n    400[\"무결성 검증 파일 생성부\"]\n    500[\"데이터 저장 제어부\"]\n    600[\"무결성 검증부\"]\n    \n    100 -->|\"입력받은 데이터 파일을 사용하여\"| 200\n    200 -->|\"무결성 검증 데이터를 사용하여\"| 300\n    200 -->|\"무결성 검증 데이터를 사용하여\"| 400\n    300 -->|\"삭제 검증 정보를 사용하여\"| 400\n    400 -->|\"무결성 검증 파일을 저장하여\"| 500\n    500 -->|\"저장된 데이터 파일을 사용하여\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 입력부",
+          "component_type": "process",
+          "description": "시간 순서에 따라 데이터 파일을 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "무결성 검증 생성부",
+          "component_type": "process",
+          "description": "입력받은 데이터 파일의 무결성 검증 데이터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받은 데이터 파일을 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "삭제 검증 정보 생성부",
+          "component_type": "process",
+          "description": "삭제 여부를 검증하기 위한 삭제 검증 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무결성 검증 데이터를 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "무결성 검증 파일 생성부",
+          "component_type": "process",
+          "description": "무결성 검증 데이터 및 삭제 검증 정보를 포함하는 파일을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무결성 검증 데이터를 사용하여",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "삭제 검증 정보를 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "데이터 저장 제어부",
+          "component_type": "process",
+          "description": "무결성 검증 파일을 저장하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "무결성 검증 파일을 저장하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "무결성 검증부",
+          "component_type": "process",
+          "description": "삭제 검증 정보를 추출하고 비교하여 삭제를 검출하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "저장된 데이터 파일을 사용하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230153895/1020230153895_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230153895",
+      "diagram_type": "classDiagram",
+      "diagram_title": "데이터 기록 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터입력부 {\n        +String 데이터파일\n        +입력()\n    }\n    class 무결성검증생성부 {\n        +String 무결성검증데이터\n        +생성()\n    }\n    class 삭제검증정보생성부 {\n        +String 삭제검증정보\n        +생성()\n    }\n    class 무결성검증파일생성부 {\n        +String 무결성검증파일\n        +생성()\n    }\n    class 데이터저장제어부 {\n        +저장()\n    }\n    class 무결성검증부 {\n        +검증()\n    }\n    데이터입력부 --> 무결성검증생성부 : \"입력받은 데이터 파일을 사용하여\"\n    무결성검증생성부 --> 삭제검증정보생성부 : \"무결성 검증 데이터를 사용하여\"\n    무결성검증생성부 --> 무결성검증파일생성부 : \"무결성 검증 데이터를 사용하여\"\n    삭제검증정보생성부 --> 무결성검증파일생성부 : \"삭제 검증 정보를 사용하여\"\n    무결성검증파일생성부 --> 데이터저장제어부 : \"무결성 검증 파일을 저장하여\"\n    데이터저장제어부 --> 무결성검증부 : \"저장된 데이터 파일을 사용하여\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 입력부",
+          "component_type": "process",
+          "description": "시간 순서에 따라 데이터 파일을 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "무결성 검증 생성부",
+          "component_type": "process",
+          "description": "입력받은 데이터 파일의 무결성 검증 데이터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받은 데이터 파일을 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "삭제 검증 정보 생성부",
+          "component_type": "process",
+          "description": "삭제 여부를 검증하기 위한 삭제 검증 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무결성 검증 데이터를 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "무결성 검증 파일 생성부",
+          "component_type": "process",
+          "description": "무결성 검증 데이터 및 삭제 검증 정보를 포함하는 파일을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무결성 검증 데이터를 사용하여",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "삭제 검증 정보를 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "데이터 저장 제어부",
+          "component_type": "process",
+          "description": "무결성 검증 파일을 저장하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "무결성 검증 파일을 저장하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "무결성 검증부",
+          "component_type": "process",
+          "description": "삭제 검증 정보를 추출하고 비교하여 삭제를 검출하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "저장된 데이터 파일을 사용하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230153895/1020230153895_fig_2.mmd"
+    }
+  ]
+}

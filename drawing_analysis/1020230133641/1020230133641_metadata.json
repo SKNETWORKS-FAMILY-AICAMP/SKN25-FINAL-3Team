@@ -1,0 +1,245 @@
+{
+  "app_num": "1020230133641",
+  "invention_type": "method",
+  "main_concept": "가스터빈장치의 부품 상태를 모니터링하고 업데이트하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "계측부",
+      "component_type": "actor",
+      "description": "가스터빈장치의 부품의 계측 물리량을 나타내는 센서 데이터를 수집하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "분석부",
+      "component_type": "process",
+      "description": "수치해석을 통해 도출된 훈련 데이터를 이용하여 센서 데이터를 분석하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "센서 데이터 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "검증부",
+      "component_type": "process",
+      "description": "학습 데이터를 통해 생성된 검증모델을 통해 센서 데이터에 대한 추론을 수행하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상태 데이터 분석",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "물리모델생성부",
+      "component_type": "process",
+      "description": "업데이트된 훈련 데이터를 이용하여 차수축소모델을 업데이트하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "상태 벡터 도출",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "학습모델생성부",
+      "component_type": "process",
+      "description": "학습 데이터를 이용하여 검증모델을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "센서 데이터 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "표현부",
+      "component_type": "process",
+      "description": "부품의 해석 물리량 및 상태를 시각화하여 화면으로 표출하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "상태 데이터 시각화",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230133641",
+      "diagram_type": "flowchart",
+      "diagram_title": "가스터빈장치 상태 모니터링 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"계측부\"]\n    200[\"분석부\"]\n    300[\"검증부\"]\n    400[\"물리모델생성부\"]\n    500[\"학습모델생성부\"]\n    600[\"표현부\"]\n    \n    100 -->|\"센서 데이터 수집\"| 200\n    200 -->|\"상태 데이터 분석\"| 300\n    300 -->|\"상태 벡터 도출\"| 400\n    100 -->|\"센서 데이터 수집\"| 500\n    300 -->|\"상태 데이터 시각화\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "계측부",
+          "component_type": "actor",
+          "description": "가스터빈장치의 부품의 계측 물리량을 나타내는 센서 데이터를 수집하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분석부",
+          "component_type": "process",
+          "description": "수치해석을 통해 도출된 훈련 데이터를 이용하여 센서 데이터를 분석하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "센서 데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검증부",
+          "component_type": "process",
+          "description": "학습 데이터를 통해 생성된 검증모델을 통해 센서 데이터에 대한 추론을 수행하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상태 데이터 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "물리모델생성부",
+          "component_type": "process",
+          "description": "업데이트된 훈련 데이터를 이용하여 차수축소모델을 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상태 벡터 도출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습모델생성부",
+          "component_type": "process",
+          "description": "학습 데이터를 이용하여 검증모델을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "센서 데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "표현부",
+          "component_type": "process",
+          "description": "부품의 해석 물리량 및 상태를 시각화하여 화면으로 표출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상태 데이터 시각화",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230133641/1020230133641_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230133641",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가스터빈장치 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 계측부 {\n        +String 센서데이터\n        +수집()\n    }\n    class 분석부 {\n        +String 상태데이터\n        +분석()\n    }\n    class 검증부 {\n        +String 검증모델\n        +추론()\n    }\n    class 물리모델생성부 {\n        +String 차수축소모델\n        +업데이트()\n    }\n    class 학습모델생성부 {\n        +String 학습데이터\n        +생성()\n    }\n    class 표현부 {\n        +String 시각화데이터\n        +표출()\n    }\n    계측부 --> 분석부 : \"센서 데이터 수집\"\n    분석부 --> 검증부 : \"상태 데이터 분석\"\n    검증부 --> 물리모델생성부 : \"상태 벡터 도출\"\n    계측부 --> 학습모델생성부 : \"센서 데이터 수집\"\n    검증부 --> 표현부 : \"상태 데이터 시각화\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "계측부",
+          "component_type": "actor",
+          "description": "가스터빈장치의 부품의 계측 물리량을 나타내는 센서 데이터를 수집하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분석부",
+          "component_type": "process",
+          "description": "수치해석을 통해 도출된 훈련 데이터를 이용하여 센서 데이터를 분석하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "센서 데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검증부",
+          "component_type": "process",
+          "description": "학습 데이터를 통해 생성된 검증모델을 통해 센서 데이터에 대한 추론을 수행하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상태 데이터 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "물리모델생성부",
+          "component_type": "process",
+          "description": "업데이트된 훈련 데이터를 이용하여 차수축소모델을 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상태 벡터 도출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습모델생성부",
+          "component_type": "process",
+          "description": "학습 데이터를 이용하여 검증모델을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "센서 데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "표현부",
+          "component_type": "process",
+          "description": "부품의 해석 물리량 및 상태를 시각화하여 화면으로 표출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상태 데이터 시각화",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230133641/1020230133641_fig_2.mmd"
+    }
+  ]
+}

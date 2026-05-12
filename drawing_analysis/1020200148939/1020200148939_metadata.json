@@ -1,0 +1,245 @@
+{
+  "app_num": "1020200148939",
+  "invention_type": "method",
+  "main_concept": "암 환자 치료에 대한 반응성을 예측하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "암 환자의 병리 슬라이드 이미지를 처리하고 반응성을 예측하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "병리 슬라이드 이미지",
+      "component_type": "data",
+      "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "면역 세포 정보",
+      "component_type": "data",
+      "description": "병리 슬라이드 이미지 내의 면역 세포에 대한 정보",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "종양 세포 정보",
+      "component_type": "data",
+      "description": "병리 슬라이드 이미지 내의 종양 세포에 대한 정보",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "상호작용 스코어",
+      "component_type": "data",
+      "description": "면역 세포와 종양 세포 간의 상호작용을 나타내는 점수",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "예측에 사용됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "기계학습 모델",
+      "component_type": "process",
+      "description": "상호작용 스코어를 기반으로 반응성을 예측하는 모델",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "입력됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200148939",
+      "diagram_type": "flowchart",
+      "diagram_title": "암 환자 치료 반응성 예측 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"병리 슬라이드 이미지\"]\n    300[\"면역 세포 정보\"]\n    400[\"종양 세포 정보\"]\n    500[\"상호작용 스코어\"]\n    600[\"기계학습 모델\"]\n    \n    200 -->| \"처리됨\" | 100\n    300 -->| \"사용됨\" | 100\n    400 -->| \"사용됨\" | 100\n    100 -->| \"예측에 사용됨\" | 500\n    500 -->| \"입력됨\" | 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "암 환자의 병리 슬라이드 이미지를 처리하고 반응성을 예측하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "병리 슬라이드 이미지",
+          "component_type": "data",
+          "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "면역 세포 정보",
+          "component_type": "data",
+          "description": "병리 슬라이드 이미지 내의 면역 세포에 대한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "종양 세포 정보",
+          "component_type": "data",
+          "description": "병리 슬라이드 이미지 내의 종양 세포에 대한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "상호작용 스코어",
+          "component_type": "data",
+          "description": "면역 세포와 종양 세포 간의 상호작용을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예측에 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "기계학습 모델",
+          "component_type": "process",
+          "description": "상호작용 스코어를 기반으로 반응성을 예측하는 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200148939/1020200148939_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200148939",
+      "diagram_type": "classDiagram",
+      "diagram_title": "정보 처리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +String 역할\n        +processImage()\n        +predictResponse()\n    }\n    class 병리슬라이드이미지 {\n        +String 이미지데이터\n    }\n    class 면역세포정보 {\n        +String 세포데이터\n    }\n    class 종양세포정보 {\n        +String 세포데이터\n    }\n    class 상호작용스코어 {\n        +float 점수\n    }\n    class 기계학습모델 {\n        +String 모델데이터\n        +predict()\n    }\n    프로세서 --> 병리슬라이드이미지 : \"처리됨\"\n    프로세서 --> 면역세포정보 : \"사용됨\"\n    프로세서 --> 종양세포정보 : \"사용됨\"\n    프로세서 --> 상호작용스코어 : \"예측에 사용됨\"\n    기계학습모델 --> 상호작용스코어 : \"입력됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "암 환자의 병리 슬라이드 이미지를 처리하고 반응성을 예측하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "병리 슬라이드 이미지",
+          "component_type": "data",
+          "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "면역 세포 정보",
+          "component_type": "data",
+          "description": "병리 슬라이드 이미지 내의 면역 세포에 대한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "종양 세포 정보",
+          "component_type": "data",
+          "description": "병리 슬라이드 이미지 내의 종양 세포에 대한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "상호작용 스코어",
+          "component_type": "data",
+          "description": "면역 세포와 종양 세포 간의 상호작용을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예측에 사용됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "기계학습 모델",
+          "component_type": "process",
+          "description": "상호작용 스코어를 기반으로 반응성을 예측하는 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200148939/1020200148939_fig_2.mmd"
+    }
+  ]
+}

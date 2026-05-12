@@ -1,0 +1,149 @@
+{
+  "app_num": "1020170083779",
+  "invention_type": "method",
+  "main_concept": "악성코드 바이너리 데이터를 영상화하여 딥러닝 기반으로 악성코드를 검출하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "악성코드 바이너리 데이터 입력부",
+      "component_type": "data",
+      "description": "악성코드 바이너리 데이터를 입력받는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메타데이터 추출부",
+      "component_type": "process",
+      "description": "입력된 악성코드 바이너리 데이터에서 메타데이터를 추출하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "메타데이터를 변환",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "데이터 변환부",
+      "component_type": "process",
+      "description": "추출된 메타데이터를 영상 데이터로 변환하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "영상 데이터를 신경망에 입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "신경망부",
+      "component_type": "process",
+      "description": "변환된 영상 데이터를 입력받아 악성코드를 학습하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020170083779",
+      "diagram_type": "flowchart",
+      "diagram_title": "악성코드 검출 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"악성코드 바이너리 데이터 입력부\"]\n    200[\"메타데이터 추출부\"]\n    300[\"데이터 변환부\"]\n    400[\"신경망부\"]\n    100 -->|\"악성코드 바이너리 데이터 입력\"| 200\n    200 -->|\"메타데이터를 변환\"| 300\n    300 -->|\"영상 데이터를 신경망에 입력\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "악성코드 바이너리 데이터 입력부",
+          "component_type": "data",
+          "description": "악성코드 바이너리 데이터를 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메타데이터 추출부",
+          "component_type": "process",
+          "description": "입력된 악성코드 바이너리 데이터에서 메타데이터를 추출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메타데이터를 변환",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 변환부",
+          "component_type": "process",
+          "description": "추출된 메타데이터를 영상 데이터로 변환하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "영상 데이터를 신경망에 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신경망부",
+          "component_type": "process",
+          "description": "변환된 영상 데이터를 입력받아 악성코드를 학습하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020170083779/1020170083779_fig_1.mmd"
+    },
+    {
+      "app_num": "1020170083779",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 변환 및 학습 과정",
+      "mermaid_code": "flowchart TD\n    100[\"악성코드 바이너리 데이터 입력부\"]\n    200[\"메타데이터 추출부\"]\n    300[\"데이터 변환부\"]\n    400[\"신경망부\"]\n    100 -->|\"악성코드 바이너리 데이터 입력\"| 200\n    200 -->|\"메타데이터를 변환\"| 300\n    300 -->|\"영상 데이터를 신경망에 입력\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "악성코드 바이너리 데이터 입력부",
+          "component_type": "data",
+          "description": "악성코드 바이너리 데이터를 입력받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메타데이터 추출부",
+          "component_type": "process",
+          "description": "입력된 악성코드 바이너리 데이터에서 메타데이터를 추출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메타데이터를 변환",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 변환부",
+          "component_type": "process",
+          "description": "추출된 메타데이터를 영상 데이터로 변환하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "영상 데이터를 신경망에 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신경망부",
+          "component_type": "process",
+          "description": "변환된 영상 데이터를 입력받아 악성코드를 학습하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020170083779/1020170083779_fig_2.mmd"
+    }
+  ]
+}

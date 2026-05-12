@@ -1,0 +1,221 @@
+{
+  "app_num": "1020240169312",
+  "invention_type": "system",
+  "main_concept": "임대 시설물의 통합 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "시스템의 명령을 처리하고 실행하는 중앙 처리 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "인스트럭션과 데이터를 저장하는 저장소",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장된 인스트럭션을 프로세서에 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "데이터베이스",
+      "component_type": "data",
+      "description": "임대차 계약 정보 및 관리 정보를 저장하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보를 프로세서에 제공",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "저장된 데이터에 접근",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "모바일 인터페이스",
+      "component_type": "actor",
+      "description": "임대인, 임차인 및 관리자가 시스템에 접근하는 인터페이스",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자 요청을 프로세서에 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "CCTV 시스템",
+      "component_type": "device",
+      "description": "시설물의 안전을 모니터링하고 이상 행동을 감지하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "영상 데이터를 프로세서에 전달",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240169312",
+      "diagram_type": "flowchart",
+      "diagram_title": "임대 시설물 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"메모리\"]\n    300[\"데이터베이스\"]\n    400[\"모바일 인터페이스\"]\n    500[\"CCTV 시스템\"]\n    \n    400 -->|\"사용자 요청을 프로세서에 전달\"| 100\n    200 -->|\"저장된 인스트럭션을 프로세서에 제공\"| 100\n    300 -->|\"정보를 프로세서에 제공\"| 100\n    300 <--|\"저장된 데이터에 접근\"| 200\n    500 -->|\"영상 데이터를 프로세서에 전달\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "시스템의 명령을 처리하고 실행하는 중앙 처리 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "인스트럭션과 데이터를 저장하는 저장소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 인스트럭션을 프로세서에 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "임대차 계약 정보 및 관리 정보를 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보를 프로세서에 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "저장된 데이터에 접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모바일 인터페이스",
+          "component_type": "actor",
+          "description": "임대인, 임차인 및 관리자가 시스템에 접근하는 인터페이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 요청을 프로세서에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "CCTV 시스템",
+          "component_type": "device",
+          "description": "시설물의 안전을 모니터링하고 이상 행동을 감지하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영상 데이터를 프로세서에 전달",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240169312/1020240169312_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240169312",
+      "diagram_type": "classDiagram",
+      "diagram_title": "임대 시설물 관리 시스템 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +executeCommand()\n    }\n    class 메모리 {\n        +storeData()\n    }\n    class 데이터베이스 {\n        +saveContractInfo()\n    }\n    class 모바일인터페이스 {\n        +sendRequest()\n    }\n    class CCTV시스템 {\n        +monitorSafety()\n    }\n    프로세서 --> 메모리 : \"저장된 인스트럭션을 프로세서에 제공\"\n    프로세서 --> 데이터베이스 : \"정보를 프로세서에 제공\"\n    데이터베이스 --> 메모리 : \"저장된 데이터에 접근\"\n    프로세서 --> 모바일인터페이스 : \"사용자 요청을 프로세서에 전달\"\n    프로세서 --> CCTV시스템 : \"영상 데이터를 프로세서에 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "시스템의 명령을 처리하고 실행하는 중앙 처리 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "인스트럭션과 데이터를 저장하는 저장소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 인스트럭션을 프로세서에 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "임대차 계약 정보 및 관리 정보를 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보를 프로세서에 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "저장된 데이터에 접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모바일 인터페이스",
+          "component_type": "actor",
+          "description": "임대인, 임차인 및 관리자가 시스템에 접근하는 인터페이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 요청을 프로세서에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "CCTV 시스템",
+          "component_type": "device",
+          "description": "시설물의 안전을 모니터링하고 이상 행동을 감지하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영상 데이터를 프로세서에 전달",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240169312/1020240169312_fig_2.mmd"
+    }
+  ]
+}

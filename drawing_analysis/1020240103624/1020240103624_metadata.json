@@ -1,0 +1,125 @@
+{
+  "app_num": "1020240103624",
+  "invention_type": "system",
+  "main_concept": "수요기업과 내·외국인 구직자 매칭 및 추천 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "구인 단말",
+      "component_type": "actor",
+      "description": "고용주가 구인 정보를 등록하는 단말",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "구직 단말",
+      "component_type": "actor",
+      "description": "구직자가 이력서를 등록하고 지원하는 단말",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "서버",
+      "component_type": "device",
+      "description": "구인 및 구직 정보를 관리하고 매칭 기능을 수행하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구인 정보 등록",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "이력서 등록 및 매칭",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240103624",
+      "diagram_type": "flowchart",
+      "diagram_title": "구인 및 구직 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"구인 단말\"]\n    200[\"구직 단말\"]\n    300[\"서버\"]\n    400[\"면접 후보자 선정 및 통보\"]\n    500[\"근로 계약서 작성 및 결제\"]\n    \n    100 -->|\"구인 정보 등록\"| 300\n    200 -->|\"이력서 등록\"| 300\n    300 -->|\"구인 정보와 이력서 매칭\"| 400\n    400 -->|\"결과 통보\"| 200\n    400 -->|\"면접 통보\"| 100\n    400 -->|\"계약서 작성 및 결제\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "구인 단말",
+          "component_type": "actor",
+          "description": "고용주가 구인 정보를 등록하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구직 단말",
+          "component_type": "actor",
+          "description": "구직자가 이력서를 등록하고 지원하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "구인 및 구직 정보를 관리하고 매칭 기능을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구인 정보 등록",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "이력서 등록 및 매칭",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240103624/1020240103624_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240103624",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 및 관계도",
+      "mermaid_code": "classDiagram\n    class 구인단말 {\n        +String 구인정보\n        +registerJob()\n    }\n    class 구직단말 {\n        +String 이력서\n        +registerResume()\n    }\n    class 서버 {\n        +manageJobInfo()\n        +matchResume()\n    }\n    구인단말 --> 서버 : \"구인 정보 등록\"\n    구직단말 --> 서버 : \"이력서 등록 및 매칭\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "구인 단말",
+          "component_type": "actor",
+          "description": "고용주가 구인 정보를 등록하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구직 단말",
+          "component_type": "actor",
+          "description": "구직자가 이력서를 등록하고 지원하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "구인 및 구직 정보를 관리하고 매칭 기능을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구인 정보 등록",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "이력서 등록 및 매칭",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240103624/1020240103624_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "app_num": "1020207032320",
+  "invention_type": "system",
+  "main_concept": "머신 학습 문제를 해결하기 위한 신경망 아키텍처 선택 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세싱 하드웨어",
+      "component_type": "device",
+      "description": "머신 학습 문제를 해결하기 위한 연산을 수행하는 하드웨어",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "device",
+      "description": "명령어를 저장하여 프로세싱 하드웨어가 동작하도록 하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장된 명령어를 실행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "후보 신경망",
+      "component_type": "data",
+      "description": "머신 학습 문제를 해결하기 위한 훈련되지 않은 신경망",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "표현성 측도",
+      "component_type": "data",
+      "description": "후보 신경망의 표현성을 평가하는 측정값",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "후보 신경망의 평가",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "훈련 가능성 측도",
+      "component_type": "data",
+      "description": "후보 신경망의 훈련 가능성을 평가하는 측정값",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "후보 신경망의 평가",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "출력",
+      "component_type": "data",
+      "description": "선택된 후보 신경망을 나타내는 결과",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "선택된 신경망의 결과",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020207032320",
+      "diagram_type": "flowchart",
+      "diagram_title": "머신 학습 문제 해결 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"프로세싱 하드웨어\"]\n    200[\"메모리\"]\n    300[\"후보 신경망\"]\n    400[\"표현성 측도\"]\n    500[\"훈련 가능성 측도\"]\n    600[\"출력\"]\n    \n    100 -->|\"저장된 명령어를 실행\"| 200\n    200 -->|\"머신 학습 문제 공간에 접근\"| 300\n    300 -->|\"후보 신경망의 평가\"| 400\n    300 -->|\"후보 신경망의 평가\"| 500\n    400 -->|\"적합한 후보 신경망 선택\"| 600\n    500 -->|\"선택된 신경망의 결과\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세싱 하드웨어",
+          "component_type": "device",
+          "description": "머신 학습 문제를 해결하기 위한 연산을 수행하는 하드웨어",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "명령어를 저장하여 프로세싱 하드웨어가 동작하도록 하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "후보 신경망",
+          "component_type": "data",
+          "description": "머신 학습 문제를 해결하기 위한 훈련되지 않은 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "표현성 측도",
+          "component_type": "data",
+          "description": "후보 신경망의 표현성을 평가하는 측정값",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "후보 신경망의 평가",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "훈련 가능성 측도",
+          "component_type": "data",
+          "description": "후보 신경망의 훈련 가능성을 평가하는 측정값",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "후보 신경망의 평가",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "출력",
+          "component_type": "data",
+          "description": "선택된 후보 신경망을 나타내는 결과",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "선택된 신경망의 결과",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020207032320/1020207032320_fig_1.mmd"
+    },
+    {
+      "app_num": "1020207032320",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세싱하드웨어 {\n        +String 연산\n    }\n    class 메모리 {\n        +String 명령어\n        +execute()\n    }\n    class 후보신경망 {\n        +String 신경망구조\n    }\n    class 표현성측도 {\n        +String 평가값\n    }\n    class 훈련가능성측도 {\n        +String 평가값\n    }\n    class 출력 {\n        +String 결과\n    }\n    메모리 --> 프로세싱하드웨어 : \"저장된 명령어를 실행\"\n    표현성측도 <-- 후보신경망 : \"후보 신경망의 평가\"\n    훈련가능성측도 <-- 후보신경망 : \"후보 신경망의 평가\"\n    출력 <-- 후보신경망 : \"선택된 신경망의 결과\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세싱 하드웨어",
+          "component_type": "device",
+          "description": "머신 학습 문제를 해결하기 위한 연산을 수행하는 하드웨어",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "명령어를 저장하여 프로세싱 하드웨어가 동작하도록 하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "후보 신경망",
+          "component_type": "data",
+          "description": "머신 학습 문제를 해결하기 위한 훈련되지 않은 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "표현성 측도",
+          "component_type": "data",
+          "description": "후보 신경망의 표현성을 평가하는 측정값",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "후보 신경망의 평가",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "훈련 가능성 측도",
+          "component_type": "data",
+          "description": "후보 신경망의 훈련 가능성을 평가하는 측정값",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "후보 신경망의 평가",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "출력",
+          "component_type": "data",
+          "description": "선택된 후보 신경망을 나타내는 결과",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "선택된 신경망의 결과",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020207032320/1020207032320_fig_2.mmd"
+    }
+  ]
+}

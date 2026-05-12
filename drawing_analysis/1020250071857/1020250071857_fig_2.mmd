@@ -1,0 +1,30 @@
+%% 1020250071857 - 결제 서비스 구성 요소 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 정보데이터베이스 {
+        +String 전자지갑정보
+    }
+    class 회원데이터베이스 {
+        +String 회원식별정보
+        +String 전자지갑정보
+    }
+    class 바코드발급부 {
+        +generateBarcode()
+        +sendBarcode()
+    }
+    class 결제이벤트발생부 {
+        +triggerPaymentEvent()
+    }
+    class 이체요청부 {
+        +sendTransferCommand()
+    }
+    class 결제완료부 {
+        +sendCompletionMessage()
+    }
+    바코드발급부 --> 정보데이터베이스 : "정보 요청"
+    바코드발급부 --> 회원데이터베이스 : "회원 정보 요청"
+    결제이벤트발생부 --> 회원데이터베이스 : "회원 정보 확인"
+    이체요청부 --> 정보데이터베이스 : "전자지갑 정보 확인"
+    이체요청부 --> 회원데이터베이스 : "회원 정보 확인"
+    결제완료부 --> 결제이벤트발생부 : "결제 이벤트 발생 후"

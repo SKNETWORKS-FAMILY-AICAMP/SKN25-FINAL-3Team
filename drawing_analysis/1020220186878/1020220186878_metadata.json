@@ -1,0 +1,323 @@
+{
+  "app_num": "1020220186878",
+  "invention_type": "system",
+  "main_concept": "통합 차량자원 관리 시스템을 통한 렌터카 대여 및 관리",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "렌터카",
+      "component_type": "device",
+      "description": "사용자가 대여하여 사용하는 차량",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "사용자단말기",
+      "component_type": "actor",
+      "description": "렌터카를 검색하고 예약하는 사용자 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "예약 및 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "관리자단말기",
+      "component_type": "actor",
+      "description": "렌터카 관리 정보를 수신하는 관리자 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "관리서버",
+      "component_type": "device",
+      "description": "렌터카 정보를 관리하고 예약 시스템과 연동",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "예약 정보 제공",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "관리 정보 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "예약관리부",
+      "component_type": "process",
+      "description": "예약 정보를 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "예약 정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "계약관리부",
+      "component_type": "process",
+      "description": "대여 계약을 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "예약 정보 감지",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "대차관리부",
+      "component_type": "process",
+      "description": "차량의 인도 및 반납을 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "차량 인도 및 반납 정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "매출관리부",
+      "component_type": "process",
+      "description": "렌터카 대여에 따른 매출을 관리하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "900",
+      "name": "차량관리부",
+      "component_type": "process",
+      "description": "차량의 사용 정도를 관리하는 모듈",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220186878",
+      "diagram_type": "classDiagram",
+      "diagram_title": "렌터카 관리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 렌터카 {\n        +String 차량정보\n    }\n    class 사용자단말기 {\n        +예약()\n        +정보제공()\n    }\n    class 관리자단말기 {\n        +관리정보수신()\n    }\n    class 관리서버 {\n        +예약정보관리()\n        +관리정보제공()\n    }\n    class 예약관리부 {\n        +예약정보수신()\n    }\n    class 계약관리부 {\n        +예약정보감지()\n    }\n    class 대차관리부 {\n        +차량인도반납정보수신()\n    }\n    class 매출관리부 {\n        +매출관리()\n    }\n    class 차량관리부 {\n        +사용정도관리()\n    }\n\n    사용자단말기 -->|예약 및 정보 제공| 렌터카\n    관리서버 <--|예약 정보 제공| 사용자단말기\n    관리서버 <--|관리 정보 제공| 관리자단말기\n    예약관리부 -->|예약 정보 수신| 관리서버\n    계약관리부 -->|예약 정보 감지| 예약관리부\n    대차관리부 -->|차량 인도 및 반납 정보 수신| 렌터카",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "렌터카",
+          "component_type": "device",
+          "description": "사용자가 대여하여 사용하는 차량",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자단말기",
+          "component_type": "actor",
+          "description": "렌터카를 검색하고 예약하는 사용자 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예약 및 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관리자단말기",
+          "component_type": "actor",
+          "description": "렌터카 관리 정보를 수신하는 관리자 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "렌터카 정보를 관리하고 예약 시스템과 연동",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 정보 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "관리 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "예약관리부",
+          "component_type": "process",
+          "description": "예약 정보를 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "예약 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "계약관리부",
+          "component_type": "process",
+          "description": "대여 계약을 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "예약 정보 감지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "대차관리부",
+          "component_type": "process",
+          "description": "차량의 인도 및 반납을 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "차량 인도 및 반납 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "매출관리부",
+          "component_type": "process",
+          "description": "렌터카 대여에 따른 매출을 관리하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "차량관리부",
+          "component_type": "process",
+          "description": "차량의 사용 정도를 관리하는 모듈",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220186878/1020220186878_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220186878",
+      "diagram_type": "flowchart",
+      "diagram_title": "렌터카 대여 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"렌터카\"]\n    200[\"사용자단말기\"]\n    300[\"관리자단말기\"]\n    400[\"관리서버\"]\n    500[\"예약관리부\"]\n    600[\"계약관리부\"]\n    700[\"대차관리부\"]\n    800[\"매출관리부\"]\n    900[\"차량관리부\"]\n\n    200 -->| \"예약 및 정보 제공\" | 100\n    200 -->| \"예약 정보 제공\" | 400\n    400 -->| \"예약 정보 수신\" | 500\n    500 -->| \"예약 정보 감지\" | 600\n    600 -->| \"차량 인도 및 반납 정보 수신\" | 700\n    700 -->| \"매출 정보 관리\" | 800\n    700 -->| \"차량 사용 정도 관리\" | 900",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "렌터카",
+          "component_type": "device",
+          "description": "사용자가 대여하여 사용하는 차량",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자단말기",
+          "component_type": "actor",
+          "description": "렌터카를 검색하고 예약하는 사용자 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예약 및 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관리자단말기",
+          "component_type": "actor",
+          "description": "렌터카 관리 정보를 수신하는 관리자 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "렌터카 정보를 관리하고 예약 시스템과 연동",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 정보 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "관리 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "예약관리부",
+          "component_type": "process",
+          "description": "예약 정보를 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "예약 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "계약관리부",
+          "component_type": "process",
+          "description": "대여 계약을 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "예약 정보 감지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "대차관리부",
+          "component_type": "process",
+          "description": "차량의 인도 및 반납을 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "차량 인도 및 반납 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "매출관리부",
+          "component_type": "process",
+          "description": "렌터카 대여에 따른 매출을 관리하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "차량관리부",
+          "component_type": "process",
+          "description": "차량의 사용 정도를 관리하는 모듈",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220186878/1020220186878_fig_2.mmd"
+    }
+  ]
+}

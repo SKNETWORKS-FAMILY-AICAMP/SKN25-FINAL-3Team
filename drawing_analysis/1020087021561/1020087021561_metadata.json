@@ -1,0 +1,275 @@
+{
+  "app_num": "1020087021561",
+  "invention_type": "system",
+  "main_concept": "단일 칩 상의 다수의 병렬 프로세서와 컴퓨터 메모리를 이용한 스레드-레벨 프로세싱 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "병렬 프로세서",
+      "component_type": "device",
+      "description": "스레드-레벨 프로세싱을 수행하는 프로세서",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "마스터 프로세서",
+      "component_type": "device",
+      "description": "병렬 프로세서를 관리하는 프로세서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "관리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "컴퓨터 메모리",
+      "component_type": "data",
+      "description": "병렬 프로세서가 액세스하는 메모리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "액세스",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "로컬 캐시",
+      "component_type": "data",
+      "description": "각 프로세서에 할당된 캐시 메모리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "할당",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "특정 레지스터",
+      "component_type": "data",
+      "description": "각 프로세서에 존재하는 레지스터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020087021561",
+      "diagram_type": "classDiagram",
+      "diagram_title": "병렬 프로세서 시스템 구조",
+      "mermaid_code": "classDiagram\n    class 병렬프로세서 {\n        +String 스레드\n        +processThread()\n    }\n    class 마스터프로세서 {\n        +manageProcessors()\n    }\n    class 컴퓨터메모리 {\n        +String 데이터\n        +accessData()\n    }\n    class 로컬캐시 {\n        +String 캐시데이터\n        +allocateCache()\n    }\n    class 특정레지스터 {\n        +String 레지스터데이터\n        +useRegister()\n    }\n    마스터프로세서 --> 병렬프로세서 : \"관리\"\n    컴퓨터메모리 <-- 병렬프로세서 : \"액세스\"\n    로컬캐시 --> 병렬프로세서 : \"할당\"\n    특정레지스터 --> 병렬프로세서 : \"사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "병렬 프로세서",
+          "component_type": "device",
+          "description": "스레드-레벨 프로세싱을 수행하는 프로세서",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "마스터 프로세서",
+          "component_type": "device",
+          "description": "병렬 프로세서를 관리하는 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "컴퓨터 메모리",
+          "component_type": "data",
+          "description": "병렬 프로세서가 액세스하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "액세스",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "로컬 캐시",
+          "component_type": "data",
+          "description": "각 프로세서에 할당된 캐시 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "할당",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "특정 레지스터",
+          "component_type": "data",
+          "description": "각 프로세서에 존재하는 레지스터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020087021561/1020087021561_fig_1.mmd"
+    },
+    {
+      "app_num": "1020087021561",
+      "diagram_type": "flowchart",
+      "diagram_title": "인스트럭션 세트 처리 흐름",
+      "mermaid_code": "flowchart TD\n    100[\"병렬 프로세서\"]\n    200[\"마스터 프로세서\"]\n    300[\"컴퓨터 메모리\"]\n    400[\"로컬 캐시\"]\n    500[\"특정 레지스터\"]\n    \n    200 -->|\"관리\"| 100\n    300 <-->|\"액세스\"| 100\n    400 -->|\"할당\"| 100\n    500 -->|\"사용\"| 100\n    \n    100 -->|\"로컬 캐시 할당\"| 400\n    100 -->|\"스레드 할당\"| 200\n    100 -->|\"스레드 프로세싱\"| 500\n    100 -->|\"결과 프로세싱\"| 300\n    100 -->|\"스레드 탈-할당\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "병렬 프로세서",
+          "component_type": "device",
+          "description": "스레드-레벨 프로세싱을 수행하는 프로세서",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "마스터 프로세서",
+          "component_type": "device",
+          "description": "병렬 프로세서를 관리하는 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "컴퓨터 메모리",
+          "component_type": "data",
+          "description": "병렬 프로세서가 액세스하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "액세스",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "로컬 캐시",
+          "component_type": "data",
+          "description": "각 프로세서에 할당된 캐시 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "할당",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "특정 레지스터",
+          "component_type": "data",
+          "description": "각 프로세서에 존재하는 레지스터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020087021561/1020087021561_fig_2.mmd"
+    },
+    {
+      "app_num": "1020087021561",
+      "diagram_type": "flowchart",
+      "diagram_title": "주소 지정 방식",
+      "mermaid_code": "flowchart TD\n    100[\"병렬 프로세서\"]\n    200[\"마스터 프로세서\"]\n    300[\"컴퓨터 메모리\"]\n    400[\"로컬 캐시\"]\n    500[\"특정 레지스터\"]\n    \n    200 -->|\"관리\"| 100\n    300 <--|\"액세스\"| 100\n    400 -->|\"할당\"| 100\n    500 -->|\"사용\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "병렬 프로세서",
+          "component_type": "device",
+          "description": "스레드-레벨 프로세싱을 수행하는 프로세서",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "마스터 프로세서",
+          "component_type": "device",
+          "description": "병렬 프로세서를 관리하는 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "컴퓨터 메모리",
+          "component_type": "data",
+          "description": "병렬 프로세서가 액세스하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "액세스",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "로컬 캐시",
+          "component_type": "data",
+          "description": "각 프로세서에 할당된 캐시 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "할당",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "특정 레지스터",
+          "component_type": "data",
+          "description": "각 프로세서에 존재하는 레지스터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020087021561/1020087021561_fig_3.mmd"
+    }
+  ]
+}

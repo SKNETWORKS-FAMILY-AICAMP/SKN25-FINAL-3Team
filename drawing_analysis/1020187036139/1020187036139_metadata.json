@@ -1,0 +1,239 @@
+{
+  "app_num": "1020187036139",
+  "invention_type": "method",
+  "main_concept": "음성 처리 상태를 시각적으로 표시하기 위한 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 디바이스",
+      "component_type": "device",
+      "description": "음성 입력을 처리하고 LED 조명을 제어하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "풀 컬러 LED 어레이",
+      "component_type": "device",
+      "description": "음성 처리 상태를 시각적으로 표시하는 조명 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "제어",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "연관",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "마이크로폰",
+      "component_type": "device",
+      "description": "주변 환경의 오디오 입력을 수집하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "오디오 입력을 처리하고 LED 조명을 제어하는 중앙 처리 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "프로세서가 실행할 프로그램을 저장하는 장치",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "저장",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020187036139",
+      "diagram_type": "flowchart",
+      "diagram_title": "음성 처리 상태 표시 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전자 디바이스\"]\n    200[\"풀 컬러 LED 어레이\"]\n    300[\"마이크로폰\"]\n    400[\"프로세서\"]\n    500[\"메모리\"]\n    \n    300 -->|\"오디오 입력 수집\"| 100\n    100 -->|\"음성 입력 처리\"| 400\n    400 -->|\"음성 처리 상태 결정\"| 200\n    200 -->|\"LED 조명 동기화\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 디바이스",
+          "component_type": "device",
+          "description": "음성 입력을 처리하고 LED 조명을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "풀 컬러 LED 어레이",
+          "component_type": "device",
+          "description": "음성 처리 상태를 시각적으로 표시하는 조명 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "연관",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "마이크로폰",
+          "component_type": "device",
+          "description": "주변 환경의 오디오 입력을 수집하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "오디오 입력을 처리하고 LED 조명을 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 프로그램을 저장하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020187036139/1020187036139_fig_1.mmd"
+    },
+    {
+      "app_num": "1020187036139",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 디바이스 구성도",
+      "mermaid_code": "classDiagram\n    class 전자디바이스 {\n        +String 음성입력\n        +controlLED()\n    }\n    class 풀컬러LED어레이 {\n        +String 상태\n        +visualizeState()\n    }\n    class 마이크로폰 {\n        +String 오디오입력\n        +collectAudio()\n    }\n    class 프로세서 {\n        +String 프로그램\n        +processAudio()\n    }\n    class 메모리 {\n        +String 데이터\n        +storeProgram()\n    }\n    전자디바이스 --> 풀컬러LED어레이 : \"포함\"\n    전자디바이스 --> 마이크로폰 : \"연결\"\n    프로세서 --> 메모리 : \"저장\"\n    프로세서 --> 풀컬러LED어레이 : \"제어\"\n    프로세서 --> 전자디바이스 : \"구성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 디바이스",
+          "component_type": "device",
+          "description": "음성 입력을 처리하고 LED 조명을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "풀 컬러 LED 어레이",
+          "component_type": "device",
+          "description": "음성 처리 상태를 시각적으로 표시하는 조명 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "연관",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "마이크로폰",
+          "component_type": "device",
+          "description": "주변 환경의 오디오 입력을 수집하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "오디오 입력을 처리하고 LED 조명을 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 프로그램을 저장하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020187036139/1020187036139_fig_2.mmd"
+    }
+  ]
+}

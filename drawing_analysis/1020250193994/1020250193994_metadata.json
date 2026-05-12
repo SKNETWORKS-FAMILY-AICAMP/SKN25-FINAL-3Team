@@ -1,0 +1,857 @@
+{
+  "app_num": "1020250193994",
+  "invention_type": "system",
+  "main_concept": "인공지능 기반 제품 포장 최적화 설계 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "포장 조건 입력부",
+      "component_type": "device",
+      "description": "포장상자 설계 정보와 유통환경 정보를 수집하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포장 설계안 도출부에 정보 제공",
+          "direction": "->"
+        },
+        {
+          "target": "110",
+          "label": "포장 조건 수신부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "120",
+          "label": "포장 조건 처리부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "130",
+          "label": "포장 조건 저장부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "140",
+          "label": "제1 통신부 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "포장 설계안 도출부",
+      "component_type": "device",
+      "description": "최적 포장 설계안을 도출하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "포장 조건 입력부와 통신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "중앙관제부에 결과 제공",
+          "direction": "->"
+        },
+        {
+          "target": "210",
+          "label": "제2 통신부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "220",
+          "label": "설계안 판단부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "230",
+          "label": "제3 통신부 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "중앙관제부",
+      "component_type": "device",
+      "description": "최적 포장 설계안을 작업자 및 관리자에게 통지하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포장 설계안 도출부와 통신",
+          "direction": "<-"
+        },
+        {
+          "target": "310",
+          "label": "제4 통신부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "320",
+          "label": "알림정보 배열부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "330",
+          "label": "제5 통신부 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "110",
+      "name": "포장 조건 수신부",
+      "component_type": "device",
+      "description": "포장 조건 입력부에서 포장 조건을 수신하는 역할",
+      "relationships": [
+        {
+          "target": "120",
+          "label": "포장 조건 처리부로 공급",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "포장 조건 처리부",
+      "component_type": "process",
+      "description": "수신된 포장 조건을 처리하여 저장부로 공급하는 역할",
+      "relationships": [
+        {
+          "target": "130",
+          "label": "포장 조건 저장부로 공급",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "130",
+      "name": "포장 조건 저장부",
+      "component_type": "data",
+      "description": "포장 조건을 데이터화하여 저장하는 역할",
+      "relationships": [
+        {
+          "target": "140",
+          "label": "제1 통신부와 통신",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "포장 설계안 도출부에 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "140",
+      "name": "제1 통신부",
+      "component_type": "device",
+      "description": "포장 조건 입력부와 포장 설계안 도출부 간의 통신을 담당",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포장 설계안 도출부와 통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "210",
+      "name": "제2 통신부",
+      "component_type": "device",
+      "description": "포장 설계안 도출부에서 포장 조건 입력부와 통신하는 역할",
+      "relationships": [
+        {
+          "target": "220",
+          "label": "설계안 판단부와 통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "220",
+      "name": "설계안 판단부",
+      "component_type": "process",
+      "description": "최적 포장 설계안을 도출하는 역할",
+      "relationships": [
+        {
+          "target": "230",
+          "label": "제3 통신부와 통신",
+          "direction": "->"
+        },
+        {
+          "target": "221",
+          "label": "학습모듈 포함",
+          "direction": "->"
+        },
+        {
+          "target": "222",
+          "label": "도출모듈 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "230",
+      "name": "제3 통신부",
+      "component_type": "device",
+      "description": "포장 설계안 도출부와 중앙관제부 간의 통신을 담당",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "중앙관제부와 통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "221",
+      "name": "학습모듈",
+      "component_type": "process",
+      "description": "포장 조건 입력부에서 수집된 정보를 저장하고 학습하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "222",
+      "name": "도출모듈",
+      "component_type": "process",
+      "description": "학습된 정보를 기반으로 최적 포장 설계안을 도출하는 역할",
+      "relationships": [
+        {
+          "target": "222-1",
+          "label": "포장 조건 데이터 저장부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "222-2",
+          "label": "변화값 산출부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "222-3",
+          "label": "설계안 도출부 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "222-1",
+      "name": "포장 조건 데이터 저장부",
+      "component_type": "data",
+      "description": "학습된 포장상자 설계 정보 및 유통환경 정보를 저장하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "222-2",
+      "name": "변화값 산출부",
+      "component_type": "process",
+      "description": "변화값을 산출하는 역할",
+      "relationships": [
+        {
+          "target": "222-2a",
+          "label": "제1 변화값 산출부 포함",
+          "direction": "->"
+        },
+        {
+          "target": "222-2b",
+          "label": "제2 변화값 산출부 포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "222-2a",
+      "name": "제1 변화값 산출부",
+      "component_type": "process",
+      "description": "포장상자 설계 정보를 기준으로 변화값을 산출하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "222-2b",
+      "name": "제2 변화값 산출부",
+      "component_type": "process",
+      "description": "유통환경 정보를 기준으로 변화값을 산출하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "222-3",
+      "name": "설계안 도출부",
+      "component_type": "process",
+      "description": "변화값을 기반으로 최적 포장 설계안을 도출하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250193994",
+      "diagram_type": "flowchart",
+      "diagram_title": "포장 설계 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"포장 조건 입력부\"]\n    200[\"포장 설계안 도출부\"]\n    300[\"중앙관제부\"]\n    110[\"포장 조건 수신부\"]\n    120[\"포장 조건 처리부\"]\n    130[\"포장 조건 저장부\"]\n    140[\"제1 통신부\"]\n    210[\"제2 통신부\"]\n    220[\"설계안 판단부\"]\n    230[\"제3 통신부\"]\n\n    100 -->|\"포장 설계안 도출부에 정보 제공\"| 200\n    100 -->|\"포장 조건 수신부 포함\"| 110\n    100 -->|\"포장 조건 처리부 포함\"| 120\n    100 -->|\"포장 조건 저장부 포함\"| 130\n    100 -->|\"제1 통신부 포함\"| 140\n\n    200 -->|\"중앙관제부에 결과 제공\"| 300\n    200 -->|\"제2 통신부 포함\"| 210\n    200 -->|\"설계안 판단부 포함\"| 220\n    200 -->|\"제3 통신부 포함\"| 230\n\n    110 -->|\"포장 조건 처리부로 공급\"| 120\n    120 -->|\"포장 조건 저장부로 공급\"| 130\n    130 -->|\"포장 설계안 도출부에 데이터 제공\"| 200\n    140 -->|\"포장 설계안 도출부와 통신\"| 200\n\n    210 -->|\"설계안 판단부와 통신\"| 220\n    230 -->|\"중앙관제부와 통신\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "포장 조건 입력부",
+          "component_type": "device",
+          "description": "포장상자 설계 정보와 유통환경 정보를 수집하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부에 정보 제공",
+              "direction": "->"
+            },
+            {
+              "target": "110",
+              "label": "포장 조건 수신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "120",
+              "label": "포장 조건 처리부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "130",
+              "label": "포장 조건 저장부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "140",
+              "label": "제1 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "포장 설계안 도출부",
+          "component_type": "device",
+          "description": "최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "포장 조건 입력부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "중앙관제부에 결과 제공",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "제2 통신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "설계안 판단부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "제3 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "중앙관제부",
+          "component_type": "device",
+          "description": "최적 포장 설계안을 작업자 및 관리자에게 통지하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "310",
+              "label": "제4 통신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "320",
+              "label": "알림정보 배열부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "330",
+              "label": "제5 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "포장 조건 수신부",
+          "component_type": "device",
+          "description": "포장 조건 입력부에서 포장 조건을 수신하는 역할",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "포장 조건 처리부로 공급",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "포장 조건 처리부",
+          "component_type": "process",
+          "description": "수신된 포장 조건을 처리하여 저장부로 공급하는 역할",
+          "relationships": [
+            {
+              "target": "130",
+              "label": "포장 조건 저장부로 공급",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "포장 조건 저장부",
+          "component_type": "data",
+          "description": "포장 조건을 데이터화하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "140",
+              "label": "제1 통신부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부에 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "140",
+          "name": "제1 통신부",
+          "component_type": "device",
+          "description": "포장 조건 입력부와 포장 설계안 도출부 간의 통신을 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "제2 통신부",
+          "component_type": "device",
+          "description": "포장 설계안 도출부에서 포장 조건 입력부와 통신하는 역할",
+          "relationships": [
+            {
+              "target": "220",
+              "label": "설계안 판단부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "설계안 판단부",
+          "component_type": "process",
+          "description": "최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "230",
+              "label": "제3 통신부와 통신",
+              "direction": "->"
+            },
+            {
+              "target": "221",
+              "label": "학습모듈 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222",
+              "label": "도출모듈 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "제3 통신부",
+          "component_type": "device",
+          "description": "포장 설계안 도출부와 중앙관제부 간의 통신을 담당",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "중앙관제부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "221",
+          "name": "학습모듈",
+          "component_type": "process",
+          "description": "포장 조건 입력부에서 수집된 정보를 저장하고 학습하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222",
+          "name": "도출모듈",
+          "component_type": "process",
+          "description": "학습된 정보를 기반으로 최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "222-1",
+              "label": "포장 조건 데이터 저장부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-2",
+              "label": "변화값 산출부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-3",
+              "label": "설계안 도출부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "222-1",
+          "name": "포장 조건 데이터 저장부",
+          "component_type": "data",
+          "description": "학습된 포장상자 설계 정보 및 유통환경 정보를 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-2",
+          "name": "변화값 산출부",
+          "component_type": "process",
+          "description": "변화값을 산출하는 역할",
+          "relationships": [
+            {
+              "target": "222-2a",
+              "label": "제1 변화값 산출부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-2b",
+              "label": "제2 변화값 산출부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "222-2a",
+          "name": "제1 변화값 산출부",
+          "component_type": "process",
+          "description": "포장상자 설계 정보를 기준으로 변화값을 산출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-2b",
+          "name": "제2 변화값 산출부",
+          "component_type": "process",
+          "description": "유통환경 정보를 기준으로 변화값을 산출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-3",
+          "name": "설계안 도출부",
+          "component_type": "process",
+          "description": "변화값을 기반으로 최적 포장 설계안을 도출하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250193994/1020250193994_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250193994",
+      "diagram_type": "classDiagram",
+      "diagram_title": "포장 설계 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 포장조건입력부 {\n        +String 설계정보\n        +String 유통환경정보\n        +정보수집()\n    }\n    class 포장설계안도출부 {\n        +String 최적설계안\n        +설계안도출()\n    }\n    class 중앙관제부 {\n        +String 알림정보\n        +설계안통지()\n    }\n    class 포장조건수신부 {\n        +String 수신정보\n        +정보수신()\n    }\n    class 포장조건처리부 {\n        +String 처리정보\n        +정보처리()\n    }\n    class 포장조건저장부 {\n        +String 저장정보\n        +정보저장()\n    }\n    class 제1통신부 {\n        +String 통신정보\n        +정보전송()\n    }\n    class 제2통신부 {\n        +String 통신정보\n        +정보전송()\n    }\n    class 제3통신부 {\n        +String 통신정보\n        +정보전송()\n    }\n    포장조건입력부 --> 포장조건수신부 : \"포장 조건 수신부 포함\"\n    포장조건입력부 --> 포장조건처리부 : \"포장 조건 처리부 포함\"\n    포장조건입력부 --> 포장조건저장부 : \"포장 조건 저장부 포함\"\n    포장조건입력부 --> 제1통신부 : \"제1 통신부 포함\"\n    포장조건입력부 --> 포장설계안도출부 : \"포장 설계안 도출부에 정보 제공\"\n    \n    포장설계안도출부 --> 중앙관제부 : \"중앙관제부에 결과 제공\"\n    포장설계안도출부 --> 제2통신부 : \"제2 통신부 포함\"\n    포장설계안도출부 --> 설계안판단부 : \"설계안 판단부 포함\"\n    포장설계안도출부 --> 제3통신부 : \"제3 통신부 포함\"\n    \n    중앙관제부 --> 제3통신부 : \"중앙관제부와 통신\"\n    중앙관제부 --> 제4통신부 : \"제4 통신부 포함\"\n    중앙관제부 --> 알림정보배열부 : \"알림정보 배열부 포함\"\n    중앙관제부 --> 제5통신부 : \"제5 통신부 포함\"\n    \n    포장조건수신부 --> 포장조건처리부 : \"포장 조건 처리부로 공급\"\n    포장조건처리부 --> 포장조건저장부 : \"포장 조건 저장부로 공급\"\n    포장조건저장부 --> 포장설계안도출부 : \"포장 설계안 도출부에 데이터 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "포장 조건 입력부",
+          "component_type": "device",
+          "description": "포장상자 설계 정보와 유통환경 정보를 수집하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부에 정보 제공",
+              "direction": "->"
+            },
+            {
+              "target": "110",
+              "label": "포장 조건 수신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "120",
+              "label": "포장 조건 처리부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "130",
+              "label": "포장 조건 저장부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "140",
+              "label": "제1 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "포장 설계안 도출부",
+          "component_type": "device",
+          "description": "최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "포장 조건 입력부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "중앙관제부에 결과 제공",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "제2 통신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "설계안 판단부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "제3 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "중앙관제부",
+          "component_type": "device",
+          "description": "최적 포장 설계안을 작업자 및 관리자에게 통지하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "310",
+              "label": "제4 통신부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "320",
+              "label": "알림정보 배열부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "330",
+              "label": "제5 통신부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "포장 조건 수신부",
+          "component_type": "device",
+          "description": "포장 조건 입력부에서 포장 조건을 수신하는 역할",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "포장 조건 처리부로 공급",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "포장 조건 처리부",
+          "component_type": "process",
+          "description": "수신된 포장 조건을 처리하여 저장부로 공급하는 역할",
+          "relationships": [
+            {
+              "target": "130",
+              "label": "포장 조건 저장부로 공급",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "포장 조건 저장부",
+          "component_type": "data",
+          "description": "포장 조건을 데이터화하여 저장하는 역할",
+          "relationships": [
+            {
+              "target": "140",
+              "label": "제1 통신부와 통신",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부에 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "140",
+          "name": "제1 통신부",
+          "component_type": "device",
+          "description": "포장 조건 입력부와 포장 설계안 도출부 간의 통신을 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포장 설계안 도출부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "제2 통신부",
+          "component_type": "device",
+          "description": "포장 설계안 도출부에서 포장 조건 입력부와 통신하는 역할",
+          "relationships": [
+            {
+              "target": "220",
+              "label": "설계안 판단부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "설계안 판단부",
+          "component_type": "process",
+          "description": "최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "230",
+              "label": "제3 통신부와 통신",
+              "direction": "->"
+            },
+            {
+              "target": "221",
+              "label": "학습모듈 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222",
+              "label": "도출모듈 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "제3 통신부",
+          "component_type": "device",
+          "description": "포장 설계안 도출부와 중앙관제부 간의 통신을 담당",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "중앙관제부와 통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "221",
+          "name": "학습모듈",
+          "component_type": "process",
+          "description": "포장 조건 입력부에서 수집된 정보를 저장하고 학습하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222",
+          "name": "도출모듈",
+          "component_type": "process",
+          "description": "학습된 정보를 기반으로 최적 포장 설계안을 도출하는 역할",
+          "relationships": [
+            {
+              "target": "222-1",
+              "label": "포장 조건 데이터 저장부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-2",
+              "label": "변화값 산출부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-3",
+              "label": "설계안 도출부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "222-1",
+          "name": "포장 조건 데이터 저장부",
+          "component_type": "data",
+          "description": "학습된 포장상자 설계 정보 및 유통환경 정보를 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-2",
+          "name": "변화값 산출부",
+          "component_type": "process",
+          "description": "변화값을 산출하는 역할",
+          "relationships": [
+            {
+              "target": "222-2a",
+              "label": "제1 변화값 산출부 포함",
+              "direction": "->"
+            },
+            {
+              "target": "222-2b",
+              "label": "제2 변화값 산출부 포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "222-2a",
+          "name": "제1 변화값 산출부",
+          "component_type": "process",
+          "description": "포장상자 설계 정보를 기준으로 변화값을 산출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-2b",
+          "name": "제2 변화값 산출부",
+          "component_type": "process",
+          "description": "유통환경 정보를 기준으로 변화값을 산출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "222-3",
+          "name": "설계안 도출부",
+          "component_type": "process",
+          "description": "변화값을 기반으로 최적 포장 설계안을 도출하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250193994/1020250193994_fig_2.mmd"
+    }
+  ]
+}

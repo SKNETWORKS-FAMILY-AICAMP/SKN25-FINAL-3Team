@@ -1,0 +1,24 @@
+%% 1020200001729 - 학습 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 학습장치 {
+        +String 주행경로
+        +String 주변상황
+        +calculateCollisionProbability()
+    }
+    class 상태네트워크 {
+        +String 상태벡터
+        +generateFeatureMap()
+    }
+    class 궤적네트워크 {
+        +String 궤적벡터
+        +generateFeatureMap()
+    }
+    class 안전성네트워크 {
+        +String 특징맵
+        +calculateCollisionProbability()
+    }
+    학습장치 --> 상태네트워크 : "상호작용"
+    상태네트워크 --> 궤적네트워크 : "연산"
+    궤적네트워크 --> 안전성네트워크 : "연산"

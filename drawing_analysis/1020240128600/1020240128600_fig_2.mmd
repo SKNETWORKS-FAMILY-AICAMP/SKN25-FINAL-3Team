@@ -1,0 +1,26 @@
+%% 1020240128600 - 전자 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 사용자 {
+        +String 검색키워드위치
+        +receiveKeywordLocation()
+    }
+    class 전자장치 {
+        +String 최대연결거리
+        +String 최대키워드개수
+        +receiveMaxDistance()
+        +receiveMaxKeywordCount()
+    }
+    class 클러스터링 {
+        +String 클러스터링정도
+        +filterKeywords()
+    }
+    class 디스플레이 {
+        +String 클러스터정보
+        +visualizeKeywordDifferences()
+    }
+    사용자 --> 전자장치 : "검색 키워드의 위치 수신"
+    전자장치 --> 클러스터링 : "최대 연결 거리 및 최대 키워드 개수 수신"
+    클러스터링 --> 디스플레이 : "검색 의도별 클러스터링 결과 디스플레이"
+    디스플레이 --> 디스플레이 : "키워드 차이 시각화"

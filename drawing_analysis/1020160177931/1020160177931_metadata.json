@@ -1,0 +1,167 @@
+{
+  "app_num": "1020160177931",
+  "invention_type": "hybrid",
+  "main_concept": "휴먼 추종 로봇이 추종 대상을 추적 실패 시 위치를 탐색하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "위치 추정 모듈",
+      "component_type": "process",
+      "description": "추종 대상의 위치를 추정하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "탐색 범위 설정 모듈",
+      "component_type": "process",
+      "description": "추정된 위치 정보와 보행 패턴 정보를 기반으로 탐색 범위를 설정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "위치 정보를 제공받음",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "추적 모듈",
+      "component_type": "process",
+      "description": "설정된 탐색 범위로 이동 후 추종 대상을 추적",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "탐색 범위를 사용함",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "영상 수신 모듈",
+      "component_type": "device",
+      "description": "카메라로부터 깊이 영상 및 컬러 영상을 수신",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "추적 모듈에 영상 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020160177931",
+      "diagram_type": "flowchart",
+      "diagram_title": "휴먼 추종 로봇의 작동 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"위치 추정 모듈\"]\n    200[\"탐색 범위 설정 모듈\"]\n    300[\"추적 모듈\"]\n    400[\"영상 수신 모듈\"]\n    400 -->| \"추적 모듈에 영상 제공\" | 300\n    100 <--| \"위치 정보를 제공받음\" | 200\n    200 <--| \"탐색 범위를 사용함\" | 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "위치 추정 모듈",
+          "component_type": "process",
+          "description": "추종 대상의 위치를 추정하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "탐색 범위 설정 모듈",
+          "component_type": "process",
+          "description": "추정된 위치 정보와 보행 패턴 정보를 기반으로 탐색 범위를 설정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "위치 정보를 제공받음",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추적 모듈",
+          "component_type": "process",
+          "description": "설정된 탐색 범위로 이동 후 추종 대상을 추적",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "탐색 범위를 사용함",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "영상 수신 모듈",
+          "component_type": "device",
+          "description": "카메라로부터 깊이 영상 및 컬러 영상을 수신",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "추적 모듈에 영상 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020160177931/1020160177931_fig_1.mmd"
+    },
+    {
+      "app_num": "1020160177931",
+      "diagram_type": "classDiagram",
+      "diagram_title": "휴먼 추종 로봇 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 위치추정모듈 {\n        +위치 추정()\n    }\n    class 탐색범위설정모듈 {\n        +탐색 범위 설정()\n    }\n    class 추적모듈 {\n        +추적()\n    }\n    class 영상수신모듈 {\n        +영상 수신()\n    }\n    위치추정모듈 --> 탐색범위설정모듈 : \"위치 정보를 제공받음\"\n    탐색범위설정모듈 --> 추적모듈 : \"탐색 범위를 사용함\"\n    영상수신모듈 --> 추적모듈 : \"추적 모듈에 영상 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "위치 추정 모듈",
+          "component_type": "process",
+          "description": "추종 대상의 위치를 추정하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "탐색 범위 설정 모듈",
+          "component_type": "process",
+          "description": "추정된 위치 정보와 보행 패턴 정보를 기반으로 탐색 범위를 설정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "위치 정보를 제공받음",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추적 모듈",
+          "component_type": "process",
+          "description": "설정된 탐색 범위로 이동 후 추종 대상을 추적",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "탐색 범위를 사용함",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "영상 수신 모듈",
+          "component_type": "device",
+          "description": "카메라로부터 깊이 영상 및 컬러 영상을 수신",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "추적 모듈에 영상 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020160177931/1020160177931_fig_2.mmd"
+    }
+  ]
+}

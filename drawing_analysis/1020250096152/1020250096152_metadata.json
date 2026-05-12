@@ -1,0 +1,219 @@
+{
+  "app_num": "1020250096152",
+  "invention_type": "system",
+  "main_concept": "사용자의 감정강도에 따라 콘텐츠의 크기와 시각적 효과를 가변적으로 조절하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컨트롤장치",
+      "component_type": "device",
+      "description": "사용자로부터 콘텐츠정보를 입력받는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "콘텐츠관리서버",
+      "component_type": "device",
+      "description": "콘텐츠정보를 저장하고 관리하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력받은 콘텐츠정보를 관리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "감정측정부",
+      "component_type": "device",
+      "description": "사용자의 얼굴을 인식하여 감정강도를 측정하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자의 감정정보를 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "크기조절부",
+      "component_type": "process",
+      "description": "감정강도에 따라 콘텐츠정보의 크기를 가변시키는 부",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "감정강도를 기반으로 크기 조절",
+          "direction": "<-"
+        },
+        {
+          "target": "500",
+          "label": "최종 콘텐츠정보 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "효과설정부",
+      "component_type": "process",
+      "description": "시각효과변수를 설정하는 부",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "가변 콘텐츠정보와 융합",
+          "direction": "<-"
+        },
+        {
+          "target": "600",
+          "label": "최종 콘텐츠정보 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "출력제어부",
+      "component_type": "process",
+      "description": "최종 출력 콘텐츠정보를 생성하고 디스플레이장치로 전송하는 부",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "최종 콘텐츠정보를 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "700",
+          "label": "콘텐츠를 디스플레이장치로 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "디스플레이장치",
+      "component_type": "device",
+      "description": "최종 출력 콘텐츠정보를 표시하는 장치",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "콘텐츠를 수신하여 표시",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250096152",
+      "diagram_type": "classDiagram",
+      "diagram_title": "감정강도 기반 콘텐츠 크기 가변 디스플레이 시스템 블록도",
+      "mermaid_code": "classDiagram\n    class 컨트롤장치 {\n        +String 콘텐츠정보\n        +입력받기()\n    }\n    class 콘텐츠관리서버 {\n        +String 저장된정보\n        +관리하기()\n    }\n    class 감정측정부 {\n        +String 감정정보\n        +측정하기()\n    }\n    class 크기조절부 {\n        +String 크기정보\n        +조절하기()\n    }\n    class 효과설정부 {\n        +String 시각효과정보\n        +설정하기()\n    }\n    class 출력제어부 {\n        +String 최종콘텐츠정보\n        +전송하기()\n    }\n    class 디스플레이장치 {\n        +String 표시정보\n        +표시하기()\n    }\n    컨트롤장치 --> 콘텐츠관리서버 : \"입력받은 콘텐츠정보를 관리\"\n    컨트롤장치 --> 감정측정부 : \"사용자의 감정정보를 수집\"\n    감정측정부 --> 크기조절부 : \"감정강도를 기반으로 크기 조절\"\n    크기조절부 --> 효과설정부 : \"최종 콘텐츠정보 생성\"\n    효과설정부 --> 출력제어부 : \"가변 콘텐츠정보와 융합\"\n    출력제어부 --> 디스플레이장치 : \"콘텐츠를 디스플레이장치로 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컨트롤장치",
+          "component_type": "device",
+          "description": "사용자로부터 콘텐츠정보를 입력받는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "콘텐츠관리서버",
+          "component_type": "device",
+          "description": "콘텐츠정보를 저장하고 관리하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받은 콘텐츠정보를 관리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "감정측정부",
+          "component_type": "device",
+          "description": "사용자의 얼굴을 인식하여 감정강도를 측정하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자의 감정정보를 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "크기조절부",
+          "component_type": "process",
+          "description": "감정강도에 따라 콘텐츠정보의 크기를 가변시키는 부",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "감정강도를 기반으로 크기 조절",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "최종 콘텐츠정보 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "효과설정부",
+          "component_type": "process",
+          "description": "시각효과변수를 설정하는 부",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "가변 콘텐츠정보와 융합",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "최종 콘텐츠정보 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "출력제어부",
+          "component_type": "process",
+          "description": "최종 출력 콘텐츠정보를 생성하고 디스플레이장치로 전송하는 부",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "최종 콘텐츠정보를 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "700",
+              "label": "콘텐츠를 디스플레이장치로 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "디스플레이장치",
+          "component_type": "device",
+          "description": "최종 출력 콘텐츠정보를 표시하는 장치",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "콘텐츠를 수신하여 표시",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250096152/1020250096152_fig_1.mmd"
+    }
+  ]
+}

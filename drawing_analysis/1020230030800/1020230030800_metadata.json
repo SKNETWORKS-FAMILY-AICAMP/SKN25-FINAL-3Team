@@ -1,0 +1,245 @@
+{
+  "app_num": "1020230030800",
+  "invention_type": "system",
+  "main_concept": "블록체인 기반 예약보증금 관리 서비스 제공 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "감지부",
+      "component_type": "process",
+      "description": "리워드 지급 예정 이벤트 감지",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "자산 발행 관리부",
+      "component_type": "process",
+      "description": "디지털 자산 발행 및 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이벤트 감지 후",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "예약 관리부",
+      "component_type": "process",
+      "description": "예약 요청 및 보증금 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "디지털 자산 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "판단부",
+      "component_type": "process",
+      "description": "노쇼 여부 판단",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "예약 상태 확인",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "노쇼 처리부",
+      "component_type": "process",
+      "description": "노쇼 발생 시 보증금 처리",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "노쇼 판단 후",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "신용 관리부",
+      "component_type": "process",
+      "description": "소비자 신용등급 관리",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "노쇼 판단 결과 기반",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230030800",
+      "diagram_type": "flowchart",
+      "diagram_title": "블록체인 기반 예약보증금 관리 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"감지부\\n리워드 지급 예정 이벤트 감지\"]\n    200[\"자산 발행 관리부\\n디지털 자산 발행 및 제공\"]\n    300[\"예약 관리부\\n예약 요청 및 보증금 관리\"]\n    400[\"판단부\\n노쇼 여부 판단\"]\n    500[\"노쇼 처리부\\n노쇼 발생 시 보증금 처리\"]\n    600[\"신용 관리부\\n소비자 신용등급 관리\"]\n    \n    100 -->|\"이벤트 감지 후\"| 200\n    200 -->|\"디지털 자산 사용\"| 300\n    300 -->|\"예약 상태 확인\"| 400\n    400 -->|\"노쇼 판단 후\"| 500\n    400 -->|\"노쇼 판단 결과 기반\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "감지부",
+          "component_type": "process",
+          "description": "리워드 지급 예정 이벤트 감지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "자산 발행 관리부",
+          "component_type": "process",
+          "description": "디지털 자산 발행 및 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이벤트 감지 후",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "예약 관리부",
+          "component_type": "process",
+          "description": "예약 요청 및 보증금 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "디지털 자산 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판단부",
+          "component_type": "process",
+          "description": "노쇼 여부 판단",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "예약 상태 확인",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "노쇼 처리부",
+          "component_type": "process",
+          "description": "노쇼 발생 시 보증금 처리",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "노쇼 판단 후",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "신용 관리부",
+          "component_type": "process",
+          "description": "소비자 신용등급 관리",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "노쇼 판단 결과 기반",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230030800/1020230030800_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230030800",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 및 관계",
+      "mermaid_code": "classDiagram\n    class 감지부 {\n        +String 이벤트 감지\n    }\n    class 자산 발행 관리부 {\n        +String 디지털 자산 발행\n    }\n    class 예약 관리부 {\n        +String 예약 요청 관리\n    }\n    class 판단부 {\n        +String 노쇼 여부 판단\n    }\n    class 노쇼 처리부 {\n        +String 보증금 처리\n    }\n    class 신용 관리부 {\n        +String 신용등급 관리\n    }\n    감지부 --> 자산 발행 관리부 : \"이벤트 감지 후\"\n    자산 발행 관리부 --> 예약 관리부 : \"디지털 자산 사용\"\n    예약 관리부 --> 판단부 : \"예약 상태 확인\"\n    판단부 --> 노쇼 처리부 : \"노쇼 판단 후\"\n    판단부 --> 신용 관리부 : \"노쇼 판단 결과 기반\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "감지부",
+          "component_type": "process",
+          "description": "리워드 지급 예정 이벤트 감지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "자산 발행 관리부",
+          "component_type": "process",
+          "description": "디지털 자산 발행 및 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이벤트 감지 후",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "예약 관리부",
+          "component_type": "process",
+          "description": "예약 요청 및 보증금 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "디지털 자산 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "판단부",
+          "component_type": "process",
+          "description": "노쇼 여부 판단",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "예약 상태 확인",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "노쇼 처리부",
+          "component_type": "process",
+          "description": "노쇼 발생 시 보증금 처리",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "노쇼 판단 후",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "신용 관리부",
+          "component_type": "process",
+          "description": "소비자 신용등급 관리",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "노쇼 판단 결과 기반",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230030800/1020230030800_fig_2.mmd"
+    }
+  ]
+}

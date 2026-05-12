@@ -1,0 +1,188 @@
+{
+  "app_num": "1020200128459",
+  "invention_type": "method",
+  "main_concept": "모바일 플랫폼을 이용한 온라인 광고 방법으로, 사용자 관심 키워드에 기반한 신문기사와 광고 이미지 출력",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말기",
+      "component_type": "actor",
+      "description": "사용자가 콘텐츠 정보를 출력받고 상호작용하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "출력부",
+      "component_type": "device",
+      "description": "콘텐츠 정보, 신문기사 및 광고 이미지를 출력하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "출력하는 콘텐츠",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "콘텐츠 정보",
+      "component_type": "data",
+      "description": "사용자에게 제공되는 정보",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "신문기사",
+      "component_type": "data",
+      "description": "사용자의 관심 키워드와 관련된 기사",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력되는 신문기사",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "광고 이미지",
+      "component_type": "data",
+      "description": "신문기사와 함께 출력되는 광고",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력되는 광고 이미지",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200128459",
+      "diagram_type": "classDiagram",
+      "diagram_title": "모바일 플랫폼을 이용한 온라인 광고 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말기 {\n        +String 사용자정보\n        +상호작용()\n    }\n    class 출력부 {\n        +String 콘텐츠정보\n        +출력()\n    }\n    class 콘텐츠정보 {\n        +String 데이터\n    }\n    class 신문기사 {\n        +String 기사내용\n    }\n    class 광고이미지 {\n        +String 이미지데이터\n    }\n    사용자단말기 --> 출력부 : \"콘텐츠 정보 출력\"\n    출력부 --> 콘텐츠정보 : \"출력하는 콘텐츠\"\n    출력부 <-- 신문기사 : \"출력되는 신문기사\"\n    출력부 <-- 광고이미지 : \"출력되는 광고 이미지\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말기",
+          "component_type": "actor",
+          "description": "사용자가 콘텐츠 정보를 출력받고 상호작용하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "출력부",
+          "component_type": "device",
+          "description": "콘텐츠 정보, 신문기사 및 광고 이미지를 출력하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력하는 콘텐츠",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "콘텐츠 정보",
+          "component_type": "data",
+          "description": "사용자에게 제공되는 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "신문기사",
+          "component_type": "data",
+          "description": "사용자의 관심 키워드와 관련된 기사",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력되는 신문기사",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "광고 이미지",
+          "component_type": "data",
+          "description": "신문기사와 함께 출력되는 광고",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력되는 광고 이미지",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200128459/1020200128459_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200128459",
+      "diagram_type": "flowchart",
+      "diagram_title": "모바일 플랫폼을 이용한 온라인 광고 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말기\"]\n    200[\"출력부\"]\n    300[\"콘텐츠 정보\"]\n    400[\"신문기사\"]\n    500[\"광고 이미지\"]\n    \n    100 -->|\"콘텐츠 정보 요청\"| 200\n    200 -->|\"출력하는 콘텐츠\"| 300\n    300 -->|\"신문기사 접근 유도 문구 출력\"| 400\n    400 -->|\"출력되는 신문기사\"| 200\n    200 -->|\"출력되는 광고 이미지\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말기",
+          "component_type": "actor",
+          "description": "사용자가 콘텐츠 정보를 출력받고 상호작용하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "출력부",
+          "component_type": "device",
+          "description": "콘텐츠 정보, 신문기사 및 광고 이미지를 출력하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력하는 콘텐츠",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "콘텐츠 정보",
+          "component_type": "data",
+          "description": "사용자에게 제공되는 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "신문기사",
+          "component_type": "data",
+          "description": "사용자의 관심 키워드와 관련된 기사",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력되는 신문기사",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "광고 이미지",
+          "component_type": "data",
+          "description": "신문기사와 함께 출력되는 광고",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력되는 광고 이미지",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200128459/1020200128459_fig_2.mmd"
+    }
+  ]
+}

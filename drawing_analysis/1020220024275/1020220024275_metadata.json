@@ -1,0 +1,344 @@
+{
+  "app_num": "1020220024275",
+  "invention_type": "system",
+  "main_concept": "블록체인 기반의 결제 중개 서비스 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "구매자 단말",
+      "component_type": "actor",
+      "description": "결제를 요청하는 사용자 단말",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결제 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "판매자 단말",
+      "component_type": "actor",
+      "description": "결제를 수신하는 판매자 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "결제 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "서비스 서버",
+      "component_type": "device",
+      "description": "결제 중개 서비스를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "디지털 페이 할당",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "디지털 페이 지급",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "블록체인 관리",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "결제 중개 관리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "블록체인 관리부",
+      "component_type": "process",
+      "description": "블록체인 기록 생성 및 검증",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "결제 중개 관리부",
+      "component_type": "process",
+      "description": "결제 중개 및 환전 서비스 관리",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결제 중개 서비스 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "디지털 페이 추세 분석모듈",
+      "component_type": "process",
+      "description": "디지털 페이의 구매 및 지급 정산 추세 분석",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "추세 분석 결과 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "환전 추천 모듈",
+      "component_type": "process",
+      "description": "환전 추천 시점 정보 제공",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "분석 결과 기반 추천",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220024275",
+      "diagram_type": "flowchart",
+      "diagram_title": "블록체인 기반 결제 중개 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"구매자 단말\"]\n    200[\"판매자 단말\"]\n    300[\"서비스 서버\"]\n    400[\"블록체인 관리부\"]\n    500[\"결제 중개 관리부\"]\n    600[\"디지털 페이 추세 분석모듈\"]\n    700[\"환전 추천 모듈\"]\n    \n    100 -->| \"결제 요청\" | 200\n    200 -->| \"결제 처리\" | 300\n    300 -->| \"디지털 페이 할당\" | 100\n    300 -->| \"디지털 페이 지급\" | 200\n    300 -->| \"블록체인 관리\" | 400\n    300 -->| \"결제 중개 관리\" | 500\n    500 -->| \"결제 중개 서비스 제공\" | 300\n    500 -->| \"추세 분석 결과 제공\" | 600\n    600 -->| \"분석 결과 기반 추천\" | 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "결제를 요청하는 사용자 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "결제를 수신하는 판매자 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서비스 서버",
+          "component_type": "device",
+          "description": "결제 중개 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "디지털 페이 할당",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "디지털 페이 지급",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "블록체인 관리",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "결제 중개 관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "블록체인 관리부",
+          "component_type": "process",
+          "description": "블록체인 기록 생성 및 검증",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "결제 중개 관리부",
+          "component_type": "process",
+          "description": "결제 중개 및 환전 서비스 관리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제 중개 서비스 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "디지털 페이 추세 분석모듈",
+          "component_type": "process",
+          "description": "디지털 페이의 구매 및 지급 정산 추세 분석",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추세 분석 결과 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "환전 추천 모듈",
+          "component_type": "process",
+          "description": "환전 추천 시점 정보 제공",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "분석 결과 기반 추천",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220024275/1020220024275_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220024275",
+      "diagram_type": "classDiagram",
+      "diagram_title": "결제 중개 서비스 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 구매자단말 {\n        +결제 요청()\n    }\n    class 판매자단말 {\n        +결제 수신()\n        +결제 처리()\n    }\n    class 서비스서버 {\n        +디지털 페이 할당()\n        +디지털 페이 지급()\n        +블록체인 관리()\n        +결제 중개 관리()\n    }\n    class 블록체인관리부 {\n        +기록 생성 및 검증()\n    }\n    class 결제중개관리부 {\n        +결제 중개 서비스 제공()\n    }\n    class 디지털페이추세분석모듈 {\n        +추세 분석 결과 제공()\n    }\n    class 환전추천모듈 {\n        +분석 결과 기반 추천()\n    }\n\n    구매자단말 --> 판매자단말 : \"결제 요청\"\n    판매자단말 --> 서비스서버 : \"결제 처리\"\n    서비스서버 --> 구매자단말 : \"디지털 페이 할당\"\n    서비스서버 --> 판매자단말 : \"디지털 페이 지급\"\n    서비스서버 --> 블록체인관리부 : \"블록체인 관리\"\n    서비스서버 --> 결제중개관리부 : \"결제 중개 관리\"\n    결제중개관리부 --> 디지털페이추세분석모듈 : \"추세 분석 결과 제공\"\n    디지털페이추세분석모듈 --> 환전추천모듈 : \"분석 결과 기반 추천\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "결제를 요청하는 사용자 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "결제를 수신하는 판매자 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서비스 서버",
+          "component_type": "device",
+          "description": "결제 중개 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "디지털 페이 할당",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "디지털 페이 지급",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "블록체인 관리",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "결제 중개 관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "블록체인 관리부",
+          "component_type": "process",
+          "description": "블록체인 기록 생성 및 검증",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "결제 중개 관리부",
+          "component_type": "process",
+          "description": "결제 중개 및 환전 서비스 관리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제 중개 서비스 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "디지털 페이 추세 분석모듈",
+          "component_type": "process",
+          "description": "디지털 페이의 구매 및 지급 정산 추세 분석",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "추세 분석 결과 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "환전 추천 모듈",
+          "component_type": "process",
+          "description": "환전 추천 시점 정보 제공",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "분석 결과 기반 추천",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220024275/1020220024275_fig_2.mmd"
+    }
+  ]
+}

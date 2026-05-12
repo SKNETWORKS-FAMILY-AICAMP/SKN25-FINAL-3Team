@@ -1,0 +1,200 @@
+{
+  "app_num": "1020247023700",
+  "invention_type": "method",
+  "main_concept": "인공 신경망의 바이어스 전압을 교정하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "비휘발성 메모리 셀",
+      "component_type": "device",
+      "description": "신경 전류를 저장하고 바이어스 전압을 인가받는 메모리 셀",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "바이어스 전압을 인가함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "전류 디지털-아날로그 변환기",
+      "component_type": "device",
+      "description": "디지털 입력에 따라 전류를 생성하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "전류를 비휘발성 메모리 셀에 공급함",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "연산 증폭기에 연결됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "연산 증폭기",
+      "component_type": "device",
+      "description": "비휘발성 메모리 셀의 전압을 조정하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "전류 디지털-아날로그 변환기로부터 전류를 수신함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "바이어스 제어 회로",
+      "component_type": "device",
+      "description": "바이어스 전압을 조정하고 인가하는 회로",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비휘발성 메모리 셀에 바이어스 전압을 인가함",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020247023700",
+      "diagram_type": "flowchart",
+      "diagram_title": "바이어스 전압 교정 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"비휘발성 메모리 셀\"]\n    200[\"전류 디지털-아날로그 변환기\"]\n    300[\"연산 증폭기\"]\n    400[\"바이어스 제어 회로\"]\n    400 -->|\"바이어스 전압을 인가함\"| 100\n    100 -->|\"전류를 비휘발성 메모리 셀에 공급함\"| 200\n    200 -->|\"연산 증폭기에 연결됨\"| 300\n    300 -->|\"전류 디지털-아날로그 변환기로부터 전류를 수신함\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비휘발성 메모리 셀",
+          "component_type": "device",
+          "description": "신경 전류를 저장하고 바이어스 전압을 인가받는 메모리 셀",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "바이어스 전압을 인가함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "전류 디지털-아날로그 변환기",
+          "component_type": "device",
+          "description": "디지털 입력에 따라 전류를 생성하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전류를 비휘발성 메모리 셀에 공급함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연산 증폭기에 연결됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "연산 증폭기",
+          "component_type": "device",
+          "description": "비휘발성 메모리 셀의 전압을 조정하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전류 디지털-아날로그 변환기로부터 전류를 수신함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "바이어스 제어 회로",
+          "component_type": "device",
+          "description": "바이어스 전압을 조정하고 인가하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비휘발성 메모리 셀에 바이어스 전압을 인가함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020247023700/1020247023700_fig_1.mmd"
+    },
+    {
+      "app_num": "1020247023700",
+      "diagram_type": "classDiagram",
+      "diagram_title": "바이어스 전압 생성 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 비휘발성메모리셀 {\n        +String 신경전류\n        +바이어스전압인가()\n    }\n    class 전류디지털아날로그변환기 {\n        +String 디지털입력\n        +전류생성()\n    }\n    class 연산증폭기 {\n        +String 전압조정\n        +전류수신()\n    }\n    class 바이어스제어회로 {\n        +String 바이어스전압\n        +조정및인가()\n    }\n    비휘발성메모리셀 --> 전류디지털아날로그변환기 : \"전류를 비휘발성 메모리 셀에 공급함\"\n    전류디지털아날로그변환기 --> 연산증폭기 : \"연산 증폭기에 연결됨\"\n    연산증폭기 --> 전류디지털아날로그변환기 : \"전류 디지털-아날로그 변환기로부터 전류를 수신함\"\n    바이어스제어회로 --> 비휘발성메모리셀 : \"비휘발성 메모리 셀에 바이어스 전압을 인가함\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비휘발성 메모리 셀",
+          "component_type": "device",
+          "description": "신경 전류를 저장하고 바이어스 전압을 인가받는 메모리 셀",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "바이어스 전압을 인가함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "전류 디지털-아날로그 변환기",
+          "component_type": "device",
+          "description": "디지털 입력에 따라 전류를 생성하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전류를 비휘발성 메모리 셀에 공급함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연산 증폭기에 연결됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "연산 증폭기",
+          "component_type": "device",
+          "description": "비휘발성 메모리 셀의 전압을 조정하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "전류 디지털-아날로그 변환기로부터 전류를 수신함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "바이어스 제어 회로",
+          "component_type": "device",
+          "description": "바이어스 전압을 조정하고 인가하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비휘발성 메모리 셀에 바이어스 전압을 인가함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020247023700/1020247023700_fig_2.mmd"
+    }
+  ]
+}

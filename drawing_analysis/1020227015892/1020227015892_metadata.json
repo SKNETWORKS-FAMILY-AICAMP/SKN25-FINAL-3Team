@@ -1,0 +1,221 @@
+{
+  "app_num": "1020227015892",
+  "invention_type": "system",
+  "main_concept": "로봇 디바이스의 자세를 식별하기 위한 촉각 센서와 신경망을 사용하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "로봇 디바이스",
+      "component_type": "actor",
+      "description": "하나 이상의 촉각 센서를 구비하고 객체를 파지하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "신경망",
+      "component_type": "process",
+      "description": "로봇 디바이스의 자세를 식별하기 위해 훈련되는 신경망",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "자세 식별을 위한 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "촉각 센서",
+      "component_type": "device",
+      "description": "객체와의 접촉을 감지하여 신경망에 데이터를 제공하는 센서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "신경망을 저장하고 훈련 데이터를 보관하는 메모리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "신경망 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "신경망을 훈련하고 로봇 디바이스의 자세를 식별하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "신경망 훈련",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "자세 식별 수행",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227015892",
+      "diagram_type": "flowchart",
+      "diagram_title": "로봇 디바이스 자세 식별 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"로봇 디바이스\"]\n    200[\"신경망\"]\n    300[\"촉각 센서\"]\n    400[\"메모리\"]\n    500[\"프로세서\"]\n    300 -->| \"데이터 제공\" | 200\n    200 -->| \"신경망 저장\" | 400\n    500 -->| \"신경망 훈련\" | 200\n    500 -->| \"자세 식별 수행\" | 100\n    100 -->| \"자세 식별을 위한 데이터 제공\" | 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로봇 디바이스",
+          "component_type": "actor",
+          "description": "하나 이상의 촉각 센서를 구비하고 객체를 파지하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "process",
+          "description": "로봇 디바이스의 자세를 식별하기 위해 훈련되는 신경망",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "자세 식별을 위한 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "촉각 센서",
+          "component_type": "device",
+          "description": "객체와의 접촉을 감지하여 신경망에 데이터를 제공하는 센서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "신경망을 저장하고 훈련 데이터를 보관하는 메모리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신경망 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "신경망을 훈련하고 로봇 디바이스의 자세를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신경망 훈련",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "자세 식별 수행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227015892/1020227015892_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227015892",
+      "diagram_type": "classDiagram",
+      "diagram_title": "로봇 픽킹 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 로봇디바이스 {\n        +String 촉각센서\n        +pickObject()\n    }\n    class 신경망 {\n        +train()\n        +identifyPosture()\n    }\n    class 촉각센서 {\n        +detectContact()\n        +provideData()\n    }\n    class 메모리 {\n        +storeData()\n        +retrieveData()\n    }\n    class 프로세서 {\n        +trainNeuralNetwork()\n        +identifyPosture()\n    }\n    로봇디바이스 --> 신경망 : \"자세 식별을 위한 데이터 제공\"\n    촉각센서 --> 신경망 : \"데이터 제공\"\n    메모리 --> 신경망 : \"신경망 저장\"\n    프로세서 --> 신경망 : \"신경망 훈련\"\n    프로세서 --> 로봇디바이스 : \"자세 식별 수행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로봇 디바이스",
+          "component_type": "actor",
+          "description": "하나 이상의 촉각 센서를 구비하고 객체를 파지하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망",
+          "component_type": "process",
+          "description": "로봇 디바이스의 자세를 식별하기 위해 훈련되는 신경망",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "자세 식별을 위한 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "촉각 센서",
+          "component_type": "device",
+          "description": "객체와의 접촉을 감지하여 신경망에 데이터를 제공하는 센서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "신경망을 저장하고 훈련 데이터를 보관하는 메모리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신경망 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "신경망을 훈련하고 로봇 디바이스의 자세를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신경망 훈련",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "자세 식별 수행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227015892/1020227015892_fig_2.mmd"
+    }
+  ]
+}

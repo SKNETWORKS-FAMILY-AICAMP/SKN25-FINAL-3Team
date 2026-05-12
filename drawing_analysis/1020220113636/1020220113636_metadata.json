@@ -1,0 +1,191 @@
+{
+  "app_num": "1020220113636",
+  "invention_type": "method",
+  "main_concept": "환경 변수 데이터 학습에 기초한 영상 기반 객체 인식 방법 및 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "영상 데이터를 수집하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "학습 서버",
+      "component_type": "actor",
+      "description": "환경 변수 데이터 학습을 수행하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "영상 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "모델 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "저장 서버",
+      "component_type": "data",
+      "description": "학습된 모델을 저장하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "모델 저장",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220113636",
+      "diagram_type": "classDiagram",
+      "diagram_title": "영상 기반 객체 인식 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 카메라 {\n        +String 영상데이터\n        +수집()\n    }\n    class 학습서버 {\n        +String 환경변수데이터\n        +학습수행()\n        +모델저장()\n    }\n    class 저장서버 {\n        +String 학습된모델\n        +모델저장()\n    }\n    카메라 --> 학습서버 : \"영상 수신\"\n    학습서버 --> 저장서버 : \"모델 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "영상 데이터를 수집하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습 서버",
+          "component_type": "actor",
+          "description": "환경 변수 데이터 학습을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영상 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "모델 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "저장 서버",
+          "component_type": "data",
+          "description": "학습된 모델을 저장하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모델 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220113636/1020220113636_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220113636",
+      "diagram_type": "flowchart",
+      "diagram_title": "학습 서버의 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"학습 서버\"]\n    300[\"저장 서버\"]\n    400[\"영상 수신 및 프레임 단위로 분할\"]\n    500[\"1차 학습 수행\"]\n    600[\"제1 추론 단계에서 객체 탐지 및 라벨링\"]\n    700[\"가중치 부여 및 2차 학습 수행\"]\n    800[\"최종 객체 탐지\"]\n\n    100 -->|\"영상 수신\"| 200\n    200 -->|\"프레임 분할\"| 400\n    400 -->|\"학습 수행\"| 500\n    500 -->|\"객체 탐지\"| 600\n    600 -->|\"가중치 부여\"| 700\n    700 -->|\"최종 탐지\"| 800\n    200 -->|\"모델 저장\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "영상 데이터를 수집하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습 서버",
+          "component_type": "actor",
+          "description": "환경 변수 데이터 학습을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영상 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "모델 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "저장 서버",
+          "component_type": "data",
+          "description": "학습된 모델을 저장하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모델 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220113636/1020220113636_fig_2.mmd"
+    },
+    {
+      "app_num": "1020220113636",
+      "diagram_type": "flowchart",
+      "diagram_title": "1차 추론 결과 예시",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"학습 서버\"]\n    300[\"저장 서버\"]\n    400[\"영상 수신 및 프레임 단위로 분할\"]\n    500[\"1차 학습 수행\"]\n    600[\"제1 추론 단계에서 객체 탐지 및 라벨링\"]\n    700[\"가중치 부여 및 2차 학습 수행\"]\n    800[\"최종 객체 탐지\"]\n\n    100 -->| \"영상 수신\" | 200\n    200 -->| \"모델 저장\" | 300\n    200 --> 400\n    400 --> 500\n    500 --> 600\n    600 --> 700\n    700 --> 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "영상 데이터를 수집하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습 서버",
+          "component_type": "actor",
+          "description": "환경 변수 데이터 학습을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영상 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "모델 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "저장 서버",
+          "component_type": "data",
+          "description": "학습된 모델을 저장하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모델 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020220113636/1020220113636_fig_3.mmd"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "app_num": "1020250126811",
+  "invention_type": "method",
+  "main_concept": "특정 사람의 물체 소지 여부에 따른 위험도 스코어를 산출하여 경보를 작동하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨팅 장치",
+      "component_type": "device",
+      "description": "위험도 스코어를 산출하고 경보를 작동하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "분석 모듈",
+      "component_type": "process",
+      "description": "영상 분석을 통해 특정 관절 좌표 및 물체 특성을 추출하는 모듈",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "경보 모듈",
+      "component_type": "process",
+      "description": "위험도 스코어에 따라 경보를 작동하는 모듈",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250126811",
+      "diagram_type": "flowchart",
+      "diagram_title": "위험도 스코어 산출 및 경보 작동 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨팅 장치\"]\n    200[\"분석 모듈\"]\n    300[\"경보 모듈\"]\n    400[\"영상 획득\"]\n    500[\"특정 관절 좌표 및 물체 특성 추출\"]\n    600[\"위험도 스코어 산출\"]\n    700[\"경보 작동 여부 판단\"]\n    800[\"경보 작동\"]\n\n    400 -->| \"영상 전송\" | 100\n    100 -->| \"제어\" | 200\n    200 -->| \"데이터 제공\" | 500\n    500 -->| \"위험도 스코어 산출\" | 600\n    600 -->| \"경보 판단\" | 700\n    700 -->| \"경보 작동\" | 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "위험도 스코어를 산출하고 경보를 작동하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "분석 모듈",
+          "component_type": "process",
+          "description": "영상 분석을 통해 특정 관절 좌표 및 물체 특성을 추출하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "경보 모듈",
+          "component_type": "process",
+          "description": "위험도 스코어에 따라 경보를 작동하는 모듈",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250126811/1020250126811_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250126811",
+      "diagram_type": "flowchart",
+      "diagram_title": "검증 서브 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨팅 장치\"]\n    200[\"분석 모듈\"]\n    300[\"경보 모듈\"]\n    400[\"영상 획득\"]\n    500[\"특정 관절 좌표 및 물체 특성 추출\"]\n    600[\"위험도 스코어 산출\"]\n    700[\"경보 작동 여부 판단\"]\n    800[\"경보 작동\"]\n\n    400 -->| \"영상 전송\" | 100\n    100 -->| \"제어\" | 200\n    200 -->| \"데이터 제공\" | 500\n    500 -->| \"정보 전달\" | 600\n    600 -->| \"스코어 전달\" | 700\n    700 -->| \"결과 판단\" | 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "위험도 스코어를 산출하고 경보를 작동하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "분석 모듈",
+          "component_type": "process",
+          "description": "영상 분석을 통해 특정 관절 좌표 및 물체 특성을 추출하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "경보 모듈",
+          "component_type": "process",
+          "description": "위험도 스코어에 따라 경보를 작동하는 모듈",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250126811/1020250126811_fig_2.mmd"
+    }
+  ]
+}

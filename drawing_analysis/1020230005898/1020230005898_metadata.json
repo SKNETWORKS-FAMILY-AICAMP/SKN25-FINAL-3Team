@@ -1,0 +1,341 @@
+{
+  "app_num": "1020230005898",
+  "invention_type": "system",
+  "main_concept": "저층주거지의 주택관리 서비스를 제공하는 스마트 플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "지자체 서버",
+      "component_type": "device",
+      "description": "공공지원사업 정보를 업로드하고 신청을 수신하여 대상을 선정하여 전송하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "사용자 단말",
+      "component_type": "device",
+      "description": "소유지 또는 거주지 정보를 입력하고 유지비를 일괄납부하며 성능진단 결과를 출력하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 요청 및 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "공공지원안내부",
+      "component_type": "process",
+      "description": "공공지원사업 정보를 안내하고 사용자 정보를 기반으로 신청 가능한 사업을 추출하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 입력 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "사용자등록부",
+      "component_type": "data",
+      "description": "사용자 정보를 저장하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 입력 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "일괄납부관리부",
+      "component_type": "process",
+      "description": "유지비를 조회하고 일괄납부를 청구하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "청구 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "성능진단부",
+      "component_type": "process",
+      "description": "주택성능진단 결과를 등급으로 표시하여 제공하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결과 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "주택관리중개부",
+      "component_type": "process",
+      "description": "주택관리 서비스를 중개하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "서비스 요청 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "위험알림부",
+      "component_type": "process",
+      "description": "위험 알림 정보를 인포그래픽으로 시각화하여 제공하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "900",
+      "name": "관리이력활용부",
+      "component_type": "process",
+      "description": "주택관리 이력 정보를 분석하여 제공하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230005898",
+      "diagram_type": "classDiagram",
+      "diagram_title": "저층주거지 스마트 관리 플랫폼 구성도",
+      "mermaid_code": "classDiagram\n    class 지자체서버 {\n        +uploadPublicSupportInfo()\n        +receiveApplication()\n    }\n    class 사용자단말 {\n        +inputPropertyInfo()\n        +payMaintenanceFee()\n        +outputPerformanceDiagnosis()\n    }\n    class 공공지원안내부 {\n        +provideSupportInfo()\n        +extractEligibleProjects()\n    }\n    class 사용자등록부 {\n        +storeUserInfo()\n    }\n    class 일괄납부관리부 {\n        +queryMaintenanceFee()\n        +sendBillingRequest()\n    }\n    class 성능진단부 {\n        +sendDiagnosisResult()\n    }\n    class 주택관리중개부 {\n        +receiveServiceRequest()\n    }\n    class 위험알림부 {\n        +visualizeRiskAlerts()\n    }\n    class 관리이력활용부 {\n        +analyzeManagementHistory()\n    }\n\n    사용자단말 --> 지자체서버 : \"정보 요청 및 수신\"\n    공공지원안내부 <-- 사용자단말 : \"정보 입력 수신\"\n    공공지원안내부 --> 사용자등록부 : \"정보 제공\"\n    사용자등록부 <-- 사용자단말 : \"정보 입력 수신\"\n    일괄납부관리부 --> 사용자단말 : \"청구 정보 전송\"\n    성능진단부 --> 사용자단말 : \"결과 전송\"\n    주택관리중개부 <-- 사용자단말 : \"서비스 요청 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "지자체 서버",
+          "component_type": "device",
+          "description": "공공지원사업 정보를 업로드하고 신청을 수신하여 대상을 선정하여 전송하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "소유지 또는 거주지 정보를 입력하고 유지비를 일괄납부하며 성능진단 결과를 출력하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청 및 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공공지원안내부",
+          "component_type": "process",
+          "description": "공공지원사업 정보를 안내하고 사용자 정보를 기반으로 신청 가능한 사업을 추출하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "사용자등록부",
+          "component_type": "data",
+          "description": "사용자 정보를 저장하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "일괄납부관리부",
+          "component_type": "process",
+          "description": "유지비를 조회하고 일괄납부를 청구하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "청구 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "성능진단부",
+          "component_type": "process",
+          "description": "주택성능진단 결과를 등급으로 표시하여 제공하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "주택관리중개부",
+          "component_type": "process",
+          "description": "주택관리 서비스를 중개하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 요청 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "위험알림부",
+          "component_type": "process",
+          "description": "위험 알림 정보를 인포그래픽으로 시각화하여 제공하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "관리이력활용부",
+          "component_type": "process",
+          "description": "주택관리 이력 정보를 분석하여 제공하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230005898/1020230005898_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230005898",
+      "diagram_type": "flowchart",
+      "diagram_title": "주택관리 서비스 제공 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"지자체 서버\"]\n    200[\"사용자 단말\"]\n    300[\"공공지원안내부\"]\n    400[\"사용자등록부\"]\n    500[\"일괄납부관리부\"]\n    600[\"성능진단부\"]\n    700[\"주택관리중개부\"]\n    \n    200 -->|\"소유지 또는 거주지 정보 입력\"| 400\n    400 -->|\"정보 입력 수신\"| 300\n    300 -->|\"공공지원사업 정보 제공\"| 200\n    200 -->|\"유지비 일괄납부 요청\"| 500\n    500 -->|\"청구 정보 전송\"| 200\n    200 -->|\"성능진단 요청\"| 600\n    600 -->|\"주택성능진단 결과 전송\"| 200\n    200 -->|\"서비스 요청\"| 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "지자체 서버",
+          "component_type": "device",
+          "description": "공공지원사업 정보를 업로드하고 신청을 수신하여 대상을 선정하여 전송하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "소유지 또는 거주지 정보를 입력하고 유지비를 일괄납부하며 성능진단 결과를 출력하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청 및 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공공지원안내부",
+          "component_type": "process",
+          "description": "공공지원사업 정보를 안내하고 사용자 정보를 기반으로 신청 가능한 사업을 추출하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "사용자등록부",
+          "component_type": "data",
+          "description": "사용자 정보를 저장하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "일괄납부관리부",
+          "component_type": "process",
+          "description": "유지비를 조회하고 일괄납부를 청구하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "청구 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "성능진단부",
+          "component_type": "process",
+          "description": "주택성능진단 결과를 등급으로 표시하여 제공하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "주택관리중개부",
+          "component_type": "process",
+          "description": "주택관리 서비스를 중개하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 요청 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "위험알림부",
+          "component_type": "process",
+          "description": "위험 알림 정보를 인포그래픽으로 시각화하여 제공하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "관리이력활용부",
+          "component_type": "process",
+          "description": "주택관리 이력 정보를 분석하여 제공하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230005898/1020230005898_fig_2.mmd"
+    }
+  ]
+}

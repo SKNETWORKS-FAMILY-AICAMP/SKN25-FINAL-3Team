@@ -1,0 +1,263 @@
+{
+  "app_num": "1020177001104",
+  "invention_type": "method",
+  "main_concept": "지오-로케이션 데이터를 기반으로 이벤트 갤러리를 관리하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "actor",
+      "description": "지오-로케이션 데이터 수신 및 이벤트 갤러리 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "클라이언트 디바이스",
+      "component_type": "actor",
+      "description": "사용자가 메시지를 생성하고 이벤트 갤러리에 접근하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 요청 및 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "지오-로케이션 데이터",
+      "component_type": "data",
+      "description": "사용자의 위치 정보를 포함하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서버에 의해 수신됨",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "클라이언트 디바이스에서 생성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "이벤트 갤러리",
+      "component_type": "data",
+      "description": "이벤트와 관련된 콘텐츠를 포함하는 데이터 구조",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서버에서 관리됨",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "사용자가 접근함",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020177001104",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 서버 {\n        +String 지오로케이션데이터\n        +manageEventGallery()\n    }\n    class 클라이언트디바이스 {\n        +String 사용자메시지\n        +accessEventGallery()\n    }\n    class 지오로케이션데이터 {\n        +String 위치정보\n    }\n    class 이벤트갤러리 {\n        +String 콘텐츠\n    }\n    클라이언트디바이스 --> 서버 : \"데이터 요청 및 수신\"\n    서버 --> 지오로케이션데이터 : \"서버에 의해 수신됨\"\n    지오로케이션데이터 <-- 클라이언트디바이스 : \"클라이언트 디바이스에서 생성됨\"\n    서버 --> 이벤트갤러리 : \"서버에서 관리됨\"\n    이벤트갤러리 <-- 클라이언트디바이스 : \"사용자가 접근함\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "지오-로케이션 데이터 수신 및 이벤트 갤러리 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라이언트 디바이스",
+          "component_type": "actor",
+          "description": "사용자가 메시지를 생성하고 이벤트 갤러리에 접근하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 요청 및 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "지오-로케이션 데이터",
+          "component_type": "data",
+          "description": "사용자의 위치 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에 의해 수신됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "클라이언트 디바이스에서 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이벤트 갤러리",
+          "component_type": "data",
+          "description": "이벤트와 관련된 콘텐츠를 포함하는 데이터 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에서 관리됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자가 접근함",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020177001104/1020177001104_fig_1.mmd"
+    },
+    {
+      "app_num": "1020177001104",
+      "diagram_type": "flowchart",
+      "diagram_title": "서버 측 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"클라이언트 디바이스\"]\n    300[\"지오-로케이션 데이터\"]\n    400[\"이벤트 갤러리\"]\n    \n    200 -->| \"데이터 요청 및 수신\" | 300\n    300 -->| \"서버에 의해 수신됨\" | 100\n    100 -->| \"지오-로케이션 펜스와 비교\" | 400\n    400 -->| \"서버에서 관리됨\" | 100\n    200 -->| \"사용자가 접근함\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "지오-로케이션 데이터 수신 및 이벤트 갤러리 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라이언트 디바이스",
+          "component_type": "actor",
+          "description": "사용자가 메시지를 생성하고 이벤트 갤러리에 접근하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 요청 및 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "지오-로케이션 데이터",
+          "component_type": "data",
+          "description": "사용자의 위치 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에 의해 수신됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "클라이언트 디바이스에서 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이벤트 갤러리",
+          "component_type": "data",
+          "description": "이벤트와 관련된 콘텐츠를 포함하는 데이터 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에서 관리됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자가 접근함",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020177001104/1020177001104_fig_2.mmd"
+    },
+    {
+      "app_num": "1020177001104",
+      "diagram_type": "flowchart",
+      "diagram_title": "클라이언트 측 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"클라이언트 디바이스\"]\n    300[\"지오-로케이션 데이터\"]\n    400[\"이벤트 갤러리\"]\n    \n    200 -->| \"데이터 요청 및 수신\" | 100\n    100 -->| \"서버에 의해 수신됨\" | 300\n    300 -->| \"지오-로케이션 펜스와 비교\" | 100\n    100 -->| \"이벤트 갤러리 정보 추가\" | 400\n    200 -->| \"사용자 선택 검출\" | 400\n    400 -->| \"팔로워 추가\" | 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "지오-로케이션 데이터 수신 및 이벤트 갤러리 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라이언트 디바이스",
+          "component_type": "actor",
+          "description": "사용자가 메시지를 생성하고 이벤트 갤러리에 접근하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 요청 및 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "지오-로케이션 데이터",
+          "component_type": "data",
+          "description": "사용자의 위치 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에 의해 수신됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "클라이언트 디바이스에서 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이벤트 갤러리",
+          "component_type": "data",
+          "description": "이벤트와 관련된 콘텐츠를 포함하는 데이터 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버에서 관리됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자가 접근함",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020177001104/1020177001104_fig_3.mmd"
+    }
+  ]
+}

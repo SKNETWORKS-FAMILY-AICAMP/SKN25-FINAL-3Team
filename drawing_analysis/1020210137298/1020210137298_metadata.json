@@ -1,0 +1,374 @@
+{
+  "app_num": "1020210137298",
+  "invention_type": "system",
+  "main_concept": "사용자 위치 기반의 실시간 여행정보 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자단말",
+      "component_type": "actor",
+      "description": "사용자가 위치 정보를 입력하고 여행 정보를 수신하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "저장 DB",
+      "component_type": "data",
+      "description": "관광지 및 시설 정보를 저장하고 관리하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "정보 제공",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "정보 탐색",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "관광지정보 제공부",
+      "component_type": "process",
+      "description": "사용자의 위치에 따라 관광지 정보를 제공하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 전송",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "정보 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "시설정보 제공부",
+      "component_type": "process",
+      "description": "관심 관광지에 따른 시설 정보를 제공하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 전송",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "정보 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "피드백부",
+      "component_type": "process",
+      "description": "사용자로부터 상품에 대한 피드백을 수집하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "피드백 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "600",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "알고리즘 생성부",
+      "component_type": "process",
+      "description": "상품 불량 판단 알고리즘을 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "데이터 입력",
+          "direction": "<-"
+        },
+        {
+          "target": "700",
+          "label": "결과 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "지역상품 판정부",
+      "component_type": "process",
+      "description": "상품의 불량 확률을 판단하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결과 전송",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "알고리즘 사용",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210137298",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 위치 기반 여행정보 제공 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자단말\"]\n    200[\"저장 DB\"]\n    300[\"관광지정보 제공부\"]\n    400[\"시설정보 제공부\"]\n    500[\"피드백부\"]\n    600[\"알고리즘 생성부\"]\n    700[\"지역상품 판정부\"]\n\n    100 -->|\"정보 전송\"| 300\n    100 -->|\"정보 전송\"| 400\n    300 -->|\"정보 요청\"| 200\n    400 -->|\"정보 요청\"| 200\n    100 <--|\"피드백 수신\"| 500\n    500 -->|\"정보 제공\"| 600\n    600 <--|\"데이터 입력\"| 500\n    600 -->|\"결과 제공\"| 700\n    700 -->|\"결과 전송\"| 100\n    700 <--|\"알고리즘 사용\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자단말",
+          "component_type": "actor",
+          "description": "사용자가 위치 정보를 입력하고 여행 정보를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "저장 DB",
+          "component_type": "data",
+          "description": "관광지 및 시설 정보를 저장하고 관리하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정보 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "정보 탐색",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관광지정보 제공부",
+          "component_type": "process",
+          "description": "사용자의 위치에 따라 관광지 정보를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "시설정보 제공부",
+          "component_type": "process",
+          "description": "관심 관광지에 따른 시설 정보를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "피드백부",
+          "component_type": "process",
+          "description": "사용자로부터 상품에 대한 피드백을 수집하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "피드백 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "알고리즘 생성부",
+          "component_type": "process",
+          "description": "상품 불량 판단 알고리즘을 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "700",
+              "label": "결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "지역상품 판정부",
+          "component_type": "process",
+          "description": "상품의 불량 확률을 판단하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결과 전송",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "알고리즘 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210137298/1020210137298_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210137298",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 위치정보\n        +receiveTravelInfo()\n    }\n    class 저장DB {\n        +String 관광지정보\n        +String 시설정보\n        +storeData()\n    }\n    class 관광지정보 제공부 {\n        +provideTouristInfo()\n    }\n    class 시설정보 제공부 {\n        +provideFacilityInfo()\n    }\n    class 피드백부 {\n        +collectFeedback()\n    }\n    class 알고리즘 생성부 {\n        +generateAlgorithm()\n    }\n    class 지역상품 판정부 {\n        +determineDefectProbability()\n    }\n    사용자단말 --> 저장DB : \"정보 요청\"\n    관광지정보 제공부 --> 사용자단말 : \"정보 전송\"\n    관광지정보 제공부 --> 저장DB : \"정보 요청\"\n    시설정보 제공부 --> 사용자단말 : \"정보 전송\"\n    시설정보 제공부 --> 저장DB : \"정보 요청\"\n    피드백부 --> 사용자단말 : \"피드백 수신\"\n    피드백부 --> 알고리즘 생성부 : \"정보 제공\"\n    알고리즘 생성부 --> 피드백부 : \"데이터 입력\"\n    알고리즘 생성부 --> 지역상품 판정부 : \"결과 제공\"\n    지역상품 판정부 --> 사용자단말 : \"결과 전송\"\n    지역상품 판정부 --> 알고리즘 생성부 : \"알고리즘 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자단말",
+          "component_type": "actor",
+          "description": "사용자가 위치 정보를 입력하고 여행 정보를 수신하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "저장 DB",
+          "component_type": "data",
+          "description": "관광지 및 시설 정보를 저장하고 관리하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정보 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "정보 탐색",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관광지정보 제공부",
+          "component_type": "process",
+          "description": "사용자의 위치에 따라 관광지 정보를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "시설정보 제공부",
+          "component_type": "process",
+          "description": "관심 관광지에 따른 시설 정보를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "피드백부",
+          "component_type": "process",
+          "description": "사용자로부터 상품에 대한 피드백을 수집하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "피드백 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "알고리즘 생성부",
+          "component_type": "process",
+          "description": "상품 불량 판단 알고리즘을 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "700",
+              "label": "결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "지역상품 판정부",
+          "component_type": "process",
+          "description": "상품의 불량 확률을 판단하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결과 전송",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "알고리즘 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210137298/1020210137298_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "app_num": "1020227015590",
+  "invention_type": "hardware",
+  "main_concept": "신경망을 구현하는 하드웨어 회로",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컨트롤러",
+      "component_type": "device",
+      "description": "입력 묶음을 수신하고 압축된 입력 표현을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력 묶음을 처리하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "어드레스 레지스터",
+      "component_type": "device",
+      "description": "압축된 입력 표현의 메모리 위치를 식별하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "메모리 위치를 저장하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "활성화 메모리",
+      "component_type": "data",
+      "description": "입력 및 압축된 입력 표현을 저장하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "가중치 값을 저장하는",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "파라미터 메모리",
+      "component_type": "data",
+      "description": "신경망 계층의 가중치 값을 저장하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "계산 유닛",
+      "component_type": "device",
+      "description": "입력 행렬과 가중치 행렬 간의 곱셈을 수행하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227015590",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경망 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컨트롤러\"]\n    200[\"어드레스 레지스터\"]\n    300[\"활성화 메모리\"]\n    400[\"파라미터 메모리\"]\n    500[\"계산 유닛\"]\n    100 -->|\"입력 묶음을 처리하여\"| 200\n    200 -->|\"메모리 위치를 저장하여\"| 300\n    300 -->|\"가중치 값을 저장하는\"| 400\n    300 -->|\"입력 처리\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컨트롤러",
+          "component_type": "device",
+          "description": "입력 묶음을 수신하고 압축된 입력 표현을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력 묶음을 처리하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "어드레스 레지스터",
+          "component_type": "device",
+          "description": "압축된 입력 표현의 메모리 위치를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메모리 위치를 저장하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "활성화 메모리",
+          "component_type": "data",
+          "description": "입력 및 압축된 입력 표현을 저장하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "가중치 값을 저장하는",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "파라미터 메모리",
+          "component_type": "data",
+          "description": "신경망 계층의 가중치 값을 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "계산 유닛",
+          "component_type": "device",
+          "description": "입력 행렬과 가중치 행렬 간의 곱셈을 수행하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227015590/1020227015590_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227015590",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경망 하드웨어 구성도",
+      "mermaid_code": "classDiagram\n    class Controller {\n        +String inputBundle\n        +compressInput()\n    }\n    class AddressRegister {\n        +String compressedInputLocation\n        +identifyMemoryLocation()\n    }\n    class ActivationMemory {\n        +String inputData\n        +String compressedInputData\n    }\n    class ParameterMemory {\n        +String weightValues\n    }\n    class CalculationUnit {\n        +multiplyMatrices()\n    }\n    Controller --> AddressRegister : \"입력 묶음을 처리하여\"\n    AddressRegister --> ActivationMemory : \"메모리 위치를 저장하여\"\n    ActivationMemory --> ParameterMemory : \"가중치 값을 저장하는\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컨트롤러",
+          "component_type": "device",
+          "description": "입력 묶음을 수신하고 압축된 입력 표현을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력 묶음을 처리하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "어드레스 레지스터",
+          "component_type": "device",
+          "description": "압축된 입력 표현의 메모리 위치를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메모리 위치를 저장하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "활성화 메모리",
+          "component_type": "data",
+          "description": "입력 및 압축된 입력 표현을 저장하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "가중치 값을 저장하는",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "파라미터 메모리",
+          "component_type": "data",
+          "description": "신경망 계층의 가중치 값을 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "계산 유닛",
+          "component_type": "device",
+          "description": "입력 행렬과 가중치 행렬 간의 곱셈을 수행하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227015590/1020227015590_fig_2.mmd"
+    }
+  ]
+}

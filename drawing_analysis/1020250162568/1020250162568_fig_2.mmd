@@ -1,0 +1,27 @@
+%% 1020250162568 - 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 메인서버 {
+        +String CAD데이터
+        +String BOM데이터
+        +processVideo()
+    }
+    class 제1영상수집장치 {
+        +captureImage()
+        +uploadToServer()
+    }
+    class 코드인식부 {
+        +recognizeCode()
+        +registerResult()
+    }
+    class 제2영상수집장치 {
+        +captureImage()
+        +uploadToServer()
+    }
+    메인서버 --> 제1영상수집장치 : "영상 데이터 전송"
+    제1영상수집장치 --> 메인서버 : "영상 데이터 업로드"
+    메인서버 --> 코드인식부 : "코드 인식 결과 등록"
+    코드인식부 --> 메인서버 : "인식 결과 전송"
+    메인서버 --> 제2영상수집장치 : "영상 데이터 전송"
+    제2영상수집장치 --> 메인서버 : "영상 데이터 업로드"

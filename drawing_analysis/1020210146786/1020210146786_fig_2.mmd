@@ -1,0 +1,20 @@
+%% 1020210146786 - 문서 인식 장치 구조도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 문서이미지 {
+        +String 이미지
+    }
+    class 키-밸류쌍_생성_모듈 {
+        +extractText()
+        +generateKeyValuePairs()
+    }
+    class 디스플레이_모듈 {
+        +displayKeyValuePairs()
+    }
+    class 사용자_입력_모듈 {
+        +receiveInput()
+    }
+    문서이미지 --> 키-밸류쌍_생성_모듈 : "입력"
+    키-밸류쌍_생성_모듈 --> 디스플레이_모듈 : "출력"
+    디스플레이_모듈 --> 사용자_입력_모듈 : "입력"

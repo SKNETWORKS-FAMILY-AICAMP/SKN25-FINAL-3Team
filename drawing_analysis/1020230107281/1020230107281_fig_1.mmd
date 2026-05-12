@@ -1,0 +1,22 @@
+%% 1020230107281 - 자산 거래 지원 시스템 전체 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1수신부 {
+        +String 거래요청정보
+        +receiveRequest()
+    }
+    class 생성부 {
+        +String 링크정보
+        +createLink()
+    }
+    class 제2수신부 {
+        +String 거래수락정보
+        +receiveAcceptance()
+    }
+    class 자산거래관리부 {
+        +confirmTransaction()
+    }
+    제1수신부 --> 생성부 : "자산 거래 요청 정보 수신"
+    생성부 --> 제2수신부 : "제1 링크를 통해 접속"
+    제2수신부 --> 자산거래관리부 : "자산 거래 수락 정보 참조"

@@ -1,0 +1,24 @@
+%% 1020240058416 - 앙상블 모델 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 프로세서 {
+        +String 데이터수집()
+        +String 데이터분석()
+    }
+    class "소셜 미디어 게시물" {
+        +String 게시물내용
+    }
+    class "앙상블 모델" {
+        +String LSTM
+        +String BiTCN
+        +String 셀프어텐션
+        +identifySuicideExpression()
+    }
+    class "자살 위험도 평가" {
+        +evaluateRisk()
+    }
+    "소셜 미디어 게시물" --> 프로세서 : "수집됨"
+    프로세서 --> "앙상블 모델" : "실행됨"
+    "앙상블 모델" --> "소셜 미디어 게시물" : "분석함"
+    "앙상블 모델" --> "자살 위험도 평가" : "결과로 사용됨"

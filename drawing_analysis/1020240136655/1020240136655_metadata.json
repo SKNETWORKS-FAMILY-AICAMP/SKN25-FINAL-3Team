@@ -1,0 +1,323 @@
+{
+  "app_num": "1020240136655",
+  "invention_type": "hardware",
+  "main_concept": "오퍼랜드리스 인스트럭션 체계 기반 프로세서 및 이를 포함하는 컴퓨터",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "인스트럭션 프로세싱 유닛",
+      "component_type": "device",
+      "description": "오퍼랜드가 없는 인스트럭션을 처리하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 기능 프로세싱 모듈",
+      "component_type": "device",
+      "description": "산술논리연산 기능을 수행하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 기능 프로세싱 모듈",
+      "component_type": "device",
+      "description": "콘트롤 기능을 수행하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "ALU 레지스터",
+      "component_type": "data",
+      "description": "산술논리연산 장치가 사용하는 레지스터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "접근",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "FPU 스택",
+      "component_type": "data",
+      "description": "기능 프로세싱 유닛이 사용하는 스택",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "접근",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "프로그램 카운터",
+      "component_type": "device",
+      "description": "현재 실행 중인 인스트럭션의 주소를 추적하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "인스트럭션 로더",
+      "component_type": "device",
+      "description": "인스트럭션 메모리에서 인스트럭션을 읽어오는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "인스트럭션 큐",
+      "component_type": "data",
+      "description": "인스트럭션을 저장하고 빠르게 접근할 수 있도록 하는 큐",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240136655",
+      "diagram_type": "classDiagram",
+      "diagram_title": "오퍼랜드리스 인스트럭션 체계 기반 프로세서 구조",
+      "mermaid_code": "classDiagram\n    class 인스트럭션프로세싱유닛 {\n        +String description\n    }\n    class 제1기능프로세싱모듈 {\n        +String description\n    }\n    class 제2기능프로세싱모듈 {\n        +String description\n    }\n    class ALU레지스터 {\n        +String description\n    }\n    class FPU스택 {\n        +String description\n    }\n    class 프로그램카운터 {\n        +String description\n    }\n    class 인스트럭션로더 {\n        +String description\n    }\n    class 인스트럭션큐 {\n        +String description\n    }\n    \n    인스트럭션프로세싱유닛 <|-- 제1기능프로세싱모듈 : \"구성 요소\"\n    인스트럭션프로세싱유닛 <|-- 제2기능프로세싱모듈 : \"구성 요소\"\n    제1기능프로세싱모듈 --> ALU레지스터 : \"접근\"\n    제2기능프로세싱모듈 --> FPU스택 : \"접근\"\n    인스트럭션프로세싱유닛 <|-- 프로그램카운터 : \"연결\"\n    인스트럭션프로세싱유닛 <|-- 인스트럭션로더 : \"연결\"\n    인스트럭션프로세싱유닛 <|-- 인스트럭션큐 : \"연결\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인스트럭션 프로세싱 유닛",
+          "component_type": "device",
+          "description": "오퍼랜드가 없는 인스트럭션을 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 기능 프로세싱 모듈",
+          "component_type": "device",
+          "description": "산술논리연산 기능을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 기능 프로세싱 모듈",
+          "component_type": "device",
+          "description": "콘트롤 기능을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "ALU 레지스터",
+          "component_type": "data",
+          "description": "산술논리연산 장치가 사용하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "FPU 스택",
+          "component_type": "data",
+          "description": "기능 프로세싱 유닛이 사용하는 스택",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "프로그램 카운터",
+          "component_type": "device",
+          "description": "현재 실행 중인 인스트럭션의 주소를 추적하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "인스트럭션 로더",
+          "component_type": "device",
+          "description": "인스트럭션 메모리에서 인스트럭션을 읽어오는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "인스트럭션 큐",
+          "component_type": "data",
+          "description": "인스트럭션을 저장하고 빠르게 접근할 수 있도록 하는 큐",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240136655/1020240136655_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240136655",
+      "diagram_type": "flowchart",
+      "diagram_title": "인스트럭션 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"인스트럭션 프로세싱 유닛\"]\n    200[\"제1 기능 프로세싱 모듈\"]\n    300[\"제2 기능 프로세싱 모듈\"]\n    400[\"ALU 레지스터\"]\n    500[\"FPU 스택\"]\n    600[\"프로그램 카운터\"]\n    700[\"인스트럭션 로더\"]\n    800[\"인스트럭션 큐\"]\n\n    700 -->|\"인스트럭션 로드\"| 100\n    100 -->|\"인스트럭션 처리\"| 200\n    100 -->|\"인스트럭션 처리\"| 300\n    200 -->|\"데이터 처리\"| 400\n    300 -->|\"데이터 처리\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인스트럭션 프로세싱 유닛",
+          "component_type": "device",
+          "description": "오퍼랜드가 없는 인스트럭션을 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 기능 프로세싱 모듈",
+          "component_type": "device",
+          "description": "산술논리연산 기능을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 기능 프로세싱 모듈",
+          "component_type": "device",
+          "description": "콘트롤 기능을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "ALU 레지스터",
+          "component_type": "data",
+          "description": "산술논리연산 장치가 사용하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "FPU 스택",
+          "component_type": "data",
+          "description": "기능 프로세싱 유닛이 사용하는 스택",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "접근",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "프로그램 카운터",
+          "component_type": "device",
+          "description": "현재 실행 중인 인스트럭션의 주소를 추적하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "인스트럭션 로더",
+          "component_type": "device",
+          "description": "인스트럭션 메모리에서 인스트럭션을 읽어오는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "인스트럭션 큐",
+          "component_type": "data",
+          "description": "인스트럭션을 저장하고 빠르게 접근할 수 있도록 하는 큐",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240136655/1020240136655_fig_2.mmd"
+    }
+  ]
+}

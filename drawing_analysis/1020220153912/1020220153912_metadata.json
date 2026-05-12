@@ -1,0 +1,167 @@
+{
+  "app_num": "1020220153912",
+  "invention_type": "method",
+  "main_concept": "연속된 영상 프레임에서 사람 객체를 탐지하고 추적하여 이상행동을 검출하는 레이블링 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "객체탐지부",
+      "component_type": "process",
+      "description": "영상의 연속된 프레임에서 사람 객체를 탐지하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "객체추적부",
+      "component_type": "process",
+      "description": "탐지된 사람 객체를 추적하고 고유 식별자를 부여하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "객체 탐지 결과를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "행위식별부",
+      "component_type": "process",
+      "description": "추적된 객체의 행위를 식별하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "객체 추적 결과를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "행동검출부",
+      "component_type": "process",
+      "description": "식별된 행위에 따라 이상행동을 검출하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "행위 식별 결과를 기반으로",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220153912",
+      "diagram_type": "flowchart",
+      "diagram_title": "레이블링 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"객체탐지부\"]\n    200[\"객체추적부\"]\n    300[\"행위식별부\"]\n    400[\"행동검출부\"]\n    100 -->|\"객체 탐지 결과를 기반으로\"| 200\n    200 -->|\"객체 추적 결과를 기반으로\"| 300\n    300 -->|\"행위 식별 결과를 기반으로\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체탐지부",
+          "component_type": "process",
+          "description": "영상의 연속된 프레임에서 사람 객체를 탐지하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체추적부",
+          "component_type": "process",
+          "description": "탐지된 사람 객체를 추적하고 고유 식별자를 부여하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "객체 탐지 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "행위식별부",
+          "component_type": "process",
+          "description": "추적된 객체의 행위를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "객체 추적 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "행동검출부",
+          "component_type": "process",
+          "description": "식별된 행위에 따라 이상행동을 검출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "행위 식별 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220153912/1020220153912_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220153912",
+      "diagram_type": "classDiagram",
+      "diagram_title": "레이블링 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 객체탐지부 {\n        +String 영상프레임\n        +detectObjects()\n    }\n    class 객체추적부 {\n        +String 고유식별자\n        +trackObjects()\n    }\n    class 행위식별부 {\n        +String 행위정보\n        +identifyBehavior()\n    }\n    class 행동검출부 {\n        +String 이상행동정보\n        +detectAnomalies()\n    }\n    객체탐지부 --> 객체추적부 : \"객체 탐지 결과를 기반으로\"\n    객체추적부 --> 행위식별부 : \"객체 추적 결과를 기반으로\"\n    행위식별부 --> 행동검출부 : \"행위 식별 결과를 기반으로\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "객체탐지부",
+          "component_type": "process",
+          "description": "영상의 연속된 프레임에서 사람 객체를 탐지하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "객체추적부",
+          "component_type": "process",
+          "description": "탐지된 사람 객체를 추적하고 고유 식별자를 부여하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "객체 탐지 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "행위식별부",
+          "component_type": "process",
+          "description": "추적된 객체의 행위를 식별하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "객체 추적 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "행동검출부",
+          "component_type": "process",
+          "description": "식별된 행위에 따라 이상행동을 검출하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "행위 식별 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220153912/1020220153912_fig_2.mmd"
+    }
+  ]
+}

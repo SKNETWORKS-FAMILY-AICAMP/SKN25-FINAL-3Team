@@ -1,0 +1,221 @@
+{
+  "app_num": "1020217026320",
+  "invention_type": "method",
+  "main_concept": "비접촉식 카드 인증을 통한 제3자 디지털 지갑에 계정 정보 추가",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "명령어를 저장하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "명령어를 처리하고 실행하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장된 명령어를 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제1자 응용프로그램",
+      "component_type": "actor",
+      "description": "비접촉식 카드 인증을 수행하는 응용프로그램",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "명령어 실행 요청",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "인증 정보 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제3자 응용프로그램",
+      "component_type": "actor",
+      "description": "계정 정보를 제3자 지갑에 추가하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "인증 동작 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "비접촉식 카드",
+      "component_type": "device",
+      "description": "NFC를 통해 인증 정보를 전송하는 카드",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "NFC 교환 수행",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020217026320",
+      "diagram_type": "flowchart",
+      "diagram_title": "비접촉식 카드 인증 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"메모리\"]\n    200[\"프로세서\"]\n    300[\"제1자 응용프로그램\"]\n    400[\"제3자 응용프로그램\"]\n    500[\"비접촉식 카드\"]\n    \n    500 -->|\"NFC 교환 수행\"| 300\n    300 -->|\"명령어 실행 요청\"| 200\n    200 -->|\"저장된 명령어를 처리\"| 100\n    300 -->|\"인증 정보 요청\"| 400\n    400 -->|\"인증 동작 요청\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "명령어를 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "명령어를 처리하고 실행하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1자 응용프로그램",
+          "component_type": "actor",
+          "description": "비접촉식 카드 인증을 수행하는 응용프로그램",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "명령어 실행 요청",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "인증 정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3자 응용프로그램",
+          "component_type": "actor",
+          "description": "계정 정보를 제3자 지갑에 추가하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "인증 동작 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "비접촉식 카드",
+          "component_type": "device",
+          "description": "NFC를 통해 인증 정보를 전송하는 카드",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "NFC 교환 수행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020217026320/1020217026320_fig_1.mmd"
+    },
+    {
+      "app_num": "1020217026320",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class Memory {\n        +String commands\n    }\n    class Processor {\n        +executeCommands()\n    }\n    class FirstApp {\n        +requestExecution()\n        +requestAuthentication()\n    }\n    class ThirdApp {\n        +requestAuthenticationAction()\n    }\n    class NFC_Card {\n        +performNFCExchange()\n    }\n    Memory --> Processor : \"저장된 명령어를 처리\"\n    FirstApp --> Processor : \"명령어 실행 요청\"\n    FirstApp --> ThirdApp : \"인증 정보 요청\"\n    ThirdApp --> FirstApp : \"인증 동작 요청\"\n    NFC_Card --> FirstApp : \"NFC 교환 수행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "명령어를 저장하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "명령어를 처리하고 실행하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1자 응용프로그램",
+          "component_type": "actor",
+          "description": "비접촉식 카드 인증을 수행하는 응용프로그램",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "명령어 실행 요청",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "인증 정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3자 응용프로그램",
+          "component_type": "actor",
+          "description": "계정 정보를 제3자 지갑에 추가하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "인증 동작 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "비접촉식 카드",
+          "component_type": "device",
+          "description": "NFC를 통해 인증 정보를 전송하는 카드",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "NFC 교환 수행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020217026320/1020217026320_fig_2.mmd"
+    }
+  ]
+}

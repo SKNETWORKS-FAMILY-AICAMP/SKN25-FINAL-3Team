@@ -1,0 +1,236 @@
+{
+  "app_num": "1020220082484",
+  "invention_type": "system",
+  "main_concept": "차량 번호판 인식을 위한 멀티 스테이지 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "촬영 데이터 수신부",
+      "component_type": "device",
+      "description": "촬영부로부터 촬영 데이터를 수신하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1인식 엔진부",
+      "component_type": "process",
+      "description": "번호판 후보군의 유사도를 산출하고 필터링하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "결과 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2인식 엔진부",
+      "component_type": "process",
+      "description": "문자 존재 여부를 추정하고 정합을 판단하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결과 수신",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "결과 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제3인식 엔진부",
+      "component_type": "process",
+      "description": "문자 인식을 수행하고 인식 여부를 판단하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결과 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "번호판 인식 데이터 출력부",
+      "component_type": "device",
+      "description": "인식된 번호판 정보를 출력하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "결과 수신",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220082484",
+      "diagram_type": "flowchart",
+      "diagram_title": "차량 번호판 인식 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"촬영 데이터 수신부\"]\n    200[\"제1인식 엔진부\"]\n    300[\"제2인식 엔진부\"]\n    400[\"제3인식 엔진부\"]\n    500[\"번호판 인식 데이터 출력부\"]\n    100 -->|\"수신\"| 200\n    200 -->|\"결과 전달\"| 300\n    300 -->|\"결과 전달\"| 400\n    400 -->|\"결과 수신\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "촬영 데이터 수신부",
+          "component_type": "device",
+          "description": "촬영부로부터 촬영 데이터를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1인식 엔진부",
+          "component_type": "process",
+          "description": "번호판 후보군의 유사도를 산출하고 필터링하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결과 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2인식 엔진부",
+          "component_type": "process",
+          "description": "문자 존재 여부를 추정하고 정합을 판단하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3인식 엔진부",
+          "component_type": "process",
+          "description": "문자 인식을 수행하고 인식 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "번호판 인식 데이터 출력부",
+          "component_type": "device",
+          "description": "인식된 번호판 정보를 출력하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결과 수신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220082484/1020220082484_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220082484",
+      "diagram_type": "classDiagram",
+      "diagram_title": "차량 번호판 인식 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 촬영데이터수신부 {\n        +String 촬영데이터\n    }\n    class 제1인식엔진부 {\n        +유사도산출()\n        +필터링()\n    }\n    class 제2인식엔진부 {\n        +문자존재여부추정()\n        +정합판단()\n    }\n    class 제3인식엔진부 {\n        +문자인식()\n        +인식여부판단()\n    }\n    class 번호판인식데이터출력부 {\n        +String 인식데이터\n    }\n    촬영데이터수신부 --> 제1인식엔진부 : \"수신\"\n    제1인식엔진부 --> 제2인식엔진부 : \"결과 전달\"\n    제2인식엔진부 --> 제3인식엔진부 : \"결과 전달\"\n    제3인식엔진부 --> 번호판인식데이터출력부 : \"결과 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "촬영 데이터 수신부",
+          "component_type": "device",
+          "description": "촬영부로부터 촬영 데이터를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1인식 엔진부",
+          "component_type": "process",
+          "description": "번호판 후보군의 유사도를 산출하고 필터링하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결과 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2인식 엔진부",
+          "component_type": "process",
+          "description": "문자 존재 여부를 추정하고 정합을 판단하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결과 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3인식 엔진부",
+          "component_type": "process",
+          "description": "문자 인식을 수행하고 인식 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "번호판 인식 데이터 출력부",
+          "component_type": "device",
+          "description": "인식된 번호판 정보를 출력하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결과 수신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220082484/1020220082484_fig_2.mmd"
+    }
+  ]
+}

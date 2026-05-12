@@ -1,0 +1,167 @@
+{
+  "app_num": "1020220102659",
+  "invention_type": "system",
+  "main_concept": "사용자가 요청하는 검색어와 연관된 검색어 사이의 관계를 거리로 파악하여 최적의 검색 경로를 제공하는 시스템.",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "검색어 생성부",
+      "component_type": "process",
+      "description": "키워드에 문자를 추가하여 기본 검색어를 자동 생성.",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "검색어 관계 DB",
+      "component_type": "data",
+      "description": "검색어 간의 관계 정보를 저장.",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "검색어 생성부에서 생성된 정보를 저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "검색 경로 추출부",
+      "component_type": "process",
+      "description": "검색어 관계 DB를 기반으로 검색 경로 정보를 생성.",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "검색어 관계 DB에서 정보를 추출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "최적 경로 추천부",
+      "component_type": "process",
+      "description": "사용자 요청에 따라 추천 리스트 정보를 생성.",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "검색 경로 추출부에서 생성된 정보를 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220102659",
+      "diagram_type": "flowchart",
+      "diagram_title": "검색 경로 제공 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"검색어 생성부\"]\n    200[\"검색어 관계 DB\"]\n    300[\"검색 경로 추출부\"]\n    400[\"최적 경로 추천부\"]\n    100 -->|\"검색어 생성부에서 생성된 정보를 저장\"| 200\n    200 -->|\"검색어 관계 DB에서 정보를 추출\"| 300\n    300 -->|\"검색 경로 추출부에서 생성된 정보를 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검색어 생성부",
+          "component_type": "process",
+          "description": "키워드에 문자를 추가하여 기본 검색어를 자동 생성.",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색어 관계 DB",
+          "component_type": "data",
+          "description": "검색어 간의 관계 정보를 저장.",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검색어 생성부에서 생성된 정보를 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 경로 추출부",
+          "component_type": "process",
+          "description": "검색어 관계 DB를 기반으로 검색 경로 정보를 생성.",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "검색어 관계 DB에서 정보를 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "최적 경로 추천부",
+          "component_type": "process",
+          "description": "사용자 요청에 따라 추천 리스트 정보를 생성.",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검색 경로 추출부에서 생성된 정보를 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220102659/1020220102659_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220102659",
+      "diagram_type": "classDiagram",
+      "diagram_title": "검색 경로 제공 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 검색어생성부 {\n        +String 기본검색어\n        +자동생성()\n    }\n    class 검색어관계DB {\n        +String 관계정보\n        +정보저장()\n    }\n    class 검색경로추출부 {\n        +String 검색경로정보\n        +경로생성()\n    }\n    class 최적경로추천부 {\n        +String 추천리스트\n        +리스트생성()\n    }\n    검색어생성부 --> 검색어관계DB : \"검색어 생성부에서 생성된 정보를 저장\"\n    검색어관계DB --> 검색경로추출부 : \"검색어 관계 DB에서 정보를 추출\"\n    검색경로추출부 --> 최적경로추천부 : \"검색 경로 추출부에서 생성된 정보를 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "검색어 생성부",
+          "component_type": "process",
+          "description": "키워드에 문자를 추가하여 기본 검색어를 자동 생성.",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색어 관계 DB",
+          "component_type": "data",
+          "description": "검색어 간의 관계 정보를 저장.",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검색어 생성부에서 생성된 정보를 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 경로 추출부",
+          "component_type": "process",
+          "description": "검색어 관계 DB를 기반으로 검색 경로 정보를 생성.",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "검색어 관계 DB에서 정보를 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "최적 경로 추천부",
+          "component_type": "process",
+          "description": "사용자 요청에 따라 추천 리스트 정보를 생성.",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검색 경로 추출부에서 생성된 정보를 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220102659/1020220102659_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,560 @@
+{
+  "app_num": "1020190024451",
+  "invention_type": "hardware",
+  "main_concept": "접이식 멀티미디어 단말기로 개방형 및 보안형 콘텐츠를 구분하여 제공하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "개방기능부",
+      "component_type": "device",
+      "description": "인터넷 서핑 및 게임을 포함한 개방형 콘텐츠를 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "폴더블키보드",
+      "component_type": "device",
+      "description": "사용자 입력을 수행하며 개방기능부와 연결됨",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "보안기능부",
+      "component_type": "device",
+      "description": "통화 및 메신저와 같은 보안형 콘텐츠를 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제1 커넥터",
+      "component_type": "device",
+      "description": "개방기능부와 폴더블키보드 간의 전원 및 신호 소통",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소통",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "소통",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제2 커넥터",
+      "component_type": "device",
+      "description": "폴더블키보드와 보안기능부 간의 전원 및 신호 소통",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "소통",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "소통",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "외부디스플레이",
+      "component_type": "device",
+      "description": "사용자의 입력을 통해 콘텐츠를 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "메인 터치디스플레이",
+      "component_type": "device",
+      "description": "개방형 콘텐츠를 표시하고 사용자 입력을 받음",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "메인하우징",
+      "component_type": "device",
+      "description": "메인 터치디스플레이를 지지하고 폴더블키보드와 연결됨",
+      "relationships": [
+        {
+          "target": "700",
+          "label": "지지",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "900",
+      "name": "안착패널",
+      "component_type": "device",
+      "description": "메인 터치디스플레이의 경사를 조절하며 지지력 제공",
+      "relationships": [
+        {
+          "target": "700",
+          "label": "지지",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "1000",
+      "name": "연결바",
+      "component_type": "device",
+      "description": "메인 터치디스플레이와 안착패널을 연결",
+      "relationships": [
+        {
+          "target": "900",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "700",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "1100",
+      "name": "외부디스플레이 접속부",
+      "component_type": "device",
+      "description": "외부디스플레이를 연결하는 부위",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190024451",
+      "diagram_type": "classDiagram",
+      "diagram_title": "접이식 멀티미디어 단말기 구성도",
+      "mermaid_code": "classDiagram\n    class 개방기능부 {\n        +String 설명: \"인터넷 서핑 및 게임을 포함한 개방형 콘텐츠를 제공\"\n    }\n    class 폴더블키보드 {\n        +String 설명: \"사용자 입력을 수행하며 개방기능부와 연결됨\"\n    }\n    class 보안기능부 {\n        +String 설명: \"통화 및 메신저와 같은 보안형 콘텐츠를 제공\"\n    }\n    class 제1커넥터 {\n        +String 설명: \"개방기능부와 폴더블키보드 간의 전원 및 신호 소통\"\n    }\n    class 제2커넥터 {\n        +String 설명: \"폴더블키보드와 보안기능부 간의 전원 및 신호 소통\"\n    }\n    class 외부디스플레이 {\n        +String 설명: \"사용자의 입력을 통해 콘텐츠를 제공\"\n    }\n    class 메인터치디스플레이 {\n        +String 설명: \"개방형 콘텐츠를 표시하고 사용자 입력을 받음\"\n    }\n    class 메인하우징 {\n        +String 설명: \"메인 터치디스플레이를 지지하고 폴더블키보드와 연결됨\"\n    }\n    class 안착패널 {\n        +String 설명: \"메인 터치디스플레이의 경사를 조절하며 지지력 제공\"\n    }\n    class 연결바 {\n        +String 설명: \"메인 터치디스플레이와 안착패널을 연결\"\n    }\n    class 외부디스플레이접속부 {\n        +String 설명: \"외부디스플레이를 연결하는 부위\"\n    }\n    \n    폴더블키보드 --> 개방기능부 : \"연결\"\n    보안기능부 --> 개방기능부 : \"연결\"\n    보안기능부 --> 폴더블키보드 : \"연결\"\n    제1커넥터 --> 개방기능부 : \"소통\"\n    제1커넥터 --> 폴더블키보드 : \"소통\"\n    제2커넥터 --> 폴더블키보드 : \"소통\"\n    제2커넥터 --> 보안기능부 : \"소통\"\n    외부디스플레이 --> 개방기능부 : \"연결\"\n    외부디스플레이 --> 보안기능부 : \"연결\"\n    메인터치디스플레이 --> 개방기능부 : \"연결\"\n    메인하우징 --> 메인터치디스플레이 : \"지지\"\n    메인하우징 --> 제1커넥터 : \"연결\"\n    안착패널 --> 메인터치디스플레이 : \"지지\"\n    연결바 --> 안착패널 : \"연결\"\n    연결바 --> 메인터치디스플레이 : \"연결\"\n    외부디스플레이접속부 --> 외부디스플레이 : \"연결\"\n    외부디스플레이접속부 --> 개방기능부 : \"연결\"\n    외부디스플레이접속부 --> 폴더블키보드 : \"연결\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "개방기능부",
+          "component_type": "device",
+          "description": "인터넷 서핑 및 게임을 포함한 개방형 콘텐츠를 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "폴더블키보드",
+          "component_type": "device",
+          "description": "사용자 입력을 수행하며 개방기능부와 연결됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "보안기능부",
+          "component_type": "device",
+          "description": "통화 및 메신저와 같은 보안형 콘텐츠를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 커넥터",
+          "component_type": "device",
+          "description": "개방기능부와 폴더블키보드 간의 전원 및 신호 소통",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소통",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 커넥터",
+          "component_type": "device",
+          "description": "폴더블키보드와 보안기능부 간의 전원 및 신호 소통",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "소통",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "외부디스플레이",
+          "component_type": "device",
+          "description": "사용자의 입력을 통해 콘텐츠를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "메인 터치디스플레이",
+          "component_type": "device",
+          "description": "개방형 콘텐츠를 표시하고 사용자 입력을 받음",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "메인하우징",
+          "component_type": "device",
+          "description": "메인 터치디스플레이를 지지하고 폴더블키보드와 연결됨",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "지지",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "안착패널",
+          "component_type": "device",
+          "description": "메인 터치디스플레이의 경사를 조절하며 지지력 제공",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "지지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "1000",
+          "name": "연결바",
+          "component_type": "device",
+          "description": "메인 터치디스플레이와 안착패널을 연결",
+          "relationships": [
+            {
+              "target": "900",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "700",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "1100",
+          "name": "외부디스플레이 접속부",
+          "component_type": "device",
+          "description": "외부디스플레이를 연결하는 부위",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190024451/1020190024451_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190024451",
+      "diagram_type": "flowchart",
+      "diagram_title": "작동 흐름도",
+      "mermaid_code": "flowchart TD\n    200[\"폴더블키보드\"]\n    100[\"개방기능부\"]\n    300[\"보안기능부\"]\n    400[\"외부디스플레이\"]\n    200 -->|\"사용자 입력\"| 100\n    100 -->|\"개방형 콘텐츠 실행\"| 400\n    200 -->|\"사용자 입력\"| 300\n    300 -->|\"보안형 콘텐츠 실행\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "개방기능부",
+          "component_type": "device",
+          "description": "인터넷 서핑 및 게임을 포함한 개방형 콘텐츠를 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "폴더블키보드",
+          "component_type": "device",
+          "description": "사용자 입력을 수행하며 개방기능부와 연결됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "보안기능부",
+          "component_type": "device",
+          "description": "통화 및 메신저와 같은 보안형 콘텐츠를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 커넥터",
+          "component_type": "device",
+          "description": "개방기능부와 폴더블키보드 간의 전원 및 신호 소통",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소통",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 커넥터",
+          "component_type": "device",
+          "description": "폴더블키보드와 보안기능부 간의 전원 및 신호 소통",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "소통",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "소통",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "외부디스플레이",
+          "component_type": "device",
+          "description": "사용자의 입력을 통해 콘텐츠를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "메인 터치디스플레이",
+          "component_type": "device",
+          "description": "개방형 콘텐츠를 표시하고 사용자 입력을 받음",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "메인하우징",
+          "component_type": "device",
+          "description": "메인 터치디스플레이를 지지하고 폴더블키보드와 연결됨",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "지지",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "안착패널",
+          "component_type": "device",
+          "description": "메인 터치디스플레이의 경사를 조절하며 지지력 제공",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "지지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "1000",
+          "name": "연결바",
+          "component_type": "device",
+          "description": "메인 터치디스플레이와 안착패널을 연결",
+          "relationships": [
+            {
+              "target": "900",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "700",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "1100",
+          "name": "외부디스플레이 접속부",
+          "component_type": "device",
+          "description": "외부디스플레이를 연결하는 부위",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190024451/1020190024451_fig_2.mmd"
+    }
+  ]
+}

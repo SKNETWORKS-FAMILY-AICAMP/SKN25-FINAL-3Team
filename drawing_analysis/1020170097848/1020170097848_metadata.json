@@ -1,0 +1,164 @@
+{
+  "app_num": "1020170097848",
+  "invention_type": "method",
+  "main_concept": "인공 신경망 학습 방법을 통한 타임 스텝 데이터 예측",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "예측 기준 시점 설정기",
+      "component_type": "process",
+      "description": "관측된 데이터와 예측할 타임 스텝을 구분하는 기준 시점을 설정",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "상태 추정 네트워크",
+      "component_type": "actor",
+      "description": "히든 벡터 및 셀 벡터를 생성하는 제1 인공 신경망",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "생성된 벡터를 기반으로 학습",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "상태 전이 네트워크",
+      "component_type": "actor",
+      "description": "상태 추정 네트워크의 결과를 기반으로 학습하는 제2 인공 신경망",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "업데이터",
+      "component_type": "process",
+      "description": "새로운 타임 스텝의 관측 데이터를 이용하여 학습 결과를 업데이트",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "업데이트된 벡터를 기반으로 학습",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "업데이트된 벡터를 기반으로 학습",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020170097848",
+      "diagram_type": "flowchart",
+      "diagram_title": "인공 신경망 학습 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"예측 기준 시점 설정기\"]\n    200[\"상태 추정 네트워크\"]\n    300[\"상태 전이 네트워크\"]\n    400[\"업데이터\"]\n    100 -->|\"기준 시점 설정\"| 200\n    200 -->|\"생성된 벡터를 기반으로 학습\"| 300\n    400 -->|\"업데이트된 벡터를 기반으로 학습\"| 200\n    400 -->|\"업데이트된 벡터를 기반으로 학습\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "예측 기준 시점 설정기",
+          "component_type": "process",
+          "description": "관측된 데이터와 예측할 타임 스텝을 구분하는 기준 시점을 설정",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "상태 추정 네트워크",
+          "component_type": "actor",
+          "description": "히든 벡터 및 셀 벡터를 생성하는 제1 인공 신경망",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성된 벡터를 기반으로 학습",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "상태 전이 네트워크",
+          "component_type": "actor",
+          "description": "상태 추정 네트워크의 결과를 기반으로 학습하는 제2 인공 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "업데이터",
+          "component_type": "process",
+          "description": "새로운 타임 스텝의 관측 데이터를 이용하여 학습 결과를 업데이트",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "업데이트된 벡터를 기반으로 학습",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "업데이트된 벡터를 기반으로 학습",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020170097848/1020170097848_fig_1.mmd"
+    },
+    {
+      "app_num": "1020170097848",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인공 신경망 구성도",
+      "mermaid_code": "classDiagram\n    class 예측기준시점설정기 {\n        +설정기능()\n    }\n    class 상태추정네트워크 {\n        +히든벡터생성()\n        +셀벡터생성()\n    }\n    class 상태전이네트워크 {\n        +상태기반학습()\n    }\n    class 업데이터 {\n        +결과업데이트()\n    }\n    예측기준시점설정기 --> 상태추정네트워크 : \"예측 기준 시점 설정\"\n    상태추정네트워크 --> 상태전이네트워크 : \"생성된 벡터를 기반으로 학습\"\n    업데이터 --> 상태추정네트워크 : \"업데이트된 벡터를 기반으로 학습\"\n    업데이터 --> 상태전이네트워크 : \"업데이트된 벡터를 기반으로 학습\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "예측 기준 시점 설정기",
+          "component_type": "process",
+          "description": "관측된 데이터와 예측할 타임 스텝을 구분하는 기준 시점을 설정",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "상태 추정 네트워크",
+          "component_type": "actor",
+          "description": "히든 벡터 및 셀 벡터를 생성하는 제1 인공 신경망",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성된 벡터를 기반으로 학습",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "상태 전이 네트워크",
+          "component_type": "actor",
+          "description": "상태 추정 네트워크의 결과를 기반으로 학습하는 제2 인공 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "업데이터",
+          "component_type": "process",
+          "description": "새로운 타임 스텝의 관측 데이터를 이용하여 학습 결과를 업데이트",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "업데이트된 벡터를 기반으로 학습",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "업데이트된 벡터를 기반으로 학습",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020170097848/1020170097848_fig_2.mmd"
+    }
+  ]
+}

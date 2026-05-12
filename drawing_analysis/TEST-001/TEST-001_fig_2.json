@@ -1,0 +1,61 @@
+{
+  "fig_number": "도 2",
+  "title": "이미지 분류 방법의 처리 흐름도이다",
+  "diagram_type": "flowchart",
+  "purpose": "이미지 분류 방법의 처리 흐름도이다",
+  "figure_source_text": "도 2는 이미지 분류 방법의 처리 흐름도이다",
+  "elements": [
+    {
+      "id": "S100",
+      "ref_no": "S100",
+      "name": "이미지 입력",
+      "type": "process",
+      "description": "사용자가 이미지를 입력부에 제공한다.",
+      "source_text": "입력부(100)는 이미지를 입력받는다."
+    },
+    {
+      "id": "S200",
+      "ref_no": "S200",
+      "name": "이미지 전처리",
+      "type": "process",
+      "description": "전처리부에서 입력된 이미지를 전처리한다.",
+      "source_text": "전처리부(200)는 입력 이미지를 전처리한다."
+    },
+    {
+      "id": "S300",
+      "ref_no": "S300",
+      "name": "이미지 분석",
+      "type": "process",
+      "description": "CNN 모델부에서 전처리된 이미지를 분석한다.",
+      "source_text": "CNN 모델부(300)는 전처리된 이미지를 분석한다."
+    },
+    {
+      "id": "S400",
+      "ref_no": "S400",
+      "name": "결과 출력",
+      "type": "process",
+      "description": "출력부에서 분석 결과를 출력한다.",
+      "source_text": "출력부(400)는 분류 결과를 출력한다."
+    }
+  ],
+  "relations": [
+    {
+      "from": "S100",
+      "to": "S200",
+      "label": "다음 단계",
+      "source_text": "입력부(100)는 이미지를 입력받는다."
+    },
+    {
+      "from": "S200",
+      "to": "S300",
+      "label": "다음 단계",
+      "source_text": "전처리부(200)는 입력 이미지를 전처리한다."
+    },
+    {
+      "from": "S300",
+      "to": "S400",
+      "label": "다음 단계",
+      "source_text": "CNN 모델부(300)는 전처리된 이미지를 분석한다."
+    }
+  ]
+}

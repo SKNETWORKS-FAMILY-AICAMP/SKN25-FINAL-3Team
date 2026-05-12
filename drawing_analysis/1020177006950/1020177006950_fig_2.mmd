@@ -1,0 +1,23 @@
+%% 1020177006950 - mQA 모델 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 질의입력수신모듈 {
+        +String queryInput
+        +receiveQuery()
+    }
+    class 이미지입력수신모듈 {
+        +String imageInput
+        +receiveImage()
+    }
+    class mQA모델 {
+        +String response
+        +processInputs()
+    }
+    class 응답생성모듈 {
+        +String finalResponse
+        +generateResponse()
+    }
+    질의입력수신모듈 --> mQA모델 : "입력 받음"
+    이미지입력수신모듈 --> mQA모델 : "입력 받음"
+    mQA모델 --> 응답생성모듈 : "출력 받음"

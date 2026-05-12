@@ -1,0 +1,221 @@
+{
+  "app_num": "1020240129470",
+  "invention_type": "method",
+  "main_concept": "통합 학사 행정 플랫폼을 통한 공교육과 사교육 일정 통합 관리 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "통합 학사 행정 플랫폼 서버",
+      "component_type": "device",
+      "description": "공교육과 사교육 정보를 통합하여 관리하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "교육 수혜자 단말",
+      "component_type": "device",
+      "description": "학생 및 학부모가 사용하는 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연동",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "국가 교육 정보 플랫폼 서버",
+      "component_type": "device",
+      "description": "공교육 학사 일정 정보를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "클라우드 서버",
+      "component_type": "device",
+      "description": "사교육 학사 일정 정보를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "통합 학사 행정 앱",
+      "component_type": "device",
+      "description": "교육 수혜자가 학사 일정을 확인하고 관리하는 앱",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연동",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240129470",
+      "diagram_type": "flowchart",
+      "diagram_title": "통합 학사 행정 플랫폼 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"통합 학사 행정 플랫폼 서버\"]\n    200[\"교육 수혜자 단말\"]\n    300[\"국가 교육 정보 플랫폼 서버\"]\n    400[\"클라우드 서버\"]\n    500[\"통합 학사 행정 앱\"]\n    \n    200 -->|\"연동\"| 100\n    300 -->|\"정보 제공\"| 100\n    400 -->|\"정보 제공\"| 100\n    100 -->|\"학사 일정 정보 통합\"| 500\n    500 -->|\"제공\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "통합 학사 행정 플랫폼 서버",
+          "component_type": "device",
+          "description": "공교육과 사교육 정보를 통합하여 관리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "교육 수혜자 단말",
+          "component_type": "device",
+          "description": "학생 및 학부모가 사용하는 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "국가 교육 정보 플랫폼 서버",
+          "component_type": "device",
+          "description": "공교육 학사 일정 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "클라우드 서버",
+          "component_type": "device",
+          "description": "사교육 학사 일정 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "통합 학사 행정 앱",
+          "component_type": "device",
+          "description": "교육 수혜자가 학사 일정을 확인하고 관리하는 앱",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240129470/1020240129470_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240129470",
+      "diagram_type": "classDiagram",
+      "diagram_title": "통합 학사 행정 플랫폼 구성도",
+      "mermaid_code": "classDiagram\n    class 통합_학사_행정_플랫폼_서버 {\n        +String 공교육_정보\n        +String 사교육_정보\n        +통합_관리()\n    }\n    class 교육_수혜자_단말 {\n        +String 사용자_정보\n        +연동()\n    }\n    class 국가_교육_정보_플랫폼_서버 {\n        +String 공교육_일정\n        +정보_제공()\n    }\n    class 클라우드_서버 {\n        +String 사교육_일정\n        +정보_제공()\n    }\n    class 통합_학사_행정_앱 {\n        +String 일정_관리\n        +연동()\n    }\n    교육_수혜자_단말 --> 통합_학사_행정_플랫폼_서버 : \"연동\"\n    국가_교육_정보_플랫폼_서버 --> 통합_학사_행정_플랫폼_서버 : \"정보 제공\"\n    클라우드_서버 --> 통합_학사_행정_플랫폼_서버 : \"정보 제공\"\n    통합_학사_행정_앱 --> 통합_학사_행정_플랫폼_서버 : \"연동\"\n    통합_학사_행정_앱 --> 교육_수혜자_단말 : \"제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "통합 학사 행정 플랫폼 서버",
+          "component_type": "device",
+          "description": "공교육과 사교육 정보를 통합하여 관리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "교육 수혜자 단말",
+          "component_type": "device",
+          "description": "학생 및 학부모가 사용하는 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "국가 교육 정보 플랫폼 서버",
+          "component_type": "device",
+          "description": "공교육 학사 일정 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "클라우드 서버",
+          "component_type": "device",
+          "description": "사교육 학사 일정 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "통합 학사 행정 앱",
+          "component_type": "device",
+          "description": "교육 수혜자가 학사 일정을 확인하고 관리하는 앱",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240129470/1020240129470_fig_2.mmd"
+    }
+  ]
+}

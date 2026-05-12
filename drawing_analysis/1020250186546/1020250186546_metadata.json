@@ -1,0 +1,266 @@
+{
+  "app_num": "1020250186546",
+  "invention_type": "hybrid",
+  "main_concept": "오프라인 매장에서 상품을 결제하고 수령하는 하이브리드 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서비스 서버",
+      "component_type": "data",
+      "description": "상품 정보 및 결제 정보를 처리하고 전송하는 서버",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "정보 전송",
+          "direction": "->"
+        },
+        {
+          "target": "20",
+          "label": "정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "택배 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "10",
+      "name": "사용자 단말기",
+      "component_type": "device",
+      "description": "사용자가 상품을 스캔하고 결제하는 단말기",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 요청",
+          "direction": "->"
+        },
+        {
+          "target": "20",
+          "label": "픽업 준비 완료 코드 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "20",
+      "name": "매장 단말기",
+      "component_type": "device",
+      "description": "매장 직원이 사용하는 단말기로 결제 정보를 수신하고 처리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "10",
+          "label": "픽업 준비 완료 코드 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "택배사 서버",
+      "component_type": "data",
+      "description": "택배 수령지 정보를 처리하고 상품을 배송하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "택배 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "매장",
+      "component_type": "actor",
+      "description": "사용자가 방문하여 상품을 선택하고 결제하는 장소",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250186546",
+      "diagram_type": "classDiagram",
+      "diagram_title": "하이브리드 스토어 결제 시스템",
+      "mermaid_code": "classDiagram\n    class 서비스서버 {\n        +String 상품정보\n        +String 결제정보\n        +정보전송()\n        +정보수신()\n    }\n    class 사용자단말기 {\n        +String 상품코드\n        +정보요청()\n        +픽업준비완료코드전송()\n    }\n    class 매장단말기 {\n        +String 결제정보\n        +결제정보수신()\n        +픽업준비완료코드수신()\n    }\n    class 택배사서버 {\n        +String 택배정보\n        +택배정보수신()\n    }\n    class 매장 {\n        +String 위치\n        +상품선택()\n        +결제()\n    }\n    서비스서버 --> 사용자단말기 : \"정보 전송\"\n    사용자단말기 --> 서비스서버 : \"정보 요청\"\n    서비스서버 --> 매장단말기 : \"결제 정보 전송\"\n    매장단말기 --> 서비스서버 : \"결제 정보 수신\"\n    서비스서버 --> 택배사서버 : \"택배 정보 전송\"\n    택배사서버 --> 서비스서버 : \"택배 정보 수신\"\n    사용자단말기 --> 매장단말기 : \"픽업 준비 완료 코드 전송\"\n    매장단말기 --> 사용자단말기 : \"픽업 준비 완료 코드 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서비스 서버",
+          "component_type": "data",
+          "description": "상품 정보 및 결제 정보를 처리하고 전송하는 서버",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "택배 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "10",
+          "name": "사용자 단말기",
+          "component_type": "device",
+          "description": "사용자가 상품을 스캔하고 결제하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "픽업 준비 완료 코드 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "20",
+          "name": "매장 단말기",
+          "component_type": "device",
+          "description": "매장 직원이 사용하는 단말기로 결제 정보를 수신하고 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "10",
+              "label": "픽업 준비 완료 코드 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "택배사 서버",
+          "component_type": "data",
+          "description": "택배 수령지 정보를 처리하고 상품을 배송하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "택배 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "매장",
+          "component_type": "actor",
+          "description": "사용자가 방문하여 상품을 선택하고 결제하는 장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250186546/1020250186546_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250186546",
+      "diagram_type": "flowchart",
+      "diagram_title": "하이브리드 스토어 상품 결제 및 수령 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서비스 서버\"]\n    10[\"사용자 단말기\"]\n    20[\"매장 단말기\"]\n    300[\"택배사 서버\"]\n    200[\"매장\"]\n    \n    10 -->|\"상품 코드 스캔하여 정보 요청\"| 100\n    100 -->|\"상품 정보 전송\"| 10\n    10 -->|\"결제 후 수령 방법 선택\"| 100\n    100 -->|\"결제 정보 전송\"| 20\n    20 -->|\"결제 정보 수신\"| 100\n    20 -->|\"반출 준비 완료 정보 전송\"| 100\n    100 -->|\"택배 정보 전송\"| 300\n    10 -->|\"픽업 준비 완료 코드 전송\"| 20\n    10 -->|\"취소 요청 시 정보 전송\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서비스 서버",
+          "component_type": "data",
+          "description": "상품 정보 및 결제 정보를 처리하고 전송하는 서버",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "택배 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "10",
+          "name": "사용자 단말기",
+          "component_type": "device",
+          "description": "사용자가 상품을 스캔하고 결제하는 단말기",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 요청",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "픽업 준비 완료 코드 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "20",
+          "name": "매장 단말기",
+          "component_type": "device",
+          "description": "매장 직원이 사용하는 단말기로 결제 정보를 수신하고 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "10",
+              "label": "픽업 준비 완료 코드 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "택배사 서버",
+          "component_type": "data",
+          "description": "택배 수령지 정보를 처리하고 상품을 배송하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "택배 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "매장",
+          "component_type": "actor",
+          "description": "사용자가 방문하여 상품을 선택하고 결제하는 장소",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250186546/1020250186546_fig_2.mmd"
+    }
+  ]
+}

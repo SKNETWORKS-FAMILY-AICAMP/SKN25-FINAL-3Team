@@ -1,0 +1,167 @@
+{
+  "app_num": "1020230107281",
+  "invention_type": "method",
+  "main_concept": "자산 거래를 지원하기 위한 방법 및 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제1 수신부",
+      "component_type": "device",
+      "description": "제1 거래자 노드로부터 자산 거래 요청 정보를 수신하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "생성부",
+      "component_type": "device",
+      "description": "자산 거래 요청 정보를 참조하여 제1 링크를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "자산 거래 요청 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 수신부",
+      "component_type": "device",
+      "description": "제2 거래자 노드로부터 자산 거래 수락 정보를 수신하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제1 링크를 통해 접속",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "자산 거래 관리부",
+      "component_type": "device",
+      "description": "자산 거래 수락 정보를 참조하여 거래 체결을 확정하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "자산 거래 수락 정보 참조",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230107281",
+      "diagram_type": "classDiagram",
+      "diagram_title": "자산 거래 지원 시스템 전체 구성도",
+      "mermaid_code": "classDiagram\n    class 제1수신부 {\n        +String 거래요청정보\n        +receiveRequest()\n    }\n    class 생성부 {\n        +String 링크정보\n        +createLink()\n    }\n    class 제2수신부 {\n        +String 거래수락정보\n        +receiveAcceptance()\n    }\n    class 자산거래관리부 {\n        +confirmTransaction()\n    }\n    제1수신부 --> 생성부 : \"자산 거래 요청 정보 수신\"\n    생성부 --> 제2수신부 : \"제1 링크를 통해 접속\"\n    제2수신부 --> 자산거래관리부 : \"자산 거래 수락 정보 참조\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 수신부",
+          "component_type": "device",
+          "description": "제1 거래자 노드로부터 자산 거래 요청 정보를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "생성부",
+          "component_type": "device",
+          "description": "자산 거래 요청 정보를 참조하여 제1 링크를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "자산 거래 요청 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 수신부",
+          "component_type": "device",
+          "description": "제2 거래자 노드로부터 자산 거래 수락 정보를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제1 링크를 통해 접속",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "자산 거래 관리부",
+          "component_type": "device",
+          "description": "자산 거래 수락 정보를 참조하여 거래 체결을 확정하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "자산 거래 수락 정보 참조",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230107281/1020230107281_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230107281",
+      "diagram_type": "flowchart",
+      "diagram_title": "자산 거래 지원 시스템 내부 구성도",
+      "mermaid_code": "flowchart TD\n    100[\"제1 수신부\"]\n    200[\"생성부\"]\n    300[\"제2 수신부\"]\n    400[\"자산 거래 관리부\"]\n    100 -->|\"자산 거래 요청 정보 수신\"| 200\n    200 -->|\"제1 링크를 통해 접속\"| 300\n    300 -->|\"자산 거래 수락 정보 참조\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 수신부",
+          "component_type": "device",
+          "description": "제1 거래자 노드로부터 자산 거래 요청 정보를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "생성부",
+          "component_type": "device",
+          "description": "자산 거래 요청 정보를 참조하여 제1 링크를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "자산 거래 요청 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 수신부",
+          "component_type": "device",
+          "description": "제2 거래자 노드로부터 자산 거래 수락 정보를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제1 링크를 통해 접속",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "자산 거래 관리부",
+          "component_type": "device",
+          "description": "자산 거래 수락 정보를 참조하여 거래 체결을 확정하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "자산 거래 수락 정보 참조",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230107281/1020230107281_fig_2.mmd"
+    }
+  ]
+}

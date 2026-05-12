@@ -1,0 +1,182 @@
+{
+  "app_num": "1020240128601",
+  "invention_type": "method",
+  "main_concept": "키워드 트렌드를 디스플레이하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제1 오브젝트",
+      "component_type": "actor",
+      "description": "타겟 키워드를 입력 받는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제2 오브젝트",
+      "component_type": "actor",
+      "description": "시간 범위를 수신하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 받음",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "키워드 변동 정보",
+      "component_type": "data",
+      "description": "키워드의 순위 변동 정보를 포함",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연관됨",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연관됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "그래프",
+      "component_type": "device",
+      "description": "키워드 변동 정보를 시각화하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240128601",
+      "diagram_type": "flowchart",
+      "diagram_title": "키워드 트렌드 디스플레이 방법",
+      "mermaid_code": "flowchart TD\n    100[\"제1 오브젝트\\n(타겟 키워드 입력)\"]\n    200[\"제2 오브젝트\\n(시간 범위 수신)\"]\n    300[\"키워드 변동 정보\\n(순위 변동 정보 포함)\"]\n    400[\"그래프\\n(변동 정보 시각화)\"]\n    100 -->|\"입력 받음\"| 200\n    100 -->|\"연관됨\"| 300\n    200 -->|\"연관됨\"| 300\n    300 -->|\"데이터 제공\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 오브젝트",
+          "component_type": "actor",
+          "description": "타겟 키워드를 입력 받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제2 오브젝트",
+          "component_type": "actor",
+          "description": "시간 범위를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 받음",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "키워드 변동 정보",
+          "component_type": "data",
+          "description": "키워드의 순위 변동 정보를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연관됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연관됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "그래프",
+          "component_type": "device",
+          "description": "키워드 변동 정보를 시각화하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240128601/1020240128601_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240128601",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자 {\n        +String 타겟키워드\n        +inputKeyword()\n    }\n    class 검색엔진 {\n        +String 시간범위\n        +receiveTimeRange()\n    }\n    class 키워드변동정보 {\n        +String 순위변동정보\n    }\n    class 그래프 {\n        +visualize()\n    }\n    사용자 --> 검색엔진 : \"입력 받음\"\n    사용자 --> 키워드변동정보 : \"연관됨\"\n    검색엔진 --> 키워드변동정보 : \"연관됨\"\n    키워드변동정보 --> 그래프 : \"데이터 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 오브젝트",
+          "component_type": "actor",
+          "description": "타겟 키워드를 입력 받는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제2 오브젝트",
+          "component_type": "actor",
+          "description": "시간 범위를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 받음",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "키워드 변동 정보",
+          "component_type": "data",
+          "description": "키워드의 순위 변동 정보를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연관됨",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연관됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "그래프",
+          "component_type": "device",
+          "description": "키워드 변동 정보를 시각화하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240128601/1020240128601_fig_2.mmd"
+    }
+  ]
+}

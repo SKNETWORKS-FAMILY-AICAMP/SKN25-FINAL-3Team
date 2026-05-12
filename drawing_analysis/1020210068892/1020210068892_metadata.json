@@ -1,0 +1,206 @@
+{
+  "app_num": "1020210068892",
+  "invention_type": "method",
+  "main_concept": "생체시료에서 핵산을 추출하고 인공지능 모델을 이용하여 암 진단 및 암 종 예측을 수행하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "해독부",
+      "component_type": "process",
+      "description": "생체시료에서 핵산을 추출하여 서열정보를 획득하는 단계",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "정렬부",
+      "component_type": "process",
+      "description": "획득한 서열정보를 표준 염색체 서열 데이터베이스에 정렬하는 단계",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서열정보를 입력받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "이미지 생성부",
+      "component_type": "process",
+      "description": "정렬된 서열정보를 이용하여 핵산단편의 크기 및 커버리지 정보가 포함된 이미지를 생성하는 단계",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정렬된 서열정보를 입력받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "암 진단부",
+      "component_type": "process",
+      "description": "생성된 이미지를 인공지능 모델에 입력하여 암 유무를 판별하는 단계",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "생성된 이미지를 입력받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "암 종 예측부",
+      "component_type": "process",
+      "description": "출력 결과값을 분석하여 암 종을 예측하는 단계",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "출력 결과값을 입력받음",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210068892",
+      "diagram_type": "flowchart",
+      "diagram_title": "암 진단 및 암 종 예측 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"해독부\"]\n    200[\"정렬부\"]\n    300[\"이미지 생성부\"]\n    400[\"암 진단부\"]\n    500[\"암 종 예측부\"]\n    100 -->|\"서열정보를 입력받음\"| 200\n    200 -->|\"정렬된 서열정보를 입력받음\"| 300\n    300 -->|\"생성된 이미지를 입력받음\"| 400\n    400 -->|\"출력 결과값을 입력받음\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "해독부",
+          "component_type": "process",
+          "description": "생체시료에서 핵산을 추출하여 서열정보를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정렬부",
+          "component_type": "process",
+          "description": "획득한 서열정보를 표준 염색체 서열 데이터베이스에 정렬하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서열정보를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 생성부",
+          "component_type": "process",
+          "description": "정렬된 서열정보를 이용하여 핵산단편의 크기 및 커버리지 정보가 포함된 이미지를 생성하는 단계",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정렬된 서열정보를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "암 진단부",
+          "component_type": "process",
+          "description": "생성된 이미지를 인공지능 모델에 입력하여 암 유무를 판별하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성된 이미지를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "암 종 예측부",
+          "component_type": "process",
+          "description": "출력 결과값을 분석하여 암 종을 예측하는 단계",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "출력 결과값을 입력받음",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210068892/1020210068892_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210068892",
+      "diagram_type": "classDiagram",
+      "diagram_title": "암 진단 및 예측 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 해독부 {\n        +핵산 추출()\n    }\n    class 정렬부 {\n        +서열정보 정렬()\n    }\n    class 이미지생성부 {\n        +이미지 생성()\n    }\n    class 암진단부 {\n        +암 유무 판별()\n    }\n    class 암종예측부 {\n        +암 종 예측()\n    }\n    해독부 --> 정렬부 : \"서열정보를 입력받음\"\n    정렬부 --> 이미지생성부 : \"정렬된 서열정보를 입력받음\"\n    이미지생성부 --> 암진단부 : \"생성된 이미지를 입력받음\"\n    암진단부 --> 암종예측부 : \"출력 결과값을 입력받음\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "해독부",
+          "component_type": "process",
+          "description": "생체시료에서 핵산을 추출하여 서열정보를 획득하는 단계",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정렬부",
+          "component_type": "process",
+          "description": "획득한 서열정보를 표준 염색체 서열 데이터베이스에 정렬하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서열정보를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 생성부",
+          "component_type": "process",
+          "description": "정렬된 서열정보를 이용하여 핵산단편의 크기 및 커버리지 정보가 포함된 이미지를 생성하는 단계",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정렬된 서열정보를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "암 진단부",
+          "component_type": "process",
+          "description": "생성된 이미지를 인공지능 모델에 입력하여 암 유무를 판별하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성된 이미지를 입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "암 종 예측부",
+          "component_type": "process",
+          "description": "출력 결과값을 분석하여 암 종을 예측하는 단계",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "출력 결과값을 입력받음",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210068892/1020210068892_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "app_num": "1020210046441",
+  "invention_type": "method",
+  "main_concept": "이미지를 기초로 객체에 대한 정보를 획득하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "타겟 이미지를 획득하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "인공신경망",
+      "component_type": "process",
+      "description": "타겟 이미지에서 객체 정보를 산출하는 알고리즘",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "타겟 이미지 획득",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "객체 정보 산출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제어부",
+      "component_type": "device",
+      "description": "산출된 객체 정보를 출력하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "객체 정보 입력",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210046441",
+      "diagram_type": "flowchart",
+      "diagram_title": "이미지 기반 객체 정보 획득 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"카메라\"]\n    200[\"인공신경망\"]\n    300[\"제어부\"]\n    100 -->|\"타겟 이미지 획득\"| 200\n    200 -->|\"객체 정보 산출\"| 300\n    300 <--|\"객체 정보 입력\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "타겟 이미지를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공신경망",
+          "component_type": "process",
+          "description": "타겟 이미지에서 객체 정보를 산출하는 알고리즘",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "타겟 이미지 획득",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "객체 정보 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "산출된 객체 정보를 출력하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "객체 정보 입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210046441/1020210046441_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210046441",
+      "diagram_type": "classDiagram",
+      "diagram_title": "객체 정보 획득 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 카메라 {\n        +String 타겟이미지\n        +획득()\n    }\n    class 인공신경망 {\n        +String 객체정보\n        +산출()\n    }\n    class 제어부 {\n        +String 출력정보\n        +출력()\n    }\n    카메라 --> 인공신경망 : \"타겟 이미지 획득\"\n    인공신경망 --> 제어부 : \"객체 정보 산출\"\n    제어부 <-- 인공신경망 : \"객체 정보 입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "타겟 이미지를 획득하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공신경망",
+          "component_type": "process",
+          "description": "타겟 이미지에서 객체 정보를 산출하는 알고리즘",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "타겟 이미지 획득",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "객체 정보 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "산출된 객체 정보를 출력하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "객체 정보 입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210046441/1020210046441_fig_2.mmd"
+    }
+  ]
+}

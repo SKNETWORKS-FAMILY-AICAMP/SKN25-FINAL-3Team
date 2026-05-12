@@ -1,0 +1,143 @@
+{
+  "app_num": "1020160153100",
+  "invention_type": "method",
+  "main_concept": "하드디스크의 스핀업과 스핀다운을 제어하여 전력 소비를 줄이는 스토리지 서버의 관리 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "결정부",
+      "component_type": "process",
+      "description": "최대 활성 디스크 수를 결정하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제어부",
+      "component_type": "process",
+      "description": "하드디스크의 스핀업과 스핀다운을 제어하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결정된 최대 활성 디스크 수에 따라",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "생성부",
+      "component_type": "process",
+      "description": "하드디스크 그룹을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결정된 최대 활성 디스크 수에 따라",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "제어부와 협력하여",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020160153100",
+      "diagram_type": "flowchart",
+      "diagram_title": "하드디스크 스핀업/스핀다운 제어 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"결정부\"]\n    200[\"제어부\"]\n    300[\"생성부\"]\n    100 -->|\"결정된 최대 활성 디스크 수에 따라\"| 200\n    100 -->|\"결정된 최대 활성 디스크 수에 따라\"| 300\n    200 -->|\"제어부와 협력하여\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "결정부",
+          "component_type": "process",
+          "description": "최대 활성 디스크 수를 결정하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "하드디스크의 스핀업과 스핀다운을 제어하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결정된 최대 활성 디스크 수에 따라",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "생성부",
+          "component_type": "process",
+          "description": "하드디스크 그룹을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결정된 최대 활성 디스크 수에 따라",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어부와 협력하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020160153100/1020160153100_fig_1.mmd"
+    },
+    {
+      "app_num": "1020160153100",
+      "diagram_type": "classDiagram",
+      "diagram_title": "스토리지 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 결정부 {\n        +최대 활성 디스크 수 결정()\n    }\n    class 제어부 {\n        +스핀업 및 스핀다운 제어()\n    }\n    class 생성부 {\n        +하드디스크 그룹 생성()\n    }\n    결정부 --> 제어부 : \"결정된 최대 활성 디스크 수에 따라\"\n    결정부 --> 생성부 : \"결정된 최대 활성 디스크 수에 따라\"\n    생성부 --> 제어부 : \"제어부와 협력하여\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "결정부",
+          "component_type": "process",
+          "description": "최대 활성 디스크 수를 결정하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "하드디스크의 스핀업과 스핀다운을 제어하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결정된 최대 활성 디스크 수에 따라",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "생성부",
+          "component_type": "process",
+          "description": "하드디스크 그룹을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결정된 최대 활성 디스크 수에 따라",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어부와 협력하여",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020160153100/1020160153100_fig_2.mmd"
+    }
+  ]
+}

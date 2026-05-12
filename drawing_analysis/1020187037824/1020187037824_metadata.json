@@ -1,0 +1,197 @@
+{
+  "app_num": "1020187037824",
+  "invention_type": "system",
+  "main_concept": "신경망을 훈련시키기 위한 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "신경망",
+      "component_type": "data",
+      "description": "입력 이미지의 반전 피처를 결정하는 신경망",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "순방향 물리적 모델",
+      "component_type": "process",
+      "description": "반전 피처로부터 출력 이미지를 생성하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "잔여 계층",
+      "component_type": "process",
+      "description": "입력 이미지와 출력 이미지 간의 차이를 결정하는 계층",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "컴퓨터 서브 시스템",
+      "component_type": "actor",
+      "description": "신경망 훈련을 위한 컴퓨터 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "훈련",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "운영",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "운영",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020187037824",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경망 훈련 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"신경망\"]\n    200[\"순방향 물리적 모델\"]\n    300[\"잔여 계층\"]\n    400[\"컴퓨터 서브 시스템\"]\n    400 -->|\"훈련\"| 100\n    100 -->|\"입력 이미지의 훈련 세트 입력\"| 200\n    200 -->|\"출력 이미지 세트 생성\"| 300\n    300 -->|\"입력 이미지와 출력 이미지 간의 차이 결정\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "신경망",
+          "component_type": "data",
+          "description": "입력 이미지의 반전 피처를 결정하는 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "순방향 물리적 모델",
+          "component_type": "process",
+          "description": "반전 피처로부터 출력 이미지를 생성하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "잔여 계층",
+          "component_type": "process",
+          "description": "입력 이미지와 출력 이미지 간의 차이를 결정하는 계층",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컴퓨터 서브 시스템",
+          "component_type": "actor",
+          "description": "신경망 훈련을 위한 컴퓨터 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "훈련",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "운영",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "운영",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020187037824/1020187037824_fig_1.mmd"
+    },
+    {
+      "app_num": "1020187037824",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경망 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 신경망 {\n        +String 반전피처\n        +훈련()\n    }\n    class 순방향물리적모델 {\n        +String 출력이미지\n        +생성()\n    }\n    class 잔여계층 {\n        +String 차이\n        +결정()\n    }\n    class 컴퓨터서브시스템 {\n        +String 시스템정보\n        +운영()\n    }\n    컴퓨터서브시스템 --> 신경망 : \"훈련\"\n    신경망 --> 순방향물리적모델 : \"입력\"\n    순방향물리적모델 --> 잔여계층 : \"입력\"\n    컴퓨터서브시스템 --> 순방향물리적모델 : \"운영\"\n    컴퓨터서브시스템 --> 잔여계층 : \"운영\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "신경망",
+          "component_type": "data",
+          "description": "입력 이미지의 반전 피처를 결정하는 신경망",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "순방향 물리적 모델",
+          "component_type": "process",
+          "description": "반전 피처로부터 출력 이미지를 생성하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "잔여 계층",
+          "component_type": "process",
+          "description": "입력 이미지와 출력 이미지 간의 차이를 결정하는 계층",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "컴퓨터 서브 시스템",
+          "component_type": "actor",
+          "description": "신경망 훈련을 위한 컴퓨터 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "훈련",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "운영",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "운영",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020187037824/1020187037824_fig_2.mmd"
+    }
+  ]
+}

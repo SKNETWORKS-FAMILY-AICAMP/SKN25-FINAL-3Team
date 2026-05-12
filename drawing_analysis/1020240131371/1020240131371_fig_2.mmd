@@ -1,0 +1,24 @@
+%% 1020240131371 - 의료 영상 분석 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제어부 {
+        +String 사용자_단말
+        +selectTarget()
+        +selectModel()
+        +processImage()
+        +generateMeasurement()
+    }
+    class 의료영상 {
+        +String imageData
+    }
+    class 측정값 {
+        +String measurementData
+    }
+    class 분석모델 {
+        +String algorithm
+        +identifyComponents()
+    }
+    제어부 --> 의료영상 : "의료 영상을 처리"
+    제어부 --> 측정값 : "측정 값을 생성"
+    제어부 --> 분석모델 : "제어부에 의해 선택됨"

@@ -1,0 +1,281 @@
+{
+  "app_num": "1020220092735",
+  "invention_type": "system",
+  "main_concept": "메타버스 기반 이커머스 및 토지분할소유권 증권거래 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "클라이언트",
+      "component_type": "actor",
+      "description": "메타버스 이커머스 서비스에 접속하는 사용자",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메타버스/이커머스 관리서버",
+      "component_type": "device",
+      "description": "이커머스 서비스 및 수익 분배를 관리하는 서버",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "증권거래소 운영서버",
+      "component_type": "device",
+      "description": "증권 거래를 관리하고 운영하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "IPO 서비스부",
+      "component_type": "process",
+      "description": "상장 대상 도시의 IPO를 관리하는 프로세스",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "연계",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "데이터 수집부",
+      "component_type": "process",
+      "description": "메타버스-도시의 데이터를 수집하는 프로세스",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "상장여부 판단부",
+      "component_type": "process",
+      "description": "비상장 도시의 상장 여부를 판단하는 프로세스",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "결정",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "결제/배송 서비스부",
+      "component_type": "process",
+      "description": "구매 아이템의 결제 및 배송을 처리하는 서비스",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220092735",
+      "diagram_type": "flowchart",
+      "diagram_title": "메타버스 이커머스 및 증권거래 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"클라이언트\"]\n    200[\"메타버스/이커머스 관리서버\"]\n    300[\"증권거래소 운영서버\"]\n    400[\"IPO 서비스부\"]\n    500[\"데이터 수집부\"]\n    600[\"상장여부 판단부\"]\n    700[\"결제/배송 서비스부\"]\n\n    100 -->|\"접속\"| 200\n    200 -->|\"제공\"| 300\n    300 -->|\"제어\"| 400\n    400 -->|\"결정\"| 600\n    200 -->|\"데이터 제공\"| 500\n    300 -->|\"연계\"| 400\n    700 -->|\"처리\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "클라이언트",
+          "component_type": "actor",
+          "description": "메타버스 이커머스 서비스에 접속하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메타버스/이커머스 관리서버",
+          "component_type": "device",
+          "description": "이커머스 서비스 및 수익 분배를 관리하는 서버",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "증권거래소 운영서버",
+          "component_type": "device",
+          "description": "증권 거래를 관리하고 운영하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "IPO 서비스부",
+          "component_type": "process",
+          "description": "상장 대상 도시의 IPO를 관리하는 프로세스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연계",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "메타버스-도시의 데이터를 수집하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "상장여부 판단부",
+          "component_type": "process",
+          "description": "비상장 도시의 상장 여부를 판단하는 프로세스",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "결제/배송 서비스부",
+          "component_type": "process",
+          "description": "구매 아이템의 결제 및 배송을 처리하는 서비스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220092735/1020220092735_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220092735",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 클라이언트 {\n        +String 사용자정보\n    }\n    class 메타버스_이커머스_관리서버 {\n        +String 수익관리\n        +manageRevenue()\n    }\n    class 증권거래소_운영서버 {\n        +String 상장여부\n        +operateExchange()\n    }\n    class IPO_서비스부 {\n        +String IPO정보\n        +manageIPO()\n    }\n    class 데이터_수집부 {\n        +String 메타버스데이터\n        +collectData()\n    }\n    class 상장여부_판단부 {\n        +String 판단결과\n        +determineListing()\n    }\n    class 결제_배송_서비스부 {\n        +String 주문정보\n        +processPayment()\n    }\n\n    클라이언트 --> 메타버스_이커머스_관리서버 : \"접속\"\n    메타버스_이커머스_관리서버 --> 증권거래소_운영서버 : \"제공\"\n    증권거래소_운영서버 --> IPO_서비스부 : \"제어\"\n    IPO_서비스부 --> 증권거래소_운영서버 : \"연계\"\n    메타버스_이커머스_관리서버 --> 데이터_수집부 : \"데이터 제공\"\n    데이터_수집부 --> 메타버스_이커머스_관리서버 : \"데이터 수집\"\n    증권거래소_운영서버 --> 상장여부_판단부 : \"결정\"\n    상장여부_판단부 --> IPO_서비스부 : \"결정\"\n    결제_배송_서비스부 --> 메타버스_이커머스_관리서버 : \"결제 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "클라이언트",
+          "component_type": "actor",
+          "description": "메타버스 이커머스 서비스에 접속하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메타버스/이커머스 관리서버",
+          "component_type": "device",
+          "description": "이커머스 서비스 및 수익 분배를 관리하는 서버",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "증권거래소 운영서버",
+          "component_type": "device",
+          "description": "증권 거래를 관리하고 운영하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "IPO 서비스부",
+          "component_type": "process",
+          "description": "상장 대상 도시의 IPO를 관리하는 프로세스",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연계",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "메타버스-도시의 데이터를 수집하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "상장여부 판단부",
+          "component_type": "process",
+          "description": "비상장 도시의 상장 여부를 판단하는 프로세스",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "결제/배송 서비스부",
+          "component_type": "process",
+          "description": "구매 아이템의 결제 및 배송을 처리하는 서비스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220092735/1020220092735_fig_2.mmd"
+    }
+  ]
+}

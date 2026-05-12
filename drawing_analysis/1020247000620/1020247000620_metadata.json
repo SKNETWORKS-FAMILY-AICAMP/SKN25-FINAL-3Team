@@ -1,0 +1,305 @@
+{
+  "app_num": "1020247000620",
+  "invention_type": "method",
+  "main_concept": "안과용 렌즈의 이미지 분석 및 결함 분류 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제1 이미지",
+      "component_type": "data",
+      "description": "제1 안과용 렌즈의 렌즈 에지 이미지",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "처리하여 결함 분석",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "에지 컨볼루션 신경망",
+      "component_type": "process",
+      "description": "렌즈 에지 결함을 분석하는 AI 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "CAM 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "클래스 활성화 맵(CAM)",
+      "component_type": "data",
+      "description": "결함 영역을 라벨링한 데이터",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "분류 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제1 분류된 이미지",
+      "component_type": "data",
+      "description": "렌즈 결함에 대한 분류 결과",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "제2 이미지",
+      "component_type": "data",
+      "description": "제2 안과용 렌즈의 렌즈 표면 이미지",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "처리하여 결함 분석",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "표면 컨볼루션 신경망",
+      "component_type": "process",
+      "description": "렌즈 표면 결함을 분석하는 AI 모델",
+      "relationships": [
+        {
+          "target": "700",
+          "label": "CAM 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "라벨링된 CAM",
+      "component_type": "data",
+      "description": "렌즈 표면 결함 영역을 라벨링한 데이터",
+      "relationships": [
+        {
+          "target": "800",
+          "label": "분류 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "제2 분류된 이미지",
+      "component_type": "data",
+      "description": "렌즈 표면 결함에 대한 분류 결과",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020247000620",
+      "diagram_type": "flowchart",
+      "diagram_title": "안과용 렌즈 검사 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"제1 이미지\"]\n    200[\"에지 컨볼루션 신경망\"]\n    300[\"클래스 활성화 맵(CAM)\"]\n    400[\"제1 분류된 이미지\"]\n    500[\"제2 이미지\"]\n    600[\"표면 컨볼루션 신경망\"]\n    700[\"라벨링된 CAM\"]\n    800[\"제2 분류된 이미지\"]\n\n    100 -->|\"처리하여 결함 분석\"| 200\n    200 -->|\"CAM 생성\"| 300\n    300 -->|\"분류 생성\"| 400\n    500 -->|\"처리하여 결함 분석\"| 600\n    600 -->|\"CAM 생성\"| 700\n    700 -->|\"분류 생성\"| 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 이미지",
+          "component_type": "data",
+          "description": "제1 안과용 렌즈의 렌즈 에지 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "처리하여 결함 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "에지 컨볼루션 신경망",
+          "component_type": "process",
+          "description": "렌즈 에지 결함을 분석하는 AI 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "CAM 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "클래스 활성화 맵(CAM)",
+          "component_type": "data",
+          "description": "결함 영역을 라벨링한 데이터",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "분류 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 분류된 이미지",
+          "component_type": "data",
+          "description": "렌즈 결함에 대한 분류 결과",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "제2 이미지",
+          "component_type": "data",
+          "description": "제2 안과용 렌즈의 렌즈 표면 이미지",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "처리하여 결함 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "표면 컨볼루션 신경망",
+          "component_type": "process",
+          "description": "렌즈 표면 결함을 분석하는 AI 모델",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "CAM 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "라벨링된 CAM",
+          "component_type": "data",
+          "description": "렌즈 표면 결함 영역을 라벨링한 데이터",
+          "relationships": [
+            {
+              "target": "800",
+              "label": "분류 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "제2 분류된 이미지",
+          "component_type": "data",
+          "description": "렌즈 표면 결함에 대한 분류 결과",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020247000620/1020247000620_fig_1.mmd"
+    },
+    {
+      "app_num": "1020247000620",
+      "diagram_type": "classDiagram",
+      "diagram_title": "AI 모델 구조",
+      "mermaid_code": "classDiagram\n    class 제1이미지 {\n        +String 렌즈에지이미지\n        +processEdge()\n    }\n    class 에지컨볼루션신경망 {\n        +String 모델\n        +analyzeEdge()\n    }\n    class 클래스활성화맵CAM {\n        +String 결함영역\n        +labeling()\n    }\n    class 제1분류된이미지 {\n        +String 결함분류결과\n    }\n    class 제2이미지 {\n        +String 렌즈표면이미지\n        +processSurface()\n    }\n    class 표면컨볼루션신경망 {\n        +String 모델\n        +analyzeSurface()\n    }\n    class 라벨링된CAM {\n        +String 결함영역\n        +labeling()\n    }\n    class 제2분류된이미지 {\n        +String 결함분류결과\n    }\n\n    제1이미지 --> 에지컨볼루션신경망 : \"처리하여 결함 분석\"\n    에지컨볼루션신경망 --> 클래스활성화맵CAM : \"CAM 생성\"\n    클래스활성화맵CAM --> 제1분류된이미지 : \"분류 생성\"\n    제2이미지 --> 표면컨볼루션신경망 : \"처리하여 결함 분석\"\n    표면컨볼루션신경망 --> 라벨링된CAM : \"CAM 생성\"\n    라벨링된CAM --> 제2분류된이미지 : \"분류 생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 이미지",
+          "component_type": "data",
+          "description": "제1 안과용 렌즈의 렌즈 에지 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "처리하여 결함 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "에지 컨볼루션 신경망",
+          "component_type": "process",
+          "description": "렌즈 에지 결함을 분석하는 AI 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "CAM 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "클래스 활성화 맵(CAM)",
+          "component_type": "data",
+          "description": "결함 영역을 라벨링한 데이터",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "분류 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 분류된 이미지",
+          "component_type": "data",
+          "description": "렌즈 결함에 대한 분류 결과",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "제2 이미지",
+          "component_type": "data",
+          "description": "제2 안과용 렌즈의 렌즈 표면 이미지",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "처리하여 결함 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "표면 컨볼루션 신경망",
+          "component_type": "process",
+          "description": "렌즈 표면 결함을 분석하는 AI 모델",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "CAM 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "라벨링된 CAM",
+          "component_type": "data",
+          "description": "렌즈 표면 결함 영역을 라벨링한 데이터",
+          "relationships": [
+            {
+              "target": "800",
+              "label": "분류 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "제2 분류된 이미지",
+          "component_type": "data",
+          "description": "렌즈 표면 결함에 대한 분류 결과",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020247000620/1020247000620_fig_2.mmd"
+    }
+  ]
+}

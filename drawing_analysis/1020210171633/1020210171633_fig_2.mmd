@@ -1,0 +1,27 @@
+%% 1020210171633 - 재활용 플라스틱 선별 장치 구성 요소
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 본체 {
+        +String description
+    }
+    class 수용공간부 {
+        +String description
+    }
+    class 센싱부 {
+        +String description
+    }
+    class 프로세서 {
+        +String description
+    }
+    class 메모리 {
+        +String description
+    }
+    class 분류부 {
+        +String description
+    }
+    본체 --> 수용공간부 : "구성 요소"
+    수용공간부 --> 센싱부 : "배치됨"
+    센싱부 --> 프로세서 : "제어"
+    프로세서 --> 메모리 : "프로그램 저장"
+    프로세서 --> 분류부 : "제어"

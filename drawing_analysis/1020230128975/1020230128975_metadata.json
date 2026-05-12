@@ -1,0 +1,395 @@
+{
+  "app_num": "1020230128975",
+  "invention_type": "system",
+  "main_concept": "블록체인 기반 선박건조 스마트계약 운용시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "스마트계약 관리서버",
+      "component_type": "device",
+      "description": "키-이벤트 완료 검증 및 자동입금 프로세스를 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "키-이벤트 코드 전송",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "블록체인 노드와 상호작용",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "선박건조자 클라이언트와 상호작용",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "선박소유자 클라이언트와 상호작용",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "계약확인자 클라이언트와 상호작용",
+          "direction": "->"
+        },
+        {
+          "target": "900",
+          "label": "금융기관 서버와 상호작용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "블록체인 네트워크",
+      "component_type": "data",
+      "description": "키-이벤트 코드가 저장되는 분산원장",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "노드 구성",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "선박건조자 클라이언트와 상호작용",
+          "direction": "<-"
+        },
+        {
+          "target": "500",
+          "label": "선박소유자 클라이언트와 상호작용",
+          "direction": "<-"
+        },
+        {
+          "target": "600",
+          "label": "계약확인자 클라이언트와 상호작용",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "블록체인-노드 구성원 클라이언트 단말기",
+      "component_type": "device",
+      "description": "블록체인 네트워크의 노드를 구성하는 클라이언트",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "선박건조자 클라이언트 단말기",
+      "component_type": "device",
+      "description": "선박건조자 클라이언트가 사용하는 단말기",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "선박소유자 클라이언트 단말기",
+      "component_type": "device",
+      "description": "선박소유자 클라이언트가 사용하는 단말기",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "계약확인자 클라이언트 단말기",
+      "component_type": "device",
+      "description": "계약확인자가 사용하는 단말기",
+      "relationships": []
+    },
+    {
+      "component_id": "700",
+      "name": "선박소유자 금융계좌 유닛",
+      "component_type": "data",
+      "description": "선박소유자 클라이언트의 금융계좌",
+      "relationships": []
+    },
+    {
+      "component_id": "800",
+      "name": "선박건조자 금융계좌 유닛",
+      "component_type": "data",
+      "description": "선박건조자 클라이언트의 금융계좌",
+      "relationships": []
+    },
+    {
+      "component_id": "900",
+      "name": "금융기관 서버",
+      "component_type": "device",
+      "description": "약정대금 자동입금을 관리하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "1000",
+      "name": "스마트 컨트랙트 프로그래밍 툴",
+      "component_type": "device",
+      "description": "스마트 계약 코드를 생성하는 도구",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230128975",
+      "diagram_type": "flowchart",
+      "diagram_title": "선박건조 스마트계약 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"스마트계약 관리서버\"]\n    200[\"블록체인 네트워크\"]\n    300[\"블록체인-노드 구성원 클라이언트 단말기\"]\n    400[\"선박건조자 클라이언트 단말기\"]\n    500[\"선박소유자 클라이언트 단말기\"]\n    600[\"계약확인자 클라이언트 단말기\"]\n    900[\"금융기관 서버\"]\n\n    100 -->| \"키-이벤트 코드 전송\" | 200\n    100 -->| \"블록체인 노드와 상호작용\" | 300\n    100 -->| \"선박건조자 클라이언트와 상호작용\" | 400\n    100 -->| \"선박소유자 클라이언트와 상호작용\" | 500\n    100 -->| \"계약확인자 클라이언트와 상호작용\" | 600\n    100 -->| \"금융기관 서버와 상호작용\" | 900",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "스마트계약 관리서버",
+          "component_type": "device",
+          "description": "키-이벤트 완료 검증 및 자동입금 프로세스를 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키-이벤트 코드 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "블록체인 노드와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "선박건조자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "선박소유자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "계약확인자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "금융기관 서버와 상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "블록체인 네트워크",
+          "component_type": "data",
+          "description": "키-이벤트 코드가 저장되는 분산원장",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "노드 구성",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "선박건조자 클라이언트와 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "선박소유자 클라이언트와 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "계약확인자 클라이언트와 상호작용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "블록체인-노드 구성원 클라이언트 단말기",
+          "component_type": "device",
+          "description": "블록체인 네트워크의 노드를 구성하는 클라이언트",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "선박건조자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "선박건조자 클라이언트가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "선박소유자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "선박소유자 클라이언트가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "계약확인자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "계약확인자가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "700",
+          "name": "선박소유자 금융계좌 유닛",
+          "component_type": "data",
+          "description": "선박소유자 클라이언트의 금융계좌",
+          "relationships": []
+        },
+        {
+          "component_id": "800",
+          "name": "선박건조자 금융계좌 유닛",
+          "component_type": "data",
+          "description": "선박건조자 클라이언트의 금융계좌",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "금융기관 서버",
+          "component_type": "device",
+          "description": "약정대금 자동입금을 관리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "1000",
+          "name": "스마트 컨트랙트 프로그래밍 툴",
+          "component_type": "device",
+          "description": "스마트 계약 코드를 생성하는 도구",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230128975/1020230128975_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230128975",
+      "diagram_type": "classDiagram",
+      "diagram_title": "선박건조 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 스마트계약관리서버 {\n        +키-이벤트 코드 생성()\n        +키-이벤트 완료 검증()\n        +자동입금 프로세스 관리()\n    }\n    class 블록체인네트워크 {\n        +키-이벤트 코드 저장()\n        +분산원장 관리()\n    }\n    class 블록체인노드구성원클라이언트단말기 {\n        +노드 구성()\n    }\n    class 선박건조자클라이언트단말기 {\n        +키-이벤트 완료 서명 전송()\n    }\n    class 선박소유자클라이언트단말기 {\n        +키-이벤트 완료 검증()\n    }\n    class 계약확인자클라이언트단말기 {\n        +키-이벤트 완료 검증()\n    }\n    class 금융기관서버 {\n        +약정대금 자동 송금()\n    }\n\n    스마트계약관리서버 --> 블록체인네트워크 : \"키-이벤트 코드 전송\"\n    스마트계약관리서버 --> 선박건조자클라이언트단말기 : \"상호작용\"\n    스마트계약관리서버 --> 선박소유자클라이언트단말기 : \"상호작용\"\n    스마트계약관리서버 --> 계약확인자클라이언트단말기 : \"상호작용\"\n    스마트계약관리서버 --> 금융기관서버 : \"상호작용\"\n    블록체인네트워크 --> 블록체인노드구성원클라이언트단말기 : \"노드 구성\"\n    블록체인네트워크 --> 선박건조자클라이언트단말기 : \"상호작용\"\n    블록체인네트워크 --> 선박소유자클라이언트단말기 : \"상호작용\"\n    블록체인네트워크 --> 계약확인자클라이언트단말기 : \"상호작용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "스마트계약 관리서버",
+          "component_type": "device",
+          "description": "키-이벤트 완료 검증 및 자동입금 프로세스를 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키-이벤트 코드 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "블록체인 노드와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "선박건조자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "선박소유자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "계약확인자 클라이언트와 상호작용",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "금융기관 서버와 상호작용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "블록체인 네트워크",
+          "component_type": "data",
+          "description": "키-이벤트 코드가 저장되는 분산원장",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "노드 구성",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "선박건조자 클라이언트와 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "선박소유자 클라이언트와 상호작용",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "계약확인자 클라이언트와 상호작용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "블록체인-노드 구성원 클라이언트 단말기",
+          "component_type": "device",
+          "description": "블록체인 네트워크의 노드를 구성하는 클라이언트",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "선박건조자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "선박건조자 클라이언트가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "선박소유자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "선박소유자 클라이언트가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "계약확인자 클라이언트 단말기",
+          "component_type": "device",
+          "description": "계약확인자가 사용하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "700",
+          "name": "선박소유자 금융계좌 유닛",
+          "component_type": "data",
+          "description": "선박소유자 클라이언트의 금융계좌",
+          "relationships": []
+        },
+        {
+          "component_id": "800",
+          "name": "선박건조자 금융계좌 유닛",
+          "component_type": "data",
+          "description": "선박건조자 클라이언트의 금융계좌",
+          "relationships": []
+        },
+        {
+          "component_id": "900",
+          "name": "금융기관 서버",
+          "component_type": "device",
+          "description": "약정대금 자동입금을 관리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "1000",
+          "name": "스마트 컨트랙트 프로그래밍 툴",
+          "component_type": "device",
+          "description": "스마트 계약 코드를 생성하는 도구",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230128975/1020230128975_fig_2.mmd"
+    }
+  ]
+}

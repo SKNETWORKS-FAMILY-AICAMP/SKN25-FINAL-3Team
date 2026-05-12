@@ -1,0 +1,24 @@
+%% 1020220148408 - 자율운항 선박 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 주변장애물감지장치 {
+        +String 장애물정보
+        +detectObstacles()
+    }
+    class 장애물지도 {
+        +String 위치정보
+        +updateMap()
+    }
+    class 인공신경망 {
+        +String 분석결과
+        +analyzeData()
+    }
+    class 제어신호생성기 {
+        +String 경로정보
+        +generateControlSignal()
+    }
+    주변장애물감지장치 -->| "장애물 감지 정보 반영" | 장애물지도
+    주변장애물감지장치 -->| "이미지 분석" | 인공신경망
+    인공신경망 -->| "장애물 정보 업데이트" | 장애물지도
+    장애물지도 -->| "장애물 지도 기반 경로 생성" | 제어신호생성기

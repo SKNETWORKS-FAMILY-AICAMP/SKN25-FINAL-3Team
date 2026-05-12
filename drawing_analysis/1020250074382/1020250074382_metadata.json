@@ -1,0 +1,188 @@
+{
+  "app_num": "1020250074382",
+  "invention_type": "system",
+  "main_concept": "제품 수요예측을 기반으로 하는 유통플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 계정모듈",
+      "component_type": "data",
+      "description": "사용자의 개인정보를 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "검색정보 처리모듈",
+      "component_type": "process",
+      "description": "사용자가 입력한 검색정보를 처리하여 의미정보를 생성",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제품그룹정보 처리모듈",
+      "component_type": "process",
+      "description": "의미정보를 기반으로 제품을 군집화하고 제품그룹정보를 생성",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "구매확률 연산모듈",
+      "component_type": "process",
+      "description": "제품그룹정보에 포함된 제품의 구매확률을 연산",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "연산",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "수요정보 연산모듈",
+      "component_type": "process",
+      "description": "사용자의 개별수요정보를 연산",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250074382",
+      "diagram_type": "flowchart",
+      "diagram_title": "유통플랫폼 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 계정모듈\"]\n    200[\"검색정보 처리모듈\"]\n    300[\"제품그룹정보 처리모듈\"]\n    400[\"구매확률 연산모듈\"]\n    500[\"수요정보 연산모듈\"]\n    \n    100 -->|\"검색정보 입력\"| 200\n    200 -->|\"제공\"| 300\n    300 -->|\"사용\"| 400\n    400 -->|\"연산\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 계정모듈",
+          "component_type": "data",
+          "description": "사용자의 개인정보를 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색정보 처리모듈",
+          "component_type": "process",
+          "description": "사용자가 입력한 검색정보를 처리하여 의미정보를 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제품그룹정보 처리모듈",
+          "component_type": "process",
+          "description": "의미정보를 기반으로 제품을 군집화하고 제품그룹정보를 생성",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "구매확률 연산모듈",
+          "component_type": "process",
+          "description": "제품그룹정보에 포함된 제품의 구매확률을 연산",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연산",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "수요정보 연산모듈",
+          "component_type": "process",
+          "description": "사용자의 개별수요정보를 연산",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250074382/1020250074382_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250074382",
+      "diagram_type": "classDiagram",
+      "diagram_title": "유통플랫폼 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자계정모듈 {\n        +String 개인정보\n        +manageAccount()\n    }\n    class 검색정보처리모듈 {\n        +String 검색정보\n        +generateMeaningInfo()\n    }\n    class 제품그룹정보처리모듈 {\n        +String 의미정보\n        +clusterProducts()\n    }\n    class 구매확률연산모듈 {\n        +String 제품그룹정보\n        +calculatePurchaseProbability()\n    }\n    class 수요정보연산모듈 {\n        +String 개별수요정보\n        +calculateDemandInfo()\n    }\n    사용자계정모듈 --> 검색정보처리모듈 : \"제공\"\n    검색정보처리모듈 --> 제품그룹정보처리모듈 : \"사용\"\n    제품그룹정보처리모듈 --> 구매확률연산모듈 : \"연산\"\n    구매확률연산모듈 --> 수요정보연산모듈 : \"연산\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 계정모듈",
+          "component_type": "data",
+          "description": "사용자의 개인정보를 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "검색정보 처리모듈",
+          "component_type": "process",
+          "description": "사용자가 입력한 검색정보를 처리하여 의미정보를 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제품그룹정보 처리모듈",
+          "component_type": "process",
+          "description": "의미정보를 기반으로 제품을 군집화하고 제품그룹정보를 생성",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "구매확률 연산모듈",
+          "component_type": "process",
+          "description": "제품그룹정보에 포함된 제품의 구매확률을 연산",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연산",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "수요정보 연산모듈",
+          "component_type": "process",
+          "description": "사용자의 개별수요정보를 연산",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250074382/1020250074382_fig_2.mmd"
+    }
+  ]
+}

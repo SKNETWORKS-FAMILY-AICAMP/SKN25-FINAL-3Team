@@ -1,0 +1,26 @@
+%% 1020157016920 - 기계어 명령 실행 시스템 구성도
+%% 도 1
+%% deterministic renderer v3
+%% style: patent_office
+%% quality: 85 / grade: B
+%% auto_repaired: True / rounds: 1
+%% 생성일: 2026-05-11
+
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Noto Sans KR, Arial', 'primaryColor': '#ffffff', 'primaryBorderColor': '#111111', 'lineColor': '#111111', 'textColor': '#111111'}}}%%
+flowchart TD
+    classDef device fill:#ffffff,stroke:#111111,stroke-width:1.4px,color:#111111;
+    classDef module fill:#ffffff,stroke:#111111,stroke-width:1.4px,color:#111111;
+    classDef process fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    classDef data fill:#ffffff,stroke:#111111,stroke-width:1.2px,stroke-dasharray: 4 3,color:#111111;
+    classDef database fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    classDef actor fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    N10[/"10 1740839"/]
+    N20["20 처리 회로"]
+    N30["30 결과 출력"]
+
+    N10 --> N20
+    N20 --> N30
+
+    class N10 data;
+    class N20 process;
+    class N30 module;

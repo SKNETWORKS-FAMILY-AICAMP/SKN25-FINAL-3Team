@@ -1,0 +1,251 @@
+{
+  "app_num": "1020180139369",
+  "invention_type": "hardware",
+  "main_concept": "회전 부재를 포함하는 전자 장치의 동작 방법 및 기능 제어",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "하우징",
+      "component_type": "device",
+      "description": "전자 장치의 외부 구조를 형성",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "회전 부재",
+      "component_type": "device",
+      "description": "하우징 외측에 회전 가능하게 배치된 부품",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "디스플레이",
+      "component_type": "device",
+      "description": "사용자에게 정보를 제공하는 화면",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "제어",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "디스플레이 및 메모리를 제어하는 중앙 처리 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "프로세서가 실행할 인스트럭션을 저장",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "연결",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180139369",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 하우징 {\n        +String 구조\n    }\n    class 회전부재 {\n        +회전()\n    }\n    class 디스플레이 {\n        +정보표시()\n    }\n    class 프로세서 {\n        +제어()\n    }\n    class 메모리 {\n        +저장()\n    }\n    하우징 --> 회전부재 : \"구성 요소\"\n    하우징 --> 디스플레이 : \"구성 요소\"\n    하우징 --> 프로세서 : \"구성 요소\"\n    프로세서 --> 디스플레이 : \"제어\"\n    프로세서 --> 메모리 : \"저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하우징",
+          "component_type": "device",
+          "description": "전자 장치의 외부 구조를 형성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회전 부재",
+          "component_type": "device",
+          "description": "하우징 외측에 회전 가능하게 배치된 부품",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "사용자에게 정보를 제공하는 화면",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이 및 메모리를 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 인스트럭션을 저장",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180139369/1020180139369_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180139369",
+      "diagram_type": "flowchart",
+      "diagram_title": "전자 장치 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"하우징\"]\n    200[\"회전 부재\"]\n    300[\"디스플레이\"]\n    400[\"프로세서\"]\n    500[\"메모리\"]\n    \n    100 -->| \"구성 요소\" | 200\n    100 -->| \"구성 요소\" | 300\n    100 -->| \"구성 요소\" | 400\n    400 -->| \"저장\" | 500\n    400 -->| \"제어\" | 300\n    \n    200 -->| \"회전\" | 300\n    300 -->| \"정보 표시\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하우징",
+          "component_type": "device",
+          "description": "전자 장치의 외부 구조를 형성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회전 부재",
+          "component_type": "device",
+          "description": "하우징 외측에 회전 가능하게 배치된 부품",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "사용자에게 정보를 제공하는 화면",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이 및 메모리를 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 인스트럭션을 저장",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180139369/1020180139369_fig_2.mmd"
+    }
+  ]
+}

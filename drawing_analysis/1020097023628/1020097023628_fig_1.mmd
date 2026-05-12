@@ -1,0 +1,18 @@
+%% 1020097023628 - 병렬 프로세서 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 병렬프로세서 {
+        +String 스레드
+        +processThread()
+    }
+    class 컴퓨터메모리 {
+        +String 데이터
+        +accessMemory()
+    }
+    class 마스터프로세서 {
+        +String 스레드관리
+        +allocateThread()
+    }
+    병렬프로세서 --> 컴퓨터메모리 : "메모리에 접근"
+    마스터프로세서 --> 병렬프로세서 : "병렬 프로세서를 관리함"

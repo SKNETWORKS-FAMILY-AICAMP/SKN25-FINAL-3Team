@@ -1,0 +1,266 @@
+{
+  "app_num": "1020130164153",
+  "invention_type": "method",
+  "main_concept": "단말기에서 캡쳐 방지 기능의 동작을 보장하기 위한 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "단말기",
+      "component_type": "actor",
+      "description": "캡쳐 방지 기능을 내장하고 있는 사용자 단말기",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "운영 체계 (OS)",
+      "component_type": "data",
+      "description": "단말기에서 캡쳐 방지 기능을 관리하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "설치",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "애플리케이션",
+      "component_type": "actor",
+      "description": "캡쳐 방지 기능을 사용하는 소프트웨어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "인증서 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "인증서",
+      "component_type": "data",
+      "description": "캡쳐 방지 기능의 설정 및 해제와 관련된 인증 정보",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "추가",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "검증",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "프로파일",
+      "component_type": "data",
+      "description": "캡쳐 방지 기능의 설정 및 해제에 필요한 정보 집합",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "설치",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "서명 추가",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020130164153",
+      "diagram_type": "flowchart",
+      "diagram_title": "캡쳐 방지 기능 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"단말기\"]\n    200[\"운영 체계 (OS)\"]\n    300[\"애플리케이션\"]\n    400[\"인증서\"]\n    500[\"프로파일\"]\n    \n    100 -->|\"사용\"| 300\n    300 -->|\"인증서 요청\"| 200\n    200 -->|\"제어\"| 100\n    200 -->|\"설치\"| 300\n    300 -->|\"서명 추가\"| 400\n    400 -->|\"추가\"| 200\n    400 -->|\"검증\"| 300\n    500 -->|\"설치\"| 200\n    500 -->|\"서명 추가\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "단말기",
+          "component_type": "actor",
+          "description": "캡쳐 방지 기능을 내장하고 있는 사용자 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "운영 체계 (OS)",
+          "component_type": "data",
+          "description": "단말기에서 캡쳐 방지 기능을 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "설치",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "애플리케이션",
+          "component_type": "actor",
+          "description": "캡쳐 방지 기능을 사용하는 소프트웨어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "인증서 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인증서",
+          "component_type": "data",
+          "description": "캡쳐 방지 기능의 설정 및 해제와 관련된 인증 정보",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추가",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "검증",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로파일",
+          "component_type": "data",
+          "description": "캡쳐 방지 기능의 설정 및 해제에 필요한 정보 집합",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "설치",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "서명 추가",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020130164153/1020130164153_fig_1.mmd"
+    },
+    {
+      "app_num": "1020130164153",
+      "diagram_type": "classDiagram",
+      "diagram_title": "캡쳐 방지 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 단말기 {\n        +String 사용자\n        +control()\n    }\n    class 운영_체계_OS {\n        +String 캡쳐_방지_기능\n        +install()\n    }\n    class 애플리케이션 {\n        +String 기능\n        +requestCertificate()\n    }\n    class 인증서 {\n        +String 인증정보\n        +validate()\n    }\n    class 프로파일 {\n        +String 설정정보\n        +addSignature()\n    }\n    단말기 --> 운영_체계_OS : \"제어\"\n    애플리케이션 --> 단말기 : \"사용\"\n    애플리케이션 --> 운영_체계_OS : \"인증서 요청\"\n    운영_체계_OS --> 프로파일 : \"설치\"\n    프로파일 --> 인증서 : \"서명 추가\"\n    인증서 --> 운영_체계_OS : \"추가\"\n    인증서 --> 애플리케이션 : \"검증\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "단말기",
+          "component_type": "actor",
+          "description": "캡쳐 방지 기능을 내장하고 있는 사용자 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "운영 체계 (OS)",
+          "component_type": "data",
+          "description": "단말기에서 캡쳐 방지 기능을 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "설치",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "애플리케이션",
+          "component_type": "actor",
+          "description": "캡쳐 방지 기능을 사용하는 소프트웨어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "인증서 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인증서",
+          "component_type": "data",
+          "description": "캡쳐 방지 기능의 설정 및 해제와 관련된 인증 정보",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추가",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "검증",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로파일",
+          "component_type": "data",
+          "description": "캡쳐 방지 기능의 설정 및 해제에 필요한 정보 집합",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "설치",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "서명 추가",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020130164153/1020130164153_fig_2.mmd"
+    }
+  ]
+}

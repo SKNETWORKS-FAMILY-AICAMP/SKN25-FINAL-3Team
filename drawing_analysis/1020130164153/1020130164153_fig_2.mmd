@@ -1,0 +1,31 @@
+%% 1020130164153 - 캡쳐 방지 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 단말기 {
+        +String 사용자
+        +control()
+    }
+    class 운영_체계_OS {
+        +String 캡쳐_방지_기능
+        +install()
+    }
+    class 애플리케이션 {
+        +String 기능
+        +requestCertificate()
+    }
+    class 인증서 {
+        +String 인증정보
+        +validate()
+    }
+    class 프로파일 {
+        +String 설정정보
+        +addSignature()
+    }
+    단말기 --> 운영_체계_OS : "제어"
+    애플리케이션 --> 단말기 : "사용"
+    애플리케이션 --> 운영_체계_OS : "인증서 요청"
+    운영_체계_OS --> 프로파일 : "설치"
+    프로파일 --> 인증서 : "서명 추가"
+    인증서 --> 운영_체계_OS : "추가"
+    인증서 --> 애플리케이션 : "검증"

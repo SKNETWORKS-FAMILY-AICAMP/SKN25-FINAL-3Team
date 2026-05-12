@@ -1,0 +1,167 @@
+{
+  "app_num": "1020250027252",
+  "invention_type": "method",
+  "main_concept": "대화형 의료챗봇을 이용한 병원예약 및 진단보조 시스템의 동작 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버 장치",
+      "component_type": "device",
+      "description": "대화형 의료챗봇의 동작을 수행하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 사용자 단말",
+      "component_type": "actor",
+      "description": "환자가 사용하는 단말기로, 의료챗봇과 상호작용",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "접속하여 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 사용자 단말",
+      "component_type": "actor",
+      "description": "의료진이 사용하는 단말기로, 검사 결과 정보를 수신",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "검사 결과 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "경량 LLM 모듈",
+      "component_type": "process",
+      "description": "증상 예측 및 요약 정보를 생성하는 인공지능 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서버 장치와 연동",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250027252",
+      "diagram_type": "flowchart",
+      "diagram_title": "대화형 의료챗봇 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버 장치\"]\n    200[\"제1 사용자 단말\"]\n    300[\"제2 사용자 단말\"]\n    400[\"경량 LLM 모듈\"]\n    200 -->|\"접속하여 정보 전송\"| 100\n    100 -->|\"사전문진정보 생성 및 상태답변멘트 수신\"| 400\n    400 -->|\"증상예측정보 및 증상요약정보 생성\"| 100\n    100 -->|\"검사추천정보 생성 및 병원예약링크 전달\"| 200\n    100 -->|\"검사 결과 정보 수신\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버 장치",
+          "component_type": "device",
+          "description": "대화형 의료챗봇의 동작을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 사용자 단말",
+          "component_type": "actor",
+          "description": "환자가 사용하는 단말기로, 의료챗봇과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "접속하여 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 사용자 단말",
+          "component_type": "actor",
+          "description": "의료진이 사용하는 단말기로, 검사 결과 정보를 수신",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검사 결과 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경량 LLM 모듈",
+          "component_type": "process",
+          "description": "증상 예측 및 요약 정보를 생성하는 인공지능 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버 장치와 연동",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250027252/1020250027252_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250027252",
+      "diagram_type": "flowchart",
+      "diagram_title": "사전문진 및 검사 추천 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버 장치\"]\n    200[\"제1 사용자 단말\"]\n    300[\"제2 사용자 단말\"]\n    400[\"경량 LLM 모듈\"]\n    200 -->|\"접속하여 정보 전송\"| 100\n    100 -->|\"사전문진정보 생성 및 상태답변멘트 수신\"| 400\n    400 -->|\"증상예측정보 및 증상요약정보 생성\"| 100\n    100 -->|\"검사추천정보 생성 및 병원예약링크 전달\"| 200\n    100 -->|\"검사 결과 정보 수신\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버 장치",
+          "component_type": "device",
+          "description": "대화형 의료챗봇의 동작을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 사용자 단말",
+          "component_type": "actor",
+          "description": "환자가 사용하는 단말기로, 의료챗봇과 상호작용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "접속하여 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 사용자 단말",
+          "component_type": "actor",
+          "description": "의료진이 사용하는 단말기로, 검사 결과 정보를 수신",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검사 결과 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경량 LLM 모듈",
+          "component_type": "process",
+          "description": "증상 예측 및 요약 정보를 생성하는 인공지능 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버 장치와 연동",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250027252/1020250027252_fig_2.mmd"
+    }
+  ]
+}

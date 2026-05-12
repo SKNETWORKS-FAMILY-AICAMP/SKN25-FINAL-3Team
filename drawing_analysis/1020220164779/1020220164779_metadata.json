@@ -1,0 +1,146 @@
+{
+  "app_num": "1020220164779",
+  "invention_type": "method",
+  "main_concept": "인공지능 기계 학습을 위한 학습 데이터의 정제 및 분류 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "학습 데이터 생성 장치",
+      "component_type": "device",
+      "description": "AI 기계 학습을 위한 데이터 수집 및 분류를 담당",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "학습 데이터 수집 장치",
+      "component_type": "device",
+      "description": "이미지를 수집하고 메타 정보를 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "이미지 정보",
+      "component_type": "data",
+      "description": "수집된 이미지의 메타 정보 및 속성",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비교 대상",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220164779",
+      "diagram_type": "flowchart",
+      "diagram_title": "학습 데이터 생성 및 분류 과정",
+      "mermaid_code": "flowchart TD\n    100[\"학습 데이터 생성 장치\"]\n    200[\"학습 데이터 수집 장치\"]\n    300[\"이미지 정보\"]\n    400[\"노이즈 이미지 분류\"]\n    \n    200 -->|\"데이터 전송\"| 100\n    100 -->|\"이미지 수신\"| 300\n    300 -->|\"비교 대상\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "학습 데이터 생성 장치",
+          "component_type": "device",
+          "description": "AI 기계 학습을 위한 데이터 수집 및 분류를 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "학습 데이터 수집 장치",
+          "component_type": "device",
+          "description": "이미지를 수집하고 메타 정보를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 정보",
+          "component_type": "data",
+          "description": "수집된 이미지의 메타 정보 및 속성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비교 대상",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220164779/1020220164779_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220164779",
+      "diagram_type": "classDiagram",
+      "diagram_title": "학습 데이터 생성 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 학습데이터생성장치 {\n        +String 데이터전송()\n    }\n    class 학습데이터수집장치 {\n        +String 데이터수신()\n    }\n    class 이미지정보 {\n        +String 메타정보\n    }\n    학습데이터생성장치 -->| \"데이터 전송\" | 학습데이터수집장치\n    학습데이터수집장치 -->| \"데이터 수신\" | 학습데이터생성장치\n    이미지정보 -->| \"비교 대상\" | 학습데이터생성장치",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "학습 데이터 생성 장치",
+          "component_type": "device",
+          "description": "AI 기계 학습을 위한 데이터 수집 및 분류를 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "학습 데이터 수집 장치",
+          "component_type": "device",
+          "description": "이미지를 수집하고 메타 정보를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 정보",
+          "component_type": "data",
+          "description": "수집된 이미지의 메타 정보 및 속성",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비교 대상",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220164779/1020220164779_fig_2.mmd"
+    }
+  ]
+}

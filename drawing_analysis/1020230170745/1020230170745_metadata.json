@@ -1,0 +1,128 @@
+{
+  "app_num": "1020230170745",
+  "invention_type": "system",
+  "main_concept": "피트니스 센터의 유/무인 운영을 위한 통합 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "고객용 단말",
+      "component_type": "device",
+      "description": "회원권 구매 및 상담 기능을 지원하는 단말",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "피트니스 센터 전사적 운영관리시스템",
+      "component_type": "system",
+      "description": "회원 관리, 운동 스케줄 관리, 급여 정산 등을 통합 관리하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "지원",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "관리자 단말",
+      "component_type": "device",
+      "description": "운영 관리 및 직원 관리 기능을 지원하는 단말",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230170745",
+      "diagram_type": "flowchart",
+      "diagram_title": "피트니스 센터 운영 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"고객용 단말\"]\n    200[\"피트니스 센터 전사적 운영관리시스템\"]\n    300[\"관리자 단말\"]\n    400[\"운동 스케줄 관리 및 업데이트\"]\n    \n    100 -->|\"회원권 구매 요청\"| 200\n    200 -->|\"출입식별코드 발급\"| 100\n    200 -->|\"운동 스케줄 관리\"| 400\n    300 -->|\"운영 관리\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "고객용 단말",
+          "component_type": "device",
+          "description": "회원권 구매 및 상담 기능을 지원하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "피트니스 센터 전사적 운영관리시스템",
+          "component_type": "system",
+          "description": "회원 관리, 운동 스케줄 관리, 급여 정산 등을 통합 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지원",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관리자 단말",
+          "component_type": "device",
+          "description": "운영 관리 및 직원 관리 기능을 지원하는 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230170745/1020230170745_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230170745",
+      "diagram_type": "classDiagram",
+      "diagram_title": "피트니스 센터 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 고객용단말 {\n        +String 회원권구매기능\n        +String 상담기능\n    }\n    class 피트니스센터전사적운영관리시스템 {\n        +String 회원관리\n        +String 운동스케줄관리\n        +String 급여정산\n    }\n    class 관리자단말 {\n        +String 운영관리기능\n        +String 직원관리기능\n    }\n    고객용단말 --> 피트니스센터전사적운영관리시스템 : \"지원\"\n    관리자단말 --> 피트니스센터전사적운영관리시스템 : \"연결\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "고객용 단말",
+          "component_type": "device",
+          "description": "회원권 구매 및 상담 기능을 지원하는 단말",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "피트니스 센터 전사적 운영관리시스템",
+          "component_type": "system",
+          "description": "회원 관리, 운동 스케줄 관리, 급여 정산 등을 통합 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지원",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "관리자 단말",
+          "component_type": "device",
+          "description": "운영 관리 및 직원 관리 기능을 지원하는 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230170745/1020230170745_fig_2.mmd"
+    }
+  ]
+}

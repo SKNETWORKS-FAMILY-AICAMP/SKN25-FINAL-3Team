@@ -1,0 +1,248 @@
+{
+  "app_num": "1020250070172",
+  "invention_type": "system",
+  "main_concept": "AI 기반 온라인 중개무역 자동화 시스템으로, 바이어와 셀러의 정보를 수집하고 최적의 거래 상대를 자동으로 매칭하여 전자 무역 전 과정을 처리.",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터모듈",
+      "component_type": "process",
+      "description": "비정형 데이터를 수집하고 정형화하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "AI매칭모듈",
+      "component_type": "process",
+      "description": "거래 상대방 간의 적합도를 평가하여 매칭 결과를 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "전자계약모듈",
+      "component_type": "process",
+      "description": "매칭된 거래 상대 간의 계약서를 자동 작성하고 저장",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "매칭 결과 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "전자결제모듈",
+      "component_type": "process",
+      "description": "결제 처리 및 다중 인증 절차 수행",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "계약 정보 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "통관연동모듈",
+      "component_type": "process",
+      "description": "물류 상태를 실시간 수집하고 통관 문서 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "리스크탐지모듈",
+      "component_type": "process",
+      "description": "이상 거래 패턴 탐지 및 경고 제공",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "매칭 결과 분석",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "번역모듈",
+      "component_type": "process",
+      "description": "문서 및 메시지를 번역하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250070172",
+      "diagram_type": "flowchart",
+      "diagram_title": "온라인 중개무역 시스템 구성도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터모듈\"]\n    200[\"AI매칭모듈\"]\n    300[\"전자계약모듈\"]\n    400[\"전자결제모듈\"]\n    500[\"통관연동모듈\"]\n    600[\"리스크탐지모듈\"]\n    700[\"번역모듈\"]\n    \n    100 -->|\"데이터 제공\"| 200\n    200 -->|\"매칭 결과 사용\"| 300\n    300 -->|\"계약 정보 사용\"| 400\n    200 -->|\"매칭 결과 분석\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터모듈",
+          "component_type": "process",
+          "description": "비정형 데이터를 수집하고 정형화하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "AI매칭모듈",
+          "component_type": "process",
+          "description": "거래 상대방 간의 적합도를 평가하여 매칭 결과를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전자계약모듈",
+          "component_type": "process",
+          "description": "매칭된 거래 상대 간의 계약서를 자동 작성하고 저장",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭 결과 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "전자결제모듈",
+          "component_type": "process",
+          "description": "결제 처리 및 다중 인증 절차 수행",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "계약 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "통관연동모듈",
+          "component_type": "process",
+          "description": "물류 상태를 실시간 수집하고 통관 문서 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "리스크탐지모듈",
+          "component_type": "process",
+          "description": "이상 거래 패턴 탐지 및 경고 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭 결과 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "번역모듈",
+          "component_type": "process",
+          "description": "문서 및 메시지를 번역하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250070172/1020250070172_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250070172",
+      "diagram_type": "flowchart",
+      "diagram_title": "AI 매칭 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터모듈\"]\n    200[\"AI매칭모듈\"]\n    300[\"전자계약모듈\"]\n    400[\"전자결제모듈\"]\n    500[\"통관연동모듈\"]\n    600[\"리스크탐지모듈\"]\n    100 -->|\"데이터 제공\"| 200\n    200 -->|\"매칭 결과 사용\"| 300\n    300 -->|\"계약 정보 사용\"| 400\n    200 -->|\"매칭 결과 분석\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터모듈",
+          "component_type": "process",
+          "description": "비정형 데이터를 수집하고 정형화하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "AI매칭모듈",
+          "component_type": "process",
+          "description": "거래 상대방 간의 적합도를 평가하여 매칭 결과를 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "전자계약모듈",
+          "component_type": "process",
+          "description": "매칭된 거래 상대 간의 계약서를 자동 작성하고 저장",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭 결과 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "전자결제모듈",
+          "component_type": "process",
+          "description": "결제 처리 및 다중 인증 절차 수행",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "계약 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "통관연동모듈",
+          "component_type": "process",
+          "description": "물류 상태를 실시간 수집하고 통관 문서 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "리스크탐지모듈",
+          "component_type": "process",
+          "description": "이상 거래 패턴 탐지 및 경고 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭 결과 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "번역모듈",
+          "component_type": "process",
+          "description": "문서 및 메시지를 번역하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250070172/1020250070172_fig_2.mmd"
+    }
+  ]
+}

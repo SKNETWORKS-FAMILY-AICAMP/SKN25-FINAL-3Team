@@ -1,0 +1,239 @@
+{
+  "app_num": "1020230150441",
+  "invention_type": "system",
+  "main_concept": "딥러닝을 이용한 Real Time 도면 복구 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "디스플레이부",
+      "component_type": "device",
+      "description": "모델링 프로그램의 화면을 표시하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "사용자입력부",
+      "component_type": "device",
+      "description": "사용자의 입력을 받는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "사용자 입력을 제어부에 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "서버",
+      "component_type": "device",
+      "description": "통신부, 저장부, 제어부를 포함하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "디스플레이부에 데이터 전송",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "사용자입력부로부터 데이터 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "통신부",
+      "component_type": "device",
+      "description": "서버와 컴퓨팅 장치 간의 통신을 담당",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "저장부",
+      "component_type": "data",
+      "description": "작업 데이터를 저장하는 부",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "제어부",
+      "component_type": "process",
+      "description": "시스템의 제어 및 데이터 처리 담당",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "사용자 입력 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "500",
+          "label": "작업 데이터 저장",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230150441",
+      "diagram_type": "flowchart",
+      "diagram_title": "Real Time 도면 복구 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"디스플레이부\"]\n    200[\"사용자입력부\"]\n    300[\"서버\"]\n    400[\"통신부\"]\n    500[\"저장부\"]\n    600[\"제어부\"]\n\n    200 -->|\"사용자 입력을 제어부에 전달\"| 600\n    600 -->|\"작업 데이터 저장\"| 500\n    600 -->|\"디스플레이부에 데이터 전송\"| 100\n    300 -->|\"사용자입력부로부터 데이터 수신\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이부",
+          "component_type": "device",
+          "description": "모델링 프로그램의 화면을 표시하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자입력부",
+          "component_type": "device",
+          "description": "사용자의 입력을 받는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "사용자 입력을 제어부에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "통신부, 저장부, 제어부를 포함하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "디스플레이부에 데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자입력부로부터 데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "통신부",
+          "component_type": "device",
+          "description": "서버와 컴퓨팅 장치 간의 통신을 담당",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "작업 데이터를 저장하는 부",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "시스템의 제어 및 데이터 처리 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용자 입력 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "작업 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230150441/1020230150441_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230150441",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 디스플레이부 {\n        +String 화면\n    }\n    class 사용자입력부 {\n        +String 사용자입력\n    }\n    class 서버 {\n        +String 통신부\n        +String 저장부\n        +String 제어부\n    }\n    class 통신부 {\n        +String 데이터전송\n    }\n    class 저장부 {\n        +String 작업데이터\n    }\n    class 제어부 {\n        +String 데이터처리\n    }\n    사용자입력부 --> 서버 : \"사용자 입력을 제어부에 전달\"\n    서버 --> 디스플레이부 : \"디스플레이부에 데이터 전송\"\n    서버 --> 사용자입력부 : \"사용자입력부로부터 데이터 수신\"\n    제어부 --> 사용자입력부 : \"사용자 입력 수신\"\n    제어부 --> 저장부 : \"작업 데이터 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이부",
+          "component_type": "device",
+          "description": "모델링 프로그램의 화면을 표시하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자입력부",
+          "component_type": "device",
+          "description": "사용자의 입력을 받는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "사용자 입력을 제어부에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "서버",
+          "component_type": "device",
+          "description": "통신부, 저장부, 제어부를 포함하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "디스플레이부에 데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "사용자입력부로부터 데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "통신부",
+          "component_type": "device",
+          "description": "서버와 컴퓨팅 장치 간의 통신을 담당",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "저장부",
+          "component_type": "data",
+          "description": "작업 데이터를 저장하는 부",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "제어부",
+          "component_type": "process",
+          "description": "시스템의 제어 및 데이터 처리 담당",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용자 입력 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "작업 데이터 저장",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230150441/1020230150441_fig_2.mmd"
+    }
+  ]
+}

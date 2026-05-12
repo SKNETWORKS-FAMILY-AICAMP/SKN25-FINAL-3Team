@@ -1,0 +1,362 @@
+{
+  "app_num": "1020250055479",
+  "invention_type": "system",
+  "main_concept": "실시간 재고 위치 파악을 통한 물류 작업 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "관리서버",
+      "component_type": "device",
+      "description": "재고 관리 및 경로 생성 기능을 수행하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "데이터수집부",
+      "component_type": "process",
+      "description": "재고의 종류 및 수량 데이터를 수집하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "리스트생성부",
+      "component_type": "process",
+      "description": "주문 리스트를 생성하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "경로생성부",
+      "component_type": "process",
+      "description": "피킹 경로 및 배송 경로를 생성하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "정보제공부",
+      "component_type": "process",
+      "description": "생성된 경로 정보를 관리자 단말로 제공하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "물품관리부",
+      "component_type": "process",
+      "description": "재고의 보관 상태를 감지 및 분석하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "관리자 단말",
+      "component_type": "device",
+      "description": "관리자가 시스템과 상호작용하는 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "통신",
+          "direction": "<->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "IoT 기반 RFID 센서",
+      "component_type": "device",
+      "description": "재고의 종류 및 수량 데이터를 수집하는 센서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 수집",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "900",
+      "name": "온도 및 습도 센서",
+      "component_type": "device",
+      "description": "재고의 보관 상태를 감지하는 센서",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "데이터 수집",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250055479",
+      "diagram_type": "flowchart",
+      "diagram_title": "물류 작업 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"관리서버\"]\n    200[\"데이터수집부\"]\n    300[\"리스트생성부\"]\n    400[\"경로생성부\"]\n    500[\"정보제공부\"]\n    600[\"물품관리부\"]\n    700[\"관리자 단말\"]\n    800[\"IoT 기반 RFID 센서\"]\n    900[\"온도 및 습도 센서\"]\n\n    800 -->| \"데이터 수집\" | 200\n    200 -->| \"재고 데이터\" | 300\n    300 -->| \"주문 리스트\" | 400\n    400 -->| \"피킹 및 배송 경로\" | 500\n    900 -->| \"상태 데이터\" | 600\n    600 -->| \"상태 정보\" | 500\n    500 -->| \"정보 제공\" | 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "재고 관리 및 경로 생성 기능을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터수집부",
+          "component_type": "process",
+          "description": "재고의 종류 및 수량 데이터를 수집하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "리스트생성부",
+          "component_type": "process",
+          "description": "주문 리스트를 생성하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경로생성부",
+          "component_type": "process",
+          "description": "피킹 경로 및 배송 경로를 생성하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "정보제공부",
+          "component_type": "process",
+          "description": "생성된 경로 정보를 관리자 단말로 제공하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "물품관리부",
+          "component_type": "process",
+          "description": "재고의 보관 상태를 감지 및 분석하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "관리자 단말",
+          "component_type": "device",
+          "description": "관리자가 시스템과 상호작용하는 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "통신",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "IoT 기반 RFID 센서",
+          "component_type": "device",
+          "description": "재고의 종류 및 수량 데이터를 수집하는 센서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "온도 및 습도 센서",
+          "component_type": "device",
+          "description": "재고의 보관 상태를 감지하는 센서",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250055479/1020250055479_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250055479",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 관리서버 {\n        +String 경로생성기능\n        +manageInventory()\n    }\n    class 데이터수집부 {\n        +collectData()\n    }\n    class 리스트생성부 {\n        +generateOrderList()\n    }\n    class 경로생성부 {\n        +createPickingAndDeliveryPath()\n    }\n    class 정보제공부 {\n        +provideInformation()\n    }\n    class 물품관리부 {\n        +monitorStorageCondition()\n    }\n    class 관리자단말 {\n        +interactWithSystem()\n    }\n    class IoT기반RFID센서 {\n        +collectInventoryData()\n    }\n    class 온도및습도센서 {\n        +detectStorageCondition()\n    }\n\n    관리서버 --> 데이터수집부 : \"소속\"\n    관리서버 --> 리스트생성부 : \"소속\"\n    관리서버 --> 경로생성부 : \"소속\"\n    관리서버 --> 정보제공부 : \"소속\"\n    관리서버 --> 물품관리부 : \"소속\"\n    관리서버 <--> 관리자단말 : \"통신\"\n    데이터수집부 --> IoT기반RFID센서 : \"데이터 수집\"\n    물품관리부 --> 온도및습도센서 : \"데이터 수집\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "재고 관리 및 경로 생성 기능을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터수집부",
+          "component_type": "process",
+          "description": "재고의 종류 및 수량 데이터를 수집하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "리스트생성부",
+          "component_type": "process",
+          "description": "주문 리스트를 생성하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경로생성부",
+          "component_type": "process",
+          "description": "피킹 경로 및 배송 경로를 생성하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "정보제공부",
+          "component_type": "process",
+          "description": "생성된 경로 정보를 관리자 단말로 제공하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "물품관리부",
+          "component_type": "process",
+          "description": "재고의 보관 상태를 감지 및 분석하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "관리자 단말",
+          "component_type": "device",
+          "description": "관리자가 시스템과 상호작용하는 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "통신",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "IoT 기반 RFID 센서",
+          "component_type": "device",
+          "description": "재고의 종류 및 수량 데이터를 수집하는 센서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "온도 및 습도 센서",
+          "component_type": "device",
+          "description": "재고의 보관 상태를 감지하는 센서",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250055479/1020250055479_fig_2.mmd"
+    }
+  ]
+}

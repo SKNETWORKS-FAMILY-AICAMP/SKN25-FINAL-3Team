@@ -1,0 +1,27 @@
+%% 1020217033033 - 하드웨어 회로 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 하드웨어회로 {
+        +String description
+    }
+    class 행렬곱셈회로 {
+        +String description
+    }
+    class 메모리 {
+        +String description
+    }
+    class 입력텐서 {
+        +String description
+    }
+    class 커널 {
+        +String description
+    }
+    class 마스킹텐서 {
+        +String description
+    }
+    하드웨어회로 --> 행렬곱셈회로 : "구성 요소"
+    하드웨어회로 --> 메모리 : "구성 요소"
+    입력텐서 --> 행렬곱셈회로 : "입력"
+    커널 --> 행렬곱셈회로 : "입력"
+    마스킹텐서 --> 행렬곱셈회로 : "입력"

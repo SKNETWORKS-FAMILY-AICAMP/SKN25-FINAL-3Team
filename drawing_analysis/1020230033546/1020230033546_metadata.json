@@ -1,0 +1,182 @@
+{
+  "app_num": "1020230033546",
+  "invention_type": "method",
+  "main_concept": "암 환자 치료에 대한 반응성을 예측하기 위한 방법 및 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "병리 슬라이드 이미지",
+      "component_type": "data",
+      "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "기계학습 모델",
+      "component_type": "process",
+      "description": "병리 슬라이드 이미지로부터 정보를 결정하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "상호작용 스코어",
+      "component_type": "data",
+      "description": "암 환자 치료에 대한 반응성을 나타내는 점수",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "산출",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "정보 처리 시스템",
+      "component_type": "device",
+      "description": "암 환자 치료 반응성을 예측하는 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "실행",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "결과",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230033546",
+      "diagram_type": "flowchart",
+      "diagram_title": "암 환자 치료 반응성 예측 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"병리 슬라이드 이미지\"]\n    200[\"기계학습 모델\"]\n    300[\"상호작용 스코어\"]\n    400[\"정보 처리 시스템\"]\n    100 -->|\"입력\"| 200\n    200 -->|\"산출\"| 300\n    200 -->|\"실행\"| 400\n    300 -->|\"결과\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "병리 슬라이드 이미지",
+          "component_type": "data",
+          "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "기계학습 모델",
+          "component_type": "process",
+          "description": "병리 슬라이드 이미지로부터 정보를 결정하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "상호작용 스코어",
+          "component_type": "data",
+          "description": "암 환자 치료에 대한 반응성을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "산출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정보 처리 시스템",
+          "component_type": "device",
+          "description": "암 환자 치료 반응성을 예측하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결과",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230033546/1020230033546_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230033546",
+      "diagram_type": "classDiagram",
+      "diagram_title": "정보 처리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 병리슬라이드이미지 {\n        +String 이미지데이터\n    }\n    class 기계학습모델 {\n        +String 모델정보\n        +정보결정()\n    }\n    class 상호작용스코어 {\n        +int 점수\n    }\n    class 정보처리시스템 {\n        +예측치료반응성()\n    }\n    병리슬라이드이미지 --> 기계학습모델 : \"입력\"\n    기계학습모델 --> 상호작용스코어 : \"산출\"\n    기계학습모델 --> 정보처리시스템 : \"실행\"\n    상호작용스코어 --> 정보처리시스템 : \"결과\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "병리 슬라이드 이미지",
+          "component_type": "data",
+          "description": "암 환자의 조직학적 정보를 포함하는 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "기계학습 모델",
+          "component_type": "process",
+          "description": "병리 슬라이드 이미지로부터 정보를 결정하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "상호작용 스코어",
+          "component_type": "data",
+          "description": "암 환자 치료에 대한 반응성을 나타내는 점수",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "산출",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정보 처리 시스템",
+          "component_type": "device",
+          "description": "암 환자 치료 반응성을 예측하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결과",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230033546/1020230033546_fig_2.mmd"
+    }
+  ]
+}

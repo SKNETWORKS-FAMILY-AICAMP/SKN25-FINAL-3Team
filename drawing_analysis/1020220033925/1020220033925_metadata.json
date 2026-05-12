@@ -1,0 +1,128 @@
+{
+  "app_num": "1020220033925",
+  "invention_type": "method",
+  "main_concept": "강화학습 기반 다중 드론 네트워크 운용 계획 생성 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력부",
+      "component_type": "actor",
+      "description": "강화학습 하이퍼파라미터와 다중 드론 네트워크 임무 정보를 입력받음",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "학습부",
+      "component_type": "process",
+      "description": "MADDPG 알고리즘을 이용하여 드론 에이전트별 액터 신경망을 학습시킴",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "계획 생성부",
+      "component_type": "process",
+      "description": "학습된 액터 신경망을 이용하여 상태-행동 이력 정보를 생성하고 운용 계획을 생성함",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "학습된 정보를 이용함",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220033925",
+      "diagram_type": "flowchart",
+      "diagram_title": "강화학습 기반 다중 드론 네트워크 운용 계획 생성 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력부\"]\n    200[\"학습부\"]\n    300[\"계획 생성부\"]\n    400[\"출력부\"]\n    100 -->|\"입력받음\"| 200\n    200 -->|\"학습된 정보를 이용함\"| 300\n    300 -->|\"운용 계획 생성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력부",
+          "component_type": "actor",
+          "description": "강화학습 하이퍼파라미터와 다중 드론 네트워크 임무 정보를 입력받음",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "MADDPG 알고리즘을 이용하여 드론 에이전트별 액터 신경망을 학습시킴",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "계획 생성부",
+          "component_type": "process",
+          "description": "학습된 액터 신경망을 이용하여 상태-행동 이력 정보를 생성하고 운용 계획을 생성함",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습된 정보를 이용함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220033925/1020220033925_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220033925",
+      "diagram_type": "flowchart",
+      "diagram_title": "MADDPG 알고리즘 기반 드론 에이전트 학습 과정",
+      "mermaid_code": "flowchart TD\n    100[\"입력부\"]\n    200[\"학습부\"]\n    300[\"계획 생성부\"]\n    400[\"출력부\"]\n    100 -->|\"입력받음\"| 200\n    200 -->|\"학습된 정보를 이용함\"| 300\n    300 -->|\"운용 계획 생성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력부",
+          "component_type": "actor",
+          "description": "강화학습 하이퍼파라미터와 다중 드론 네트워크 임무 정보를 입력받음",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "MADDPG 알고리즘을 이용하여 드론 에이전트별 액터 신경망을 학습시킴",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "계획 생성부",
+          "component_type": "process",
+          "description": "학습된 액터 신경망을 이용하여 상태-행동 이력 정보를 생성하고 운용 계획을 생성함",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습된 정보를 이용함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220033925/1020220033925_fig_2.mmd"
+    }
+  ]
+}

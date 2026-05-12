@@ -1,0 +1,437 @@
+{
+  "app_num": "1020240101366",
+  "invention_type": "system",
+  "main_concept": "인공지능을 이용한 디지털 성범죄 콘텐츠 감시 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "사용자가 시스템에 접근하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "콘텐츠 감시 서버",
+      "component_type": "device",
+      "description": "유해 콘텐츠를 감시하고 분석하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수신",
+          "direction": "->"
+        },
+        {
+          "target": "210",
+          "label": "데이터 수집",
+          "direction": "->"
+        },
+        {
+          "target": "220",
+          "label": "데이터 분석",
+          "direction": "->"
+        },
+        {
+          "target": "230",
+          "label": "유해 콘텐츠 분류",
+          "direction": "->"
+        },
+        {
+          "target": "240",
+          "label": "채증 및 삭제 관리",
+          "direction": "->"
+        },
+        {
+          "target": "250",
+          "label": "데이터 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "210",
+      "name": "데이터 수집부",
+      "component_type": "process",
+      "description": "콘텐츠를 수집하고 키워드를 추출하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "220",
+      "name": "데이터 검출부",
+      "component_type": "process",
+      "description": "수집된 콘텐츠를 분석하여 유해 콘텐츠를 분류하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 분석",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "230",
+      "name": "데이터 분석부",
+      "component_type": "process",
+      "description": "유해 콘텐츠의 특성을 분석하고 분류하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "유해 콘텐츠 분석",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "240",
+      "name": "채증/삭제 관리부",
+      "component_type": "process",
+      "description": "유해 콘텐츠에 대한 채증 및 삭제 요청을 관리하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "채증 및 삭제 관리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "250",
+      "name": "데이터베이스",
+      "component_type": "data",
+      "description": "분석 결과 및 유해 콘텐츠 정보를 저장하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "검색 대상 웹 서버",
+      "component_type": "device",
+      "description": "콘텐츠 수집을 위한 웹 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "SNS 서버",
+      "component_type": "device",
+      "description": "콘텐츠 수집을 위한 소셜 네트워크 서비스 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240101366",
+      "diagram_type": "flowchart",
+      "diagram_title": "디지털 성범죄 콘텐츠 감시 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"콘텐츠 감시 서버\"]\n    210[\"데이터 수집부\"]\n    220[\"데이터 검출부\"]\n    230[\"데이터 분석부\"]\n    240[\"채증/삭제 관리부\"]\n    250[\"데이터베이스\"]\n\n    100 -->|\"데이터 수신\"| 200\n    200 -->|\"데이터 수집\"| 210\n    210 -->|\"프롬프트 데이터 임베딩 및 키워드 추출\"| 220\n    220 -->|\"유해 콘텐츠 분류\"| 230\n    230 -->|\"데이터 저장\"| 250\n    200 -->|\"채증 및 삭제 관리\"| 240",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 시스템에 접근하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "콘텐츠 감시 서버",
+          "component_type": "device",
+          "description": "유해 콘텐츠를 감시하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "데이터 수집",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "데이터 분석",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "유해 콘텐츠 분류",
+              "direction": "->"
+            },
+            {
+              "target": "240",
+              "label": "채증 및 삭제 관리",
+              "direction": "->"
+            },
+            {
+              "target": "250",
+              "label": "데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "콘텐츠를 수집하고 키워드를 추출하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "데이터 검출부",
+          "component_type": "process",
+          "description": "수집된 콘텐츠를 분석하여 유해 콘텐츠를 분류하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "데이터 분석부",
+          "component_type": "process",
+          "description": "유해 콘텐츠의 특성을 분석하고 분류하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "유해 콘텐츠 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "240",
+          "name": "채증/삭제 관리부",
+          "component_type": "process",
+          "description": "유해 콘텐츠에 대한 채증 및 삭제 요청을 관리하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "채증 및 삭제 관리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "250",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "분석 결과 및 유해 콘텐츠 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 대상 웹 서버",
+          "component_type": "device",
+          "description": "콘텐츠 수집을 위한 웹 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "SNS 서버",
+          "component_type": "device",
+          "description": "콘텐츠 수집을 위한 소셜 네트워크 서비스 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240101366/1020240101366_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240101366",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 사용자정보\n        +접근()\n    }\n    class 콘텐츠감시서버 {\n        +String 서버정보\n        +데이터수신()\n        +데이터수집()\n        +데이터분석()\n        +유해콘텐츠분류()\n        +채증삭제관리()\n        +데이터저장()\n    }\n    class 데이터수집부 {\n        +String 수집정보\n        +키워드추출()\n    }\n    class 데이터검출부 {\n        +String 분석정보\n        +유해콘텐츠분류()\n    }\n    class 데이터분석부 {\n        +String 분석결과\n        +특성분석()\n    }\n    class 채증삭제관리부 {\n        +String 요청정보\n        +관리()\n    }\n    class 데이터베이스 {\n        +String 저장정보\n        +저장()\n    }\n\n    사용자단말 --> 콘텐츠감시서버 : \"데이터 수신\"\n    콘텐츠감시서버 --> 데이터수집부 : \"데이터 수집\"\n    콘텐츠감시서버 --> 데이터검출부 : \"데이터 분석\"\n    콘텐츠감시서버 --> 데이터분석부 : \"유해 콘텐츠 분류\"\n    콘텐츠감시서버 --> 채증삭제관리부 : \"채증 및 삭제 관리\"\n    콘텐츠감시서버 --> 데이터베이스 : \"데이터 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 시스템에 접근하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "콘텐츠 감시 서버",
+          "component_type": "device",
+          "description": "유해 콘텐츠를 감시하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "210",
+              "label": "데이터 수집",
+              "direction": "->"
+            },
+            {
+              "target": "220",
+              "label": "데이터 분석",
+              "direction": "->"
+            },
+            {
+              "target": "230",
+              "label": "유해 콘텐츠 분류",
+              "direction": "->"
+            },
+            {
+              "target": "240",
+              "label": "채증 및 삭제 관리",
+              "direction": "->"
+            },
+            {
+              "target": "250",
+              "label": "데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "210",
+          "name": "데이터 수집부",
+          "component_type": "process",
+          "description": "콘텐츠를 수집하고 키워드를 추출하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "220",
+          "name": "데이터 검출부",
+          "component_type": "process",
+          "description": "수집된 콘텐츠를 분석하여 유해 콘텐츠를 분류하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "230",
+          "name": "데이터 분석부",
+          "component_type": "process",
+          "description": "유해 콘텐츠의 특성을 분석하고 분류하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "유해 콘텐츠 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "240",
+          "name": "채증/삭제 관리부",
+          "component_type": "process",
+          "description": "유해 콘텐츠에 대한 채증 및 삭제 요청을 관리하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "채증 및 삭제 관리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "250",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "분석 결과 및 유해 콘텐츠 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 대상 웹 서버",
+          "component_type": "device",
+          "description": "콘텐츠 수집을 위한 웹 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "SNS 서버",
+          "component_type": "device",
+          "description": "콘텐츠 수집을 위한 소셜 네트워크 서비스 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240101366/1020240101366_fig_2.mmd"
+    }
+  ]
+}

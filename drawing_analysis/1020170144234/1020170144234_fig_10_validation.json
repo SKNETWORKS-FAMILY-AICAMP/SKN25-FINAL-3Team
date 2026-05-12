@@ -1,0 +1,31 @@
+{
+  "valid": true,
+  "quality": {
+    "score": 100,
+    "grade": "A",
+    "pass": true,
+    "issues": [],
+    "strengths": [
+      "구성요소 수가 충분합니다.",
+      "도면부호 또는 단계부호가 표시됩니다.",
+      "좌표 기반 특허청 스타일 SVG 렌더링을 사용했습니다.",
+      "도면 유형이 허용 범위에 있습니다."
+    ]
+  },
+  "fig_json_validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "element_count": 4,
+    "relation_count": 3
+  },
+  "layout_meta": {
+    "layout_type": "patent_flow_svg",
+    "canvas": {
+      "width": 850,
+      "height": 760
+    },
+    "step_count": 4
+  },
+  "created_at": "2026-05-11T17:42:08.670214"
+}

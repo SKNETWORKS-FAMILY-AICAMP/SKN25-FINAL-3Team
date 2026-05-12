@@ -1,0 +1,323 @@
+{
+  "app_num": "1020160051877",
+  "invention_type": "system",
+  "main_concept": "한국 대중문화 엔터테이너 관련 콘텐츠를 제공하는 한류 포털 서비스 시스템",
+  "components": [
+    {
+      "component_id": "10",
+      "name": "커뮤니티부",
+      "component_type": "data",
+      "description": "사용자와 엔터테이너 간의 소통 및 정보 공유 공간",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "마켓부",
+      "component_type": "data",
+      "description": "상품 및 서비스 거래를 위한 공간",
+      "relationships": []
+    },
+    {
+      "component_id": "30",
+      "name": "결제부",
+      "component_type": "data",
+      "description": "상품 구매 및 경매 참여를 위한 결제 처리 공간",
+      "relationships": []
+    },
+    {
+      "component_id": "40",
+      "name": "검색부",
+      "component_type": "data",
+      "description": "콘텐츠 검색 기능 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "50",
+      "name": "선정판별부",
+      "component_type": "data",
+      "description": "사용자 활동 정보를 기반으로 순위 정보를 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "11",
+      "name": "스타보드",
+      "component_type": "data",
+      "description": "엔터테이너의 정보 및 활동을 표시하는 보드",
+      "relationships": []
+    },
+    {
+      "component_id": "12",
+      "name": "스타메이커",
+      "component_type": "data",
+      "description": "엔터테이너 소속사 정보 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "13",
+      "name": "스타스타일",
+      "component_type": "data",
+      "description": "엔터테이너 관련 콘텐츠 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "14",
+      "name": "팬월드",
+      "component_type": "data",
+      "description": "팬들이 엔터테이너를 응원하고 소통하는 공간",
+      "relationships": []
+    },
+    {
+      "component_id": "21",
+      "name": "스타기념상품단",
+      "component_type": "data",
+      "description": "기념상품 정보를 제공하는 단",
+      "relationships": []
+    },
+    {
+      "component_id": "22",
+      "name": "협찬상품단",
+      "component_type": "data",
+      "description": "협찬상품 정보를 제공하는 단",
+      "relationships": []
+    },
+    {
+      "component_id": "23",
+      "name": "스타상품경매단",
+      "component_type": "data",
+      "description": "애장품 경매를 위한 단",
+      "relationships": []
+    },
+    {
+      "component_id": "24",
+      "name": "O2O서비스단",
+      "component_type": "data",
+      "description": "오프라인 매장 예약 기능 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "25",
+      "name": "비즈니스허브",
+      "component_type": "data",
+      "description": "사업 제안 및 평가 기능 제공",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020160051877",
+      "diagram_type": "classDiagram",
+      "diagram_title": "한류 포털 서비스 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 커뮤니티부 {\n        +String 소통공간\n        +정보공유()\n    }\n    class 마켓부 {\n        +String 거래공간\n        +상품구매()\n        +경매참여()\n    }\n    class 결제부 {\n        +String 결제정보\n        +결제처리()\n    }\n    class 검색부 {\n        +String 검색기능\n        +콘텐츠검색()\n    }\n    class 선정판별부 {\n        +String 순위정보\n        +활동정보기반()\n    }\n    class 스타보드 {\n        +String 엔터테이너정보\n        +활동표시()\n    }\n    class 스타메이커 {\n        +String 소속사정보\n        +정보제공()\n    }\n    class 스타스타일 {\n        +String 콘텐츠정보\n        +콘텐츠제공()\n    }\n    class 팬월드 {\n        +String 응원공간\n        +소통기능()\n    }\n    class 스타기념상품단 {\n        +String 기념상품정보\n        +정보제공()\n    }\n    class 협찬상품단 {\n        +String 협찬상품정보\n        +정보제공()\n    }\n    class 스타상품경매단 {\n        +String 경매정보\n        +경매참여()\n    }\n    class O2O서비스단 {\n        +String 예약기능\n        +매장예약()\n    }\n    class 비즈니스허브 {\n        +String 사업제안\n        +평가기능()\n    }\n\n    커뮤니티부 --> 마켓부 : \"정보 공유\"\n    마켓부 --> 결제부 : \"상품 구매 및 경매 참여\"\n    검색부 --> 스타보드 : \"엔터테이너 정보 검색\"\n    스타보드 --> 팬월드 : \"소통 및 응원\"\n    마켓부 --> 스타기념상품단 : \"기념상품 정보 제공\"\n    마켓부 --> 협찬상품단 : \"협찬상품 정보 제공\"\n    마켓부 --> 스타상품경매단 : \"경매 참여\"\n    O2O서비스단 --> 마켓부 : \"오프라인 매장 예약\"\n    비즈니스허브 --> 마켓부 : \"사업 제안 및 평가\"",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "커뮤니티부",
+          "component_type": "data",
+          "description": "사용자와 엔터테이너 간의 소통 및 정보 공유 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "마켓부",
+          "component_type": "data",
+          "description": "상품 및 서비스 거래를 위한 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "30",
+          "name": "결제부",
+          "component_type": "data",
+          "description": "상품 구매 및 경매 참여를 위한 결제 처리 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "40",
+          "name": "검색부",
+          "component_type": "data",
+          "description": "콘텐츠 검색 기능 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "50",
+          "name": "선정판별부",
+          "component_type": "data",
+          "description": "사용자 활동 정보를 기반으로 순위 정보를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "11",
+          "name": "스타보드",
+          "component_type": "data",
+          "description": "엔터테이너의 정보 및 활동을 표시하는 보드",
+          "relationships": []
+        },
+        {
+          "component_id": "12",
+          "name": "스타메이커",
+          "component_type": "data",
+          "description": "엔터테이너 소속사 정보 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "13",
+          "name": "스타스타일",
+          "component_type": "data",
+          "description": "엔터테이너 관련 콘텐츠 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "14",
+          "name": "팬월드",
+          "component_type": "data",
+          "description": "팬들이 엔터테이너를 응원하고 소통하는 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "21",
+          "name": "스타기념상품단",
+          "component_type": "data",
+          "description": "기념상품 정보를 제공하는 단",
+          "relationships": []
+        },
+        {
+          "component_id": "22",
+          "name": "협찬상품단",
+          "component_type": "data",
+          "description": "협찬상품 정보를 제공하는 단",
+          "relationships": []
+        },
+        {
+          "component_id": "23",
+          "name": "스타상품경매단",
+          "component_type": "data",
+          "description": "애장품 경매를 위한 단",
+          "relationships": []
+        },
+        {
+          "component_id": "24",
+          "name": "O2O서비스단",
+          "component_type": "data",
+          "description": "오프라인 매장 예약 기능 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "25",
+          "name": "비즈니스허브",
+          "component_type": "data",
+          "description": "사업 제안 및 평가 기능 제공",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020160051877/1020160051877_fig_1.mmd"
+    },
+    {
+      "app_num": "1020160051877",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 인터랙션 흐름도",
+      "mermaid_code": "flowchart TD\n    10[\"커뮤니티부\"]\n    20[\"마켓부\"]\n    30[\"결제부\"]\n    40[\"검색부\"]\n    10 -->|\"사용자가 회원가입\"| 40\n    40 -->|\"엔터테이너 정보 검색\"| 20\n    20 -->|\"상품 구매 또는 경매 참여\"| 30",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "커뮤니티부",
+          "component_type": "data",
+          "description": "사용자와 엔터테이너 간의 소통 및 정보 공유 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "마켓부",
+          "component_type": "data",
+          "description": "상품 및 서비스 거래를 위한 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "30",
+          "name": "결제부",
+          "component_type": "data",
+          "description": "상품 구매 및 경매 참여를 위한 결제 처리 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "40",
+          "name": "검색부",
+          "component_type": "data",
+          "description": "콘텐츠 검색 기능 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "50",
+          "name": "선정판별부",
+          "component_type": "data",
+          "description": "사용자 활동 정보를 기반으로 순위 정보를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "11",
+          "name": "스타보드",
+          "component_type": "data",
+          "description": "엔터테이너의 정보 및 활동을 표시하는 보드",
+          "relationships": []
+        },
+        {
+          "component_id": "12",
+          "name": "스타메이커",
+          "component_type": "data",
+          "description": "엔터테이너 소속사 정보 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "13",
+          "name": "스타스타일",
+          "component_type": "data",
+          "description": "엔터테이너 관련 콘텐츠 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "14",
+          "name": "팬월드",
+          "component_type": "data",
+          "description": "팬들이 엔터테이너를 응원하고 소통하는 공간",
+          "relationships": []
+        },
+        {
+          "component_id": "21",
+          "name": "스타기념상품단",
+          "component_type": "data",
+          "description": "기념상품 정보를 제공하는 단",
+          "relationships": []
+        },
+        {
+          "component_id": "22",
+          "name": "협찬상품단",
+          "component_type": "data",
+          "description": "협찬상품 정보를 제공하는 단",
+          "relationships": []
+        },
+        {
+          "component_id": "23",
+          "name": "스타상품경매단",
+          "component_type": "data",
+          "description": "애장품 경매를 위한 단",
+          "relationships": []
+        },
+        {
+          "component_id": "24",
+          "name": "O2O서비스단",
+          "component_type": "data",
+          "description": "오프라인 매장 예약 기능 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "25",
+          "name": "비즈니스허브",
+          "component_type": "data",
+          "description": "사업 제안 및 평가 기능 제공",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020160051877/1020160051877_fig_2.mmd"
+    }
+  ]
+}

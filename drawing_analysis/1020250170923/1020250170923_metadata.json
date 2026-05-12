@@ -1,0 +1,182 @@
+{
+  "app_num": "1020250170923",
+  "invention_type": "system",
+  "main_concept": "프록시카드를 이용한 블록체인 기반 결제 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "결제자 단말",
+      "component_type": "actor",
+      "description": "결제 요청을 생성하고 블록체인 서버로 전송하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프록시카드 발급 서버",
+      "component_type": "actor",
+      "description": "사용자의 신원을 검증하고 프록시카드를 발급하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 요청 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "동의자 단말",
+      "component_type": "actor",
+      "description": "결제 요청에 대한 동의를 판단하고 서명 데이터를 전송하는 장치",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "동의 신호 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "블록체인 서버",
+      "component_type": "actor",
+      "description": "결제 동의율을 산출하고 거래 실행 여부를 결정하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 요청 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "동의 데이터 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250170923",
+      "diagram_type": "flowchart",
+      "diagram_title": "프록시카드 기반 블록체인 결제 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"결제자 단말\"]\n    200[\"프록시카드 발급 서버\"]\n    300[\"동의자 단말\"]\n    400[\"블록체인 서버\"]\n    100 -->|\"결제 요청 생성\"| 200\n    200 -->|\"프록시카드 발급 및 인증\"| 100\n    100 -->|\"결제 요청 전송\"| 400\n    400 -->|\"결제 요청 정보 수신 및 동의 판단\"| 300\n    300 -->|\"동의 신호 제공\"| 400\n    400 -->|\"결제 동의율 산출 및 거래 실행 결정\"| 100\n    400 -->|\"스테이블 코인 정산 수행\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "결제자 단말",
+          "component_type": "actor",
+          "description": "결제 요청을 생성하고 블록체인 서버로 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프록시카드 발급 서버",
+          "component_type": "actor",
+          "description": "사용자의 신원을 검증하고 프록시카드를 발급하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "동의자 단말",
+          "component_type": "actor",
+          "description": "결제 요청에 대한 동의를 판단하고 서명 데이터를 전송하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "동의 신호 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "블록체인 서버",
+          "component_type": "actor",
+          "description": "결제 동의율을 산출하고 거래 실행 여부를 결정하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "동의 데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250170923/1020250170923_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250170923",
+      "diagram_type": "classDiagram",
+      "diagram_title": "프록시카드 기반 블록체인 결제 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 결제자단말 {\n        +String 결제요청\n        +전송()\n    }\n    class 프록시카드발급서버 {\n        +String 사용자정보\n        +프록시카드발급()\n    }\n    class 동의자단말 {\n        +String 동의신호\n        +서명전송()\n    }\n    class 블록체인서버 {\n        +String 동의율\n        +거래결정()\n    }\n    결제자단말 --> 프록시카드발급서버 : \"결제 요청 생성\"\n    블록체인서버 --> 결제자단말 : \"결제 요청 수신\"\n    블록체인서버 --> 동의자단말 : \"동의 데이터 수신\"\n    동의자단말 --> 블록체인서버 : \"동의 신호 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "결제자 단말",
+          "component_type": "actor",
+          "description": "결제 요청을 생성하고 블록체인 서버로 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프록시카드 발급 서버",
+          "component_type": "actor",
+          "description": "사용자의 신원을 검증하고 프록시카드를 발급하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "동의자 단말",
+          "component_type": "actor",
+          "description": "결제 요청에 대한 동의를 판단하고 서명 데이터를 전송하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "동의 신호 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "블록체인 서버",
+          "component_type": "actor",
+          "description": "결제 동의율을 산출하고 거래 실행 여부를 결정하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "동의 데이터 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250170923/1020250170923_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,503 @@
+{
+  "app_num": "1020220118978",
+  "invention_type": "system",
+  "main_concept": "생활밀착형 원스톱 플랫폼 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "가맹점 단말",
+      "component_type": "device",
+      "description": "상품 또는 서비스를 등록하고 매장 데이터를 업로드하여 가맹점으로 등록",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "사용자 단말",
+      "component_type": "device",
+      "description": "현위치 또는 입력된 위치를 기반으로 가맹점을 검색하고 지도에 오버레이하여 출력",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "검색 및 오버레이",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "플랫폼 서비스 제공 서버",
+      "component_type": "device",
+      "description": "가맹점 단말과 사용자 단말 간의 데이터 처리 및 서비스 제공",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "등록부와 매핑",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "위치 기반 서비스 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "경로안내부",
+      "component_type": "process",
+      "description": "사용자 단말의 가맹점 단말로 이동 시 길찾기 및 경로안내 서비스 제공",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "서비스 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "매칭부",
+      "component_type": "process",
+      "description": "취미정보를 기반으로 사용자 간 매칭 수행",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 입력 및 매칭",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "테마별추천부",
+      "component_type": "process",
+      "description": "지역별 커뮤니티 및 테마에 맞는 상품 또는 서비스 추천",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "추천 서비스 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "아이템중개부",
+      "component_type": "process",
+      "description": "공동구매 및 중고거래를 중개",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "거래 중개",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "예약관리부",
+      "component_type": "process",
+      "description": "예약 이벤트를 관리하고 전송",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "예약 이벤트 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "900",
+      "name": "충전결제부",
+      "component_type": "process",
+      "description": "선결제를 위한 결제 처리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결제 처리",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220118978",
+      "diagram_type": "classDiagram",
+      "diagram_title": "생활밀착형 원스톱 플랫폼 서비스 제공 시스템",
+      "mermaid_code": "classDiagram\n    class 가맹점단말 {\n        +String 매장데이터\n        +등록()\n    }\n    class 사용자단말 {\n        +String 현재위치\n        +검색()\n    }\n    class 플랫폼서비스제공서버 {\n        +String 데이터처리\n        +서비스제공()\n    }\n    class 경로안내부 {\n        +String 경로정보\n        +안내서비스()\n    }\n    class 매칭부 {\n        +String 취미정보\n        +매칭수행()\n    }\n    class 테마별추천부 {\n        +String 추천상품\n        +추천서비스()\n    }\n    class 아이템중개부 {\n        +String 거래정보\n        +거래중개()\n    }\n    class 예약관리부 {\n        +String 예약정보\n        +이벤트관리()\n    }\n    class 충전결제부 {\n        +String 결제정보\n        +결제처리()\n    }\n\n    사용자단말 --> 가맹점단말 : \"검색 및 오버레이\"\n    플랫폼서비스제공서버 --> 가맹점단말 : \"등록부와 매핑\"\n    플랫폼서비스제공서버 --> 사용자단말 : \"위치 기반 서비스 제공\"\n    경로안내부 --> 사용자단말 : \"서비스 제공\"\n    매칭부 --> 사용자단말 : \"정보 입력 및 매칭\"\n    테마별추천부 --> 사용자단말 : \"추천 서비스 제공\"\n    아이템중개부 --> 사용자단말 : \"거래 중개\"\n    예약관리부 --> 사용자단말 : \"예약 이벤트 전송\"\n    충전결제부 --> 사용자단말 : \"결제 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가맹점 단말",
+          "component_type": "device",
+          "description": "상품 또는 서비스를 등록하고 매장 데이터를 업로드하여 가맹점으로 등록",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "현위치 또는 입력된 위치를 기반으로 가맹점을 검색하고 지도에 오버레이하여 출력",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검색 및 오버레이",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "플랫폼 서비스 제공 서버",
+          "component_type": "device",
+          "description": "가맹점 단말과 사용자 단말 간의 데이터 처리 및 서비스 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "등록부와 매핑",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "위치 기반 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경로안내부",
+          "component_type": "process",
+          "description": "사용자 단말의 가맹점 단말로 이동 시 길찾기 및 경로안내 서비스 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "매칭부",
+          "component_type": "process",
+          "description": "취미정보를 기반으로 사용자 간 매칭 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 및 매칭",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "테마별추천부",
+          "component_type": "process",
+          "description": "지역별 커뮤니티 및 테마에 맞는 상품 또는 서비스 추천",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추천 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "아이템중개부",
+          "component_type": "process",
+          "description": "공동구매 및 중고거래를 중개",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 중개",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "예약관리부",
+          "component_type": "process",
+          "description": "예약 이벤트를 관리하고 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 이벤트 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "충전결제부",
+          "component_type": "process",
+          "description": "선결제를 위한 결제 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220118978/1020220118978_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220118978",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랫폼 서비스 제공 서버 블록 구성도",
+      "mermaid_code": "classDiagram\n    class 가맹점단말 {\n        +String 매장데이터\n        +등록()\n    }\n    class 사용자단말 {\n        +String 위치정보\n        +검색()\n    }\n    class 플랫폼서비스제공서버 {\n        +String 데이터처리\n        +서비스제공()\n    }\n    class 경로안내부 {\n        +String 길찾기정보\n        +경로안내()\n    }\n    class 매칭부 {\n        +String 취미정보\n        +매칭수행()\n    }\n    class 테마별추천부 {\n        +String 추천상품\n        +추천제공()\n    }\n    class 아이템중개부 {\n        +String 거래정보\n        +거래중개()\n    }\n    class 예약관리부 {\n        +String 예약정보\n        +예약관리()\n    }\n    class 충전결제부 {\n        +String 결제정보\n        +결제처리()\n    }\n\n    사용자단말 -->| \"검색 및 오버레이\" | 가맹점단말\n    플랫폼서비스제공서버 -->| \"등록부와 매핑\" | 가맹점단말\n    플랫폼서비스제공서버 -->| \"위치 기반 서비스 제공\" | 사용자단말\n    사용자단말 -->| \"서비스 제공\" | 경로안내부\n    사용자단말 -->| \"정보 입력 및 매칭\" | 매칭부\n    사용자단말 -->| \"추천 서비스 제공\" | 테마별추천부\n    사용자단말 -->| \"거래 중개\" | 아이템중개부\n    사용자단말 -->| \"예약 이벤트 전송\" | 예약관리부\n    사용자단말 -->| \"결제 처리\" | 충전결제부",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가맹점 단말",
+          "component_type": "device",
+          "description": "상품 또는 서비스를 등록하고 매장 데이터를 업로드하여 가맹점으로 등록",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "현위치 또는 입력된 위치를 기반으로 가맹점을 검색하고 지도에 오버레이하여 출력",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검색 및 오버레이",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "플랫폼 서비스 제공 서버",
+          "component_type": "device",
+          "description": "가맹점 단말과 사용자 단말 간의 데이터 처리 및 서비스 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "등록부와 매핑",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "위치 기반 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경로안내부",
+          "component_type": "process",
+          "description": "사용자 단말의 가맹점 단말로 이동 시 길찾기 및 경로안내 서비스 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "매칭부",
+          "component_type": "process",
+          "description": "취미정보를 기반으로 사용자 간 매칭 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 및 매칭",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "테마별추천부",
+          "component_type": "process",
+          "description": "지역별 커뮤니티 및 테마에 맞는 상품 또는 서비스 추천",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추천 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "아이템중개부",
+          "component_type": "process",
+          "description": "공동구매 및 중고거래를 중개",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 중개",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "예약관리부",
+          "component_type": "process",
+          "description": "예약 이벤트를 관리하고 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 이벤트 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "충전결제부",
+          "component_type": "process",
+          "description": "선결제를 위한 결제 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220118978/1020220118978_fig_2.mmd"
+    },
+    {
+      "app_num": "1020220118978",
+      "diagram_type": "flowchart",
+      "diagram_title": "생활밀착형 원스톱 플랫폼 서비스 제공 방법",
+      "mermaid_code": "flowchart TD\n    100[\"가맹점 단말\"]\n    200[\"사용자 단말\"]\n    300[\"플랫폼 서비스 제공 서버\"]\n    400[\"경로안내부\"]\n    500[\"매칭부\"]\n    600[\"테마별추천부\"]\n    700[\"아이템중개부\"]\n    800[\"예약관리부\"]\n    900[\"충전결제부\"]\n\n    100 -->|\"등록부와 매핑\"| 300\n    200 -->|\"검색 및 오버레이\"| 100\n    300 -->|\"위치 기반 서비스 제공\"| 200\n    200 -->|\"서비스 제공\"| 400\n    200 -->|\"정보 입력 및 매칭\"| 500\n    200 -->|\"추천 서비스 제공\"| 600\n    200 -->|\"거래 중개\"| 700\n    200 -->|\"예약 이벤트 전송\"| 800\n    200 -->|\"결제 처리\"| 900",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가맹점 단말",
+          "component_type": "device",
+          "description": "상품 또는 서비스를 등록하고 매장 데이터를 업로드하여 가맹점으로 등록",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "현위치 또는 입력된 위치를 기반으로 가맹점을 검색하고 지도에 오버레이하여 출력",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검색 및 오버레이",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "플랫폼 서비스 제공 서버",
+          "component_type": "device",
+          "description": "가맹점 단말과 사용자 단말 간의 데이터 처리 및 서비스 제공",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "등록부와 매핑",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "위치 기반 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "경로안내부",
+          "component_type": "process",
+          "description": "사용자 단말의 가맹점 단말로 이동 시 길찾기 및 경로안내 서비스 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "매칭부",
+          "component_type": "process",
+          "description": "취미정보를 기반으로 사용자 간 매칭 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력 및 매칭",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "테마별추천부",
+          "component_type": "process",
+          "description": "지역별 커뮤니티 및 테마에 맞는 상품 또는 서비스 추천",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "추천 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "아이템중개부",
+          "component_type": "process",
+          "description": "공동구매 및 중고거래를 중개",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "거래 중개",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "예약관리부",
+          "component_type": "process",
+          "description": "예약 이벤트를 관리하고 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 이벤트 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "충전결제부",
+          "component_type": "process",
+          "description": "선결제를 위한 결제 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020220118978/1020220118978_fig_5.mmd"
+    }
+  ]
+}

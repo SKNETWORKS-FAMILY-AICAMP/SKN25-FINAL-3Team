@@ -1,0 +1,128 @@
+{
+  "app_num": "1020217006505",
+  "invention_type": "hardware",
+  "main_concept": "메모리 시스템과 프로세서 간의 데이터 액세스를 최적화하는 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메인 메모리 어레이",
+      "component_type": "device",
+      "description": "데이터를 저장하는 메모리 배열",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 메모리 제어기",
+      "component_type": "device",
+      "description": "메모리 액세스 요청을 처리하고 데이터 액세스 패턴을 결정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "메모리 시스템과 상호작용하여 데이터를 처리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "요청",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020217006505",
+      "diagram_type": "classDiagram",
+      "diagram_title": "메모리 시스템 구조",
+      "mermaid_code": "classDiagram\n    class 메인메모리어레이 {\n        +String 데이터\n    }\n    class 제1메모리제어기 {\n        +processRequest()\n        +determineAccessPattern()\n    }\n    class 프로세서 {\n        +processData()\n    }\n    프로세서 --> 제1메모리제어기 : \"요청\"\n    제1메모리제어기 --> 메인메모리어레이 : \"제어\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 메모리 어레이",
+          "component_type": "device",
+          "description": "데이터를 저장하는 메모리 배열",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 메모리 제어기",
+          "component_type": "device",
+          "description": "메모리 액세스 요청을 처리하고 데이터 액세스 패턴을 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "메모리 시스템과 상호작용하여 데이터를 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020217006505/1020217006505_fig_1.mmd"
+    },
+    {
+      "app_num": "1020217006505",
+      "diagram_type": "flowchart",
+      "diagram_title": "메모리 액세스 프로세스",
+      "mermaid_code": "flowchart TD\n    300[\"프로세서\"]\n    200[\"제1 메모리 제어기\"]\n    100[\"메인 메모리 어레이\"]\n    \n    300 -->|\"메모리 액세스 요청 수신\"| 200\n    200 -->|\"데이터 액세스 패턴 결정\"| 100\n    200 -->|\"액세스 포인터 결정 및 데이터 출력\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 메모리 어레이",
+          "component_type": "device",
+          "description": "데이터를 저장하는 메모리 배열",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 메모리 제어기",
+          "component_type": "device",
+          "description": "메모리 액세스 요청을 처리하고 데이터 액세스 패턴을 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "메모리 시스템과 상호작용하여 데이터를 처리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020217006505/1020217006505_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "app_num": "1020240173044",
+  "invention_type": "system",
+  "main_concept": "인공지능을 이용한 미술 자산 가치 평가 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "미술 자산 가치 평가 시스템",
+      "component_type": "system",
+      "description": "미술 작품의 가치를 평가하는 시스템",
+      "relationships": []
+    },
+    {
+      "component_id": "110",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "시스템에 접근하여 데이터를 입력하는 사용자",
+      "relationships": [
+        {
+          "target": "120",
+          "label": "통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "서버",
+      "component_type": "device",
+      "description": "데이터 처리 및 인공지능 알고리즘 수행",
+      "relationships": [
+        {
+          "target": "130",
+          "label": "데이터 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "130",
+      "name": "데이터베이스",
+      "component_type": "data",
+      "description": "미술 작품 관련 데이터를 저장",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240173044",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인공지능 미술 자산 가치 평가 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 미술자산가치평가시스템 {\n        +String 설명\n    }\n    class 사용자단말 {\n        +String 데이터입력\n    }\n    class 서버 {\n        +String 데이터처리\n        +String 알고리즘수행\n    }\n    class 데이터베이스 {\n        +String 데이터저장\n    }\n    미술자산가치평가시스템 --> 사용자단말 : \"통신\"\n    미술자산가치평가시스템 --> 서버 : \"데이터 처리\"\n    서버 --> 데이터베이스 : \"데이터 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "미술 자산 가치 평가 시스템",
+          "component_type": "system",
+          "description": "미술 작품의 가치를 평가하는 시스템",
+          "relationships": []
+        },
+        {
+          "component_id": "110",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "시스템에 접근하여 데이터를 입력하는 사용자",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "서버",
+          "component_type": "device",
+          "description": "데이터 처리 및 인공지능 알고리즘 수행",
+          "relationships": [
+            {
+              "target": "130",
+              "label": "데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "미술 작품 관련 데이터를 저장",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240173044/1020240173044_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240173044",
+      "diagram_type": "flowchart",
+      "diagram_title": "미술 자산 가치 평가 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"미술 자산 가치 평가 시스템\"]\n    110[\"사용자 단말\"]\n    120[\"서버\"]\n    130[\"데이터베이스\"]\n    \n    110 -->|\"통신\"| 120\n    120 -->|\"데이터 저장\"| 130\n    100 -->|\"데이터 수집\"| 120\n    120 -->|\"데이터 정규화 및 학습 데이터 생성\"| 120\n    120 -->|\"가치 평가 모델 학습\"| 120\n    120 -->|\"현재 가치 및 미래 가격 변동 예측\"| 120\n    120 -->|\"최종 평가 결과 생성\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "미술 자산 가치 평가 시스템",
+          "component_type": "system",
+          "description": "미술 작품의 가치를 평가하는 시스템",
+          "relationships": []
+        },
+        {
+          "component_id": "110",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "시스템에 접근하여 데이터를 입력하는 사용자",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "서버",
+          "component_type": "device",
+          "description": "데이터 처리 및 인공지능 알고리즘 수행",
+          "relationships": [
+            {
+              "target": "130",
+              "label": "데이터 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "130",
+          "name": "데이터베이스",
+          "component_type": "data",
+          "description": "미술 작품 관련 데이터를 저장",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020240173044/1020240173044_fig_5.mmd"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "app_num": "1020210134063",
+  "invention_type": "method",
+  "main_concept": "연료전지 시스템의 잔여 수명 예측을 위한 디지털 트윈 모델 생성 및 업데이트 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "디지털 트윈 장치",
+      "component_type": "device",
+      "description": "연료전지 시스템의 데이터를 수집하고 분석하여 잔여 수명을 예측하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "클라우드 저장소",
+      "component_type": "data",
+      "description": "디지털 트윈 데이터를 저장하는 클라우드 기반 저장소",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "딥 러닝 모델",
+      "component_type": "process",
+      "description": "디지털 트윈 데이터를 학습하여 미래 열화 경향을 예측하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "모델 생성",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210134063",
+      "diagram_type": "flowchart",
+      "diagram_title": "연료전지 시스템 잔여 수명 예측 방법",
+      "mermaid_code": "flowchart TD\n    100[\"디지털 트윈 장치\"]\n    200[\"클라우드 저장소\"]\n    300[\"딥 러닝 모델\"]\n    400[\"미래 열화 경향 예측\"]\n    500[\"잔여 수명 예측\"]\n    \n    100 -->|\"데이터 저장\"| 200\n    200 -->|\"모델 생성\"| 300\n    300 -->|\"예측 결과\"| 400\n    400 -->|\"잔여 수명 정보\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디지털 트윈 장치",
+          "component_type": "device",
+          "description": "연료전지 시스템의 데이터를 수집하고 분석하여 잔여 수명을 예측하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라우드 저장소",
+          "component_type": "data",
+          "description": "디지털 트윈 데이터를 저장하는 클라우드 기반 저장소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "딥 러닝 모델",
+          "component_type": "process",
+          "description": "디지털 트윈 데이터를 학습하여 미래 열화 경향을 예측하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델 생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210134063/1020210134063_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210134063",
+      "diagram_type": "classDiagram",
+      "diagram_title": "디지털 트윈 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 디지털트윈장치 {\n        +String 데이터수집()\n        +String 잔여수명예측()\n    }\n    class 클라우드저장소 {\n        +String 데이터저장()\n    }\n    class 딥러닝모델 {\n        +String 모델생성()\n        +String 열화경향예측()\n    }\n    디지털트윈장치 --> 클라우드저장소 : \"데이터 저장\"\n    디지털트윈장치 --> 딥러닝모델 : \"모델 생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디지털 트윈 장치",
+          "component_type": "device",
+          "description": "연료전지 시스템의 데이터를 수집하고 분석하여 잔여 수명을 예측하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라우드 저장소",
+          "component_type": "data",
+          "description": "디지털 트윈 데이터를 저장하는 클라우드 기반 저장소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "딥 러닝 모델",
+          "component_type": "process",
+          "description": "디지털 트윈 데이터를 학습하여 미래 열화 경향을 예측하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델 생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210134063/1020210134063_fig_2.mmd"
+    }
+  ]
+}

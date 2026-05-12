@@ -1,0 +1,28 @@
+%% 1020250074382 - 유통플랫폼 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 사용자계정모듈 {
+        +String 개인정보
+        +manageAccount()
+    }
+    class 검색정보처리모듈 {
+        +String 검색정보
+        +generateMeaningInfo()
+    }
+    class 제품그룹정보처리모듈 {
+        +String 의미정보
+        +clusterProducts()
+    }
+    class 구매확률연산모듈 {
+        +String 제품그룹정보
+        +calculatePurchaseProbability()
+    }
+    class 수요정보연산모듈 {
+        +String 개별수요정보
+        +calculateDemandInfo()
+    }
+    사용자계정모듈 --> 검색정보처리모듈 : "제공"
+    검색정보처리모듈 --> 제품그룹정보처리모듈 : "사용"
+    제품그룹정보처리모듈 --> 구매확률연산모듈 : "연산"
+    구매확률연산모듈 --> 수요정보연산모듈 : "연산"

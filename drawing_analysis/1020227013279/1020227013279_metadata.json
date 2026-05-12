@@ -1,0 +1,236 @@
+{
+  "app_num": "1020227013279",
+  "invention_type": "method",
+  "main_concept": "폐쇄 루프 거래를 수행하기 위한 방법",
+  "components": [
+    {
+      "component_id": "202A",
+      "name": "제1 사용자 디바이스",
+      "component_type": "device",
+      "description": "지불 선택을 수신하고 데이터를 송신하는 역할",
+      "relationships": [
+        {
+          "target": "202B",
+          "label": "데이터 송신",
+          "direction": "->"
+        },
+        {
+          "target": "206",
+          "label": "세션 키 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "202B",
+      "name": "제2 사용자 디바이스",
+      "component_type": "device",
+      "description": "제1 사용자 디바이스로부터 데이터를 수신하고 처리하는 역할",
+      "relationships": [
+        {
+          "target": "204",
+          "label": "데이터 송신",
+          "direction": "->"
+        },
+        {
+          "target": "206",
+          "label": "대칭 세션 키 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "204",
+      "name": "지불 서버",
+      "component_type": "device",
+      "description": "제2 데이터를 수신하고 처리하는 역할",
+      "relationships": [
+        {
+          "target": "206",
+          "label": "데이터 복호화 요청",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "206",
+      "name": "하드웨어 보안 모듈",
+      "component_type": "device",
+      "description": "데이터 복호화 및 서비스 공급자에게 데이터 송신 역할",
+      "relationships": [
+        {
+          "target": "208",
+          "label": "복호화된 데이터 송신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "208",
+      "name": "폐쇄 루프 서비스 공급자",
+      "component_type": "actor",
+      "description": "복호화된 데이터를 기반으로 거래를 수행하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227013279",
+      "diagram_type": "flowchart",
+      "diagram_title": "폐쇄 루프 거래 수행 방법",
+      "mermaid_code": "flowchart TD\n    202A[\"제1 사용자 디바이스\"]\n    202B[\"제2 사용자 디바이스\"]\n    204[\"지불 서버\"]\n    206[\"하드웨어 보안 모듈\"]\n    208[\"폐쇄 루프 서비스 공급자\"]\n    \n    202A -->|\"데이터 송신\"| 202B\n    202B -->|\"데이터 송신\"| 204\n    204 <--|\"데이터 복호화 요청\"| 206\n    206 -->|\"복호화된 데이터 송신\"| 208",
+      "components": [
+        {
+          "component_id": "202A",
+          "name": "제1 사용자 디바이스",
+          "component_type": "device",
+          "description": "지불 선택을 수신하고 데이터를 송신하는 역할",
+          "relationships": [
+            {
+              "target": "202B",
+              "label": "데이터 송신",
+              "direction": "->"
+            },
+            {
+              "target": "206",
+              "label": "세션 키 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "202B",
+          "name": "제2 사용자 디바이스",
+          "component_type": "device",
+          "description": "제1 사용자 디바이스로부터 데이터를 수신하고 처리하는 역할",
+          "relationships": [
+            {
+              "target": "204",
+              "label": "데이터 송신",
+              "direction": "->"
+            },
+            {
+              "target": "206",
+              "label": "대칭 세션 키 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "204",
+          "name": "지불 서버",
+          "component_type": "device",
+          "description": "제2 데이터를 수신하고 처리하는 역할",
+          "relationships": [
+            {
+              "target": "206",
+              "label": "데이터 복호화 요청",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "206",
+          "name": "하드웨어 보안 모듈",
+          "component_type": "device",
+          "description": "데이터 복호화 및 서비스 공급자에게 데이터 송신 역할",
+          "relationships": [
+            {
+              "target": "208",
+              "label": "복호화된 데이터 송신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "208",
+          "name": "폐쇄 루프 서비스 공급자",
+          "component_type": "actor",
+          "description": "복호화된 데이터를 기반으로 거래를 수행하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227013279/1020227013279_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227013279",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 디바이스 간 데이터 송신 흐름",
+      "mermaid_code": "flowchart TD\n    202A[\"제1 사용자 디바이스\"]\n    202B[\"제2 사용자 디바이스\"]\n    204[\"지불 서버\"]\n    206[\"하드웨어 보안 모듈\"]\n    208[\"폐쇄 루프 서비스 공급자\"]\n    \n    202A -->|\"데이터 송신\"| 202B\n    202B -->|\"데이터 송신\"| 204\n    204 -->|\"데이터 복호화 요청\"| 206\n    206 -->|\"복호화된 데이터 송신\"| 208",
+      "components": [
+        {
+          "component_id": "202A",
+          "name": "제1 사용자 디바이스",
+          "component_type": "device",
+          "description": "지불 선택을 수신하고 데이터를 송신하는 역할",
+          "relationships": [
+            {
+              "target": "202B",
+              "label": "데이터 송신",
+              "direction": "->"
+            },
+            {
+              "target": "206",
+              "label": "세션 키 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "202B",
+          "name": "제2 사용자 디바이스",
+          "component_type": "device",
+          "description": "제1 사용자 디바이스로부터 데이터를 수신하고 처리하는 역할",
+          "relationships": [
+            {
+              "target": "204",
+              "label": "데이터 송신",
+              "direction": "->"
+            },
+            {
+              "target": "206",
+              "label": "대칭 세션 키 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "204",
+          "name": "지불 서버",
+          "component_type": "device",
+          "description": "제2 데이터를 수신하고 처리하는 역할",
+          "relationships": [
+            {
+              "target": "206",
+              "label": "데이터 복호화 요청",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "206",
+          "name": "하드웨어 보안 모듈",
+          "component_type": "device",
+          "description": "데이터 복호화 및 서비스 공급자에게 데이터 송신 역할",
+          "relationships": [
+            {
+              "target": "208",
+              "label": "복호화된 데이터 송신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "208",
+          "name": "폐쇄 루프 서비스 공급자",
+          "component_type": "actor",
+          "description": "복호화된 데이터를 기반으로 거래를 수행하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227013279/1020227013279_fig_2.mmd"
+    }
+  ]
+}

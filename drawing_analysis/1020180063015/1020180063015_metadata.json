@@ -1,0 +1,235 @@
+{
+  "app_num": "1020180063015",
+  "invention_type": "method",
+  "main_concept": "합성 저화질 영상을 고화질 영상으로 변환하는 심층 신경망 학습 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "생성부",
+      "component_type": "process",
+      "description": "저화질 영상을 고화질 영상으로 변환하는 인공 신경망 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력된 위조 고화질 영상을 판별부에 전달",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "손실을 최소화하기 위해 가중치를 조정",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "판별부",
+      "component_type": "process",
+      "description": "위조 고화질 영상과 원본 고화질 영상을 비교하여 진위 여부를 판별",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "진위 여부를 생성부에 전달",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "진위 여부에 따라 손실을 산출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "안면 특화 손실 계산부",
+      "component_type": "process",
+      "description": "진위 여부에 따라 생성부가 최소화해야 하는 손실을 산출",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "손실을 생성부에 입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180063015",
+      "diagram_type": "classDiagram",
+      "diagram_title": "안면 특화 초 고화질 심층 신경망 학습 장치 블록 구성도",
+      "mermaid_code": "classDiagram\n    class 생성부 {\n        +String 저화질영상\n        +generateHighQuality()\n    }\n    class 판별부 {\n        +String 위조고화질영상\n        +compareOriginal()\n    }\n    class 안면특화손실계산부 {\n        +String 손실\n        +calculateLoss()\n    }\n    생성부 --> 판별부 : \"출력된 위조 고화질 영상을 판별부에 전달\"\n    판별부 --> 생성부 : \"진위 여부를 생성부에 전달\"\n    판별부 --> 안면특화손실계산부 : \"진위 여부에 따라 손실을 산출\"\n    안면특화손실계산부 --> 생성부 : \"손실을 생성부에 입력\"\n    생성부 <-- 판별부 : \"손실을 최소화하기 위해 가중치를 조정\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "생성부",
+          "component_type": "process",
+          "description": "저화질 영상을 고화질 영상으로 변환하는 인공 신경망 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력된 위조 고화질 영상을 판별부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "손실을 최소화하기 위해 가중치를 조정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판별부",
+          "component_type": "process",
+          "description": "위조 고화질 영상과 원본 고화질 영상을 비교하여 진위 여부를 판별",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "진위 여부를 생성부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "진위 여부에 따라 손실을 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안면 특화 손실 계산부",
+          "component_type": "process",
+          "description": "진위 여부에 따라 생성부가 최소화해야 하는 손실을 산출",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "손실을 생성부에 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180063015/1020180063015_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180063015",
+      "diagram_type": "flowchart",
+      "diagram_title": "영상 변환 과정",
+      "mermaid_code": "flowchart TD\n    100[\"생성부\"]\n    200[\"판별부\"]\n    300[\"안면 특화 손실 계산부\"]\n    400[\"합성 저화질 영상을 입력받음\"]\n    \n    400 -->|\"합성 저화질 영상 입력\"| 100\n    100 -->|\"출력된 위조 고화질 영상을 판별부에 전달\"| 200\n    200 -->|\"진위 여부를 생성부에 전달\"| 100\n    200 -->|\"진위 여부에 따라 손실을 산출\"| 300\n    300 -->|\"손실을 생성부에 입력\"| 100\n    100 -->|\"손실을 최소화하기 위해 가중치를 조정\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "생성부",
+          "component_type": "process",
+          "description": "저화질 영상을 고화질 영상으로 변환하는 인공 신경망 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력된 위조 고화질 영상을 판별부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "손실을 최소화하기 위해 가중치를 조정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판별부",
+          "component_type": "process",
+          "description": "위조 고화질 영상과 원본 고화질 영상을 비교하여 진위 여부를 판별",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "진위 여부를 생성부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "진위 여부에 따라 손실을 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안면 특화 손실 계산부",
+          "component_type": "process",
+          "description": "진위 여부에 따라 생성부가 최소화해야 하는 손실을 산출",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "손실을 생성부에 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180063015/1020180063015_fig_2.mmd"
+    },
+    {
+      "app_num": "1020180063015",
+      "diagram_type": "classDiagram",
+      "diagram_title": "안면 특화 손실 계산부 상세 블록 구성도",
+      "mermaid_code": "classDiagram\n    class 생성부 {\n        +String 저화질영상\n        +generateHighQuality()\n    }\n    class 판별부 {\n        +String 위조고화질영상\n        +compare()\n    }\n    class 안면특화손실계산부 {\n        +String 손실\n        +calculateLoss()\n    }\n    생성부 --> 판별부 : \"출력된 위조 고화질 영상을 판별부에 전달\"\n    판별부 --> 생성부 : \"진위 여부를 생성부에 전달\"\n    판별부 --> 안면특화손실계산부 : \"진위 여부에 따라 손실을 산출\"\n    안면특화손실계산부 --> 생성부 : \"손실을 생성부에 입력\"\n    생성부 <-- 안면특화손실계산부 : \"손실을 최소화하기 위해 가중치를 조정\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "생성부",
+          "component_type": "process",
+          "description": "저화질 영상을 고화질 영상으로 변환하는 인공 신경망 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력된 위조 고화질 영상을 판별부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "손실을 최소화하기 위해 가중치를 조정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판별부",
+          "component_type": "process",
+          "description": "위조 고화질 영상과 원본 고화질 영상을 비교하여 진위 여부를 판별",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "진위 여부를 생성부에 전달",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "진위 여부에 따라 손실을 산출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안면 특화 손실 계산부",
+          "component_type": "process",
+          "description": "진위 여부에 따라 생성부가 최소화해야 하는 손실을 산출",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "손실을 생성부에 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020180063015/1020180063015_fig_3.mmd"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "app_num": "1020200001714",
+  "invention_type": "method",
+  "main_concept": "자율 주행 자동차의 주행 모드 변경을 위한 RNN 학습 및 테스트 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "학습 장치",
+      "component_type": "actor",
+      "description": "자율 주행 자동차의 주행 모드 변경을 위한 RNN을 학습 및 테스트하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "CNN 모델",
+      "component_type": "process",
+      "description": "트레이닝 이미지를 처리하여 특징 맵을 생성하는 컨볼루션 신경망",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "LSTM 모델",
+      "component_type": "process",
+      "description": "특징 맵을 기반으로 시퀀스 데이터를 처리하는 장기 단기 기억 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "출력",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "어텐션 레이어",
+      "component_type": "process",
+      "description": "LSTM 모델의 출력 특징 벡터를 기반으로 자율주행 모드 값을 생성하는 레이어",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "로스 레이어",
+      "component_type": "process",
+      "description": "자율주행 모드 값과 GT를 비교하여 로스를 산출하는 레이어",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200001714",
+      "diagram_type": "flowchart",
+      "diagram_title": "RNN 학습 및 테스트 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"학습 장치\"]\n    200[\"CNN 모델\"]\n    300[\"LSTM 모델\"]\n    400[\"어텐션 레이어\"]\n    500[\"로스 레이어\"]\n    100 -->|\"트레이닝 이미지 획득\"| 200\n    200 -->|\"특징 맵 생성\"| 300\n    300 -->|\"시퀀스 데이터 처리\"| 400\n    400 -->|\"자율주행 모드 값 생성\"| 500\n    500 -->|\"로스 산출 및 백프로퍼게이션\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "학습 장치",
+          "component_type": "actor",
+          "description": "자율 주행 자동차의 주행 모드 변경을 위한 RNN을 학습 및 테스트하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "CNN 모델",
+          "component_type": "process",
+          "description": "트레이닝 이미지를 처리하여 특징 맵을 생성하는 컨볼루션 신경망",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "LSTM 모델",
+          "component_type": "process",
+          "description": "특징 맵을 기반으로 시퀀스 데이터를 처리하는 장기 단기 기억 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "어텐션 레이어",
+          "component_type": "process",
+          "description": "LSTM 모델의 출력 특징 벡터를 기반으로 자율주행 모드 값을 생성하는 레이어",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "로스 레이어",
+          "component_type": "process",
+          "description": "자율주행 모드 값과 GT를 비교하여 로스를 산출하는 레이어",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200001714/1020200001714_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200001714",
+      "diagram_type": "flowchart",
+      "diagram_title": "CNN 및 LSTM 모델 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"학습 장치\"]\n    200[\"CNN 모델\"]\n    300[\"LSTM 모델\"]\n    400[\"어텐션 레이어\"]\n    500[\"로스 레이어\"]\n    100 -->|\"트레이닝 이미지 획득\"| 200\n    200 -->|\"특징 맵 생성\"| 300\n    300 -->|\"시퀀스 데이터 처리\"| 400\n    400 -->|\"자율주행 모드 값 생성\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "학습 장치",
+          "component_type": "actor",
+          "description": "자율 주행 자동차의 주행 모드 변경을 위한 RNN을 학습 및 테스트하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "CNN 모델",
+          "component_type": "process",
+          "description": "트레이닝 이미지를 처리하여 특징 맵을 생성하는 컨볼루션 신경망",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "LSTM 모델",
+          "component_type": "process",
+          "description": "특징 맵을 기반으로 시퀀스 데이터를 처리하는 장기 단기 기억 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "어텐션 레이어",
+          "component_type": "process",
+          "description": "LSTM 모델의 출력 특징 벡터를 기반으로 자율주행 모드 값을 생성하는 레이어",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "로스 레이어",
+          "component_type": "process",
+          "description": "자율주행 모드 값과 GT를 비교하여 로스를 산출하는 레이어",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200001714/1020200001714_fig_2.mmd"
+    }
+  ]
+}

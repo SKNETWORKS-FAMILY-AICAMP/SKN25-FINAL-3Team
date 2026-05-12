@@ -1,0 +1,18 @@
+%% 1020210158508 - 게이트볼 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 게이트볼관리서버시스템 {
+        +String 서비스
+        +manageCommunity()
+    }
+    class 게이트볼서비스App {
+        +String 사용자인터페이스
+        +requestService()
+    }
+    class 챗봇서버 {
+        +String 질의응답
+        +processQuery()
+    }
+    게이트볼서비스App -->|연결| 게이트볼관리서버시스템 : 요청 처리
+    챗봇서버 -->|연결| 게이트볼관리서버시스템 : 질의 응답 수행

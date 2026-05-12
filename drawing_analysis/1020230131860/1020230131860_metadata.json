@@ -1,0 +1,167 @@
+{
+  "app_num": "1020230131860",
+  "invention_type": "system",
+  "main_concept": "비정형 텍스트 데이터로부터 공간정보를 추출하는 정보시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "KoCharELECTRA 모델",
+      "component_type": "process",
+      "description": "비정형 텍스트 데이터로부터 공간정보를 추출하기 위한 사전학습된 ML 모델",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "FFNN",
+      "component_type": "process",
+      "description": "KoCharELECTRA 모델의 음절 벡터를 개체명 레이블로 변환하는 미세조정 레이어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "양방향 LSTM",
+      "component_type": "process",
+      "description": "FFNN과 결합되어 공간 개체 레이블을 결정하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "CRFs",
+      "component_type": "process",
+      "description": "출력 레이블 사이의 의존성을 고려하여 최적의 출력열을 선정",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230131860",
+      "diagram_type": "flowchart",
+      "diagram_title": "정보시스템 전체 구성도",
+      "mermaid_code": "flowchart TD\n    100[\"KoCharELECTRA 모델\"]\n    200[\"FFNN\"]\n    300[\"양방향 LSTM\"]\n    400[\"CRFs\"]\n    100 -->|\"입력받음\"| 200\n    200 -->|\"연결됨\"| 300\n    200 -->|\"연결됨\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "KoCharELECTRA 모델",
+          "component_type": "process",
+          "description": "비정형 텍스트 데이터로부터 공간정보를 추출하기 위한 사전학습된 ML 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "FFNN",
+          "component_type": "process",
+          "description": "KoCharELECTRA 모델의 음절 벡터를 개체명 레이블로 변환하는 미세조정 레이어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "양방향 LSTM",
+          "component_type": "process",
+          "description": "FFNN과 결합되어 공간 개체 레이블을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "CRFs",
+          "component_type": "process",
+          "description": "출력 레이블 사이의 의존성을 고려하여 최적의 출력열을 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230131860/1020230131860_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230131860",
+      "diagram_type": "flowchart",
+      "diagram_title": "공간정보 추출 과정",
+      "mermaid_code": "flowchart TD\n    100[\"KoCharELECTRA 모델\"]\n    200[\"FFNN\"]\n    300[\"양방향 LSTM\"]\n    400[\"CRFs\"]\n    100 -->|\"입력받음\"| 200\n    200 -->|\"연결됨\"| 300\n    200 -->|\"연결됨\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "KoCharELECTRA 모델",
+          "component_type": "process",
+          "description": "비정형 텍스트 데이터로부터 공간정보를 추출하기 위한 사전학습된 ML 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "FFNN",
+          "component_type": "process",
+          "description": "KoCharELECTRA 모델의 음절 벡터를 개체명 레이블로 변환하는 미세조정 레이어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "양방향 LSTM",
+          "component_type": "process",
+          "description": "FFNN과 결합되어 공간 개체 레이블을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "CRFs",
+          "component_type": "process",
+          "description": "출력 레이블 사이의 의존성을 고려하여 최적의 출력열을 선정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230131860/1020230131860_fig_2.mmd"
+    }
+  ]
+}

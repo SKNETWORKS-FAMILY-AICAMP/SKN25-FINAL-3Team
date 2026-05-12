@@ -1,0 +1,23 @@
+%% 1020227008374 - 어텐션 블록 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class AttentionNetwork {
+        +String inputSequence
+        +process()
+    }
+    class AttentionBlock {
+        +String query
+        +String key
+        +String value
+        +generateOutput()
+    }
+    class AttentionLayer {
+        +applyAttentionMechanism()
+    }
+    class GatingLayer {
+        +applyGatingMechanism()
+    }
+    AttentionNetwork --> AttentionBlock : "구성"
+    AttentionBlock --> AttentionLayer : "구성"
+    AttentionBlock --> GatingLayer : "구성"

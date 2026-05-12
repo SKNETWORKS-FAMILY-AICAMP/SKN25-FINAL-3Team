@@ -1,0 +1,38 @@
+%% 1020220002231 - 버츄어 휴먼 인터렉션 생성 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 인터렉션생성모듈 {
+        +String 사용자대화정보
+        +generateInteraction()
+    }
+    class 부적절인덱싱모듈 {
+        +String 부적절텍스트
+        +searchInappropriate()
+    }
+    class 부적절스코어링인공신경망모듈 {
+        +String 부적절여부정보
+        +calculateInappropriateScore()
+    }
+    class 적절텍스트생성모듈 {
+        +String 부적절텍스트
+        +generateAppropriateText()
+    }
+    class 클라이언트학습모듈 {
+        +String 파라미터
+        +updateParameters()
+    }
+    class 파라미터업로드모듈 {
+        +String 업데이트된파라미터
+        +uploadParameters()
+    }
+    class 메인신경망다운로드모듈 {
+        +String 네트워크
+        +downloadMainNetwork()
+    }
+    인터렉션생성모듈 --> 부적절인덱싱모듈 : "입력 데이터 제공"
+    부적절인덱싱모듈 --> 부적절스코어링인공신경망모듈 : "부적절 여부 정보 입력"
+    부적절인덱싱모듈 --> 적절텍스트생성모듈 : "부적절 텍스트 입력"
+    인터렉션생성모듈 --> 클라이언트학습모듈 : "파라미터 업데이트"
+    클라이언트학습모듈 --> 파라미터업로드모듈 : "업데이트된 파라미터 입력"
+    인터렉션생성모듈 --> 메인신경망다운로드모듈 : "네트워크 치환"

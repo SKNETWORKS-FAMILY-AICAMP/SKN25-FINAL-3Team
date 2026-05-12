@@ -1,0 +1,212 @@
+{
+  "app_num": "1020170111374",
+  "invention_type": "method",
+  "main_concept": "디스플레이 장치의 제어 방법을 통해 복수의 페이지와 프리뷰 UI를 제공하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "디스플레이",
+      "component_type": "device",
+      "description": "사용자에게 정보를 시각적으로 제공하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "터치 입력부",
+      "component_type": "device",
+      "description": "사용자의 터치 입력을 감지하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "프로그램 및 데이터를 저장하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "디스플레이 장치의 동작을 제어하는 중앙 처리 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020170111374",
+      "diagram_type": "flowchart",
+      "diagram_title": "디스플레이 장치 제어 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"디스플레이\"]\n    200[\"터치 입력 감지\"]\n    300[\"프리뷰 UI 표시\"]\n    400[\"프리뷰 페이지 수정\"]\n    500[\"컨텐츠 수정 및 저장\"]\n    \n    100 -->|\"제1 페이지 표시\"| 200\n    200 -->|\"터치 입력 감지\"| 300\n    300 -->|\"프리뷰 UI 표시\"| 400\n    400 -->|\"프리뷰 페이지 수정\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "사용자에게 정보를 시각적으로 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "터치 입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로그램 및 데이터를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이 장치의 동작을 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020170111374/1020170111374_fig_1.mmd"
+    },
+    {
+      "app_num": "1020170111374",
+      "diagram_type": "classDiagram",
+      "diagram_title": "디스플레이 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 디스플레이 {\n        +String 정보\n    }\n    class 터치입력부 {\n        +detectTouch()\n    }\n    class 메모리 {\n        +String 데이터\n    }\n    class 프로세서 {\n        +controlDisplay()\n    }\n    디스플레이 --> 터치입력부 : \"제어\"\n    디스플레이 --> 메모리 : \"연결\"\n    터치입력부 --> 메모리 : \"연결\"\n    디스플레이 --> 프로세서 : \"제어\"\n    터치입력부 --> 프로세서 : \"제어\"\n    메모리 --> 프로세서 : \"사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "사용자에게 정보를 시각적으로 제공하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "터치 입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 입력을 감지하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로그램 및 데이터를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이 장치의 동작을 제어하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020170111374/1020170111374_fig_2.mmd"
+    }
+  ]
+}

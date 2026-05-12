@@ -1,0 +1,149 @@
+{
+  "app_num": "1020210119720",
+  "invention_type": "method",
+  "main_concept": "판매자에 의한 아이템 판매 후 정산 요청을 처리하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "판매자 단말",
+      "component_type": "actor",
+      "description": "판매자가 아이템 판매 후 정산 요청을 전송하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "전자 장치",
+      "component_type": "device",
+      "description": "정산 요청을 수신하고 처리하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "정산 작업 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "금융서비스 서버",
+      "component_type": "device",
+      "description": "정산 작업 정보를 수신하고 처리하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "회계 관련 정보 처리 노드",
+      "component_type": "device",
+      "description": "정산 요청의 승인 여부를 판단하는 노드",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "승인 여부 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210119720",
+      "diagram_type": "flowchart",
+      "diagram_title": "정산 요청 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"판매자 단말\"]\n    200[\"전자 장치\"]\n    300[\"금융서비스 서버\"]\n    400[\"회계 관련 정보 처리 노드\"]\n    100 -->|\"정산 요청 수신\"| 200\n    200 -->|\"승인 여부 수신\"| 400\n    400 -->|\"정산 작업 정보 생성\"| 200\n    200 -->|\"정산 작업 정보 전송\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "판매자가 아이템 판매 후 정산 요청을 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "정산 요청을 수신하고 처리하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정산 작업 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "금융서비스 서버",
+          "component_type": "device",
+          "description": "정산 작업 정보를 수신하고 처리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "회계 관련 정보 처리 노드",
+          "component_type": "device",
+          "description": "정산 요청의 승인 여부를 판단하는 노드",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "승인 여부 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210119720/1020210119720_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210119720",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 판매자단말 {\n        +정산요청전송()\n    }\n    class 전자장치 {\n        +정산요청수신()\n        +정산작업정보생성()\n    }\n    class 금융서비스서버 {\n        +정산작업정보수신()\n    }\n    class 회계관련정보처리노드 {\n        +승인여부판단()\n    }\n    판매자단말 --> 전자장치 : \"정산 요청 수신\"\n    전자장치 --> 회계관련정보처리노드 : \"승인 여부 수신\"\n    전자장치 --> 금융서비스서버 : \"정산 작업 정보 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "판매자가 아이템 판매 후 정산 요청을 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "정산 요청을 수신하고 처리하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정산 작업 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "금융서비스 서버",
+          "component_type": "device",
+          "description": "정산 작업 정보를 수신하고 처리하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "회계 관련 정보 처리 노드",
+          "component_type": "device",
+          "description": "정산 요청의 승인 여부를 판단하는 노드",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "승인 여부 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210119720/1020210119720_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "app_num": "1020220104033",
+  "invention_type": "method",
+  "main_concept": "신경망 모델 학습을 위한 배치 추출 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨팅 장치",
+      "component_type": "device",
+      "description": "신경망 모델 학습을 수행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "신경망 모델",
+      "component_type": "data",
+      "description": "표적과 약물의 결합 정보를 예측하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "학습 데이터",
+      "component_type": "data",
+      "description": "표적-약물 쌍을 포함하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "모델 학습에 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220104033",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경망 모델 학습을 위한 배치 추출 과정",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨팅 장치\"]\n    200[\"신경망 모델\"]\n    300[\"학습 데이터\"]\n    400[\"표적 결정\"]\n    500[\"약물 선택\"]\n    600[\"배치 포함\"]\n\n    100 -->|\"입력 데이터\"| 300\n    300 -->|\"모델 학습에 사용\"| 200\n    300 --> 400\n    400 --> 500\n    500 --> 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "신경망 모델 학습을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망 모델",
+          "component_type": "data",
+          "description": "표적과 약물의 결합 정보를 예측하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "학습 데이터",
+          "component_type": "data",
+          "description": "표적-약물 쌍을 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "모델 학습에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220104033/1020220104033_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220104033",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경망 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 컴퓨팅장치 {\n        +String description\n    }\n    class 신경망모델 {\n        +String description\n    }\n    class 학습데이터 {\n        +String description\n    }\n    컴퓨팅장치 --> 신경망모델 : \"구성 요소\"\n    컴퓨팅장치 --> 학습데이터 : \"입력 데이터\"\n    학습데이터 --> 신경망모델 : \"모델 학습에 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "신경망 모델 학습을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "신경망 모델",
+          "component_type": "data",
+          "description": "표적과 약물의 결합 정보를 예측하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "학습 데이터",
+          "component_type": "data",
+          "description": "표적-약물 쌍을 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "모델 학습에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220104033/1020220104033_fig_2.mmd"
+    }
+  ]
+}

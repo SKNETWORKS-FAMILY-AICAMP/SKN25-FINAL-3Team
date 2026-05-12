@@ -1,0 +1,209 @@
+{
+  "app_num": "1020220043374",
+  "invention_type": "system",
+  "main_concept": "대화 플랫폼에 연동 가능한 과금 처리 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "채널 형성부",
+      "component_type": "process",
+      "description": "대화 플랫폼을 통해 통신 채널을 형성하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "카운팅부",
+      "component_type": "process",
+      "description": "대화 내용에 포함된 음소 개수를 카운팅하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "음소 개수 카운팅",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "금액 산출부",
+      "component_type": "process",
+      "description": "카운팅된 음소 개수에 따라 대화 참여에 대한 산정 금액을 산출하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "산정 금액 표시",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "금액 정보 제공부",
+      "component_type": "process",
+      "description": "산출된 금액을 대화 단위로 표시하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "변환부",
+      "component_type": "process",
+      "description": "음성 형태의 대화를 문자 형태로 변환하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "음소 개수 카운팅에 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "충전금 처리부",
+      "component_type": "process",
+      "description": "충전금을 관리하고 대화 채널 차단 여부를 확인하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220043374",
+      "diagram_type": "classDiagram",
+      "diagram_title": "대화 플랫폼 과금 처리 장치 구조",
+      "mermaid_code": "classDiagram\n    class 채널형성부 {\n        +형성채널()\n    }\n    class 카운팅부 {\n        +음소개수카운팅()\n    }\n    class 금액산출부 {\n        +산정금액()\n    }\n    class 금액정보제공부 {\n        +금액표시()\n    }\n    class 변환부 {\n        +대화변환()\n    }\n    class 충전금처리부 {\n        +충전금관리()\n    }\n    채널형성부 --> 카운팅부 : \"채널 형성\"\n    카운팅부 --> 금액산출부 : \"음소 개수 카운팅\"\n    금액산출부 --> 금액정보제공부 : \"산정 금액 표시\"\n    변환부 --> 카운팅부 : \"음소 개수 카운팅에 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "채널 형성부",
+          "component_type": "process",
+          "description": "대화 플랫폼을 통해 통신 채널을 형성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "카운팅부",
+          "component_type": "process",
+          "description": "대화 내용에 포함된 음소 개수를 카운팅하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "음소 개수 카운팅",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "금액 산출부",
+          "component_type": "process",
+          "description": "카운팅된 음소 개수에 따라 대화 참여에 대한 산정 금액을 산출하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "산정 금액 표시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "금액 정보 제공부",
+          "component_type": "process",
+          "description": "산출된 금액을 대화 단위로 표시하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "변환부",
+          "component_type": "process",
+          "description": "음성 형태의 대화를 문자 형태로 변환하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "음소 개수 카운팅에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "충전금 처리부",
+          "component_type": "process",
+          "description": "충전금을 관리하고 대화 채널 차단 여부를 확인하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220043374/1020220043374_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220043374",
+      "diagram_type": "flowchart",
+      "diagram_title": "과금 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"채널 형성부\"]\n    200[\"카운팅부\"]\n    300[\"금액 산출부\"]\n    400[\"금액 정보 제공부\"]\n    500[\"변환부\"]\n    600[\"충전금 처리부\"]\n    \n    100 -->|\"채널 형성\"| 200\n    200 -->|\"음소 개수 카운팅\"| 300\n    300 -->|\"산정 금액 표시\"| 400\n    500 -->|\"음소 개수 카운팅에 사용\"| 200\n    600 -->|\"충전금 관리\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "채널 형성부",
+          "component_type": "process",
+          "description": "대화 플랫폼을 통해 통신 채널을 형성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "카운팅부",
+          "component_type": "process",
+          "description": "대화 내용에 포함된 음소 개수를 카운팅하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "음소 개수 카운팅",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "금액 산출부",
+          "component_type": "process",
+          "description": "카운팅된 음소 개수에 따라 대화 참여에 대한 산정 금액을 산출하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "산정 금액 표시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "금액 정보 제공부",
+          "component_type": "process",
+          "description": "산출된 금액을 대화 단위로 표시하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "변환부",
+          "component_type": "process",
+          "description": "음성 형태의 대화를 문자 형태로 변환하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "음소 개수 카운팅에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "충전금 처리부",
+          "component_type": "process",
+          "description": "충전금을 관리하고 대화 채널 차단 여부를 확인하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220043374/1020220043374_fig_2.mmd"
+    }
+  ]
+}

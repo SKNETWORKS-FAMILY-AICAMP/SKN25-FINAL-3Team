@@ -1,0 +1,161 @@
+{
+  "app_num": "1020200091525",
+  "invention_type": "method",
+  "main_concept": "소유권 이전 기반 결제를 위한 온라인 결제 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "온라인몰에서 상품을 구매하는 사용자",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "결제 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "서버",
+      "component_type": "process",
+      "description": "결제 중계 및 소유권 이전 처리",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "상품 정보 요청",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "결제 결과 통보",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "온라인몰",
+      "component_type": "data",
+      "description": "상품 정보를 제공하고 결제를 처리하는 플랫폼",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 정보 제공",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200091525",
+      "diagram_type": "flowchart",
+      "diagram_title": "소유권 이전 기반 결제 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"서버\"]\n    300[\"온라인몰\"]\n    400[\"결제 프로세스\"]\n    \n    100 -->|\"결제 요청\"| 200\n    200 -->|\"상품 정보 요청\"| 300\n    300 -->|\"상품 정보 제공\"| 200\n    200 -->|\"결제 결과 통보\"| 100\n    200 -->|\"제1 단계: 소유권 이전 기반 결제 요청 확인\"| 400\n    200 -->|\"제2 단계: 결제 가능성 판단 및 결제 조건 결정\"| 400\n    200 -->|\"제3 단계: 계약서 생성 및 신용 한도 확인\"| 400\n    200 -->|\"제4 단계: 상품 구매 및 소유권 이전 처리\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "온라인몰에서 상품을 구매하는 사용자",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "process",
+          "description": "결제 중계 및 소유권 이전 처리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상품 정보 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "결제 결과 통보",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "온라인몰",
+          "component_type": "data",
+          "description": "상품 정보를 제공하고 결제를 처리하는 플랫폼",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200091525/1020200091525_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200091525",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 결제요청\n    }\n    class 서버 {\n        +String 결제중계\n        +String 소유권이전처리\n    }\n    class 온라인몰 {\n        +String 상품정보제공\n        +String 결제처리\n    }\n    사용자단말 --> 서버 : \"결제 요청\"\n    서버 --> 온라인몰 : \"상품 정보 요청\"\n    온라인몰 --> 서버 : \"상품 정보 제공\"\n    서버 --> 사용자단말 : \"결제 결과 통보\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "온라인몰에서 상품을 구매하는 사용자",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "결제 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "process",
+          "description": "결제 중계 및 소유권 이전 처리",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "상품 정보 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "결제 결과 통보",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "온라인몰",
+          "component_type": "data",
+          "description": "상품 정보를 제공하고 결제를 처리하는 플랫폼",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200091525/1020200091525_fig_2.mmd"
+    }
+  ]
+}

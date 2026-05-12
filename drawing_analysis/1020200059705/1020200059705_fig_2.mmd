@@ -1,0 +1,23 @@
+%% 1020200059705 - 모델 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 메인바디 {
+        +String 특징벡터
+        +extractFeatures()
+    }
+    class 제1헤드 {
+        +String 분류결과
+        +generateClassification()
+    }
+    class 제2헤드 {
+        +String 분류결과
+        +generateClassification()
+    }
+    class 제3헤드 {
+        +String 모조레이블
+        +generatePseudoLabel()
+    }
+    메인바디 --> 제1헤드 : "특징 벡터 생성"
+    메인바디 --> 제2헤드 : "특징 벡터 생성"
+    메인바디 --> 제3헤드 : "특징 벡터 생성"

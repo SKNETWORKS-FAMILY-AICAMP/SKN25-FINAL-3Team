@@ -1,0 +1,197 @@
+{
+  "app_num": "1020230060320",
+  "invention_type": "method",
+  "main_concept": "사용자 단말의 지도 어플리케이션을 통해 소속 인증을 요청하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "지도 어플리케이션을 실행하고 소속 인증을 요청하는 주체",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "서버",
+      "component_type": "actor",
+      "description": "소속 인증 요청을 처리하고 응답하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "소속 인증 요청 처리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "검색 정보",
+      "component_type": "data",
+      "description": "사용자가 지도 어플리케이션에서 검색한 정보",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자가 입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "서버에 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "그래픽 표현",
+      "component_type": "data",
+      "description": "소속 인증 요청을 위한 시각적 요소",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자에게 표시",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "서버에서 전송",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230060320",
+      "diagram_type": "flowchart",
+      "diagram_title": "소속 인증 요청 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"서버\"]\n    300[\"검색 정보\"]\n    400[\"그래픽 표현\"]\n    100 -->| \"사용자가 입력\" | 300\n    300 -->| \"서버에 전송\" | 200\n    200 -->| \"소속 인증 요청 처리\" | 100\n    200 -->| \"서버에서 전송\" | 400\n    400 -->| \"사용자에게 표시\" | 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "지도 어플리케이션을 실행하고 소속 인증을 요청하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "소속 인증 요청을 처리하고 응답하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속 인증 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 정보",
+          "component_type": "data",
+          "description": "사용자가 지도 어플리케이션에서 검색한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자가 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "서버에 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "그래픽 표현",
+          "component_type": "data",
+          "description": "소속 인증 요청을 위한 시각적 요소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자에게 표시",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "서버에서 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230060320/1020230060320_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230060320",
+      "diagram_type": "flowchart",
+      "diagram_title": "혜택 장소 검색 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"서버\"]\n    300[\"검색 정보\"]\n    400[\"그래픽 표현\"]\n    100 -->|\"사용자가 입력\"| 300\n    300 -->|\"서버에 전송\"| 200\n    200 -->|\"소속 인증 요청 처리\"| 100\n    200 -->|\"서버에서 전송\"| 400\n    400 -->|\"사용자에게 표시\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "지도 어플리케이션을 실행하고 소속 인증을 요청하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "소속 인증 요청을 처리하고 응답하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "소속 인증 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "검색 정보",
+          "component_type": "data",
+          "description": "사용자가 지도 어플리케이션에서 검색한 정보",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자가 입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "서버에 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "그래픽 표현",
+          "component_type": "data",
+          "description": "소속 인증 요청을 위한 시각적 요소",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자에게 표시",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "서버에서 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230060320/1020230060320_fig_2.mmd"
+    }
+  ]
+}

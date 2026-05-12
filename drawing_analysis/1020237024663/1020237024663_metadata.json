@@ -1,0 +1,143 @@
+{
+  "app_num": "1020237024663",
+  "invention_type": "method",
+  "main_concept": "사용자 인증을 위한 디스플레이 생성 및 기계 판독 가능 코드의 표시 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "디스플레이 생성 컴포넌트",
+      "component_type": "device",
+      "description": "사용자 인터페이스를 생성하고 기계 판독 가능 코드를 표시하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "입력 디바이스",
+      "component_type": "device",
+      "description": "인증 데이터를 수신하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "인증 기준을 평가하고 디스플레이를 제어하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "데이터 처리",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020237024663",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 인증 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"디스플레이 생성 컴포넌트\"]\n    200[\"입력 디바이스\"]\n    300[\"프로세서\"]\n    400[\"인증 기준 평가 및 기계 판독 가능 코드 디스플레이\"]\n    200 -->|\"통신\"| 100\n    100 -->|\"제어\"| 300\n    300 -->|\"데이터 처리\"| 200\n    300 -->|\"결과 표시\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이 생성 컴포넌트",
+          "component_type": "device",
+          "description": "사용자 인터페이스를 생성하고 기계 판독 가능 코드를 표시하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "입력 디바이스",
+          "component_type": "device",
+          "description": "인증 데이터를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "인증 기준을 평가하고 디스플레이를 제어하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020237024663/1020237024663_fig_1.mmd"
+    },
+    {
+      "app_num": "1020237024663",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 디스플레이생성컴포넌트 {\n        +String 사용자인터페이스\n        +String 기계판독가능코드\n    }\n    class 입력디바이스 {\n        +String 인증데이터\n        +receiveData()\n    }\n    class 프로세서 {\n        +evaluateCriteria()\n        +controlDisplay()\n    }\n    입력디바이스 --> 디스플레이생성컴포넌트 : \"통신\"\n    프로세서 --> 디스플레이생성컴포넌트 : \"제어\"\n    프로세서 --> 입력디바이스 : \"데이터 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "디스플레이 생성 컴포넌트",
+          "component_type": "device",
+          "description": "사용자 인터페이스를 생성하고 기계 판독 가능 코드를 표시하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "입력 디바이스",
+          "component_type": "device",
+          "description": "인증 데이터를 수신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "인증 기준을 평가하고 디스플레이를 제어하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "데이터 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020237024663/1020237024663_fig_2.mmd"
+    }
+  ]
+}

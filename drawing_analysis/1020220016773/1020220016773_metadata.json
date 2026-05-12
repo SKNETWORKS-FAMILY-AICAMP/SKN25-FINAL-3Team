@@ -1,0 +1,260 @@
+{
+  "app_num": "1020220016773",
+  "invention_type": "system",
+  "main_concept": "지적재산권 거래 시스템을 통한 NFT 발행 및 관리",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "지적재산권 등록부",
+      "component_type": "data",
+      "description": "지적재산권 정보를 등록하고 인증 절차를 진행",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "NFT 발행부",
+      "component_type": "process",
+      "description": "지적재산권에 대한 NFT를 발행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "등록된 지적재산권 정보 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "NFT 및 지적재산권 정보 제공부",
+      "component_type": "data",
+      "description": "NFT와 관련된 메타정보 및 지적재산권 정보를 제공",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "발행된 NFT 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "NFT 거래 서비스 제공부",
+      "component_type": "process",
+      "description": "NFT 거래 서비스를 제공",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "발행된 NFT 사용",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "로열티 관리부",
+      "component_type": "process",
+      "description": "라이센싱을 통한 로열티 관리 및 분배",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "지적재산권 정보 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "연차료 납부 관리부",
+      "component_type": "process",
+      "description": "연차료 청구 및 납부 관리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "지적재산권 정보 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220016773",
+      "diagram_type": "flowchart",
+      "diagram_title": "지적재산권 거래 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"지적재산권 등록부\"]\n    200[\"NFT 발행부\"]\n    300[\"NFT 및 지적재산권 정보 제공부\"]\n    400[\"NFT 거래 서비스 제공부\"]\n    500[\"로열티 관리부\"]\n    600[\"연차료 납부 관리부\"]\n    \n    100 -->|\"등록된 지적재산권 정보 사용\"| 200\n    200 -->|\"발행된 NFT 정보 제공\"| 300\n    200 -->|\"발행된 NFT 사용\"| 400\n    300 -->|\"정보 제공\"| 400\n    100 -->|\"지적재산권 정보 사용\"| 500\n    100 -->|\"지적재산권 정보 사용\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "지적재산권 등록부",
+          "component_type": "data",
+          "description": "지적재산권 정보를 등록하고 인증 절차를 진행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "NFT 발행부",
+          "component_type": "process",
+          "description": "지적재산권에 대한 NFT를 발행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "등록된 지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "NFT 및 지적재산권 정보 제공부",
+          "component_type": "data",
+          "description": "NFT와 관련된 메타정보 및 지적재산권 정보를 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "발행된 NFT 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "NFT 거래 서비스 제공부",
+          "component_type": "process",
+          "description": "NFT 거래 서비스를 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "발행된 NFT 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "로열티 관리부",
+          "component_type": "process",
+          "description": "라이센싱을 통한 로열티 관리 및 분배",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "연차료 납부 관리부",
+          "component_type": "process",
+          "description": "연차료 청구 및 납부 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220016773/1020220016773_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220016773",
+      "diagram_type": "classDiagram",
+      "diagram_title": "지적재산권 거래 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 지적재산권등록부 {\n        +String 지적재산권정보\n        +인증절차진행()\n    }\n    class NFT발행부 {\n        +String NFT정보\n        +발행()\n    }\n    class NFT및지적재산권정보제공부 {\n        +String 메타정보\n        +정보제공()\n    }\n    class NFT거래서비스제공부 {\n        +String 거래정보\n        +거래서비스제공()\n    }\n    class 로열티관리부 {\n        +String 로열티정보\n        +관리및분배()\n    }\n    class 연차료납부관리부 {\n        +String 청구정보\n        +청구및납부관리()\n    }\n    지적재산권등록부 --> NFT발행부 : \"등록된 지적재산권 정보 사용\"\n    NFT발행부 --> NFT및지적재산권정보제공부 : \"발행된 NFT 정보 제공\"\n    NFT발행부 --> NFT거래서비스제공부 : \"발행된 NFT 사용\"\n    NFT및지적재산권정보제공부 --> NFT거래서비스제공부 : \"정보 제공\"\n    지적재산권등록부 --> 로열티관리부 : \"지적재산권 정보 사용\"\n    지적재산권등록부 --> 연차료납부관리부 : \"지적재산권 정보 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "지적재산권 등록부",
+          "component_type": "data",
+          "description": "지적재산권 정보를 등록하고 인증 절차를 진행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "NFT 발행부",
+          "component_type": "process",
+          "description": "지적재산권에 대한 NFT를 발행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "등록된 지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "NFT 및 지적재산권 정보 제공부",
+          "component_type": "data",
+          "description": "NFT와 관련된 메타정보 및 지적재산권 정보를 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "발행된 NFT 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "NFT 거래 서비스 제공부",
+          "component_type": "process",
+          "description": "NFT 거래 서비스를 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "발행된 NFT 사용",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "로열티 관리부",
+          "component_type": "process",
+          "description": "라이센싱을 통한 로열티 관리 및 분배",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "연차료 납부 관리부",
+          "component_type": "process",
+          "description": "연차료 청구 및 납부 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지적재산권 정보 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220016773/1020220016773_fig_2.mmd"
+    }
+  ]
+}

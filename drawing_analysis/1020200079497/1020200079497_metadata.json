@@ -1,0 +1,206 @@
+{
+  "app_num": "1020200079497",
+  "invention_type": "system",
+  "main_concept": "가상코인을 이용한 쓰레기 수거 비용 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 관리부",
+      "component_type": "process",
+      "description": "사용자의 이름과 관리코드를 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "가상지갑 관리부",
+      "component_type": "process",
+      "description": "가상코인과 관련된 정보를 저장 및 관리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자 정보 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "코인충전/차감부",
+      "component_type": "process",
+      "description": "결제정보를 처리하고 가상코인을 충전 및 차감",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "가상코인 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "리더기",
+      "component_type": "device",
+      "description": "쓰레기용기코드를 리딩하여 정보를 수집",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "가상코인 차감 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "사용자가 정보를 확인하고 요청을 전달",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결제정보 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200079497",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상코인 기반 쓰레기 수거 비용 관리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 관리부\"]\n    200[\"가상지갑 관리부\"]\n    300[\"코인충전/차감부\"]\n    400[\"리더기\"]\n    500[\"사용자 단말\"]\n    \n    100 <--|\"사용자 정보 제공\"| 200\n    200 -->|\"가상코인 전달\"| 300\n    500 -->|\"결제정보 제공\"| 300\n    400 -->|\"가상코인 차감 요청\"| 300\n    300 -->|\"가상코인 차감 및 이체\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 관리부",
+          "component_type": "process",
+          "description": "사용자의 이름과 관리코드를 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상지갑 관리부",
+          "component_type": "process",
+          "description": "가상코인과 관련된 정보를 저장 및 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "코인충전/차감부",
+          "component_type": "process",
+          "description": "결제정보를 처리하고 가상코인을 충전 및 차감",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가상코인 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리더기",
+          "component_type": "device",
+          "description": "쓰레기용기코드를 리딩하여 정보를 수집",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "가상코인 차감 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 정보를 확인하고 요청을 전달",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200079497/1020200079497_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200079497",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가상코인 관리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자관리부 {\n        +String 사용자명\n        +String 관리코드\n    }\n    class 가상지갑관리부 {\n        +String 가상코인정보\n        +manage()\n    }\n    class 코인충전차감부 {\n        +String 결제정보\n        +charge()\n        +deduct()\n    }\n    class 리더기 {\n        +String 쓰레기용기코드\n        +read()\n    }\n    class 사용자단말 {\n        +String 사용자정보\n        +request()\n    }\n    사용자관리부 --> 가상지갑관리부 : \"사용자 정보 제공\"\n    가상지갑관리부 --> 코인충전차감부 : \"가상코인 전달\"\n    리더기 --> 코인충전차감부 : \"가상코인 차감 요청\"\n    사용자단말 --> 코인충전차감부 : \"결제정보 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 관리부",
+          "component_type": "process",
+          "description": "사용자의 이름과 관리코드를 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상지갑 관리부",
+          "component_type": "process",
+          "description": "가상코인과 관련된 정보를 저장 및 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 정보 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "코인충전/차감부",
+          "component_type": "process",
+          "description": "결제정보를 처리하고 가상코인을 충전 및 차감",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "가상코인 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "리더기",
+          "component_type": "device",
+          "description": "쓰레기용기코드를 리딩하여 정보를 수집",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "가상코인 차감 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 정보를 확인하고 요청을 전달",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결제정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200079497/1020200079497_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "app_num": "1020240121692",
+  "invention_type": "system",
+  "main_concept": "웹 기반의 전통 제품 판매 및 문화 체험 예약 플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "이동 단말",
+      "component_type": "actor",
+      "description": "사용자가 접근하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제어 서버",
+      "component_type": "device",
+      "description": "웹 기반 플랫폼을 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "접근",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "관리",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "관리",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "관리",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "관리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "판매 관리부",
+      "component_type": "process",
+      "description": "전통 제품 판매 관련 정보 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "체험 관리부",
+      "component_type": "process",
+      "description": "문화 체험 프로그램 정보 관리",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "리뷰 관리부",
+      "component_type": "process",
+      "description": "리뷰 데이터 관리 및 분석",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "알림 관리부",
+      "component_type": "process",
+      "description": "알림 메시지 생성 및 전송",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240121692",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 개념도",
+      "mermaid_code": "classDiagram\n    class 이동단말 {\n        +String 사용자\n    }\n    class 제어서버 {\n        +String 웹기반플랫폼\n        +접근()\n    }\n    class 판매관리부 {\n        +String 제품정보\n        +관리()\n    }\n    class 체험관리부 {\n        +String 프로그램정보\n        +관리()\n    }\n    class 리뷰관리부 {\n        +String 리뷰데이터\n        +관리()\n    }\n    class 알림관리부 {\n        +String 알림메시지\n        +관리()\n    }\n    이동단말 --> 제어서버 : \"접근\"\n    제어서버 --> 판매관리부 : \"관리\"\n    제어서버 --> 체험관리부 : \"관리\"\n    제어서버 --> 리뷰관리부 : \"관리\"\n    제어서버 --> 알림관리부 : \"관리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이동 단말",
+          "component_type": "actor",
+          "description": "사용자가 접근하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어 서버",
+          "component_type": "device",
+          "description": "웹 기반 플랫폼을 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "접근",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매 관리부",
+          "component_type": "process",
+          "description": "전통 제품 판매 관련 정보 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "체험 관리부",
+          "component_type": "process",
+          "description": "문화 체험 프로그램 정보 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "리뷰 관리부",
+          "component_type": "process",
+          "description": "리뷰 데이터 관리 및 분석",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "알림 관리부",
+          "component_type": "process",
+          "description": "알림 메시지 생성 및 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240121692/1020240121692_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240121692",
+      "diagram_type": "classDiagram",
+      "diagram_title": "제어 서버 개념도",
+      "mermaid_code": "classDiagram\n    class 이동단말 {\n        +String 사용자\n    }\n    class 제어서버 {\n        +String 웹기반플랫폼\n        +접근()\n    }\n    class 판매관리부 {\n        +String 제품정보\n        +관리()\n    }\n    class 체험관리부 {\n        +String 프로그램정보\n        +관리()\n    }\n    class 리뷰관리부 {\n        +String 리뷰데이터\n        +관리()\n    }\n    class 알림관리부 {\n        +String 알림메시지\n        +관리()\n    }\n    이동단말 --> 제어서버 : \"접근\"\n    제어서버 --> 판매관리부 : \"관리\"\n    제어서버 --> 체험관리부 : \"관리\"\n    제어서버 --> 리뷰관리부 : \"관리\"\n    제어서버 --> 알림관리부 : \"관리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이동 단말",
+          "component_type": "actor",
+          "description": "사용자가 접근하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제어 서버",
+          "component_type": "device",
+          "description": "웹 기반 플랫폼을 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "접근",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "관리",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "판매 관리부",
+          "component_type": "process",
+          "description": "전통 제품 판매 관련 정보 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "체험 관리부",
+          "component_type": "process",
+          "description": "문화 체험 프로그램 정보 관리",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "리뷰 관리부",
+          "component_type": "process",
+          "description": "리뷰 데이터 관리 및 분석",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "알림 관리부",
+          "component_type": "process",
+          "description": "알림 메시지 생성 및 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240121692/1020240121692_fig_2.mmd"
+    }
+  ]
+}

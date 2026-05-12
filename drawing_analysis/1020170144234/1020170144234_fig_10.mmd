@@ -1,0 +1,51 @@
+%% 1020170144234 - 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 방법을 나타내는 흐름도이다
+%% 도 10
+%% deterministic renderer v3
+%% style: patent_office
+%% quality: 85 / grade: B
+%% auto_repaired: True / rounds: 1
+%% 생성일: 2026-05-11
+
+%%{init: {
+  'theme': 'base',
+  'flowchart': {
+    'htmlLabels': true,
+    'curve': 'linear',
+    'nodeSpacing': 45,
+    'rankSpacing': 65,
+    'padding': 18
+  },
+  'themeVariables': {
+    'fontFamily': 'NanumGothic, Noto Sans CJK KR, Noto Sans KR, Malgun Gothic, Arial',
+    'primaryColor': '#ffffff',
+    'primaryBorderColor': '#111111',
+    'lineColor': '#111111',
+    'textColor': '#111111',
+    'clusterBkg': '#ffffff',
+    'clusterBorder': '#111111',
+    'edgeLabelBackground': '#ffffff',
+    'tertiaryColor': '#ffffff'
+  }
+}}%%
+flowchart TB
+    classDef container fill:#ffffff,stroke:#111111,stroke-width:2.0px,color:#111111;
+    classDef device fill:#ffffff,stroke:#111111,stroke-width:1.7px,color:#111111;
+    classDef module fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef process fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef data fill:#ffffff,stroke:#111111,stroke-width:1.3px,stroke-dasharray: 5 4,color:#111111;
+    classDef database fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef actor fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef invisible fill:#ffffff,stroke:#ffffff,color:#ffffff;
+    S100["축약어 입력 단계<br/><b>S100</b>"]
+    S200["상황 정보 획득 단계<br/><b>S200</b>"]
+    S300["문장 제공 단계<br/><b>S300</b>"]
+    S400["문장 대체 단계<br/><b>S400</b>"]
+
+    S100 --> S200
+    S200 --> S300
+    S300 --> S400
+
+    class S100 process;
+    class S200 process;
+    class S300 process;
+    class S400 process;

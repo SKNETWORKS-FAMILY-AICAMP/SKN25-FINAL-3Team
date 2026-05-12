@@ -1,0 +1,284 @@
+{
+  "app_num": "1020220002233",
+  "invention_type": "system",
+  "main_concept": "인공지능 기반의 버츄어 휴먼 인터렉션 생성 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "인터렉션 생성 모듈",
+      "component_type": "process",
+      "description": "사용자 대화 정보를 입력받아 인터렉션 정보를 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "부적절 인덱싱 모듈",
+      "component_type": "process",
+      "description": "부적절 텍스트를 검색하여 부적절 여부 정보를 출력",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "부적절 스코어링 인공신경망 모듈",
+      "component_type": "process",
+      "description": "부적절 여부 정보를 기반으로 부적절 스코어를 출력",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "부적절 여부 정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "적절 텍스트 생성 모듈",
+      "component_type": "process",
+      "description": "부적절 텍스트를 적절 텍스트로 변환",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "부적절 텍스트 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "클라이언트 학습 모듈",
+      "component_type": "process",
+      "description": "인터렉션 생성 모듈의 파라미터를 업데이트",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "파라미터 업데이트",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "파라미터 업로드 모듈",
+      "component_type": "process",
+      "description": "업데이트된 파라미터를 메인 신경망 서버에 업로드",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "업데이트된 파라미터 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "메인 신경망 다운로드 모듈",
+      "component_type": "process",
+      "description": "메인 신경망 서버에서 인터렉션 생성 메인 신경망을 다운로드",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "파라미터 통합",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220002233",
+      "diagram_type": "flowchart",
+      "diagram_title": "버츄어 휴먼 인터렉션 생성 과정",
+      "mermaid_code": "flowchart TD\n    100[\"인터렉션 생성 모듈\"]\n    200[\"부적절 인덱싱 모듈\"]\n    300[\"부적절 스코어링 인공신경망 모듈\"]\n    400[\"적절 텍스트 생성 모듈\"]\n    500[\"클라이언트 학습 모듈\"]\n    600[\"파라미터 업로드 모듈\"]\n    700[\"메인 신경망 다운로드 모듈\"]\n    \n    100 -->| \"입력 데이터 제공\" | 200\n    200 -->| \"부적절 여부 정보 수신\" | 300\n    300 -->| \"부적절 텍스트 수신\" | 400\n    100 -->| \"파라미터 업데이트\" | 500\n    500 -->| \"업데이트된 파라미터 수신\" | 600\n    600 -->| \"파라미터 통합\" | 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인터렉션 생성 모듈",
+          "component_type": "process",
+          "description": "사용자 대화 정보를 입력받아 인터렉션 정보를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "부적절 인덱싱 모듈",
+          "component_type": "process",
+          "description": "부적절 텍스트를 검색하여 부적절 여부 정보를 출력",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "부적절 스코어링 인공신경망 모듈",
+          "component_type": "process",
+          "description": "부적절 여부 정보를 기반으로 부적절 스코어를 출력",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "부적절 여부 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "적절 텍스트 생성 모듈",
+          "component_type": "process",
+          "description": "부적절 텍스트를 적절 텍스트로 변환",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "부적절 텍스트 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "클라이언트 학습 모듈",
+          "component_type": "process",
+          "description": "인터렉션 생성 모듈의 파라미터를 업데이트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파라미터 업데이트",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "파라미터 업로드 모듈",
+          "component_type": "process",
+          "description": "업데이트된 파라미터를 메인 신경망 서버에 업로드",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "업데이트된 파라미터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "메인 신경망 다운로드 모듈",
+          "component_type": "process",
+          "description": "메인 신경망 서버에서 인터렉션 생성 메인 신경망을 다운로드",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "파라미터 통합",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220002233/1020220002233_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220002233",
+      "diagram_type": "classDiagram",
+      "diagram_title": "버츄어 휴먼 인터렉션 생성 모듈 구성도",
+      "mermaid_code": "classDiagram\n    class 인터렉션생성모듈 {\n        +String 사용자대화정보\n        +generateInteraction()\n    }\n    class 부적절인덱싱모듈 {\n        +String 부적절텍스트\n        +searchInappropriate()\n    }\n    class 부적절스코어링인공신경망모듈 {\n        +String 부적절여부정보\n        +calculateInappropriateScore()\n    }\n    class 적절텍스트생성모듈 {\n        +String 적절텍스트\n        +generateAppropriateText()\n    }\n    class 클라이언트학습모듈 {\n        +updateParameters()\n    }\n    class 파라미터업로드모듈 {\n        +uploadParameters()\n    }\n    class 메인신경망다운로드모듈 {\n        +downloadMainNeuralNetwork()\n    }\n    인터렉션생성모듈 --> 부적절인덱싱모듈 : \"입력 데이터 제공\"\n    부적절인덱싱모듈 --> 부적절스코어링인공신경망모듈 : \"부적절 여부 정보 수신\"\n    부적절스코어링인공신경망모듈 --> 적절텍스트생성모듈 : \"부적절 텍스트 수신\"\n    인터렉션생성모듈 --> 클라이언트학습모듈 : \"파라미터 업데이트\"\n    클라이언트학습모듈 --> 파라미터업로드모듈 : \"업데이트된 파라미터 수신\"\n    파라미터업로드모듈 --> 메인신경망다운로드모듈 : \"파라미터 통합\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인터렉션 생성 모듈",
+          "component_type": "process",
+          "description": "사용자 대화 정보를 입력받아 인터렉션 정보를 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "부적절 인덱싱 모듈",
+          "component_type": "process",
+          "description": "부적절 텍스트를 검색하여 부적절 여부 정보를 출력",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "부적절 스코어링 인공신경망 모듈",
+          "component_type": "process",
+          "description": "부적절 여부 정보를 기반으로 부적절 스코어를 출력",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "부적절 여부 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "적절 텍스트 생성 모듈",
+          "component_type": "process",
+          "description": "부적절 텍스트를 적절 텍스트로 변환",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "부적절 텍스트 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "클라이언트 학습 모듈",
+          "component_type": "process",
+          "description": "인터렉션 생성 모듈의 파라미터를 업데이트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파라미터 업데이트",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "파라미터 업로드 모듈",
+          "component_type": "process",
+          "description": "업데이트된 파라미터를 메인 신경망 서버에 업로드",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "업데이트된 파라미터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "메인 신경망 다운로드 모듈",
+          "component_type": "process",
+          "description": "메인 신경망 서버에서 인터렉션 생성 메인 신경망을 다운로드",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "파라미터 통합",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220002233/1020220002233_fig_2.mmd"
+    }
+  ]
+}

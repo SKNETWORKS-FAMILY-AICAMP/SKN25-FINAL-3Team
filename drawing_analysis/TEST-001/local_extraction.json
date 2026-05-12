@@ -1,0 +1,40 @@
+{
+  "figures": [
+    {
+      "fig_number": "도 1",
+      "title": "이미지 분류 시스템의 전체 구성도이다",
+      "diagram_type": "block_diagram",
+      "purpose": "이미지 분류 시스템의 전체 구성도이다",
+      "source_text": "도 1은 이미지 분류 시스템의 전체 구성도이다"
+    },
+    {
+      "fig_number": "도 2",
+      "title": "이미지 분류 방법의 처리 흐름도이다",
+      "diagram_type": "flowchart",
+      "purpose": "이미지 분류 방법의 처리 흐름도이다",
+      "source_text": "도 2는 이미지 분류 방법의 처리 흐름도이다"
+    }
+  ],
+  "references": [
+    {
+      "ref_no": "100",
+      "name": "입력부",
+      "source_text": "100: 입력부"
+    },
+    {
+      "ref_no": "200",
+      "name": "전처리부",
+      "source_text": "200: 전처리부"
+    },
+    {
+      "ref_no": "300",
+      "name": "CNN 모델부",
+      "source_text": "300: CNN 모델부"
+    },
+    {
+      "ref_no": "400",
+      "name": "출력부",
+      "source_text": "400: 출력부"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+%% 1020170144234 - 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다
+%% 도 1
+%% deterministic renderer v3
+%% style: patent_office
+%% quality: 85 / grade: B
+%% auto_repaired: True / rounds: 1
+%% 생성일: 2026-05-11
+
+%%{init: {
+  'theme': 'base',
+  'flowchart': {
+    'htmlLabels': true,
+    'curve': 'linear',
+    'nodeSpacing': 45,
+    'rankSpacing': 65,
+    'padding': 18
+  },
+  'themeVariables': {
+    'fontFamily': 'NanumGothic, Noto Sans CJK KR, Noto Sans KR, Malgun Gothic, Arial',
+    'primaryColor': '#ffffff',
+    'primaryBorderColor': '#111111',
+    'lineColor': '#111111',
+    'textColor': '#111111',
+    'clusterBkg': '#ffffff',
+    'clusterBorder': '#111111',
+    'edgeLabelBackground': '#ffffff',
+    'tertiaryColor': '#ffffff'
+  }
+}}%%
+flowchart LR
+    classDef container fill:#ffffff,stroke:#111111,stroke-width:2.0px,color:#111111;
+    classDef device fill:#ffffff,stroke:#111111,stroke-width:1.7px,color:#111111;
+    classDef module fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef process fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef data fill:#ffffff,stroke:#111111,stroke-width:1.3px,stroke-dasharray: 5 4,color:#111111;
+    classDef database fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef actor fill:#ffffff,stroke:#111111,stroke-width:1.5px,color:#111111;
+    classDef invisible fill:#ffffff,stroke:#ffffff,color:#ffffff;
+    N2000["및 서버<br/><b>2000</b>"]
+
+    subgraph SYS_BOX["장치 <b>1000</b>"]
+        direction TB
+        subgraph ROW_1[" "]
+            direction LR
+            N1100[/"메모리<br/><b>1100</b>"/]
+            N1200["제어부<br/><b>1200</b>"]
+            N1300["입출력부<br/><b>1300</b>"]
+            N1100 --> N1200
+            N1200 --> N1300
+        end
+        subgraph ROW_2[" "]
+            direction LR
+            N1210["데이터 학습부<br/><b>1210</b>"]
+            N1220["데이터 인식부<br/><b>1220</b>"]
+            N1400["센싱부<br/><b>1400</b>"]
+            N1210 --> N1220
+            N1220 --> N1400
+        end
+        subgraph ROW_3[" "]
+            direction LR
+            N1500["통신부<br/><b>1500</b>"]
+            N1600["V 입력부<br/><b>1600</b>"]
+            N1322["알림 모듈은 디스플레이부<br/><b>1322</b>"]
+            N1500 --> N1600
+            N1600 --> N1322
+        end
+        subgraph ROW_4[" "]
+            direction LR
+            N1324["음향 출력부<br/><b>1324</b>"]
+            N1326["진동 모터<br/><b>1326</b>"]
+            N1314["터치 패널<br/><b>1314</b>"]
+            N1324 --> N1326
+            N1326 --> N1314
+        end
+        subgraph ROW_5[" "]
+            direction LR
+            N1316["팬인식 패널<br/><b>1316</b>"]
+            N1510["근거리 통신부<br/><b>1510</b>"]
+            N1520["이동 통신부<br/><b>1520</b>"]
+            N1316 --> N1510
+            N1510 --> N1520
+        end
+        subgraph ROW_6[" "]
+            direction LR
+            N1530["방송 수신부<br/><b>1530</b>"]
+            N1620["마이크로폰<br/><b>1620</b>"]
+            N1530 --> N1620
+        end
+    end
+    N1310["사용자 입력부<br/><b>1310</b>"]
+    N1440["적외선 센서<br/><b>1440</b>"]
+    N1450["자이로스코프 센서<br/><b>1450</b>"]
+    N1470["기압 센서<br/><b>1470</b>"]
+    N1480["접 센서<br/><b>1480</b>"]
+    N1610["카메라<br/><b>1610</b>"]
+    N1101["네트워크 시스템 제1 구성 요...<br/><b>1101</b>"]
+    N1102["네트워크 시스템 제2 구성 요...<br/><b>1102</b>"]
+    N1201["네트워크 시스템 제1 구성 요...<br/><b>1201</b>"]
+    N1202["네트워크 시스템 제2 구성 요...<br/><b>1202</b>"]
+    N1203["네트워크 시스템 제3 구성 요...<br/><b>1203</b>"]
+
+    N1300 --> N1210
+    N1400 --> N1500
+    N1322 --> N1324
+    N1314 --> N1316
+    N1520 --> N1530
+    N2000 <--> N1100 
+    N1620 <--> N1310 
+    N1000 --> N1100
+    N1000 -->|"제어 기능을 제공"| N1200
+    N1000 -->|"입출력 기능을 제공"| N1300
+    N1200 --> N1210
+    N1200 --> N1220
+    N1000 -->|"서버와 연결"| N2000
+
+    class N1000 device;
+    class N1100 data;
+    class N1200 module;
+    class N1300 module;
+    class N1210 module;
+    class N1220 module;
+    class N2000 module;
+    class N1400 module;
+    class N1500 module;
+    class N1600 module;
+    class N1322 module;
+    class N1324 module;
+    class N1326 module;
+    class N1310 module;
+    class N1314 module;
+    class N1316 module;
+    class N1440 module;
+    class N1450 module;
+    class N1470 module;
+    class N1480 module;
+    class N1510 module;
+    class N1520 module;
+    class N1530 module;
+    class N1610 module;
+    class N1620 module;
+    class N1101 module;
+    class N1102 module;
+    class N1201 module;
+    class N1202 module;
+    class N1203 module;

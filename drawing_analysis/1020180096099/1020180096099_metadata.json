@@ -1,0 +1,182 @@
+{
+  "app_num": "1020180096099",
+  "invention_type": "method",
+  "main_concept": "전자 장치의 제어 방법을 통해 복수의 페이지를 연속적으로 표시하는 인터렉션 환경 제공",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 장치",
+      "component_type": "device",
+      "description": "복수의 페이지를 표시하고 사용자 입력을 처리하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "디스플레이",
+      "component_type": "device",
+      "description": "페이지와 네비게이션 UI를 시각적으로 표시하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "입력부",
+      "component_type": "device",
+      "description": "사용자의 터치 드래그 입력을 수신하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "입력 신호를 처리하고 디스플레이를 제어하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제어함",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "신호 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180096099",
+      "diagram_type": "flowchart",
+      "diagram_title": "전자 장치 제어 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전자 장치\"]\n    200[\"디스플레이\"]\n    300[\"입력부\"]\n    400[\"프로세서\"]\n    100 -->|\"제어됨\"| 200\n    100 -->|\"제어함\"| 300\n    300 -->|\"터치 드래그 입력 감지\"| 400\n    400 -->|\"스크롤 또는 드로잉 기능 수행\"| 200\n    200 -->|\"복수의 페이지 표시\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "복수의 페이지를 표시하고 사용자 입력을 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "페이지와 네비게이션 UI를 시각적으로 표시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 드래그 입력을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "입력 신호를 처리하고 디스플레이를 제어하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "신호 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180096099/1020180096099_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180096099",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 전자장치 {\n        +복수의 페이지 표시\n        +사용자 입력 처리\n    }\n    class 디스플레이 {\n        +페이지 및 네비게이션 UI 표시\n    }\n    class 입력부 {\n        +터치 드래그 입력 수신\n    }\n    class 프로세서 {\n        +입력 신호 처리\n        +디스플레이 제어\n    }\n    전자장치 <-- 디스플레이 : \"제어됨\"\n    전자장치 --> 입력부 : \"제어함\"\n    프로세서 --> 디스플레이 : \"제어함\"\n    프로세서 <-- 입력부 : \"신호 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 장치",
+          "component_type": "device",
+          "description": "복수의 페이지를 표시하고 사용자 입력을 처리하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "디스플레이",
+          "component_type": "device",
+          "description": "페이지와 네비게이션 UI를 시각적으로 표시하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "입력부",
+          "component_type": "device",
+          "description": "사용자의 터치 드래그 입력을 수신하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "입력 신호를 처리하고 디스플레이를 제어하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제어함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "신호 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180096099/1020180096099_fig_2.mmd"
+    }
+  ]
+}

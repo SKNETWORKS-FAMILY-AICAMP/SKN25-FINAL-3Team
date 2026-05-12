@@ -1,0 +1,245 @@
+{
+  "app_num": "1020217033033",
+  "invention_type": "hardware",
+  "main_concept": "하드웨어 회로를 이용한 평균 풀링 뉴럴 네트워크 계층 프로세싱",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "하드웨어 회로",
+      "component_type": "device",
+      "description": "평균 풀링 뉴럴 네트워크 계층을 프로세싱하는 하드웨어 회로",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "행렬 곱셈 회로",
+      "component_type": "device",
+      "description": "입력 텐서와 커널의 콘볼루션을 수행하는 회로",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "하드웨어 회로의 데이터를 저장하는 메모리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "입력 텐서",
+      "component_type": "data",
+      "description": "평균 풀링 뉴럴 네트워크 계층에 대한 입력 데이터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "커널",
+      "component_type": "data",
+      "description": "콘볼루션 연산에 사용되는 커널",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "마스킹 텐서",
+      "component_type": "data",
+      "description": "출력 텐서를 생성하기 위한 마스킹 데이터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020217033033",
+      "diagram_type": "flowchart",
+      "diagram_title": "평균 풀링 뉴럴 네트워크 계층 프로세싱 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"하드웨어 회로\"]\n    200[\"행렬 곱셈 회로\"]\n    300[\"메모리\"]\n    400[\"입력 텐서\"]\n    500[\"커널\"]\n    600[\"마스킹 텐서\"]\n    \n    300 -->|\"입력 텐서 전송\"| 400\n    300 -->|\"커널 전송\"| 500\n    400 -->|\"콘볼루션 수행\"| 200\n    500 -->|\"콘볼루션 수행\"| 200\n    200 -->|\"엘리먼트-별 곱셈 수행\"| 600\n    600 -->|\"최종 출력 텐서 생성\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하드웨어 회로",
+          "component_type": "device",
+          "description": "평균 풀링 뉴럴 네트워크 계층을 프로세싱하는 하드웨어 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "행렬 곱셈 회로",
+          "component_type": "device",
+          "description": "입력 텐서와 커널의 콘볼루션을 수행하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "하드웨어 회로의 데이터를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "입력 텐서",
+          "component_type": "data",
+          "description": "평균 풀링 뉴럴 네트워크 계층에 대한 입력 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "커널",
+          "component_type": "data",
+          "description": "콘볼루션 연산에 사용되는 커널",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "마스킹 텐서",
+          "component_type": "data",
+          "description": "출력 텐서를 생성하기 위한 마스킹 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020217033033/1020217033033_fig_1.mmd"
+    },
+    {
+      "app_num": "1020217033033",
+      "diagram_type": "classDiagram",
+      "diagram_title": "하드웨어 회로 구성도",
+      "mermaid_code": "classDiagram\n    class 하드웨어회로 {\n        +String description\n    }\n    class 행렬곱셈회로 {\n        +String description\n    }\n    class 메모리 {\n        +String description\n    }\n    class 입력텐서 {\n        +String description\n    }\n    class 커널 {\n        +String description\n    }\n    class 마스킹텐서 {\n        +String description\n    }\n    하드웨어회로 --> 행렬곱셈회로 : \"구성 요소\"\n    하드웨어회로 --> 메모리 : \"구성 요소\"\n    입력텐서 --> 행렬곱셈회로 : \"입력\"\n    커널 --> 행렬곱셈회로 : \"입력\"\n    마스킹텐서 --> 행렬곱셈회로 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "하드웨어 회로",
+          "component_type": "device",
+          "description": "평균 풀링 뉴럴 네트워크 계층을 프로세싱하는 하드웨어 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "행렬 곱셈 회로",
+          "component_type": "device",
+          "description": "입력 텐서와 커널의 콘볼루션을 수행하는 회로",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "하드웨어 회로의 데이터를 저장하는 메모리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "입력 텐서",
+          "component_type": "data",
+          "description": "평균 풀링 뉴럴 네트워크 계층에 대한 입력 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "커널",
+          "component_type": "data",
+          "description": "콘볼루션 연산에 사용되는 커널",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "마스킹 텐서",
+          "component_type": "data",
+          "description": "출력 텐서를 생성하기 위한 마스킹 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020217033033/1020217033033_fig_2.mmd"
+    }
+  ]
+}

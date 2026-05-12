@@ -1,0 +1,221 @@
+{
+  "app_num": "1020177035954",
+  "invention_type": "method",
+  "main_concept": "프로그램가능한 IC에서 메모리를 관리하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로그램가능한 IC",
+      "component_type": "device",
+      "description": "메모리 관리 기능을 수행하는 통합 회로",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서 서브시스템",
+      "component_type": "device",
+      "description": "메모리 어드레스 공간의 제1 부분을 구현하는 서브시스템",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "커플링",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로그램가능한 로직 서브시스템",
+      "component_type": "device",
+      "description": "메모리 어드레스 공간의 제2 부분을 구현하는 서브시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성 요소",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "캐시 회로",
+      "component_type": "device",
+      "description": "프로세서 서브시스템과 프로그램가능한 로직 서브시스템에 커플링된 캐시",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연관",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "연관",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "가상 메모리 블록 회로",
+      "component_type": "device",
+      "description": "가상 메모리 블록을 구현하는 회로",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구현",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020177035954",
+      "diagram_type": "flowchart",
+      "diagram_title": "메모리 관리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로그램가능한 IC\"]\n    200[\"프로세서 서브시스템\"]\n    300[\"프로그램가능한 로직 서브시스템\"]\n    400[\"캐시 회로\"]\n    500[\"가상 메모리 블록 회로\"]\n    \n    100 -->| \"구성 요소\" | 300\n    200 -->| \"커플링\" | 300\n    200 -->| \"연관\" | 400\n    300 -->| \"연관\" | 400\n    300 -->| \"구현\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로그램가능한 IC",
+          "component_type": "device",
+          "description": "메모리 관리 기능을 수행하는 통합 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서 서브시스템",
+          "component_type": "device",
+          "description": "메모리 어드레스 공간의 제1 부분을 구현하는 서브시스템",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "커플링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로그램가능한 로직 서브시스템",
+          "component_type": "device",
+          "description": "메모리 어드레스 공간의 제2 부분을 구현하는 서브시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "캐시 회로",
+          "component_type": "device",
+          "description": "프로세서 서브시스템과 프로그램가능한 로직 서브시스템에 커플링된 캐시",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연관",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연관",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "가상 메모리 블록 회로",
+          "component_type": "device",
+          "description": "가상 메모리 블록을 구현하는 회로",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구현",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020177035954/1020177035954_fig_1.mmd"
+    },
+    {
+      "app_num": "1020177035954",
+      "diagram_type": "classDiagram",
+      "diagram_title": "프로그램가능한 IC 구조도",
+      "mermaid_code": "classDiagram\n    class 프로그램가능한IC {\n        +메모리 관리 기능\n    }\n    class 프로세서서브시스템 {\n        +메모리 어드레스 공간의 제1 부분\n    }\n    class 프로그램가능한로직서브시스템 {\n        +메모리 어드레스 공간의 제2 부분\n    }\n    class 캐시회로 {\n        +프로세서 서브시스템과 프로그램가능한 로직 서브시스템에 커플링\n    }\n    class 가상메모리블록회로 {\n        +가상 메모리 블록 구현\n    }\n    프로그램가능한IC <-- 프로세서서브시스템 : 구성 요소\n    프로세서서브시스템 --> 캐시회로 : 연관\n    프로그램가능한로직서브시스템 --> 캐시회로 : 연관\n    프로그램가능한로직서브시스템 --> 가상메모리블록회로 : 구현",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로그램가능한 IC",
+          "component_type": "device",
+          "description": "메모리 관리 기능을 수행하는 통합 회로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서 서브시스템",
+          "component_type": "device",
+          "description": "메모리 어드레스 공간의 제1 부분을 구현하는 서브시스템",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "커플링",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로그램가능한 로직 서브시스템",
+          "component_type": "device",
+          "description": "메모리 어드레스 공간의 제2 부분을 구현하는 서브시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성 요소",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "캐시 회로",
+          "component_type": "device",
+          "description": "프로세서 서브시스템과 프로그램가능한 로직 서브시스템에 커플링된 캐시",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연관",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연관",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "가상 메모리 블록 회로",
+          "component_type": "device",
+          "description": "가상 메모리 블록을 구현하는 회로",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구현",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020177035954/1020177035954_fig_2.mmd"
+    }
+  ]
+}

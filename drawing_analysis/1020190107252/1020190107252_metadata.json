@@ -1,0 +1,245 @@
+{
+  "app_num": "1020190107252",
+  "invention_type": "system",
+  "main_concept": "블록체인을 이용한 기부 물품거래 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "기부자 단말기",
+      "component_type": "actor",
+      "description": "기부자가 물품기부 요청정보를 입력하고, 토큰을 관리하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기부 요청정보 전송",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "토큰 기부정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "운영서버",
+      "component_type": "device",
+      "description": "기부자와 후원단체 간의 거래를 관리하고, 토큰을 발행 및 갱신하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "기부 요청정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "토큰 기부정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "후원단체 리스트 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "후원자/후원단체 단말기",
+      "component_type": "actor",
+      "description": "후원자가 기부받은 토큰을 관리하고, 환전 요청을 처리하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기부 완료 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "환전 요청정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "토큰 관리부",
+      "component_type": "process",
+      "description": "토큰의 발행, 충전 및 갱신을 관리하는 프로세스",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "토큰 갱신 내역 전송",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190107252",
+      "diagram_type": "flowchart",
+      "diagram_title": "기부 물품거래 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"기부자 단말기\"]\n    200[\"운영서버\"]\n    300[\"후원자/후원단체 단말기\"]\n    400[\"토큰 관리부\"]\n    100 -->|\"기부 요청정보 전송\"| 200\n    200 -->|\"후원단체 리스트 제공\"| 100\n    200 -->|\"토큰 기부정보 수신\"| 300\n    300 -->|\"환전 요청정보 전송\"| 400\n    400 -->|\"토큰 갱신 내역 전송\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "기부자 단말기",
+          "component_type": "actor",
+          "description": "기부자가 물품기부 요청정보를 입력하고, 토큰을 관리하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기부 요청정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "토큰 기부정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "운영서버",
+          "component_type": "device",
+          "description": "기부자와 후원단체 간의 거래를 관리하고, 토큰을 발행 및 갱신하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기부 요청정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "토큰 기부정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "후원단체 리스트 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "후원자/후원단체 단말기",
+          "component_type": "actor",
+          "description": "후원자가 기부받은 토큰을 관리하고, 환전 요청을 처리하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기부 완료 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "환전 요청정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 관리부",
+          "component_type": "process",
+          "description": "토큰의 발행, 충전 및 갱신을 관리하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "토큰 갱신 내역 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190107252/1020190107252_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190107252",
+      "diagram_type": "classDiagram",
+      "diagram_title": "기부 물품거래 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 기부자단말기 {\n        +String 요청정보\n        +String 토큰정보\n        +기부요청전송()\n        +토큰기부전송()\n    }\n    class 운영서버 {\n        +String 후원단체리스트\n        +기부요청수신()\n        +토큰기부수신()\n        +후원단체리스트제공()\n    }\n    class 후원자후원단체단말기 {\n        +String 기부토큰\n        +기부완료정보수신()\n        +환전요청전송()\n    }\n    class 토큰관리부 {\n        +String 토큰갱신내역\n        +토큰발행()\n        +토큰충전()\n        +토큰갱신()\n    }\n    기부자단말기 --> 운영서버 : \"기부 요청정보 전송\"\n    운영서버 --> 기부자단말기 : \"기부 요청정보 수신\"\n    운영서버 --> 후원자후원단체단말기 : \"후원단체 리스트 제공\"\n    후원자후원단체단말기 --> 운영서버 : \"기부 완료 정보 수신\"\n    후원자후원단체단말기 --> 토큰관리부 : \"환전 요청정보 전송\"\n    운영서버 --> 토큰관리부 : \"토큰 갱신 내역 전송\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "기부자 단말기",
+          "component_type": "actor",
+          "description": "기부자가 물품기부 요청정보를 입력하고, 토큰을 관리하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기부 요청정보 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "토큰 기부정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "운영서버",
+          "component_type": "device",
+          "description": "기부자와 후원단체 간의 거래를 관리하고, 토큰을 발행 및 갱신하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기부 요청정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "토큰 기부정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "후원단체 리스트 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "후원자/후원단체 단말기",
+          "component_type": "actor",
+          "description": "후원자가 기부받은 토큰을 관리하고, 환전 요청을 처리하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기부 완료 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "환전 요청정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 관리부",
+          "component_type": "process",
+          "description": "토큰의 발행, 충전 및 갱신을 관리하는 프로세스",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "토큰 갱신 내역 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190107252/1020190107252_fig_2.mmd"
+    }
+  ]
+}

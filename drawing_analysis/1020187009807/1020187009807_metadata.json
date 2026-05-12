@@ -1,0 +1,197 @@
+{
+  "app_num": "1020187009807",
+  "invention_type": "method",
+  "main_concept": "사용자의 얼굴 영역 이미지에서 안구 및 주위 영역의 품질 메트릭을 계산하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 얼굴 이미지",
+      "component_type": "data",
+      "description": "사용자의 얼굴 영역을 포함하는 이미지 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "안구 이미지 영역",
+      "component_type": "data",
+      "description": "얼굴 이미지에서 정의된 안구의 이미지 영역",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "안구 주위 이미지 영역",
+      "component_type": "data",
+      "description": "안구를 둘러싸는 영역으로, 품질 메트릭 계산에 사용됨",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "부분",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "관련",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "품질 메트릭",
+      "component_type": "data",
+      "description": "안구 및 주위 이미지 영역의 품질을 평가하는 메트릭",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기초",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "기초",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020187009807",
+      "diagram_type": "flowchart",
+      "diagram_title": "안구 및 주위 이미지 품질 메트릭 계산 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자의 얼굴 이미지\"]\n    200[\"안구 이미지 영역\"]\n    300[\"안구 주위 이미지 영역\"]\n    400[\"품질 메트릭\"]\n    100 -->|\"수신\"| 200\n    200 -->|\"포함\"| 300\n    300 -->|\"부분\"| 100\n    300 -->|\"관련\"| 200\n    200 -->|\"기초\"| 400\n    300 -->|\"기초\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 얼굴 이미지",
+          "component_type": "data",
+          "description": "사용자의 얼굴 영역을 포함하는 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "안구 이미지 영역",
+          "component_type": "data",
+          "description": "얼굴 이미지에서 정의된 안구의 이미지 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안구 주위 이미지 영역",
+          "component_type": "data",
+          "description": "안구를 둘러싸는 영역으로, 품질 메트릭 계산에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "부분",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "관련",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "품질 메트릭",
+          "component_type": "data",
+          "description": "안구 및 주위 이미지 영역의 품질을 평가하는 메트릭",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기초",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "기초",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020187009807/1020187009807_fig_1.mmd"
+    },
+    {
+      "app_num": "1020187009807",
+      "diagram_type": "classDiagram",
+      "diagram_title": "안구 이미지 처리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자얼굴이미지 {\n        +String 이미지데이터\n    }\n    class 안구이미지영역 {\n        +String 이미지데이터\n    }\n    class 안구주위이미지영역 {\n        +String 이미지데이터\n    }\n    class 품질메트릭 {\n        +String 메트릭값\n    }\n    사용자얼굴이미지 -->|부분| 안구주위이미지영역 : \"포함\"\n    안구주위이미지영역 -->|관련| 안구이미지영역 : \"포함\"\n    안구이미지영역 -->|기초| 품질메트릭 : \"기초\"\n    안구주위이미지영역 -->|기초| 품질메트릭 : \"기초\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 얼굴 이미지",
+          "component_type": "data",
+          "description": "사용자의 얼굴 영역을 포함하는 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "안구 이미지 영역",
+          "component_type": "data",
+          "description": "얼굴 이미지에서 정의된 안구의 이미지 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안구 주위 이미지 영역",
+          "component_type": "data",
+          "description": "안구를 둘러싸는 영역으로, 품질 메트릭 계산에 사용됨",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "부분",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "관련",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "품질 메트릭",
+          "component_type": "data",
+          "description": "안구 및 주위 이미지 영역의 품질을 평가하는 메트릭",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기초",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "기초",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020187009807/1020187009807_fig_2.mmd"
+    }
+  ]
+}

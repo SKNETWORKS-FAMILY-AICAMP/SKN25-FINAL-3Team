@@ -1,0 +1,25 @@
+%% 1020230078104 - 인공지능 모델 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class BERT모델 {
+        +String hiddenStateVector
+        +generateHiddenState()
+    }
+    class CNN모델 {
+        +String featureMap
+        +classify()
+    }
+    class 프로세서 {
+        +String inputText
+        +identifyTextType()
+    }
+    class 메모리 {
+        +String modelData
+        +storeModel()
+    }
+    프로세서 --> BERT모델 : "BERT 모델에 텍스트 입력"
+    BERT모델 --> CNN모델 : "입력 받음"
+    프로세서 --> CNN모델 : "CNN 모델에 hidden state vector 입력"
+    메모리 --> BERT모델 : "모델 저장"
+    메모리 --> CNN모델 : "모델 저장"

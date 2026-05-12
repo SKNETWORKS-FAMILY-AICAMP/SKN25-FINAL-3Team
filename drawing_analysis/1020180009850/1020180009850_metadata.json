@@ -1,0 +1,143 @@
+{
+  "app_num": "1020180009850",
+  "invention_type": "hybrid",
+  "main_concept": "플렉서블 디스플레이를 제어하여 오브젝트 그룹을 편집하는 전자 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플렉서블 디스플레이",
+      "component_type": "device",
+      "description": "오브젝트 그룹을 표시하는 디스플레이 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "디스플레이를 제어하고 오브젝트 그룹을 관리하는 중앙 처리 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "프로세서의 명령 및 오브젝트 정보를 저장하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180009850",
+      "diagram_type": "flowchart",
+      "diagram_title": "플렉서블 디스플레이 제어 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플렉서블 디스플레이\"]\n    200[\"프로세서\"]\n    300[\"메모리\"]\n    400[\"사용자 입력\"]\n    \n    100 -->|\"언폴딩 상태에서 메인 페이지 표시\"| 200\n    200 -->|\"오브젝트 그룹 숨김 설정 및 해제\"| 400\n    400 -->|\"사용자 입력에 따른 오브젝트 표시 조정\"| 200\n    200 -->|\"명령 및 오브젝트 정보 저장\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플렉서블 디스플레이",
+          "component_type": "device",
+          "description": "오브젝트 그룹을 표시하는 디스플레이 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이를 제어하고 오브젝트 그룹을 관리하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서의 명령 및 오브젝트 정보를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180009850/1020180009850_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180009850",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class FlexibleDisplay {\n        +String displayContent\n        +showObjects()\n    }\n    class Processor {\n        +String controlCommands\n        +manageObjects()\n    }\n    class Memory {\n        +String objectData\n        +storeCommands()\n    }\n    FlexibleDisplay <-- Processor : \"제어\"\n    Processor --> Memory : \"저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플렉서블 디스플레이",
+          "component_type": "device",
+          "description": "오브젝트 그룹을 표시하는 디스플레이 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "디스플레이를 제어하고 오브젝트 그룹을 관리하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서의 명령 및 오브젝트 정보를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180009850/1020180009850_fig_2.mmd"
+    }
+  ]
+}

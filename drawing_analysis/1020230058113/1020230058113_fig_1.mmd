@@ -1,0 +1,37 @@
+%% 1020230058113 - 스마트 태블릿 전자 메뉴판 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 본체프레임 {
+        +String 구조
+    }
+    class 디스플레이패널 {
+        +String 터치패널
+        +displayContent()
+    }
+    class 제어유닛 {
+        +String 송수신기능
+        +manageContent()
+    }
+    class 통신유닛 {
+        +String 외부연결
+        +sendReceive()
+    }
+    class 광고콘텐츠관리모듈 {
+        +String 광고설정
+        +manageAds()
+    }
+    class 메뉴관리모듈 {
+        +String 메뉴설정
+        +manageMenu()
+    }
+    class 이벤트콘텐츠관리모듈 {
+        +String 이벤트설정
+        +manageEvents()
+    }
+    본체프레임 --> 디스플레이패널 : "고정"
+    디스플레이패널 --> 제어유닛 : "제어 유닛과 연결"
+    제어유닛 --> 통신유닛 : "통신 유닛과 연동"
+    제어유닛 --> 광고콘텐츠관리모듈 : "광고 콘텐츠 관리 모듈 포함"
+    제어유닛 --> 메뉴관리모듈 : "메뉴 관리 모듈 포함"
+    제어유닛 --> 이벤트콘텐츠관리모듈 : "이벤트 콘텐츠 관리 모듈 포함"

@@ -1,0 +1,182 @@
+{
+  "app_num": "1020237000315",
+  "invention_type": "method",
+  "main_concept": "플랜트 프로세스의 최적화를 위한 컴퓨터 구현 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플랜트 프로세스 그래프",
+      "component_type": "data",
+      "description": "프로세스 흐름을 나타내는 노드와 엣지로 구성된 그래프",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "회귀 함수",
+      "component_type": "process",
+      "description": "각 노드에 대한 출력을 예측하기 위한 함수",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "모델링됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "인접 행렬",
+      "component_type": "data",
+      "description": "그래프의 네트워크 토폴로지를 인코딩하는 행렬",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "최적화 모델",
+      "component_type": "process",
+      "description": "각 프로세스에 대한 설정점을 제공하는 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기반으로 생성됨",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "기반으로 생성됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020237000315",
+      "diagram_type": "flowchart",
+      "diagram_title": "플랜트 프로세스 최적화 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플랜트 프로세스 그래프\"]\n    200[\"회귀 함수\"]\n    300[\"인접 행렬\"]\n    400[\"최적화 모델\"]\n    100 -->|\"모델링됨\"| 200\n    100 -->|\"생성됨\"| 300\n    200 -->|\"기반으로 생성됨\"| 400\n    300 -->|\"기반으로 생성됨\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랜트 프로세스 그래프",
+          "component_type": "data",
+          "description": "프로세스 흐름을 나타내는 노드와 엣지로 구성된 그래프",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회귀 함수",
+          "component_type": "process",
+          "description": "각 노드에 대한 출력을 예측하기 위한 함수",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델링됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "인접 행렬",
+          "component_type": "data",
+          "description": "그래프의 네트워크 토폴로지를 인코딩하는 행렬",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "최적화 모델",
+          "component_type": "process",
+          "description": "각 프로세스에 대한 설정점을 제공하는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기반으로 생성됨",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "기반으로 생성됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020237000315/1020237000315_fig_1.mmd"
+    },
+    {
+      "app_num": "1020237000315",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랜트 프로세스 그래프 구조",
+      "mermaid_code": "classDiagram\n    class 플랜트프로세스그래프 {\n        +String 노드\n        +String 엣지\n    }\n    class 회귀함수 {\n        +예측()\n    }\n    class 인접행렬 {\n        +인코딩()\n    }\n    class 최적화모델 {\n        +설정점제공()\n    }\n    플랜트프로세스그래프 --> 회귀함수 : \"모델링됨\"\n    플랜트프로세스그래프 --> 인접행렬 : \"생성됨\"\n    회귀함수 --> 최적화모델 : \"기반으로 생성됨\"\n    인접행렬 --> 최적화모델 : \"기반으로 생성됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플랜트 프로세스 그래프",
+          "component_type": "data",
+          "description": "프로세스 흐름을 나타내는 노드와 엣지로 구성된 그래프",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "회귀 함수",
+          "component_type": "process",
+          "description": "각 노드에 대한 출력을 예측하기 위한 함수",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델링됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "인접 행렬",
+          "component_type": "data",
+          "description": "그래프의 네트워크 토폴로지를 인코딩하는 행렬",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "최적화 모델",
+          "component_type": "process",
+          "description": "각 프로세스에 대한 설정점을 제공하는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기반으로 생성됨",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "기반으로 생성됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020237000315/1020237000315_fig_2.mmd"
+    }
+  ]
+}

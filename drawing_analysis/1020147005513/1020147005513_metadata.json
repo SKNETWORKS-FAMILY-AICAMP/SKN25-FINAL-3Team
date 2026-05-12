@@ -1,0 +1,323 @@
+{
+  "app_num": "1020147005513",
+  "invention_type": "method",
+  "main_concept": "전자 이미지로부터 특징을 추출하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 이미지 획득 모듈",
+      "component_type": "process",
+      "description": "객체의 전자 이미지를 획득하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "에지 검출 모듈",
+      "component_type": "process",
+      "description": "전자 이미지에서 제1 세트의 에지를 검출하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "에지 풀링 모듈",
+      "component_type": "process",
+      "description": "제1 세트의 에지들로부터 제2 세트의 에지를 결정하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "패치 샘플링 모듈",
+      "component_type": "process",
+      "description": "에지 패치, 컬러 패치 및 텍스처 패치를 샘플링하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "패치 선택 모듈",
+      "component_type": "process",
+      "description": "유클리디언 거리에 기반하여 패치를 선택하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "부분 선택 모듈",
+      "component_type": "process",
+      "description": "선택된 패치들로부터 부분을 결정하는 역할",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "부분 풀링 모듈",
+      "component_type": "process",
+      "description": "제1 세트의 부분들로부터 제2 세트의 부분들을 결정하는 역할",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "객체 등록 모듈",
+      "component_type": "process",
+      "description": "제2 세트의 부분들을 객체에 등록하는 역할",
+      "relationships": [
+        {
+          "target": "700",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020147005513",
+      "diagram_type": "flowchart",
+      "diagram_title": "특징 추출 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전자 이미지 획득 모듈\"]\n    200[\"에지 검출 모듈\"]\n    300[\"에지 풀링 모듈\"]\n    400[\"패치 샘플링 모듈\"]\n    500[\"패치 선택 모듈\"]\n    600[\"부분 선택 모듈\"]\n    700[\"부분 풀링 모듈\"]\n    800[\"객체 등록 모듈\"]\n    \n    100 -->|\"입력\"| 200\n    200 -->|\"입력\"| 300\n    300 -->|\"입력\"| 400\n    400 -->|\"입력\"| 500\n    500 -->|\"입력\"| 600\n    600 -->|\"입력\"| 700\n    700 -->|\"입력\"| 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 이미지 획득 모듈",
+          "component_type": "process",
+          "description": "객체의 전자 이미지를 획득하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "에지 검출 모듈",
+          "component_type": "process",
+          "description": "전자 이미지에서 제1 세트의 에지를 검출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "에지 풀링 모듈",
+          "component_type": "process",
+          "description": "제1 세트의 에지들로부터 제2 세트의 에지를 결정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "패치 샘플링 모듈",
+          "component_type": "process",
+          "description": "에지 패치, 컬러 패치 및 텍스처 패치를 샘플링하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "패치 선택 모듈",
+          "component_type": "process",
+          "description": "유클리디언 거리에 기반하여 패치를 선택하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "부분 선택 모듈",
+          "component_type": "process",
+          "description": "선택된 패치들로부터 부분을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "부분 풀링 모듈",
+          "component_type": "process",
+          "description": "제1 세트의 부분들로부터 제2 세트의 부분들을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "객체 등록 모듈",
+          "component_type": "process",
+          "description": "제2 세트의 부분들을 객체에 등록하는 역할",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020147005513/1020147005513_fig_1.mmd"
+    },
+    {
+      "app_num": "1020147005513",
+      "diagram_type": "flowchart",
+      "diagram_title": "패치 선택 및 등록 과정",
+      "mermaid_code": "flowchart TD\n    100[\"전자 이미지 획득 모듈\"]\n    200[\"에지 검출 모듈\"]\n    300[\"에지 풀링 모듈\"]\n    400[\"패치 샘플링 모듈\"]\n    500[\"패치 선택 모듈\"]\n    600[\"부분 선택 모듈\"]\n    700[\"부분 풀링 모듈\"]\n    800[\"객체 등록 모듈\"]\n    \n    100 -->| \"입력\" | 200\n    200 -->| \"입력\" | 300\n    300 -->| \"입력\" | 400\n    400 -->| \"입력\" | 500\n    500 -->| \"입력\" | 600\n    600 -->| \"입력\" | 700\n    700 -->| \"입력\" | 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 이미지 획득 모듈",
+          "component_type": "process",
+          "description": "객체의 전자 이미지를 획득하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "에지 검출 모듈",
+          "component_type": "process",
+          "description": "전자 이미지에서 제1 세트의 에지를 검출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "에지 풀링 모듈",
+          "component_type": "process",
+          "description": "제1 세트의 에지들로부터 제2 세트의 에지를 결정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "패치 샘플링 모듈",
+          "component_type": "process",
+          "description": "에지 패치, 컬러 패치 및 텍스처 패치를 샘플링하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "패치 선택 모듈",
+          "component_type": "process",
+          "description": "유클리디언 거리에 기반하여 패치를 선택하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "부분 선택 모듈",
+          "component_type": "process",
+          "description": "선택된 패치들로부터 부분을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "부분 풀링 모듈",
+          "component_type": "process",
+          "description": "제1 세트의 부분들로부터 제2 세트의 부분들을 결정하는 역할",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "객체 등록 모듈",
+          "component_type": "process",
+          "description": "제2 세트의 부분들을 객체에 등록하는 역할",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020147005513/1020147005513_fig_2.mmd"
+    }
+  ]
+}

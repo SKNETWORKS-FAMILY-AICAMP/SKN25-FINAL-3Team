@@ -1,0 +1,404 @@
+{
+  "app_num": "1020130042378",
+  "invention_type": "system",
+  "main_concept": "태양 위치 추적을 이용한 난반사 방지 키오스크 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "태양 위치추적 센싱 유닛",
+      "component_type": "device",
+      "description": "태양의 위치 정보를 측정하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "키오스크 하우징",
+      "component_type": "device",
+      "description": "키오스크의 외부 구조를 형성하는 장치",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "회전 유닛에 의해 회전됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "디스플레이 유닛",
+      "component_type": "device",
+      "description": "사용자에게 정보를 표시하는 장치",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "회전 유닛에 의해 회전됨",
+          "direction": "->"
+        },
+        {
+          "target": "900",
+          "label": "제어 유닛에 의해 제어됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "디스플레이 회전 유닛",
+      "component_type": "device",
+      "description": "디스플레이 유닛을 회전시키는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "디스플레이 유닛을 회전시킴",
+          "direction": "->"
+        },
+        {
+          "target": "900",
+          "label": "제어 유닛에 의해 제어됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "키오스크 하우징 회전 유닛",
+      "component_type": "device",
+      "description": "키오스크 하우징을 회전시키는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "키오스크 하우징을 회전시킴",
+          "direction": "->"
+        },
+        {
+          "target": "900",
+          "label": "제어 유닛에 의해 제어됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "데이터 베이스",
+      "component_type": "data",
+      "description": "태양 위치 정보와 디스플레이 유닛의 위치 정보를 저장하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "900",
+          "label": "제어 유닛에 의해 접근됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "900",
+      "name": "제어 유닛",
+      "component_type": "device",
+      "description": "전체 시스템의 동작을 제어하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "태양 위치 정보를 수신함",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "키오스크 하우징을 제어함",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "디스플레이 유닛을 제어함",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "디스플레이 회전 유닛을 제어함",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "키오스크 하우징 회전 유닛을 제어함",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "데이터베이스에서 정보 추출",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020130042378",
+      "diagram_type": "flowchart",
+      "diagram_title": "키오스크 장치 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"태양 위치추적 센싱 유닛\"]\n    200[\"키오스크 하우징\"]\n    300[\"디스플레이 유닛\"]\n    400[\"디스플레이 회전 유닛\"]\n    500[\"키오스크 하우징 회전 유닛\"]\n    600[\"데이터 베이스\"]\n    900[\"제어 유닛\"]\n    \n    100 -->|\"태양 위치 정보 측정\"| 900\n    900 -->|\"디스플레이 유닛 각도 정보 추출\"| 300\n    300 -->|\"디스플레이 회전 제어\"| 400\n    200 -->|\"회전 유닛에 의해 회전됨\"| 500\n    400 -->|\"회전 유닛에 의해 회전됨\"| 300\n    500 -->|\"키오스크 하우징을 회전시킴\"| 200\n    900 -->|\"데이터베이스에서 정보 추출\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "태양 위치추적 센싱 유닛",
+          "component_type": "device",
+          "description": "태양의 위치 정보를 측정하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "키오스크 하우징",
+          "component_type": "device",
+          "description": "키오스크의 외부 구조를 형성하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "회전 유닛에 의해 회전됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디스플레이 유닛",
+          "component_type": "device",
+          "description": "사용자에게 정보를 표시하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "회전 유닛에 의해 회전됨",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "디스플레이 회전 유닛",
+          "component_type": "device",
+          "description": "디스플레이 유닛을 회전시키는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "디스플레이 유닛을 회전시킴",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "키오스크 하우징 회전 유닛",
+          "component_type": "device",
+          "description": "키오스크 하우징을 회전시키는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키오스크 하우징을 회전시킴",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "데이터 베이스",
+          "component_type": "data",
+          "description": "태양 위치 정보와 디스플레이 유닛의 위치 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 접근됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "제어 유닛",
+          "component_type": "device",
+          "description": "전체 시스템의 동작을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "태양 위치 정보를 수신함",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "키오스크 하우징을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "디스플레이 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "디스플레이 회전 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "키오스크 하우징 회전 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "데이터베이스에서 정보 추출",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020130042378/1020130042378_fig_1.mmd"
+    },
+    {
+      "app_num": "1020130042378",
+      "diagram_type": "classDiagram",
+      "diagram_title": "제어 유닛 기능 블록도",
+      "mermaid_code": "classDiagram\n    class 태양위치추적센싱유닛 {\n        +String 위치정보\n        +측정()\n    }\n    class 키오스크하우징 {\n        +String 구조정보\n        +형성()\n    }\n    class 디스플레이유닛 {\n        +String 표시정보\n        +정보표시()\n    }\n    class 디스플레이회전유닛 {\n        +String 회전각도\n        +회전()\n    }\n    class 키오스크하우징회전유닛 {\n        +String 회전각도\n        +회전()\n    }\n    class 제어유닛 {\n        +String 제어정보\n        +제어()\n        +정보추출()\n    }\n    태양위치추적센싱유닛 --> 제어유닛 : \"태양 위치 정보를 수신함\"\n    키오스크하우징 --> 키오스크하우징회전유닛 : \"키오스크 하우징을 회전시킴\"\n    디스플레이유닛 --> 디스플레이회전유닛 : \"디스플레이 유닛을 회전시킴\"\n    디스플레이회전유닛 --> 제어유닛 : \"제어 유닛에 의해 제어됨\"\n    키오스크하우징회전유닛 --> 제어유닛 : \"제어 유닛에 의해 제어됨\"\n    디스플레이유닛 --> 제어유닛 : \"제어 유닛에 의해 제어됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "태양 위치추적 센싱 유닛",
+          "component_type": "device",
+          "description": "태양의 위치 정보를 측정하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "키오스크 하우징",
+          "component_type": "device",
+          "description": "키오스크의 외부 구조를 형성하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "회전 유닛에 의해 회전됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "디스플레이 유닛",
+          "component_type": "device",
+          "description": "사용자에게 정보를 표시하는 장치",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "회전 유닛에 의해 회전됨",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "디스플레이 회전 유닛",
+          "component_type": "device",
+          "description": "디스플레이 유닛을 회전시키는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "디스플레이 유닛을 회전시킴",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "키오스크 하우징 회전 유닛",
+          "component_type": "device",
+          "description": "키오스크 하우징을 회전시키는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "키오스크 하우징을 회전시킴",
+              "direction": "->"
+            },
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 제어됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "데이터 베이스",
+          "component_type": "data",
+          "description": "태양 위치 정보와 디스플레이 유닛의 위치 정보를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "900",
+              "label": "제어 유닛에 의해 접근됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "제어 유닛",
+          "component_type": "device",
+          "description": "전체 시스템의 동작을 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "태양 위치 정보를 수신함",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "키오스크 하우징을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "디스플레이 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "디스플레이 회전 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "키오스크 하우징 회전 유닛을 제어함",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "데이터베이스에서 정보 추출",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 8",
+      "output_path": "drawing_analysis/1020130042378/1020130042378_fig_8.mmd"
+    }
+  ]
+}

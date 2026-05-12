@@ -1,0 +1,287 @@
+{
+  "invention_type": "system",
+  "main_concept": "이종 멀티 CPU가 탑재된 시스템온칩(System on Chip, SoC)에서 복수의 운영체제가 경쟁 상태 없이 물리 자원을 공유할 수 있는 장치 및 방법",
+  "technical_problem": "이종 멀티 CPU가 탑재된 SoC에서 복수의 운영체제가 물리 자원을 경쟁 상태 없이 공유할 수 있는 방법의 필요성",
+  "solution_summary": "호스트 CPU가 다수의 클라이언트 CPU의 공유 물리자원에 대한 접근 제어권을 관리하여, 다수의 클라이언트 CPU에서 독립적으로 동작하는 운영체제가 경쟁 상태 없이 물리 자원을 공유할 수 있도록 하는 시스템",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "실시예에 따른 시스템온칩(System on Chip, 이하, 'SoC'라 통칭함)의 구성도이다",
+      "purpose": "시스템온칩의 전체 구성 요소를 나타내기 위함",
+      "source_text": "도 1은 실시예에 따른 시스템온칩(System on Chip, 이하, 'SoC'라 통칭함)의 구성도이다"
+    },
+    {
+      "fig_number": "도 3",
+      "diagram_type": "flowchart",
+      "title": "실시예에 따른 제어권 관리 절차를 나타낸 흐름도이다",
+      "purpose": "제어권 관리 절차의 흐름을 설명하기 위함",
+      "source_text": "도 3은 실시예에 따른 제어권 관리 절차를 나타낸 흐름도이다"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "100",
+      "name": "단일 SoC",
+      "component_type": "device",
+      "description": "이종 멀티 CPU를 포함하는 시스템온칩",
+      "source_text": "단일 SoC(100)",
+      "relationships": [
+        {
+          "target": "101",
+          "label": "호스트 CPU",
+          "direction": "->",
+          "source_text": "호스트 CPU(101)"
+        },
+        {
+          "target": "102",
+          "label": "클라이언트 CPU",
+          "direction": "->",
+          "source_text": "클라이언트 CPU(102)"
+        },
+        {
+          "target": "108",
+          "label": "버스 인터커넥터",
+          "direction": "->",
+          "source_text": "버스-인터커넥터(108)"
+        },
+        {
+          "target": "113",
+          "label": "IPC 디바이스",
+          "direction": "->",
+          "source_text": "IPC 디바이스(113)"
+        }
+      ]
+    },
+    {
+      "component_id": "101",
+      "name": "호스트 CPU",
+      "component_type": "actor",
+      "description": "시스템 전체를 부팅하고 제어권을 관리하는 CPU",
+      "source_text": "호스트 CPU(101)",
+      "relationships": []
+    },
+    {
+      "component_id": "102",
+      "name": "클라이언트 CPU",
+      "component_type": "actor",
+      "description": "호스트 CPU에 제어권 관리를 요청하는 CPU",
+      "source_text": "클라이언트 CPU(102)",
+      "relationships": []
+    },
+    {
+      "component_id": "108",
+      "name": "버스 인터커넥터",
+      "component_type": "module",
+      "description": "CPU와 공유 물리자원을 연결하는 인터커넥터",
+      "source_text": "버스-인터커넥터(108)",
+      "relationships": []
+    },
+    {
+      "component_id": "113",
+      "name": "IPC 디바이스",
+      "component_type": "device",
+      "description": "제어권 관리 요청 및 응답을 처리하는 장치",
+      "source_text": "IPC 디바이스(113)",
+      "relationships": []
+    },
+    {
+      "component_id": "10",
+      "name": "2833295",
+      "component_type": "module",
+      "description": "2833295",
+      "source_text": "10-2833295",
+      "relationships": []
+    },
+    {
+      "component_id": "11",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "11 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "12",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "12 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "13",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "13 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "14",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "14 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "15",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "15 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "1",
+      "name": "102",
+      "component_type": "module",
+      "description": "102",
+      "source_text": "1(102)",
+      "relationships": []
+    },
+    {
+      "component_id": "2",
+      "name": "103",
+      "component_type": "module",
+      "description": "103",
+      "source_text": "2(103)",
+      "relationships": []
+    },
+    {
+      "component_id": "3",
+      "name": "104",
+      "component_type": "module",
+      "description": "104",
+      "source_text": "3(104)",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "은 외부 장치",
+      "component_type": "module",
+      "description": "은 외부 장치",
+      "source_text": "은 외부 장치(200)",
+      "relationships": []
+    },
+    {
+      "component_id": "114",
+      "name": "데이터 램",
+      "component_type": "module",
+      "description": "데이터 램",
+      "source_text": "데이터 램(114)",
+      "relationships": []
+    },
+    {
+      "component_id": "115",
+      "name": "코드 램",
+      "component_type": "module",
+      "description": "코드 램",
+      "source_text": "코드 램(115)",
+      "relationships": []
+    },
+    {
+      "component_id": "127",
+      "name": "은 OS",
+      "component_type": "module",
+      "description": "은 OS",
+      "source_text": "은 OS(127)",
+      "relationships": []
+    },
+    {
+      "component_id": "128",
+      "name": "디바이스 드라이버",
+      "component_type": "module",
+      "description": "디바이스 드라이버",
+      "source_text": "디바이스 드라이버(128)",
+      "relationships": []
+    },
+    {
+      "component_id": "129",
+      "name": "IPC 드라이버",
+      "component_type": "module",
+      "description": "IPC 드라이버",
+      "source_text": "IPC 드라이버(129)",
+      "relationships": []
+    },
+    {
+      "component_id": "121",
+      "name": "는 공유자원 제어부",
+      "component_type": "module",
+      "description": "는 공유자원 제어부",
+      "source_text": "는 공유자원 제어부(121)",
+      "relationships": []
+    },
+    {
+      "component_id": "122",
+      "name": "IPC 드라이버",
+      "component_type": "module",
+      "description": "IPC 드라이버",
+      "source_text": "IPC 드라이버(122)",
+      "relationships": []
+    },
+    {
+      "component_id": "123",
+      "name": "디바이스 드라이버",
+      "component_type": "module",
+      "description": "디바이스 드라이버",
+      "source_text": "디바이스 드라이버(123)",
+      "relationships": []
+    },
+    {
+      "component_id": "124",
+      "name": "는 접근 제어 관리부",
+      "component_type": "module",
+      "description": "는 접근 제어 관리부",
+      "source_text": "는 접근 제어 관리부(124)",
+      "relationships": []
+    },
+    {
+      "component_id": "125",
+      "name": "간접 접근 제어부",
+      "component_type": "module",
+      "description": "간접 접근 제어부",
+      "source_text": "간접 접근 제어부(125)",
+      "relationships": []
+    },
+    {
+      "component_id": "126",
+      "name": "관리부",
+      "component_type": "module",
+      "description": "관리부",
+      "source_text": "관리부(126)",
+      "relationships": []
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "제어권 할당 요청 수신",
+      "description": "클라이언트 CPU로부터 제어권 할당 요청을 수신하는 단계",
+      "source_text": "제1 클라이언트 프로세서로부터 제1 공유 물리자원에 대한 제어권 할당 요청을 수신하는 단계"
+    },
+    {
+      "step_id": "S101",
+      "name": "제어권 확인",
+      "description": "제어권이 이미 할당되었는지 확인하는 단계",
+      "source_text": "상기 제1 공유 물리자원에 대한 제어권이 제2 클라이언트 프로세서에게 이미 할당되었는지 확인하는 단계"
+    },
+    {
+      "step_id": "S102",
+      "name": "제어권 할당 응답 전송",
+      "description": "제어권 할당 승인 응답을 클라이언트 CPU에게 전송하는 단계",
+      "source_text": "제어권이 이미 할당되지 않았다면, 상기 제1 클라이언트 프로세서에게 제어권 할당 승인 응답을 전송하는 단계"
+    },
+    {
+      "step_id": "S103",
+      "name": "제어권 할당 거절 응답 전송",
+      "description": "제어권 할당 거절 응답을 클라이언트 CPU에게 전송하는 단계",
+      "source_text": "제어권이 이미 할당되었다면, 상기 제1 클라이언트 프로세서에게 제어권 할당 거절 응답을 전송하는 단계를 포함한다."
+    }
+  ],
+  "key_actors": [
+    "호스트 CPU",
+    "클라이언트 CPU"
+  ]
+}

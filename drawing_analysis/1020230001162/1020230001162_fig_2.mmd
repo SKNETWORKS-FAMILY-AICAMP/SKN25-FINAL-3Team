@@ -1,0 +1,27 @@
+%% 1020230001162 - 인공 신경망 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1인공신경망 {
+        +extractVisualFeatures()
+    }
+    class 제2인공신경망 {
+        +extractAuditoryFeatures()
+    }
+    class 제3인공신경망 {
+        +predictAttentionArea()
+    }
+    class 제4인공신경망 {
+        +integrateFeatures()
+    }
+    class 제5인공신경망 {
+        +classifyVisualObjects()
+    }
+    class 제6인공신경망 {
+        +classifyAuditoryObjects()
+    }
+    제1인공신경망 --> 제2인공신경망 : "시각 정보 전달"
+    제2인공신경망 --> 제3인공신경망 : "청각 정보 전달"
+    제3인공신경망 --> 제4인공신경망 : "관심 영역 예측"
+    제4인공신경망 --> 제5인공신경망 : "통합된 특징점 전달"
+    제4인공신경망 --> 제6인공신경망 : "통합된 특징점 전달"

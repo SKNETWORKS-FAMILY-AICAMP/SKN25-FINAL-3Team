@@ -1,0 +1,407 @@
+{
+  "app_num": "1020220071866",
+  "invention_type": "hybrid",
+  "main_concept": "스파이킹 뉴럴 네트워크의 하드웨어 및 소프트웨어 구현",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "시냅스 어레이",
+      "component_type": "device",
+      "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "뉴런 회로",
+      "component_type": "device",
+      "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구성",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제어부",
+      "component_type": "device",
+      "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제어",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "실행",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220071866",
+      "diagram_type": "classDiagram",
+      "diagram_title": "하드웨어 기반 스파이킹 뉴럴 네트워크 구성도",
+      "mermaid_code": "classDiagram\n    class 시냅스어레이 {\n        +구성()\n    }\n    class 뉴런회로 {\n        +추론()\n    }\n    class 제어부 {\n        +제어()\n    }\n    class 메모리 {\n        +저장()\n    }\n    class 프로세서 {\n        +실행()\n    }\n    제어부 --> 시냅스어레이 : \"제어\"\n    제어부 --> 뉴런회로 : \"제어\"\n    뉴런회로 <-- 시냅스어레이 : \"구성\"\n    프로세서 --> 메모리 : \"실행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시냅스 어레이",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "뉴런 회로",
+          "component_type": "device",
+          "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220071866/1020220071866_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220071866",
+      "diagram_type": "classDiagram",
+      "diagram_title": "소프트웨어 기반 스파이킹 뉴럴 네트워크 구성도",
+      "mermaid_code": "classDiagram\n    class 시냅스어레이 {\n        +구성()\n    }\n    class 뉴런회로 {\n        +추론()\n    }\n    class 제어부 {\n        +제어()\n    }\n    class 메모리 {\n        +저장()\n    }\n    class 프로세서 {\n        +실행()\n    }\n    제어부 --> 시냅스어레이 : \"제어\"\n    제어부 --> 뉴런회로 : \"제어\"\n    뉴런회로 --> 시냅스어레이 : \"구성\"\n    프로세서 --> 메모리 : \"실행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시냅스 어레이",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "뉴런 회로",
+          "component_type": "device",
+          "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220071866/1020220071866_fig_2.mmd"
+    },
+    {
+      "app_num": "1020220071866",
+      "diagram_type": "flowchart",
+      "diagram_title": "스파이킹 뉴럴 네트워크 동작 방법",
+      "mermaid_code": "flowchart TD\n    100[\"시냅스 어레이\"]\n    200[\"뉴런 회로\"]\n    300[\"제어부\"]\n    400[\"메모리\"]\n    500[\"프로세서\"]\n    \n    300 -->|\"제어\"| 100\n    300 -->|\"제어\"| 200\n    500 -->|\"실행\"| 400\n    100 -->|\"구성\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시냅스 어레이",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "뉴런 회로",
+          "component_type": "device",
+          "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020220071866/1020220071866_fig_3.mmd"
+    },
+    {
+      "app_num": "1020220071866",
+      "diagram_type": "flowchart",
+      "diagram_title": "바이어스 제공 개념 설명",
+      "mermaid_code": "flowchart TD\n    100[\"시냅스 어레이\"]\n    200[\"뉴런 회로\"]\n    300[\"제어부\"]\n    400[\"메모리\"]\n    500[\"프로세서\"]\n    \n    100 -->|\"구성\"| 200\n    300 -->|\"제어\"| 100\n    300 -->|\"제어\"| 200\n    500 -->|\"실행\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시냅스 어레이",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "뉴런 회로",
+          "component_type": "device",
+          "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 4",
+      "output_path": "drawing_analysis/1020220071866/1020220071866_fig_4.mmd"
+    },
+    {
+      "app_num": "1020220071866",
+      "diagram_type": "flowchart",
+      "diagram_title": "지연 적용 효과 설명",
+      "mermaid_code": "flowchart TD\n    100[\"시냅스 어레이\"]\n    200[\"뉴런 회로\"]\n    300[\"제어부\"]\n    400[\"메모리\"]\n    500[\"프로세서\"]\n    \n    100 <--| \"구성\" | 200\n    300 -->| \"제어\" | 100\n    300 -->| \"제어\" | 200\n    500 -->| \"실행\" | 400\n    400 -->| \"데이터 제공\" | 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시냅스 어레이",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크의 시냅스 계층을 구현",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "뉴런 회로",
+          "component_type": "device",
+          "description": "시냅스 어레이에 결합되어 뉴런 계층을 구현",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제어부",
+          "component_type": "device",
+          "description": "시냅스 어레이 및 뉴런 회로의 동작을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제어",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "스파이킹 뉴럴 네트워크 제공 프로그램을 실행",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020220071866/1020220071866_fig_5.mmd"
+    }
+  ]
+}

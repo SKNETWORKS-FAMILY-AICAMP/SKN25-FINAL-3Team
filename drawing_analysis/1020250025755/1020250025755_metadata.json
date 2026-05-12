@@ -1,0 +1,245 @@
+{
+  "app_num": "1020250025755",
+  "invention_type": "system",
+  "main_concept": "매장에서 결제 서비스를 제공하기 위한 데이터 수집 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "데이터 수집 및 처리의 중심 역할을 수행",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "device",
+      "description": "프로세서에 작동적으로 연결되어 데이터 저장 및 처리 지원",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "이미지 센서",
+      "component_type": "device",
+      "description": "매장 내에서 이미지 데이터를 수집",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "트래킹 데이터",
+      "component_type": "data",
+      "description": "사용자의 3차원 포즈 데이터를 포함",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "트리거 데이터",
+      "component_type": "data",
+      "description": "상품의 추가 및 제거 시점을 포함",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "식별",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "학습된 모듈",
+      "component_type": "process",
+      "description": "상품 식별을 위한 딥러닝 모델",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250025755",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 수집 및 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"메모리\"]\n    300[\"이미지 센서\"]\n    400[\"트래킹 데이터\"]\n    500[\"트리거 데이터\"]\n    600[\"학습된 모듈\"]\n\n    300 -->|\"데이터 수신\"| 100\n    100 -->|\"연결\"| 200\n    100 -->|\"생성\"| 400\n    100 -->|\"식별\"| 500\n    500 -->|\"사용\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "데이터 수집 및 처리의 중심 역할을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "프로세서에 작동적으로 연결되어 데이터 저장 및 처리 지원",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 센서",
+          "component_type": "device",
+          "description": "매장 내에서 이미지 데이터를 수집",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "트래킹 데이터",
+          "component_type": "data",
+          "description": "사용자의 3차원 포즈 데이터를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "트리거 데이터",
+          "component_type": "data",
+          "description": "상품의 추가 및 제거 시점을 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "식별",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "학습된 모듈",
+          "component_type": "process",
+          "description": "상품 식별을 위한 딥러닝 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250025755/1020250025755_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250025755",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +데이터 수집 및 처리의 중심 역할 수행\n    }\n    class 메모리 {\n        +프로세서에 작동적으로 연결되어 데이터 저장 및 처리 지원\n    }\n    class 이미지센서 {\n        +매장 내에서 이미지 데이터를 수집\n    }\n    class 트래킹데이터 {\n        +사용자의 3차원 포즈 데이터를 포함\n    }\n    class 트리거데이터 {\n        +상품의 추가 및 제거 시점을 포함\n    }\n    class 학습된모듈 {\n        +상품 식별을 위한 딥러닝 모델\n    }\n    프로세서 <-- 메모리 : \"연결\"\n    프로세서 <-- 이미지센서 : \"데이터 수신\"\n    프로세서 --> 트래킹데이터 : \"생성\"\n    프로세서 --> 트리거데이터 : \"식별\"\n    학습된모듈 --> 트리거데이터 : \"사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "데이터 수집 및 처리의 중심 역할을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "프로세서에 작동적으로 연결되어 데이터 저장 및 처리 지원",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이미지 센서",
+          "component_type": "device",
+          "description": "매장 내에서 이미지 데이터를 수집",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "트래킹 데이터",
+          "component_type": "data",
+          "description": "사용자의 3차원 포즈 데이터를 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "트리거 데이터",
+          "component_type": "data",
+          "description": "상품의 추가 및 제거 시점을 포함",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "식별",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "학습된 모듈",
+          "component_type": "process",
+          "description": "상품 식별을 위한 딥러닝 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250025755/1020250025755_fig_2.mmd"
+    }
+  ]
+}

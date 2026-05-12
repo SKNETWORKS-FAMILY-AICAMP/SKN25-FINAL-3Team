@@ -1,0 +1,143 @@
+{
+  "app_num": "1020180122065",
+  "invention_type": "method",
+  "main_concept": "멀티 커널 시스템에서의 입출력 처리 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메인 프로세서의 제1 커널",
+      "component_type": "actor",
+      "description": "입출력 태스크를 처리하는 주 프로세서의 커널",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입출력 태스크를 전달받음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "병렬 프로세서의 경량 커널",
+      "component_type": "actor",
+      "description": "입출력 태스크를 생성하고 메인 프로세서에 전달하는 경량 커널",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입출력 태스크를 전달함",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "공유 메모리를 설정함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "공유 메모리",
+      "component_type": "data",
+      "description": "메인 프로세서와 병렬 프로세서 간의 데이터 송수신을 위한 메모리",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180122065",
+      "diagram_type": "flowchart",
+      "diagram_title": "멀티 커널 시스템의 입출력 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"메인 프로세서의 제1 커널\"]\n    200[\"병렬 프로세서의 경량 커널\"]\n    300[\"공유 메모리\"]\n    400[\"입출력 태스크 전달\"]\n    500[\"입출력 태스크 처리\"]\n    600[\"처리 결과 전달\"]\n\n    200 -->| \"입출력 태스크를 전달함\" | 100\n    100 -->| \"입출력 태스크를 전달받음\" | 400\n    200 -->| \"공유 메모리를 설정함\" | 300\n    400 -->| \"입출력 태스크 처리\" | 500\n    500 -->| \"처리 결과 전달\" | 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 프로세서의 제1 커널",
+          "component_type": "actor",
+          "description": "입출력 태스크를 처리하는 주 프로세서의 커널",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입출력 태스크를 전달받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "병렬 프로세서의 경량 커널",
+          "component_type": "actor",
+          "description": "입출력 태스크를 생성하고 메인 프로세서에 전달하는 경량 커널",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력 태스크를 전달함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "공유 메모리를 설정함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공유 메모리",
+          "component_type": "data",
+          "description": "메인 프로세서와 병렬 프로세서 간의 데이터 송수신을 위한 메모리",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180122065/1020180122065_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180122065",
+      "diagram_type": "classDiagram",
+      "diagram_title": "멀티 커널 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 메인프로세서의제1커널 {\n        +입출력태스크처리()\n    }\n    class 병렬프로세서의경량커널 {\n        +입출력태스크생성()\n        +공유메모리설정()\n    }\n    class 공유메모리 {\n        +데이터송수신()\n    }\n    메인프로세서의제1커널 --> 병렬프로세서의경량커널 : \"입출력 태스크를 전달받음\"\n    병렬프로세서의경량커널 --> 메인프로세서의제1커널 : \"입출력 태스크를 전달함\"\n    병렬프로세서의경량커널 --> 공유메모리 : \"공유 메모리를 설정함\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 프로세서의 제1 커널",
+          "component_type": "actor",
+          "description": "입출력 태스크를 처리하는 주 프로세서의 커널",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입출력 태스크를 전달받음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "병렬 프로세서의 경량 커널",
+          "component_type": "actor",
+          "description": "입출력 태스크를 생성하고 메인 프로세서에 전달하는 경량 커널",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력 태스크를 전달함",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "공유 메모리를 설정함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공유 메모리",
+          "component_type": "data",
+          "description": "메인 프로세서와 병렬 프로세서 간의 데이터 송수신을 위한 메모리",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180122065/1020180122065_fig_2.mmd"
+    }
+  ]
+}

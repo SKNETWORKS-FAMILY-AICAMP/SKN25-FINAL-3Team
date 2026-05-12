@@ -1,0 +1,251 @@
+{
+  "app_num": "1020240081489",
+  "invention_type": "system",
+  "main_concept": "선박 상태 모니터링 및 예지보전 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 전처리부",
+      "component_type": "process",
+      "description": "로우 데이터를 수집하여 설정 포맷에 맞게 전처리하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "데이터 통신부",
+      "component_type": "process",
+      "description": "전처리된 데이터를 육상 서버로 전송하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "전처리된 데이터 전송",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "데이터 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "예지보전 판단부",
+      "component_type": "process",
+      "description": "이상 데이터를 식별하고 분석하여 예지하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "전처리 데이터 수신",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "결과 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "선박 대시보드",
+      "component_type": "device",
+      "description": "상태 모니터링 및 예지보전 결과를 디스플레이하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결과 표시",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "머신러닝 운영시스템부",
+      "component_type": "process",
+      "description": "예지보전 알고리즘을 생성하고 업데이트하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "알고리즘 업데이트",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240081489",
+      "diagram_type": "flowchart",
+      "diagram_title": "선박 상태 모니터링 및 예지보전 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 전처리부\"]\n    200[\"데이터 통신부\"]\n    300[\"예지보전 판단부\"]\n    400[\"선박 대시보드\"]\n    500[\"머신러닝 운영시스템부\"]\n    \n    100 -->|\"로우 데이터 수집\"| 200\n    200 -->|\"전처리된 데이터 전송\"| 300\n    300 -->|\"결과 전송\"| 400\n    200 -->|\"데이터 수신\"| 500\n    500 -->|\"알고리즘 업데이트\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 전처리부",
+          "component_type": "process",
+          "description": "로우 데이터를 수집하여 설정 포맷에 맞게 전처리하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 통신부",
+          "component_type": "process",
+          "description": "전처리된 데이터를 육상 서버로 전송하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전처리된 데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "예지보전 판단부",
+          "component_type": "process",
+          "description": "이상 데이터를 식별하고 분석하여 예지하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전처리 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "선박 대시보드",
+          "component_type": "device",
+          "description": "상태 모니터링 및 예지보전 결과를 디스플레이하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 표시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "머신러닝 운영시스템부",
+          "component_type": "process",
+          "description": "예지보전 알고리즘을 생성하고 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "알고리즘 업데이트",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240081489/1020240081489_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240081489",
+      "diagram_type": "classDiagram",
+      "diagram_title": "선박 상태 모니터링 및 예지보전 관리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터전처리부 {\n        +로우 데이터 수집()\n        +전처리()\n    }\n    class 데이터통신부 {\n        +전처리된 데이터 전송()\n    }\n    class 예지보전판단부 {\n        +이상 데이터 식별()\n        +분석()\n    }\n    class 선박대시보드 {\n        +결과 디스플레이()\n    }\n    class 머신러닝운영시스템부 {\n        +알고리즘 생성()\n        +업데이트()\n    }\n    데이터전처리부 --> 데이터통신부 : \"전처리된 데이터 전송\"\n    데이터전처리부 --> 예지보전판단부 : \"전처리 데이터 수신\"\n    데이터통신부 --> 예지보전판단부 : \"데이터 수신\"\n    예지보전판단부 --> 선박대시보드 : \"결과 전송\"\n    머신러닝운영시스템부 --> 데이터통신부 : \"데이터 수신\"\n    머신러닝운영시스템부 --> 예지보전판단부 : \"알고리즘 업데이트\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 전처리부",
+          "component_type": "process",
+          "description": "로우 데이터를 수집하여 설정 포맷에 맞게 전처리하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 통신부",
+          "component_type": "process",
+          "description": "전처리된 데이터를 육상 서버로 전송하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전처리된 데이터 전송",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "예지보전 판단부",
+          "component_type": "process",
+          "description": "이상 데이터를 식별하고 분석하여 예지하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전처리 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "선박 대시보드",
+          "component_type": "device",
+          "description": "상태 모니터링 및 예지보전 결과를 디스플레이하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 표시",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "머신러닝 운영시스템부",
+          "component_type": "process",
+          "description": "예지보전 알고리즘을 생성하고 업데이트하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "알고리즘 업데이트",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240081489/1020240081489_fig_2.mmd"
+    }
+  ]
+}

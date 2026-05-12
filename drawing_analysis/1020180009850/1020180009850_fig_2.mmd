@@ -1,0 +1,18 @@
+%% 1020180009850 - 전자 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class FlexibleDisplay {
+        +String displayContent
+        +showObjects()
+    }
+    class Processor {
+        +String controlCommands
+        +manageObjects()
+    }
+    class Memory {
+        +String objectData
+        +storeCommands()
+    }
+    FlexibleDisplay <-- Processor : "제어"
+    Processor --> Memory : "저장"

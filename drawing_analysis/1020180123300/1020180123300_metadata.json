@@ -1,0 +1,128 @@
+{
+  "app_num": "1020180123300",
+  "invention_type": "method",
+  "main_concept": "딥러닝을 이용한 의료영상의 공간 정규화 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "적응형 템플릿 생성부",
+      "component_type": "process",
+      "description": "기능적 의료영상을 입력받아 적응형 템플릿을 생성하는 과정",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "학습부",
+      "component_type": "process",
+      "description": "생성된 적응형 템플릿에 기반하여 이미지를 생성하고 진위 여부를 판단하는 과정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "적응형 템플릿 생성부에서 생성된 템플릿을 사용하여",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "공간 정규화부",
+      "component_type": "process",
+      "description": "학습 결과에 기초하여 공간 정규화된 의료영상을 제공하는 과정",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "학습부의 결과를 기반으로",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180123300",
+      "diagram_type": "flowchart",
+      "diagram_title": "의료영상 공간 정규화 과정",
+      "mermaid_code": "flowchart TD\n    100[\"적응형 템플릿 생성부\"]\n    200[\"학습부\"]\n    300[\"공간 정규화부\"]\n    400[\"기능적 의료영상 입력\"]\n    500[\"공간 정규화된 이미지 제공\"]\n    \n    400 -->|\"기능적 의료영상을 심층 학습 아키텍처에 입력\"| 100\n    100 -->|\"적응형 템플릿 생성부에서 생성된 템플릿을 사용하여\"| 200\n    200 -->|\"학습부의 결과를 기반으로\"| 300\n    300 -->|\"공간 정규화된 이미지 제공\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "적응형 템플릿 생성부",
+          "component_type": "process",
+          "description": "기능적 의료영상을 입력받아 적응형 템플릿을 생성하는 과정",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "생성된 적응형 템플릿에 기반하여 이미지를 생성하고 진위 여부를 판단하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "적응형 템플릿 생성부에서 생성된 템플릿을 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공간 정규화부",
+          "component_type": "process",
+          "description": "학습 결과에 기초하여 공간 정규화된 의료영상을 제공하는 과정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습부의 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180123300/1020180123300_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180123300",
+      "diagram_type": "classDiagram",
+      "diagram_title": "의료영상 공간 정규화 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 적응형템플릿생성부 {\n        +String 기능적의료영상\n        +generateTemplate()\n    }\n    class 학습부 {\n        +String 생성된템플릿\n        +generateImage()\n        +determineAuthenticity()\n    }\n    class 공간정규화부 {\n        +String 학습결과\n        +provideNormalizedImage()\n    }\n    적응형템플릿생성부 --> 학습부 : \"적응형 템플릿 생성부에서 생성된 템플릿을 사용하여\"\n    학습부 --> 공간정규화부 : \"학습부의 결과를 기반으로\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "적응형 템플릿 생성부",
+          "component_type": "process",
+          "description": "기능적 의료영상을 입력받아 적응형 템플릿을 생성하는 과정",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "생성된 적응형 템플릿에 기반하여 이미지를 생성하고 진위 여부를 판단하는 과정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "적응형 템플릿 생성부에서 생성된 템플릿을 사용하여",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "공간 정규화부",
+          "component_type": "process",
+          "description": "학습 결과에 기초하여 공간 정규화된 의료영상을 제공하는 과정",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습부의 결과를 기반으로",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180123300/1020180123300_fig_2.mmd"
+    }
+  ]
+}

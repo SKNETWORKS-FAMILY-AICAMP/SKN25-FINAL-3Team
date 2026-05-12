@@ -1,0 +1,251 @@
+{
+  "app_num": "1020220087113",
+  "invention_type": "system",
+  "main_concept": "차량 정비소 간 차량부품 중개 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "판매자 단말",
+      "component_type": "actor",
+      "description": "차량부품의 판매 데이터를 업로드하고 차량 정비소의 정보를 등록하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "구매자 단말",
+      "component_type": "actor",
+      "description": "차량부품을 검색하고 구매 및 결제를 진행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "판매자 단말과 상호작용",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "중개 서비스 제공 서버",
+      "component_type": "device",
+      "description": "판매자와 구매자 간의 중개 역할을 수행하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "판매자 단말과 데이터 통신",
+          "direction": "<->"
+        },
+        {
+          "target": "200",
+          "label": "구매자 단말과 데이터 통신",
+          "direction": "<->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "위치기반검색부",
+      "component_type": "process",
+      "description": "구매자가 위치 기반으로 차량부품을 검색하는 기능",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "구매자 단말에서 호출",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "중개 서비스 제공 서버와 연동",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "생체인증부",
+      "component_type": "process",
+      "description": "사용자 인증을 위한 생체 인식 기능",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "판매자 단말에서 사용",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "구매자 단말에서 사용",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220087113",
+      "diagram_type": "flowchart",
+      "diagram_title": "차량부품 중개 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"판매자 단말\"]\n    200[\"구매자 단말\"]\n    300[\"중개 서비스 제공 서버\"]\n    400[\"위치기반검색부\"]\n    500[\"생체인증부\"]\n    \n    100 -->|\"차량부품 정보 입력 및 업로드\"| 300\n    200 -->|\"판매자 단말과 상호작용\"| 100\n    200 -->|\"차량부품 검색\"| 400\n    400 -->|\"중개 서비스 제공 서버와 연동\"| 300\n    200 -->|\"차량부품 선택 및 결제\"| 300\n    100 -->|\"생체 인증 사용\"| 500\n    200 -->|\"생체 인증 사용\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "차량부품의 판매 데이터를 업로드하고 차량 정비소의 정보를 등록하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "차량부품을 검색하고 구매 및 결제를 진행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말과 상호작용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "중개 서비스 제공 서버",
+          "component_type": "device",
+          "description": "판매자와 구매자 간의 중개 역할을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말과 데이터 통신",
+              "direction": "<->"
+            },
+            {
+              "target": "200",
+              "label": "구매자 단말과 데이터 통신",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "위치기반검색부",
+          "component_type": "process",
+          "description": "구매자가 위치 기반으로 차량부품을 검색하는 기능",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "구매자 단말에서 호출",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "중개 서비스 제공 서버와 연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "생체인증부",
+          "component_type": "process",
+          "description": "사용자 인증을 위한 생체 인식 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말에서 사용",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "구매자 단말에서 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220087113/1020220087113_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220087113",
+      "diagram_type": "classDiagram",
+      "diagram_title": "차량부품 중개 서비스 구성도",
+      "mermaid_code": "classDiagram\n    class 판매자단말 {\n        +String 판매데이터\n        +uploadData()\n    }\n    class 구매자단말 {\n        +String 검색어\n        +searchParts()\n        +makePayment()\n    }\n    class 중개서비스제공서버 {\n        +String 데이터베이스\n        +communicate()\n    }\n    class 위치기반검색부 {\n        +searchByLocation()\n    }\n    class 생체인증부 {\n        +authenticateUser()\n    }\n    판매자단말 --> 중개서비스제공서버 : \"판매자 단말과 데이터 통신\"\n    구매자단말 --> 중개서비스제공서버 : \"구매자 단말과 데이터 통신\"\n    구매자단말 --> 위치기반검색부 : \"구매자 단말에서 호출\"\n    위치기반검색부 --> 중개서비스제공서버 : \"중개 서비스 제공 서버와 연동\"\n    판매자단말 --> 생체인증부 : \"판매자 단말에서 사용\"\n    구매자단말 --> 생체인증부 : \"구매자 단말에서 사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "차량부품의 판매 데이터를 업로드하고 차량 정비소의 정보를 등록하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "차량부품을 검색하고 구매 및 결제를 진행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말과 상호작용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "중개 서비스 제공 서버",
+          "component_type": "device",
+          "description": "판매자와 구매자 간의 중개 역할을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말과 데이터 통신",
+              "direction": "<->"
+            },
+            {
+              "target": "200",
+              "label": "구매자 단말과 데이터 통신",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "위치기반검색부",
+          "component_type": "process",
+          "description": "구매자가 위치 기반으로 차량부품을 검색하는 기능",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "구매자 단말에서 호출",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "중개 서비스 제공 서버와 연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "생체인증부",
+          "component_type": "process",
+          "description": "사용자 인증을 위한 생체 인식 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매자 단말에서 사용",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "구매자 단말에서 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220087113/1020220087113_fig_2.mmd"
+    }
+  ]
+}

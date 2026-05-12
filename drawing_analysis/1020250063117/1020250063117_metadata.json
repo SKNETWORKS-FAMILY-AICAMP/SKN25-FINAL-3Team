@@ -1,0 +1,155 @@
+{
+  "app_num": "1020250063117",
+  "invention_type": "system",
+  "main_concept": "온라인 보드게임 판매 및 맞춤 추천 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "맞춤 추천 모듈",
+      "component_type": "process",
+      "description": "사용자 프로필 정보를 분석하여 보드게임을 추천",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "가상 체험 모듈",
+      "component_type": "process",
+      "description": "AR/VR 기술을 활용하여 보드게임을 미리 체험할 수 있도록 함",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "가격 최적화 모듈",
+      "component_type": "process",
+      "description": "사용자 구매 패턴을 분석하여 동적 가격 조정",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "보드게임 가이드 모듈",
+      "component_type": "process",
+      "description": "AI 챗봇을 통해 게임 규칙을 안내",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "게임 정보 관리 모듈",
+      "component_type": "data",
+      "description": "게임 정보를 체계적으로 저장 및 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "커뮤니티/소셜 모듈",
+      "component_type": "actor",
+      "description": "사용자 리뷰 및 소통 기능 제공",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250063117",
+      "diagram_type": "flowchart",
+      "diagram_title": "온라인 보드게임 추천 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"맞춤 추천 모듈\"]\n    200[\"가상 체험 모듈\"]\n    300[\"가격 최적화 모듈\"]\n    400[\"보드게임 가이드 모듈\"]\n    500[\"게임 정보 관리 모듈\"]\n    600[\"커뮤니티/소셜 모듈\"]\n    \n    600 -->|\"사용자 프로필 정보 수집\"| 100\n    100 -->|\"추천 알고리즘 실행\"| 200\n    200 -->|\"보드게임 추천 및 가상 체험 제공\"| 300\n    300 -->|\"가격 최적화 및 할인 적용\"| 400\n    400 -->|\"게임 규칙 안내 및 사용자 피드백 수집\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "맞춤 추천 모듈",
+          "component_type": "process",
+          "description": "사용자 프로필 정보를 분석하여 보드게임을 추천",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상 체험 모듈",
+          "component_type": "process",
+          "description": "AR/VR 기술을 활용하여 보드게임을 미리 체험할 수 있도록 함",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "가격 최적화 모듈",
+          "component_type": "process",
+          "description": "사용자 구매 패턴을 분석하여 동적 가격 조정",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "보드게임 가이드 모듈",
+          "component_type": "process",
+          "description": "AI 챗봇을 통해 게임 규칙을 안내",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "게임 정보 관리 모듈",
+          "component_type": "data",
+          "description": "게임 정보를 체계적으로 저장 및 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "커뮤니티/소셜 모듈",
+          "component_type": "actor",
+          "description": "사용자 리뷰 및 소통 기능 제공",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250063117/1020250063117_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250063117",
+      "diagram_type": "classDiagram",
+      "diagram_title": "보드게임 추천 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 맞춤추천모듈 {\n        +사용자 프로필 정보 분석()\n        +보드게임 추천()\n    }\n    class 가상체험모듈 {\n        +AR/VR 기술 활용()\n        +보드게임 체험 제공()\n    }\n    class 가격최적화모듈 {\n        +사용자 구매 패턴 분석()\n        +동적 가격 조정()\n    }\n    class 보드게임가이드모듈 {\n        +게임 규칙 안내()\n        +사용자 피드백 수집()\n    }\n    class 게임정보관리모듈 {\n        +게임 정보 저장()\n        +게임 정보 관리()\n    }\n    class 커뮤니티소셜모듈 {\n        +사용자 리뷰 제공()\n        +소통 기능 제공()\n    }\n    \n    맞춤추천모듈 --> 가상체험모듈 : \"추천 결과 전달\"\n    맞춤추천모듈 --> 가격최적화모듈 : \"구매 패턴 정보 전달\"\n    보드게임가이드모듈 --> 커뮤니티소셜모듈 : \"피드백 공유\"\n    게임정보관리모듈 --> 맞춤추천모듈 : \"게임 정보 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "맞춤 추천 모듈",
+          "component_type": "process",
+          "description": "사용자 프로필 정보를 분석하여 보드게임을 추천",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가상 체험 모듈",
+          "component_type": "process",
+          "description": "AR/VR 기술을 활용하여 보드게임을 미리 체험할 수 있도록 함",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "가격 최적화 모듈",
+          "component_type": "process",
+          "description": "사용자 구매 패턴을 분석하여 동적 가격 조정",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "보드게임 가이드 모듈",
+          "component_type": "process",
+          "description": "AI 챗봇을 통해 게임 규칙을 안내",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "게임 정보 관리 모듈",
+          "component_type": "data",
+          "description": "게임 정보를 체계적으로 저장 및 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "커뮤니티/소셜 모듈",
+          "component_type": "actor",
+          "description": "사용자 리뷰 및 소통 기능 제공",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250063117/1020250063117_fig_2.mmd"
+    }
+  ]
+}

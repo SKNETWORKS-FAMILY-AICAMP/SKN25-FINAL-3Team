@@ -1,0 +1,284 @@
+{
+  "app_num": "1020230017135",
+  "invention_type": "system",
+  "main_concept": "가상현실 박람회를 기반으로 한 인테리어 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "가상박람회부",
+      "component_type": "device",
+      "description": "시설물의 내부 형태 및 구조를 가상으로 확인할 수 있는 플랫폼",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "관리서버",
+      "component_type": "device",
+      "description": "가상박람회부의 데이터 관리 및 연산 제어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "관리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "가입부",
+      "component_type": "process",
+      "description": "사업자와 구매자의 회원가입 처리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "모형제작부",
+      "component_type": "device",
+      "description": "시설물의 축소 모형을 제작하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연동",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "도면변환부",
+      "component_type": "process",
+      "description": "2D 및 3D 도면으로 변환하는 기능",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "인테리어선택부",
+      "component_type": "process",
+      "description": "인테리어 선택 사항을 설정하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "견적산출부",
+      "component_type": "process",
+      "description": "선택 사항에 대한 견적을 산출하는 부서",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "연계",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230017135",
+      "diagram_type": "flowchart",
+      "diagram_title": "인테리어 제공 시스템 운영 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"가상박람회부\"]\n    200[\"관리서버\"]\n    300[\"가입부\"]\n    400[\"모형제작부\"]\n    500[\"도면변환부\"]\n    600[\"인테리어선택부\"]\n    700[\"견적산출부\"]\n    \n    300 -->|\"회원가입 처리\"| 100\n    200 -->|\"데이터 관리\"| 100\n    400 -->|\"모형 제작 연동\"| 100\n    500 -->|\"도면 데이터 제공\"| 100\n    600 -->|\"인테리어 선택 연결\"| 100\n    600 -->|\"견적 산출 연계\"| 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가상박람회부",
+          "component_type": "device",
+          "description": "시설물의 내부 형태 및 구조를 가상으로 확인할 수 있는 플랫폼",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "가상박람회부의 데이터 관리 및 연산 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가입부",
+          "component_type": "process",
+          "description": "사업자와 구매자의 회원가입 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모형제작부",
+          "component_type": "device",
+          "description": "시설물의 축소 모형을 제작하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "도면변환부",
+          "component_type": "process",
+          "description": "2D 및 3D 도면으로 변환하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "인테리어선택부",
+          "component_type": "process",
+          "description": "인테리어 선택 사항을 설정하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "견적산출부",
+          "component_type": "process",
+          "description": "선택 사항에 대한 견적을 산출하는 부서",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230017135/1020230017135_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230017135",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인테리어 제공 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 가상박람회부 {\n        +String 플랫폼\n        +visualizeStructure()\n    }\n    class 관리서버 {\n        +String 데이터관리\n        +controlOperations()\n    }\n    class 가입부 {\n        +String 회원정보\n        +processRegistration()\n    }\n    class 모형제작부 {\n        +String 축소모형\n        +createModel()\n    }\n    class 도면변환부 {\n        +String 도면형식\n        +convertDrawings()\n    }\n    class 인테리어선택부 {\n        +String 선택사항\n        +selectInterior()\n    }\n    class 견적산출부 {\n        +String 견적정보\n        +calculateEstimate()\n    }\n    관리서버 --> 가상박람회부 : \"관리\"\n    가입부 --> 가상박람회부 : \"연결\"\n    모형제작부 --> 가상박람회부 : \"연동\"\n    도면변환부 --> 가상박람회부 : \"데이터 제공\"\n    인테리어선택부 --> 가상박람회부 : \"연결\"\n    견적산출부 --> 인테리어선택부 : \"연계\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "가상박람회부",
+          "component_type": "device",
+          "description": "시설물의 내부 형태 및 구조를 가상으로 확인할 수 있는 플랫폼",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "관리서버",
+          "component_type": "device",
+          "description": "가상박람회부의 데이터 관리 및 연산 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가입부",
+          "component_type": "process",
+          "description": "사업자와 구매자의 회원가입 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모형제작부",
+          "component_type": "device",
+          "description": "시설물의 축소 모형을 제작하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "도면변환부",
+          "component_type": "process",
+          "description": "2D 및 3D 도면으로 변환하는 기능",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "인테리어선택부",
+          "component_type": "process",
+          "description": "인테리어 선택 사항을 설정하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "견적산출부",
+          "component_type": "process",
+          "description": "선택 사항에 대한 견적을 산출하는 부서",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230017135/1020230017135_fig_2.mmd"
+    }
+  ]
+}

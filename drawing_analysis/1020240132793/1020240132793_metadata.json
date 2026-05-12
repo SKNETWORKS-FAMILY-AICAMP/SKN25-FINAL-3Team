@@ -1,0 +1,167 @@
+{
+  "app_num": "1020240132793",
+  "invention_type": "system",
+  "main_concept": "복수개의 인공지능 모델을 이용하여 사용자의 상품 관심도를 결정하고 상품을 정렬하는 서버",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "device",
+      "description": "사용자의 상품 관심도를 결정하고 상품을 정렬하는 기능을 수행",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "사용자 장치",
+      "component_type": "actor",
+      "description": "전용 어플리케이션을 통해 사용자 행동 정보를 수집",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용자 행동 정보를 서버에 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "대규모 언어 모델",
+      "component_type": "process",
+      "description": "사용자 행동 정보를 기반으로 제1 관심 순위를 결정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제1 관심 순위 결정",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "머신 러닝 모델",
+      "component_type": "process",
+      "description": "사용자 행동 정보를 기반으로 제2 관심 순위를 결정",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "제2 관심 순위 결정",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240132793",
+      "diagram_type": "classDiagram",
+      "diagram_title": "사용자 장치 및 서버 블록도",
+      "mermaid_code": "classDiagram\n    class 서버 {\n        +String 관심도\n        +정렬상품()\n    }\n    class 사용자장치 {\n        +String 행동정보\n        +정보전송()\n    }\n    class 대규모언어모델 {\n        +String 제1관심순위\n        +관심순위결정()\n    }\n    class 머신러닝모델 {\n        +String 제2관심순위\n        +관심순위결정()\n    }\n    사용자장치 --> 서버 : \"사용자 행동 정보를 서버에 전송\"\n    대규모언어모델 --> 서버 : \"제1 관심 순위 결정\"\n    머신러닝모델 --> 서버 : \"제2 관심 순위 결정\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "사용자의 상품 관심도를 결정하고 상품을 정렬하는 기능을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 장치",
+          "component_type": "actor",
+          "description": "전용 어플리케이션을 통해 사용자 행동 정보를 수집",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 행동 정보를 서버에 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대규모 언어 모델",
+          "component_type": "process",
+          "description": "사용자 행동 정보를 기반으로 제1 관심 순위를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제1 관심 순위 결정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "머신 러닝 모델",
+          "component_type": "process",
+          "description": "사용자 행동 정보를 기반으로 제2 관심 순위를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제2 관심 순위 결정",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240132793/1020240132793_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240132793",
+      "diagram_type": "flowchart",
+      "diagram_title": "상품 관심 순위 결정 및 정렬 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"사용자 장치\"]\n    300[\"대규모 언어 모델\"]\n    400[\"머신 러닝 모델\"]\n    200 -->|\"사용자 행동 정보를 서버에 전송\"| 100\n    100 -->|\"제1 관심 순위 결정\"| 300\n    100 -->|\"제2 관심 순위 결정\"| 400\n    300 -->|\"제1 관심 순위\"| 100\n    400 -->|\"제2 관심 순위\"| 100\n    100 -->|\"최종 관심 순위 결정\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "사용자의 상품 관심도를 결정하고 상품을 정렬하는 기능을 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "사용자 장치",
+          "component_type": "actor",
+          "description": "전용 어플리케이션을 통해 사용자 행동 정보를 수집",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용자 행동 정보를 서버에 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "대규모 언어 모델",
+          "component_type": "process",
+          "description": "사용자 행동 정보를 기반으로 제1 관심 순위를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제1 관심 순위 결정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "머신 러닝 모델",
+          "component_type": "process",
+          "description": "사용자 행동 정보를 기반으로 제2 관심 순위를 결정",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "제2 관심 순위 결정",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240132793/1020240132793_fig_2.mmd"
+    }
+  ]
+}

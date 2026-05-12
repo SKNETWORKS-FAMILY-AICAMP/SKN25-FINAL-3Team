@@ -1,0 +1,141 @@
+{
+  "fig_number": "도 1",
+  "title": "일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다",
+  "diagram_type": "block_diagram",
+  "purpose": "사용자 입력에 기반한 문장을 제공하는 장치의 구조를 설명하기 위함",
+  "figure_source_text": "도 1은 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다",
+  "elements": [
+    {
+      "id": "N1000",
+      "ref_no": "1000",
+      "name": "장치",
+      "type": "device",
+      "description": "사용자 입력에 기반한 문장을 제공하는 장치",
+      "source_text": "1000:\n 장치"
+    },
+    {
+      "id": "N1200",
+      "ref_no": "1200",
+      "name": "제어부",
+      "type": "module",
+      "description": "장치의 전반적인 동작을 제어하는 제어부",
+      "source_text": "1200: 제어부"
+    },
+    {
+      "id": "N1300",
+      "ref_no": "1300",
+      "name": "입출력부",
+      "type": "module",
+      "description": "사용자와 상호작용하는 입출력부",
+      "source_text": "1300: 입출력부"
+    },
+    {
+      "id": "N13102",
+      "ref_no": "13102",
+      "name": "데이터 획득부",
+      "type": "module",
+      "description": "데이터 획득부",
+      "source_text": "데이터 획득부(13102)"
+    },
+    {
+      "id": "N2000",
+      "ref_no": "2000",
+      "name": "및 서버",
+      "type": "module",
+      "description": "및 서버",
+      "source_text": "및 서버(2000)"
+    },
+    {
+      "id": "N1400",
+      "ref_no": "1400",
+      "name": "센싱부",
+      "type": "module",
+      "description": "센싱부",
+      "source_text": "센싱부(1400)"
+    },
+    {
+      "id": "N1500",
+      "ref_no": "1500",
+      "name": "통신부",
+      "type": "module",
+      "description": "통신부",
+      "source_text": "통신부(1500)"
+    },
+    {
+      "id": "N1600",
+      "ref_no": "1600",
+      "name": "V 입력부",
+      "type": "module",
+      "description": "V 입력부",
+      "source_text": "V 입력부(1600)"
+    },
+    {
+      "id": "N1322",
+      "ref_no": "1322",
+      "name": "알림 모듈",
+      "type": "module",
+      "description": "알림 모듈",
+      "source_text": "알림 모듈은 디스플레이부(1322)"
+    },
+    {
+      "id": "N1324",
+      "ref_no": "1324",
+      "name": "음향 출력부",
+      "type": "module",
+      "description": "음향 출력부",
+      "source_text": "음향 출력부(1324)"
+    },
+    {
+      "id": "N1510",
+      "ref_no": "1510",
+      "name": "근거리 통신부",
+      "type": "module",
+      "description": "근거리 통신부",
+      "source_text": "근거리 통신부(1510)"
+    },
+    {
+      "id": "N1520",
+      "ref_no": "1520",
+      "name": "이동 통신부",
+      "type": "module",
+      "description": "이동 통신부",
+      "source_text": "이동 통신부\n(1520)"
+    },
+    {
+      "id": "N1530",
+      "ref_no": "1530",
+      "name": "방송 수신부",
+      "type": "module",
+      "description": "방송 수신부",
+      "source_text": "방송 수신부(1530)"
+    },
+    {
+      "id": "N1100",
+      "ref_no": "1100",
+      "name": "메모리",
+      "type": "data",
+      "description": "컴퓨터 실행가능 명령어를 저장하는 메모리",
+      "source_text": "1100: 메모리"
+    }
+  ],
+  "relations": [
+    {
+      "from": "N1000",
+      "to": "N1100",
+      "label": "저장",
+      "source_text": "메모리(1100)는 제어부(1200)의 처리 및 제어를 위한 프로그램을 저장할 수 있다."
+    },
+    {
+      "from": "N1000",
+      "to": "N1200",
+      "label": "제어",
+      "source_text": "제어부(1200)는 사용자 입력에 기반한 문장을 제공하는 장치(1000)의 전반적인 동작을 제어한다."
+    },
+    {
+      "from": "N1000",
+      "to": "N1300",
+      "label": "입출력",
+      "source_text": "입출력부(1300)는 사용자로부터 축약어를 입력받고, 축약어에 대응되는 문장을 사용자에게 제공할 수 있다."
+    }
+  ]
+}

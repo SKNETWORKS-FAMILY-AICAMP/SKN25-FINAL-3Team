@@ -1,0 +1,305 @@
+{
+  "app_num": "1020200018698",
+  "invention_type": "system",
+  "main_concept": "향상된 확장성과 자율성을 갖는 컨테이너 기반 클라우드 시스템 및 클라우드 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "인메모리 클러스터",
+      "component_type": "device",
+      "description": "이벤트 데이터를 저장하는 컨테이너 기반 클러스터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "서버 모듈",
+      "component_type": "device",
+      "description": "클라우드 서비스를 제공하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이벤트 데이터 제공",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "Web API 접근",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "데이터 복제",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "인증 수행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "데이터 접근 제어 모듈",
+      "component_type": "device",
+      "description": "Web API를 통해 데이터베이스 접근을 제어하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "서비스 모듈과 연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "데이터 분산 모듈",
+      "component_type": "device",
+      "description": "데이터베이스 간 데이터 복제를 담당하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 복제",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "트래픽 감지",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "보안 모듈",
+      "component_type": "device",
+      "description": "사용자 단말기의 인증을 수행하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "인증 키 저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "관리 모듈",
+      "component_type": "device",
+      "description": "트래픽에 따라 보안 모듈의 개수를 조절하는 모듈",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "보안 모듈 조절",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200018698",
+      "diagram_type": "classDiagram",
+      "diagram_title": "컨테이너 기반 클라우드 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class InMemoryCluster {\n        +String eventData\n    }\n    class ServerModule {\n        +provideEventData()\n        +accessWebAPI()\n        +replicateData()\n        +performAuthentication()\n    }\n    class DataAccessControlModule {\n        +controlDatabaseAccess()\n    }\n    class DataDistributionModule {\n        +replicateDataBetweenDatabases()\n        +detectTraffic()\n    }\n    class SecurityModule {\n        +storeAuthenticationKey()\n        +performUserAuthentication()\n    }\n    class ManagementModule {\n        +adjustSecurityModuleCount()\n    }\n    \n    InMemoryCluster <|-- ServerModule : \"이벤트 데이터 제공\"\n    ServerModule --> DataAccessControlModule : \"Web API 접근\"\n    ServerModule --> DataDistributionModule : \"데이터 복제\"\n    ServerModule --> SecurityModule : \"인증 수행\"\n    DataAccessControlModule --> ServerModule : \"서비스 모듈과 연결\"\n    DataDistributionModule --> InMemoryCluster : \"데이터 복제\"\n    DataDistributionModule --> ManagementModule : \"트래픽 감지\"\n    SecurityModule --> InMemoryCluster : \"인증 키 저장\"\n    ManagementModule --> SecurityModule : \"보안 모듈 조절\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인메모리 클러스터",
+          "component_type": "device",
+          "description": "이벤트 데이터를 저장하는 컨테이너 기반 클러스터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "서버 모듈",
+          "component_type": "device",
+          "description": "클라우드 서비스를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이벤트 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "Web API 접근",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "데이터 복제",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "인증 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 접근 제어 모듈",
+          "component_type": "device",
+          "description": "Web API를 통해 데이터베이스 접근을 제어하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 모듈과 연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "데이터 분산 모듈",
+          "component_type": "device",
+          "description": "데이터베이스 간 데이터 복제를 담당하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 복제",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "트래픽 감지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "보안 모듈",
+          "component_type": "device",
+          "description": "사용자 단말기의 인증을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인증 키 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "관리 모듈",
+          "component_type": "device",
+          "description": "트래픽에 따라 보안 모듈의 개수를 조절하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "보안 모듈 조절",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200018698/1020200018698_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200018698",
+      "diagram_type": "flowchart",
+      "diagram_title": "클라우드 서비스 제공 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"인메모리 클러스터\"]\n    200[\"서버 모듈\"]\n    300[\"데이터 접근 제어 모듈\"]\n    400[\"데이터 분산 모듈\"]\n    500[\"보안 모듈\"]\n    600[\"관리 모듈\"]\n    \n    200 -->|\"이벤트 데이터 제공\"| 100\n    200 -->|\"Web API 접근\"| 300\n    200 -->|\"데이터 복제\"| 400\n    200 -->|\"인증 수행\"| 500\n    400 -->|\"데이터 복제\"| 100\n    600 -->|\"보안 모듈 조절\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "인메모리 클러스터",
+          "component_type": "device",
+          "description": "이벤트 데이터를 저장하는 컨테이너 기반 클러스터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "서버 모듈",
+          "component_type": "device",
+          "description": "클라우드 서비스를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이벤트 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "Web API 접근",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "데이터 복제",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "인증 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "데이터 접근 제어 모듈",
+          "component_type": "device",
+          "description": "Web API를 통해 데이터베이스 접근을 제어하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 모듈과 연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "데이터 분산 모듈",
+          "component_type": "device",
+          "description": "데이터베이스 간 데이터 복제를 담당하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 복제",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "트래픽 감지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "보안 모듈",
+          "component_type": "device",
+          "description": "사용자 단말기의 인증을 수행하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인증 키 저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "관리 모듈",
+          "component_type": "device",
+          "description": "트래픽에 따라 보안 모듈의 개수를 조절하는 모듈",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "보안 모듈 조절",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200018698/1020200018698_fig_2.mmd"
+    }
+  ]
+}

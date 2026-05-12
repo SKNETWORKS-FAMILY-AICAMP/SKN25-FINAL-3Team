@@ -1,0 +1,221 @@
+{
+  "app_num": "1020230134631",
+  "invention_type": "method",
+  "main_concept": "신경망 네트워크의 분리와 결합을 이용한 학습 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "신경망 모델",
+      "component_type": "data",
+      "description": "학습에 사용되는 신경망 구조",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "포워드 네트워크",
+      "component_type": "process",
+      "description": "입력 데이터를 처리하여 출력값을 생성하는 네트워크",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "출력값 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "백워드 네트워크",
+      "component_type": "process",
+      "description": "손실 함수를 기반으로 파라미터를 업데이트하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "손실 계산",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "파라미터 업데이트",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "오토인코더 모델",
+      "component_type": "data",
+      "description": "병목 특징을 샘플링하는 데 사용되는 모델",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "출력값 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "디코더",
+      "component_type": "process",
+      "description": "병목 특징을 입력받아 출력값을 생성하는 네트워크",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "입력값",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230134631",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경망 학습 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"신경망 모델\"]\n    200[\"포워드 네트워크\"]\n    300[\"백워드 네트워크\"]\n    400[\"오토인코더 모델\"]\n    500[\"디코더\"]\n    \n    100 -->|\"중간 특징 정의\"| 200\n    200 -->|\"출력값 생성\"| 300\n    300 -->|\"손실 계산\"| 100\n    300 -->|\"파라미터 업데이트\"| 200\n    400 -->|\"출력값 생성\"| 500\n    500 -->|\"입력값\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "신경망 모델",
+          "component_type": "data",
+          "description": "학습에 사용되는 신경망 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "포워드 네트워크",
+          "component_type": "process",
+          "description": "입력 데이터를 처리하여 출력값을 생성하는 네트워크",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력값 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "백워드 네트워크",
+          "component_type": "process",
+          "description": "손실 함수를 기반으로 파라미터를 업데이트하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "손실 계산",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "파라미터 업데이트",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오토인코더 모델",
+          "component_type": "data",
+          "description": "병목 특징을 샘플링하는 데 사용되는 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "출력값 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "병목 특징을 입력받아 출력값을 생성하는 네트워크",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력값",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230134631/1020230134631_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230134631",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경망 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 신경망모델 {\n        +String 구조\n    }\n    class 포워드네트워크 {\n        +String 입력데이터\n        +출력값생성()\n    }\n    class 백워드네트워크 {\n        +String 손실함수\n        +파라미터업데이트()\n    }\n    class 오토인코더모델 {\n        +String 병목특징\n        +출력값생성()\n    }\n    class 디코더 {\n        +String 입력값\n        +출력값생성()\n    }\n    신경망모델 --> 포워드네트워크 : \"출력값 생성\"\n    백워드네트워크 --> 신경망모델 : \"손실 계산\"\n    백워드네트워크 --> 포워드네트워크 : \"파라미터 업데이트\"\n    오토인코더모델 --> 디코더 : \"출력값 생성\"\n    디코더 --> 오토인코더모델 : \"입력값\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "신경망 모델",
+          "component_type": "data",
+          "description": "학습에 사용되는 신경망 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "포워드 네트워크",
+          "component_type": "process",
+          "description": "입력 데이터를 처리하여 출력값을 생성하는 네트워크",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력값 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "백워드 네트워크",
+          "component_type": "process",
+          "description": "손실 함수를 기반으로 파라미터를 업데이트하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "손실 계산",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "파라미터 업데이트",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오토인코더 모델",
+          "component_type": "data",
+          "description": "병목 특징을 샘플링하는 데 사용되는 모델",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "출력값 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "병목 특징을 입력받아 출력값을 생성하는 네트워크",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력값",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230134631/1020230134631_fig_2.mmd"
+    }
+  ]
+}

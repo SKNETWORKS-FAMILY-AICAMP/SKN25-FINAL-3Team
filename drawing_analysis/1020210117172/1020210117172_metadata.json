@@ -1,0 +1,383 @@
+{
+  "app_num": "1020210117172",
+  "invention_type": "method",
+  "main_concept": "딥러닝 기반으로 샘플과 진단 키트의 상호 반응을 분석하여 농도를 예측하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "샘플",
+      "component_type": "data",
+      "description": "검체로부터 획득된 샘플",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "진단 키트",
+      "component_type": "device",
+      "description": "샘플과 상호 반응하는 진단 키트",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상호 반응",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "반응 이미지",
+      "component_type": "data",
+      "description": "샘플과 진단 키트의 상호 반응에 따른 이미지",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "기반",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "기반",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "인코더",
+      "component_type": "process",
+      "description": "반응 이미지를 기반으로 잠재 벡터를 출력하는 과정",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "잠재 벡터",
+      "component_type": "data",
+      "description": "인코더에서 출력된 벡터",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "출력",
+          "direction": "<-"
+        },
+        {
+          "target": "600",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "디코더",
+      "component_type": "process",
+      "description": "잠재 벡터를 기반으로 예측 이미지를 생성하는 과정",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "700",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "예측 이미지",
+      "component_type": "data",
+      "description": "디코더에서 생성된 예측 이미지",
+      "relationships": [
+        {
+          "target": "600",
+          "label": "출력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "회귀 모델",
+      "component_type": "process",
+      "description": "예측 농도를 출력하는 모델",
+      "relationships": [
+        {
+          "target": "700",
+          "label": "기반",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210117172",
+      "diagram_type": "flowchart",
+      "diagram_title": "딥러닝 기반 분석 결과 예측 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"샘플\"]\n    200[\"진단 키트\"]\n    300[\"반응 이미지\"]\n    400[\"인코더\"]\n    500[\"잠재 벡터\"]\n    600[\"디코더\"]\n    700[\"예측 이미지\"]\n    800[\"회귀 모델\"]\n\n    100 -->|상호 반응| 200\n    200 -->|기반| 300\n    100 -->|기반| 300\n    300 -->|입력| 400\n    400 -->|출력| 500\n    500 -->|입력| 600\n    600 -->|출력| 700\n    700 -->|기반| 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플",
+          "component_type": "data",
+          "description": "검체로부터 획득된 샘플",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "진단 키트",
+          "component_type": "device",
+          "description": "샘플과 상호 반응하는 진단 키트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상호 반응",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "반응 이미지",
+          "component_type": "data",
+          "description": "샘플과 진단 키트의 상호 반응에 따른 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기반",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인코더",
+          "component_type": "process",
+          "description": "반응 이미지를 기반으로 잠재 벡터를 출력하는 과정",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "잠재 벡터",
+          "component_type": "data",
+          "description": "인코더에서 출력된 벡터",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "출력",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "잠재 벡터를 기반으로 예측 이미지를 생성하는 과정",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "700",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "예측 이미지",
+          "component_type": "data",
+          "description": "디코더에서 생성된 예측 이미지",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "출력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "회귀 모델",
+          "component_type": "process",
+          "description": "예측 농도를 출력하는 모델",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210117172/1020210117172_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210117172",
+      "diagram_type": "classDiagram",
+      "diagram_title": "딥러닝 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 샘플 {\n        +String sampleData\n    }\n    class 진단키트 {\n        +String kitData\n    }\n    class 반응이미지 {\n        +String reactionImage\n    }\n    class 인코더 {\n        +process()\n    }\n    class 잠재벡터 {\n        +String latentVector\n    }\n    class 디코더 {\n        +generateImage()\n    }\n    class 예측이미지 {\n        +String predictedImage\n    }\n    class 회귀모델 {\n        +predictConcentration()\n    }\n    샘플 --> 진단키트 : \"상호 반응\"\n    진단키트 --> 반응이미지 : \"기반\"\n    샘플 --> 반응이미지 : \"기반\"\n    반응이미지 --> 인코더 : \"입력\"\n    인코더 --> 잠재벡터 : \"출력\"\n    잠재벡터 --> 디코더 : \"입력\"\n    디코더 --> 예측이미지 : \"출력\"\n    예측이미지 --> 회귀모델 : \"기반\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "샘플",
+          "component_type": "data",
+          "description": "검체로부터 획득된 샘플",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "진단 키트",
+          "component_type": "device",
+          "description": "샘플과 상호 반응하는 진단 키트",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상호 반응",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "반응 이미지",
+          "component_type": "data",
+          "description": "샘플과 진단 키트의 상호 반응에 따른 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "기반",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "인코더",
+          "component_type": "process",
+          "description": "반응 이미지를 기반으로 잠재 벡터를 출력하는 과정",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "잠재 벡터",
+          "component_type": "data",
+          "description": "인코더에서 출력된 벡터",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "출력",
+              "direction": "<-"
+            },
+            {
+              "target": "600",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "디코더",
+          "component_type": "process",
+          "description": "잠재 벡터를 기반으로 예측 이미지를 생성하는 과정",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "700",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "예측 이미지",
+          "component_type": "data",
+          "description": "디코더에서 생성된 예측 이미지",
+          "relationships": [
+            {
+              "target": "600",
+              "label": "출력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "회귀 모델",
+          "component_type": "process",
+          "description": "예측 농도를 출력하는 모델",
+          "relationships": [
+            {
+              "target": "700",
+              "label": "기반",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210117172/1020210117172_fig_2.mmd"
+    }
+  ]
+}

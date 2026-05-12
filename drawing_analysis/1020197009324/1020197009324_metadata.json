@@ -1,0 +1,152 @@
+{
+  "app_num": "1020197009324",
+  "invention_type": "method",
+  "main_concept": "사용자의 얼굴 영역 이미지를 처리하여 안구 이미지 및 안구 주위 이미지 영역을 정의하고 바이오메트릭 매치 스코어를 계산하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 얼굴 이미지",
+      "component_type": "data",
+      "description": "사용자의 얼굴 영역의 이미지 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "안구 이미지 영역",
+      "component_type": "data",
+      "description": "눈의 일부를 포함하는 안구 이미지 영역",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "안구 주위 이미지 영역",
+      "component_type": "data",
+      "description": "안구 이미지 영역을 둘러싼 복수의 이미지 영역",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "바이오메트릭 매치 스코어",
+      "component_type": "data",
+      "description": "안구 이미지 및 주위 이미지 영역을 기반으로 계산된 매치 스코어",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "프로세싱 유닛",
+      "component_type": "device",
+      "description": "지시를 실행하여 이미지 처리 및 매치 스코어 계산을 수행하는 장치",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197009324",
+      "diagram_type": "flowchart",
+      "diagram_title": "안구 이미지 및 주위 이미지 정의 방법",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 얼굴 이미지\"]\n    200[\"안구 이미지 영역\"]\n    300[\"안구 주위 이미지 영역\"]\n    400[\"바이오메트릭 매치 스코어\"]\n    500[\"프로세싱 유닛\"]\n    100 -->|\"이미지 수신\"| 500\n    500 -->|\"안구 이미지 정의\"| 200\n    200 -->|\"포함\"| 300\n    300 -->|\"스코어 계산\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 얼굴 이미지",
+          "component_type": "data",
+          "description": "사용자의 얼굴 영역의 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "안구 이미지 영역",
+          "component_type": "data",
+          "description": "눈의 일부를 포함하는 안구 이미지 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안구 주위 이미지 영역",
+          "component_type": "data",
+          "description": "안구 이미지 영역을 둘러싼 복수의 이미지 영역",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "바이오메트릭 매치 스코어",
+          "component_type": "data",
+          "description": "안구 이미지 및 주위 이미지 영역을 기반으로 계산된 매치 스코어",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세싱 유닛",
+          "component_type": "device",
+          "description": "지시를 실행하여 이미지 처리 및 매치 스코어 계산을 수행하는 장치",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197009324/1020197009324_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197009324",
+      "diagram_type": "flowchart",
+      "diagram_title": "바이오메트릭 매치 스코어 계산 방법",
+      "mermaid_code": "flowchart TD\n    100[\"사용자의 얼굴 이미지\"]\n    200[\"안구 이미지 영역\"]\n    300[\"안구 주위 이미지 영역\"]\n    400[\"바이오메트릭 매치 스코어\"]\n    500[\"프로세싱 유닛\"]\n    100 -->|\"이미지 수신\"| 500\n    500 -->|\"안구 이미지 영역 정의\"| 200\n    500 -->|\"안구 주위 이미지 영역 정의\"| 300\n    200 -->|\"포함\"| 300\n    500 -->|\"매치 스코어 계산\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 얼굴 이미지",
+          "component_type": "data",
+          "description": "사용자의 얼굴 영역의 이미지 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "안구 이미지 영역",
+          "component_type": "data",
+          "description": "눈의 일부를 포함하는 안구 이미지 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "안구 주위 이미지 영역",
+          "component_type": "data",
+          "description": "안구 이미지 영역을 둘러싼 복수의 이미지 영역",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "바이오메트릭 매치 스코어",
+          "component_type": "data",
+          "description": "안구 이미지 및 주위 이미지 영역을 기반으로 계산된 매치 스코어",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "프로세싱 유닛",
+          "component_type": "device",
+          "description": "지시를 실행하여 이미지 처리 및 매치 스코어 계산을 수행하는 장치",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197009324/1020197009324_fig_2.mmd"
+    }
+  ]
+}

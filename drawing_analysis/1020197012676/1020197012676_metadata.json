@@ -1,0 +1,143 @@
+{
+  "app_num": "1020197012676",
+  "invention_type": "method",
+  "main_concept": "이미지 기반의 차량 손상 평가 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "모바일 디바이스",
+      "component_type": "actor",
+      "description": "처리 대상 이미지를 촬영하고 클라우드 서버에 업로드하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "클라우드 서버",
+      "component_type": "device",
+      "description": "처리 대상 이미지를 저장하고 분석하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이미지 업로드",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "정비 계획서 회신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "정비 계획서",
+      "component_type": "data",
+      "description": "손상 평가 결과를 바탕으로 생성된 정비 계획",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정비 계획서 생성",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197012676",
+      "diagram_type": "flowchart",
+      "diagram_title": "차량 손상 평가 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"모바일 디바이스\"]\n    200[\"클라우드 서버\"]\n    300[\"정비 계획서\"]\n    400[\"처리 대상 이미지 획득\"]\n    500[\"차량 구성품 식별\"]\n    600[\"이미지 매칭 수행\"]\n    700[\"손상 부분 및 유형 식별\"]\n    800[\"손상 구성품 및 손상 정도 결정\"]\n\n    100 -->|\"이미지 업로드\"| 200\n    200 -->|\"정비 계획서 생성\"| 300\n    400 --> 500\n    500 --> 600\n    600 --> 700\n    700 --> 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "모바일 디바이스",
+          "component_type": "actor",
+          "description": "처리 대상 이미지를 촬영하고 클라우드 서버에 업로드하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라우드 서버",
+          "component_type": "device",
+          "description": "처리 대상 이미지를 저장하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 업로드",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "정비 계획서 회신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "정비 계획서",
+          "component_type": "data",
+          "description": "손상 평가 결과를 바탕으로 생성된 정비 계획",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정비 계획서 생성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197012676/1020197012676_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197012676",
+      "diagram_type": "classDiagram",
+      "diagram_title": "차량 구성품 및 손상 정보 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 모바일디바이스 {\n        +String 이미지\n        +uploadImage()\n    }\n    class 클라우드서버 {\n        +String 저장공간\n        +analyzeImage()\n        +sendRepairPlan()\n    }\n    class 정비계획서 {\n        +String 손상정보\n        +generateRepairPlan()\n    }\n    모바일디바이스 --> 클라우드서버 : \"이미지 업로드\"\n    클라우드서버 --> 정비계획서 : \"정비 계획서 생성\"\n    클라우드서버 --> 모바일디바이스 : \"정비 계획서 회신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "모바일 디바이스",
+          "component_type": "actor",
+          "description": "처리 대상 이미지를 촬영하고 클라우드 서버에 업로드하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "클라우드 서버",
+          "component_type": "device",
+          "description": "처리 대상 이미지를 저장하고 분석하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이미지 업로드",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "정비 계획서 회신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "정비 계획서",
+          "component_type": "data",
+          "description": "손상 평가 결과를 바탕으로 생성된 정비 계획",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정비 계획서 생성",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197012676/1020197012676_fig_2.mmd"
+    }
+  ]
+}

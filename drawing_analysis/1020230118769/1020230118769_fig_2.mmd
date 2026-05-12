@@ -1,0 +1,18 @@
+%% 1020230118769 - 딥러닝 모델 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class CA_TimeGAN {
+        +String generatedData
+        +generateData()
+    }
+    class Residual_CNN_LSTM {
+        +String predictedTemperature
+        +trainModel()
+        +predictTemperature()
+    }
+    class SensorData {
+        +String temperatureData
+    }
+    CA_TimeGAN --> Residual_CNN_LSTM : "데이터 생성"
+    Residual_CNN_LSTM --> SensorData : "온도변화 예측"

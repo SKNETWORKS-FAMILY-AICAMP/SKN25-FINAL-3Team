@@ -1,0 +1,233 @@
+{
+  "app_num": "1020250132107",
+  "invention_type": "method",
+  "main_concept": "인공신경망을 활용한 차량 번호 인식 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력 데이터",
+      "component_type": "data",
+      "description": "복수 개의 차량 번호판을 포함하는 차량 이미지",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "정답 데이터",
+      "component_type": "data",
+      "description": "차량 번호에 해당하는 정답 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "인공신경망 모듈",
+      "component_type": "actor",
+      "description": "입력 데이터를 처리하여 출력 데이터를 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "정답 비교",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "손실 계산",
+      "component_type": "process",
+      "description": "출력 데이터와 정답 데이터를 비교하여 손실을 계산하는 단계",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "출력 데이터",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "정답 데이터",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "차량 번호 인식",
+      "component_type": "process",
+      "description": "차량 이미지로부터 차량 번호를 인식하는 단계",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "모듈 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250132107",
+      "diagram_type": "flowchart",
+      "diagram_title": "인공신경망 학습 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력 데이터\"]\n    200[\"정답 데이터\"]\n    300[\"인공신경망 모듈\"]\n    400[\"손실 계산\"]\n    500[\"차량 번호 인식\"]\n    \n    100 -->|\"입력\"| 500\n    500 -->|\"모듈 사용\"| 300\n    300 -->|\"출력 데이터\"| 400\n    200 <--|\"정답 데이터\"| 400\n    300 <--|\"정답 비교\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "복수 개의 차량 번호판을 포함하는 차량 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정답 데이터",
+          "component_type": "data",
+          "description": "차량 번호에 해당하는 정답 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "인공신경망 모듈",
+          "component_type": "actor",
+          "description": "입력 데이터를 처리하여 출력 데이터를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정답 비교",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "손실 계산",
+          "component_type": "process",
+          "description": "출력 데이터와 정답 데이터를 비교하여 손실을 계산하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력 데이터",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "정답 데이터",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "차량 번호 인식",
+          "component_type": "process",
+          "description": "차량 이미지로부터 차량 번호를 인식하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "모듈 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250132107/1020250132107_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250132107",
+      "diagram_type": "flowchart",
+      "diagram_title": "차량 번호 인식 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력 데이터\"]\n    200[\"정답 데이터\"]\n    300[\"인공신경망 모듈\"]\n    400[\"손실 계산\"]\n    500[\"차량 번호 인식\"]\n    \n    100 -->|\"입력\"| 500\n    500 -->|\"모듈 사용\"| 300\n    300 -->|\"출력 데이터\"| 400\n    200 <--|\"정답 데이터\"| 400\n    300 <--|\"정답 비교\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 데이터",
+          "component_type": "data",
+          "description": "복수 개의 차량 번호판을 포함하는 차량 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "정답 데이터",
+          "component_type": "data",
+          "description": "차량 번호에 해당하는 정답 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "인공신경망 모듈",
+          "component_type": "actor",
+          "description": "입력 데이터를 처리하여 출력 데이터를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "정답 비교",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "손실 계산",
+          "component_type": "process",
+          "description": "출력 데이터와 정답 데이터를 비교하여 손실을 계산하는 단계",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력 데이터",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "정답 데이터",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "차량 번호 인식",
+          "component_type": "process",
+          "description": "차량 이미지로부터 차량 번호를 인식하는 단계",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "모듈 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250132107/1020250132107_fig_2.mmd"
+    }
+  ]
+}

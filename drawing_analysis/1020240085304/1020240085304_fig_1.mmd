@@ -1,0 +1,28 @@
+%% 1020240085304 - 장례지도사 관리 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 장례지도사단말 {
+        +String 이벤트등록요청
+        +createEvent()
+        +generateSettlementRequest()
+    }
+    class 장례지도사관리서버 {
+        +String 요청처리결과
+        +processRequest()
+        +createSettlementDetails()
+    }
+    class 이벤트관리모듈 {
+        +String 이벤트정보
+        +processEventInfo()
+    }
+    class 정산관리모듈 {
+        +String 정산결과
+        +processSettlement()
+    }
+    장례지도사단말 --> 장례지도사관리서버 : "이벤트 등록 요청 전송"
+    장례지도사관리서버 --> 장례지도사단말 : "이벤트 등록 결과 제공"
+    장례지도사관리서버 --> 이벤트관리모듈 : "이벤트 정보 처리"
+    장례지도사관리서버 --> 정산관리모듈 : "정산 내역 생성"
+    장례지도사단말 --> 정산관리모듈 : "정산 요청 생성"
+    정산관리모듈 --> 장례지도사관리서버 : "정산 결과 제공"

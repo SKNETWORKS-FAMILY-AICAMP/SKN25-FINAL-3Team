@@ -1,0 +1,206 @@
+{
+  "app_num": "1020250077859",
+  "invention_type": "system",
+  "main_concept": "인공 지능 기반 전철전력설비의 선제적 유지관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 수집부",
+      "component_type": "device",
+      "description": "전철전력설비의 물리량을 측정하는 센서 및 계측기",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "데이터 처리부",
+      "component_type": "process",
+      "description": "수집된 데이터를 병렬 처리하고 저장하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수집",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "AI 기반 분석부",
+      "component_type": "process",
+      "description": "딥러닝 기법을 적용하여 데이터 분석 및 이상 탐지 수행",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "350",
+      "name": "보수 의사결정 모듈",
+      "component_type": "process",
+      "description": "유지보수 계획을 생성하고 경고를 발령하는 모듈",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결과 활용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "360",
+      "name": "실시간 모니터링 모듈",
+      "component_type": "device",
+      "description": "위험도를 시각적으로 표현하고 경고를 발령하는 시스템",
+      "relationships": [
+        {
+          "target": "350",
+          "label": "경고 수신",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250077859",
+      "diagram_type": "flowchart",
+      "diagram_title": "전철전력설비 유지관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 수집부\"]\n    200[\"데이터 처리부\"]\n    300[\"AI 기반 분석부\"]\n    350[\"보수 의사결정 모듈\"]\n    360[\"실시간 모니터링 모듈\"]\n    100 -->|\"데이터 수집\"| 200\n    200 -->|\"데이터 입력\"| 300\n    300 -->|\"결과 활용\"| 350\n    350 -->|\"경고 수신\"| 360",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집부",
+          "component_type": "device",
+          "description": "전철전력설비의 물리량을 측정하는 센서 및 계측기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 처리부",
+          "component_type": "process",
+          "description": "수집된 데이터를 병렬 처리하고 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AI 기반 분석부",
+          "component_type": "process",
+          "description": "딥러닝 기법을 적용하여 데이터 분석 및 이상 탐지 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "350",
+          "name": "보수 의사결정 모듈",
+          "component_type": "process",
+          "description": "유지보수 계획을 생성하고 경고를 발령하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 활용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "360",
+          "name": "실시간 모니터링 모듈",
+          "component_type": "device",
+          "description": "위험도를 시각적으로 표현하고 경고를 발령하는 시스템",
+          "relationships": [
+            {
+              "target": "350",
+              "label": "경고 수신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250077859/1020250077859_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250077859",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전철전력설비 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 데이터수집부 {\n        +String 센서데이터\n        +측정()\n    }\n    class 데이터처리부 {\n        +String 처리된데이터\n        +병렬처리()\n    }\n    class AI기반분석부 {\n        +String 분석결과\n        +이상탐지()\n    }\n    class 보수의사결정모듈 {\n        +String 유지보수계획\n        +경고발령()\n    }\n    class 실시간모니터링모듈 {\n        +String 위험도표현\n        +경고발령()\n    }\n    데이터수집부 --> 데이터처리부 : \"데이터 수집\"\n    데이터처리부 --> AI기반분석부 : \"데이터 입력\"\n    AI기반분석부 --> 보수의사결정모듈 : \"결과 활용\"\n    보수의사결정모듈 --> 실시간모니터링모듈 : \"경고 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집부",
+          "component_type": "device",
+          "description": "전철전력설비의 물리량을 측정하는 센서 및 계측기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 처리부",
+          "component_type": "process",
+          "description": "수집된 데이터를 병렬 처리하고 저장하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AI 기반 분석부",
+          "component_type": "process",
+          "description": "딥러닝 기법을 적용하여 데이터 분석 및 이상 탐지 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "350",
+          "name": "보수 의사결정 모듈",
+          "component_type": "process",
+          "description": "유지보수 계획을 생성하고 경고를 발령하는 모듈",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 활용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "360",
+          "name": "실시간 모니터링 모듈",
+          "component_type": "device",
+          "description": "위험도를 시각적으로 표현하고 경고를 발령하는 시스템",
+          "relationships": [
+            {
+              "target": "350",
+              "label": "경고 수신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250077859/1020250077859_fig_2.mmd"
+    }
+  ]
+}

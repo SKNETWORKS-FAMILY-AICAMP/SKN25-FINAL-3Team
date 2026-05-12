@@ -1,0 +1,15 @@
+%% 1020150188319 - 터치 입력 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 디스플레이모듈 {
+        +String 터치표면
+    }
+    class 압력전극 {
+        +detectPressure()
+    }
+    class 기준전위층 {
+        +generateSignal()
+    }
+    디스플레이모듈 --> 압력전극 : "형성됨"
+    압력전극 <-- 기준전위층 : "상호작용"

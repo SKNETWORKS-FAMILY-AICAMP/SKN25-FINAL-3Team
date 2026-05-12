@@ -1,0 +1,266 @@
+{
+  "app_num": "1020230133557",
+  "invention_type": "method",
+  "main_concept": "딥러닝 기반의 멸구 분류 방법 및 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "타겟 이미지",
+      "component_type": "data",
+      "description": "멸구 탐지를 위한 입력 이미지",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1관심 영역 이미지",
+      "component_type": "data",
+      "description": "타겟 이미지에서 획득된 멸구 탐지 영역",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "획득",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2관심 영역 이미지",
+      "component_type": "data",
+      "description": "멸구의 등판을 포함하는 이미지",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "획득",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "멸구 분류 모델",
+      "component_type": "process",
+      "description": "멸구의 클래스를 분류하는 딥러닝 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "멸구 분류 방법을 수행하는 컴퓨팅 장치의 프로세서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "처리",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "처리",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230133557",
+      "diagram_type": "flowchart",
+      "diagram_title": "멸구 분류 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"타겟 이미지\"]\n    200[\"제1관심 영역 이미지\"]\n    300[\"제2관심 영역 이미지\"]\n    400[\"멸구 분류 모델\"]\n    500[\"프로세서\"]\n    100 -->|\"획득\"| 200\n    200 -->|\"획득\"| 300\n    100 -->|\"처리\"| 500\n    200 -->|\"처리\"| 500\n    300 -->|\"처리\"| 500\n    500 -->|\"입력\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "타겟 이미지",
+          "component_type": "data",
+          "description": "멸구 탐지를 위한 입력 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1관심 영역 이미지",
+          "component_type": "data",
+          "description": "타겟 이미지에서 획득된 멸구 탐지 영역",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2관심 영역 이미지",
+          "component_type": "data",
+          "description": "멸구의 등판을 포함하는 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "멸구 분류 모델",
+          "component_type": "process",
+          "description": "멸구의 클래스를 분류하는 딥러닝 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "멸구 분류 방법을 수행하는 컴퓨팅 장치의 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230133557/1020230133557_fig_2.mmd"
+    },
+    {
+      "app_num": "1020230133557",
+      "diagram_type": "classDiagram",
+      "diagram_title": "해충 포집망 이미지",
+      "mermaid_code": "classDiagram\n    class 타겟이미지 {\n        +String 이미지데이터\n    }\n    class 제1관심영역이미지 {\n        +String 이미지데이터\n    }\n    class 제2관심영역이미지 {\n        +String 이미지데이터\n    }\n    class 멸구분류모델 {\n        +classify()\n    }\n    class 프로세서 {\n        +process()\n    }\n    타겟이미지 --> 제1관심영역이미지 : \"획득\"\n    제1관심영역이미지 --> 제2관심영역이미지 : \"획득\"\n    제1관심영역이미지 --> 멸구분류모델 : \"입력\"\n    제2관심영역이미지 --> 멸구분류모델 : \"입력\"\n    타겟이미지 --> 프로세서 : \"처리\"\n    제1관심영역이미지 --> 프로세서 : \"처리\"\n    제2관심영역이미지 --> 프로세서 : \"처리\"\n    프로세서 --> 멸구분류모델 : \"사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "타겟 이미지",
+          "component_type": "data",
+          "description": "멸구 탐지를 위한 입력 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1관심 영역 이미지",
+          "component_type": "data",
+          "description": "타겟 이미지에서 획득된 멸구 탐지 영역",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2관심 영역 이미지",
+          "component_type": "data",
+          "description": "멸구의 등판을 포함하는 이미지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "획득",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "멸구 분류 모델",
+          "component_type": "process",
+          "description": "멸구의 클래스를 분류하는 딥러닝 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "멸구 분류 방법을 수행하는 컴퓨팅 장치의 프로세서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "처리",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230133557/1020230133557_fig_1.mmd"
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "app_num": "1020220175522",
+  "invention_type": "system",
+  "main_concept": "ERP 프로그램과 연동하여 인쇄 물품의 재고 및 유지보수를 관리하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메시지확인부",
+      "component_type": "process",
+      "description": "AS 요청 메시지를 확인하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "선정부",
+      "component_type": "process",
+      "description": "대리점 단말을 선정하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "AS 요청 메시지로부터 정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "AS정보 생성부",
+      "component_type": "process",
+      "description": "AS용 소모품 정보를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "제품정보와 교체가능성 정보 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "통합관리부",
+      "component_type": "process",
+      "description": "AS 스케줄을 통합 관리하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "정보 통합",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220175522",
+      "diagram_type": "flowchart",
+      "diagram_title": "인쇄 물품 재고관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"메시지확인부\"]\n    200[\"선정부\"]\n    300[\"AS정보 생성부\"]\n    400[\"통합관리부\"]\n    100 -->|\"AS 요청 메시지로부터 정보 수신\"| 200\n    200 -->|\"제품정보와 교체가능성 정보 수신\"| 300\n    300 -->|\"정보 통합\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메시지확인부",
+          "component_type": "process",
+          "description": "AS 요청 메시지를 확인하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "선정부",
+          "component_type": "process",
+          "description": "대리점 단말을 선정하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "AS 요청 메시지로부터 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AS정보 생성부",
+          "component_type": "process",
+          "description": "AS용 소모품 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제품정보와 교체가능성 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "통합관리부",
+          "component_type": "process",
+          "description": "AS 스케줄을 통합 관리하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정보 통합",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220175522/1020220175522_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220175522",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 클래스 다이어그램",
+      "mermaid_code": "classDiagram\n    class 메시지확인부 {\n        +String as요청메시지\n        +확인()\n    }\n    class 선정부 {\n        +String 대리점정보\n        +선정()\n    }\n    class AS정보생성부 {\n        +String 소모품정보\n        +생성()\n    }\n    class 통합관리부 {\n        +String 스케줄정보\n        +관리()\n    }\n    메시지확인부 --> 선정부 : \"AS 요청 메시지로부터 정보 수신\"\n    선정부 --> AS정보생성부 : \"제품정보와 교체가능성 정보 수신\"\n    AS정보생성부 --> 통합관리부 : \"정보 통합\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메시지확인부",
+          "component_type": "process",
+          "description": "AS 요청 메시지를 확인하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "선정부",
+          "component_type": "process",
+          "description": "대리점 단말을 선정하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "AS 요청 메시지로부터 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "AS정보 생성부",
+          "component_type": "process",
+          "description": "AS용 소모품 정보를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "제품정보와 교체가능성 정보 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "통합관리부",
+          "component_type": "process",
+          "description": "AS 스케줄을 통합 관리하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "정보 통합",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220175522/1020220175522_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+%% 1020190165355 - 결제 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 프로세서 {
+        +String 결제요청
+        +processRequest()
+    }
+    class 결제 요청 저장부 {
+        +List<String> 저장된요청
+        +saveRequest()
+    }
+    class 결제 요청 제공부 {
+        +List<String> 제공된요청
+        +provideRequests()
+    }
+    class 결제 처리부 {
+        +String 처리결과
+        +processPayment()
+    }
+    프로세서 --> 결제 요청 저장부 : "저장 및 처리"
+    프로세서 --> 결제 요청 제공부 : "제공 요청"
+    프로세서 --> 결제 처리부 : "결제 요청 처리"

@@ -1,0 +1,167 @@
+{
+  "app_num": "1020200059705",
+  "invention_type": "method",
+  "main_concept": "퓨 샷 학습을 위한 메타 학습 데이터 기반의 모델 학습 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "메인 바디",
+      "component_type": "device",
+      "description": "입력된 데이터에 대한 특징 벡터를 추출하는 인공 신경망 구조",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 헤드",
+      "component_type": "device",
+      "description": "퓨 샷 학습을 위한 분류 결과를 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "특징 벡터 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 헤드",
+      "component_type": "device",
+      "description": "지도 학습을 위한 분류 결과를 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "특징 벡터 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제3 헤드",
+      "component_type": "device",
+      "description": "약 지도 학습을 위한 모조 레이블을 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "특징 벡터 생성",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200059705",
+      "diagram_type": "flowchart",
+      "diagram_title": "퓨 샷 학습 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"메인 바디\"]\n    200[\"제1 헤드\"]\n    300[\"제2 헤드\"]\n    400[\"제3 헤드\"]\n    100 -->|\"특징 벡터 생성\"| 200\n    100 -->|\"특징 벡터 생성\"| 300\n    100 -->|\"특징 벡터 생성\"| 400\n    200 -->|\"제1 태스크: 제1 모델을 퓨 샷 학습시키기\"| 300\n    300 -->|\"제2 태스크: 제2 모델을 지도 학습시키기\"| 400\n    400 -->|\"제3 태스크: 제3 모델을 약 지도 학습시키기\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 바디",
+          "component_type": "device",
+          "description": "입력된 데이터에 대한 특징 벡터를 추출하는 인공 신경망 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 헤드",
+          "component_type": "device",
+          "description": "퓨 샷 학습을 위한 분류 결과를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 헤드",
+          "component_type": "device",
+          "description": "지도 학습을 위한 분류 결과를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3 헤드",
+          "component_type": "device",
+          "description": "약 지도 학습을 위한 모조 레이블을 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200059705/1020200059705_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200059705",
+      "diagram_type": "classDiagram",
+      "diagram_title": "모델 구조",
+      "mermaid_code": "classDiagram\n    class 메인바디 {\n        +String 특징벡터\n        +extractFeatures()\n    }\n    class 제1헤드 {\n        +String 분류결과\n        +generateClassification()\n    }\n    class 제2헤드 {\n        +String 분류결과\n        +generateClassification()\n    }\n    class 제3헤드 {\n        +String 모조레이블\n        +generatePseudoLabel()\n    }\n    메인바디 --> 제1헤드 : \"특징 벡터 생성\"\n    메인바디 --> 제2헤드 : \"특징 벡터 생성\"\n    메인바디 --> 제3헤드 : \"특징 벡터 생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "메인 바디",
+          "component_type": "device",
+          "description": "입력된 데이터에 대한 특징 벡터를 추출하는 인공 신경망 구조",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 헤드",
+          "component_type": "device",
+          "description": "퓨 샷 학습을 위한 분류 결과를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 헤드",
+          "component_type": "device",
+          "description": "지도 학습을 위한 분류 결과를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제3 헤드",
+          "component_type": "device",
+          "description": "약 지도 학습을 위한 모조 레이블을 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "특징 벡터 생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200059705/1020200059705_fig_2.mmd"
+    }
+  ]
+}

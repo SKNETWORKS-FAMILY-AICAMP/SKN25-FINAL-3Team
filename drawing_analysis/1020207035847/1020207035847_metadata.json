@@ -1,0 +1,221 @@
+{
+  "app_num": "1020207035847",
+  "invention_type": "hardware",
+  "main_concept": "소스 순환 신경 네트워크 내 신호 전송 활동의 위상적 패턴을 표현하고 처리하는 디바이스",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "소스 순환 신경 네트워크",
+      "component_type": "device",
+      "description": "신호 전송 활동의 위상적 패턴을 표현하고 처리하는 신경 네트워크",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "입력",
+      "component_type": "data",
+      "description": "신경 네트워크에 제공되는 다양한 입력 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "액추에이터",
+      "component_type": "device",
+      "description": "신경 네트워크의 출력을 수신하고 환경에서 작동하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "출력 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "센서",
+      "component_type": "device",
+      "description": "환경의 특성을 측정하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "측정 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "교사 모듈",
+      "component_type": "device",
+      "description": "센서로부터의 측정 데이터를 해석하고 신경 네트워크에 보상 및 후회를 제공하는 모듈",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "측정 데이터 해석",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "보상 및 후회 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020207035847",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경 네트워크 신호 전송 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"소스 순환 신경 네트워크\"]\n    200[\"입력\"]\n    300[\"액추에이터\"]\n    400[\"센서\"]\n    500[\"교사 모듈\"]\n    200 -->|\"입력 데이터 제공\"| 100\n    100 -->|\"출력 수신\"| 300\n    400 -->|\"측정 데이터 제공\"| 300\n    400 -->|\"측정 데이터 해석\"| 500\n    500 -->|\"보상 및 후회 제공\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "소스 순환 신경 네트워크",
+          "component_type": "device",
+          "description": "신호 전송 활동의 위상적 패턴을 표현하고 처리하는 신경 네트워크",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "입력",
+          "component_type": "data",
+          "description": "신경 네트워크에 제공되는 다양한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "액추에이터",
+          "component_type": "device",
+          "description": "신경 네트워크의 출력을 수신하고 환경에서 작동하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "센서",
+          "component_type": "device",
+          "description": "환경의 특성을 측정하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "측정 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "교사 모듈",
+          "component_type": "device",
+          "description": "센서로부터의 측정 데이터를 해석하고 신경 네트워크에 보상 및 후회를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "측정 데이터 해석",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "보상 및 후회 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020207035847/1020207035847_fig_1.mmd"
+    },
+    {
+      "app_num": "1020207035847",
+      "diagram_type": "classDiagram",
+      "diagram_title": "신경 네트워크 구성 요소",
+      "mermaid_code": "classDiagram\n    class 소스순환신경네트워크 {\n        +String 신호전송활동패턴\n        +process()\n    }\n    class 입력 {\n        +String 데이터\n    }\n    class 액추에이터 {\n        +String 출력\n        +operate()\n    }\n    class 센서 {\n        +String 측정값\n        +measure()\n    }\n    class 교사모듈 {\n        +String 보상\n        +String 후회\n        +interpret()\n    }\n    입력 --> 소스순환신경네트워크 : \"입력 데이터 제공\"\n    소스순환신경네트워크 --> 액추에이터 : \"출력 수신\"\n    센서 --> 액추에이터 : \"측정 데이터 제공\"\n    교사모듈 --> 센서 : \"측정 데이터 해석\"\n    교사모듈 --> 소스순환신경네트워크 : \"보상 및 후회 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "소스 순환 신경 네트워크",
+          "component_type": "device",
+          "description": "신호 전송 활동의 위상적 패턴을 표현하고 처리하는 신경 네트워크",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "입력",
+          "component_type": "data",
+          "description": "신경 네트워크에 제공되는 다양한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "액추에이터",
+          "component_type": "device",
+          "description": "신경 네트워크의 출력을 수신하고 환경에서 작동하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "출력 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "센서",
+          "component_type": "device",
+          "description": "환경의 특성을 측정하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "측정 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "교사 모듈",
+          "component_type": "device",
+          "description": "센서로부터의 측정 데이터를 해석하고 신경 네트워크에 보상 및 후회를 제공하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "측정 데이터 해석",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "보상 및 후회 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020207035847/1020207035847_fig_2.mmd"
+    }
+  ]
+}

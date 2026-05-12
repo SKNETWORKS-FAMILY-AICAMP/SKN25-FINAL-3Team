@@ -1,0 +1,18 @@
+{
+  "fig_number": "도 11a",
+  "title": "예시적인 실시형태의 시스템 및 방법을 도시한다",
+  "diagram_type": "flowchart",
+  "purpose": "시스템의 작동 방법을 설명한다",
+  "figure_source_text": "도 11a는 예시적인 실시형태의 시스템 및 방법을 도시한다",
+  "elements": [
+    {
+      "id": "S100",
+      "ref_no": "S100",
+      "name": "시스템 자동 관리",
+      "type": "process",
+      "description": "복수의 시스템 규칙과 템플릿에 기반하여 시스템을 자동으로 관리하는 단계",
+      "source_text": "상기 시스템을 자동적으로 관리하는 단계"
+    }
+  ],
+  "relations": []
+}

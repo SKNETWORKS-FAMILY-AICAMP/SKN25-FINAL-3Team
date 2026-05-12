@@ -1,0 +1,128 @@
+{
+  "app_num": "1020230055750",
+  "invention_type": "method",
+  "main_concept": "영상의 정성적 특성을 추출하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "영상 분할 모듈",
+      "component_type": "device",
+      "description": "영상을 적어도 하나의 영상 세그먼트로 분할하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "그래프 임베딩 모듈",
+      "component_type": "device",
+      "description": "영상 세그먼트의 객체들 및 관계를 기반으로 영상 그래프 시퀀스를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "영상 분류 모듈",
+      "component_type": "device",
+      "description": "비슷한 정성적 특성을 가진 그래프 시퀀스를 분류하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230055750",
+      "diagram_type": "flowchart",
+      "diagram_title": "영상의 정성적 특성 추출 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"영상 분할 모듈\"]\n    200[\"그래프 임베딩 모듈\"]\n    300[\"영상 분류 모듈\"]\n    400[\"정성적 특성 추출 및 분류\"]\n    100 -->|\"사용\"| 200\n    200 -->|\"사용\"| 300\n    300 -->|\"결과\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "영상 분할 모듈",
+          "component_type": "device",
+          "description": "영상을 적어도 하나의 영상 세그먼트로 분할하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "그래프 임베딩 모듈",
+          "component_type": "device",
+          "description": "영상 세그먼트의 객체들 및 관계를 기반으로 영상 그래프 시퀀스를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "영상 분류 모듈",
+          "component_type": "device",
+          "description": "비슷한 정성적 특성을 가진 그래프 시퀀스를 분류하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230055750/1020230055750_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230055750",
+      "diagram_type": "classDiagram",
+      "diagram_title": "영상 정성적 특성 추출 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 영상분할모듈 {\n        +분할()\n    }\n    class 그래프임베딩모듈 {\n        +생성()\n    }\n    class 영상분류모듈 {\n        +분류()\n    }\n    영상분할모듈 --> 그래프임베딩모듈 : \"사용\"\n    그래프임베딩모듈 --> 영상분류모듈 : \"사용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "영상 분할 모듈",
+          "component_type": "device",
+          "description": "영상을 적어도 하나의 영상 세그먼트로 분할하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "그래프 임베딩 모듈",
+          "component_type": "device",
+          "description": "영상 세그먼트의 객체들 및 관계를 기반으로 영상 그래프 시퀀스를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "영상 분류 모듈",
+          "component_type": "device",
+          "description": "비슷한 정성적 특성을 가진 그래프 시퀀스를 분류하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230055750/1020230055750_fig_2.mmd"
+    }
+  ]
+}

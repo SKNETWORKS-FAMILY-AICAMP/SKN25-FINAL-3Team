@@ -1,0 +1,215 @@
+{
+  "app_num": "1020240063167",
+  "invention_type": "method",
+  "main_concept": "사용자의 결제 정보를 기반으로 매장 예약 및 결제를 수행하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "사용자가 결제 정보를 입력하고 예약 요청을 하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "예약 요청 및 결제 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "매장 단말",
+      "component_type": "actor",
+      "description": "매장에서 예약 및 결제를 처리하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "예약 요청 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "결제 요청 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "결제 및 예약 프로세스를 실행하는 중앙 처리 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 명령 처리",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "결제 요청 처리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "결제 정보 및 예약 정보를 저장하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "명령어 저장",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240063167",
+      "diagram_type": "flowchart",
+      "diagram_title": "결제 및 예약 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"매장 단말\"]\n    300[\"프로세서\"]\n    400[\"메모리\"]\n    100 -->|\"예약 요청 및 결제 정보 전송\"| 200\n    200 -->|\"예약 요청 수신\"| 300\n    300 -->|\"결제 명령 처리\"| 100\n    200 -->|\"결제 요청 수신\"| 300\n    300 -->|\"명령어 저장\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 결제 정보를 입력하고 예약 요청을 하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 요청 및 결제 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "매장 단말",
+          "component_type": "actor",
+          "description": "매장에서 예약 및 결제를 처리하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예약 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 요청 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "결제 및 예약 프로세스를 실행하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 명령 처리",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "결제 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "결제 정보 및 예약 정보를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "명령어 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240063167/1020240063167_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240063167",
+      "diagram_type": "flowchart",
+      "diagram_title": "제2 결제 수행 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"매장 단말\"]\n    300[\"프로세서\"]\n    400[\"메모리\"]\n    \n    100 -->|\"예약 요청 및 결제 정보 전송\"| 200\n    200 -->|\"예약 요청 수신\"| 300\n    300 -->|\"결제 명령 처리\"| 100\n    200 -->|\"결제 요청 수신\"| 300\n    300 -->|\"명령어 저장\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 결제 정보를 입력하고 예약 요청을 하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "예약 요청 및 결제 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "매장 단말",
+          "component_type": "actor",
+          "description": "매장에서 예약 및 결제를 처리하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예약 요청 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "결제 요청 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "결제 및 예약 프로세스를 실행하는 중앙 처리 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 명령 처리",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "결제 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "결제 정보 및 예약 정보를 저장하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "명령어 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240063167/1020240063167_fig_2.mmd"
+    }
+  ]
+}

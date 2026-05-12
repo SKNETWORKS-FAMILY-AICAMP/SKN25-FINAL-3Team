@@ -1,0 +1,161 @@
+{
+  "app_num": "1020200146542",
+  "invention_type": "method",
+  "main_concept": "비대면 실시간 트레이닝 서비스 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "사용자가 트레이닝 강좌를 수강하고 정보를 입력하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "서비스 서버",
+      "component_type": "device",
+      "description": "트레이너 추천 및 강좌 제공을 관리하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "트레이너 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "트레이너 단말",
+      "component_type": "actor",
+      "description": "트레이너가 강좌를 제공하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "강좌 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200146542",
+      "diagram_type": "flowchart",
+      "diagram_title": "비대면 트레이닝 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"서비스 서버\"]\n    300[\"트레이너 단말\"]\n    400[\"설문에 대한 답변 입력 및 전송\"]\n    500[\"운동수준 선택\"]\n    600[\"조건 입력\"]\n    700[\"트레이너 추천\"]\n    800[\"트레이너 선택 및 강좌 수강\"]\n    900[\"운동 결과 기록 및 전송\"]\n    100 -->| \"데이터 전송\" | 400\n    400 -->| \"데이터 전송\" | 500\n    500 -->| \"데이터 전송\" | 600\n    600 -->| \"트레이너 추천 요청\" | 200\n    200 -->| \"트레이너 정보 제공\" | 700\n    700 -->| \"트레이너 선택\" | 800\n    800 -->| \"운동 결과 전송\" | 900\n    900 -->| \"트레이너 평가 입력 및 전송\" | 200\n    200 -->| \"강좌 정보 수신\" | 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 트레이닝 강좌를 수강하고 정보를 입력하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서비스 서버",
+          "component_type": "device",
+          "description": "트레이너 추천 및 강좌 제공을 관리하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "트레이너 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "트레이너 단말",
+          "component_type": "actor",
+          "description": "트레이너가 강좌를 제공하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "강좌 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200146542/1020200146542_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200146542",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 입력데이터\n        +전송()\n    }\n    class 서비스서버 {\n        +String 트레이너정보\n        +추천()\n    }\n    class 트레이너단말 {\n        +String 강좌정보\n        +제공()\n    }\n    사용자단말 --> 서비스서버 : \"데이터 전송\"\n    서비스서버 --> 사용자단말 : \"데이터 수신\"\n    서비스서버 --> 트레이너단말 : \"트레이너 정보 제공\"\n    트레이너단말 --> 서비스서버 : \"강좌 정보 수신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "사용자가 트레이닝 강좌를 수강하고 정보를 입력하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서비스 서버",
+          "component_type": "device",
+          "description": "트레이너 추천 및 강좌 제공을 관리하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "트레이너 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "트레이너 단말",
+          "component_type": "actor",
+          "description": "트레이너가 강좌를 제공하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "강좌 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200146542/1020200146542_fig_2.mmd"
+    }
+  ]
+}

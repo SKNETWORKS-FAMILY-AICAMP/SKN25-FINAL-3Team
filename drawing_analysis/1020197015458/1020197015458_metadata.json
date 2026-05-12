@@ -1,0 +1,167 @@
+{
+  "app_num": "1020197015458",
+  "invention_type": "method",
+  "main_concept": "이미지 인식을 위한 다층 객체 모델을 이용한 관심 객체 검출 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "이미지 인식 및 객체 검출을 수행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "프로세서가 실행할 명령어를 저장하는 저장 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장된 명령어를 실행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "다층 객체 모델",
+      "component_type": "process",
+      "description": "이미지 내 객체를 검출하기 위한 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "검출 계층을 통해 객체 검출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "바운딩 박스",
+      "component_type": "data",
+      "description": "관심 객체를 포함하는 이미지 내의 영역",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "검출된 객체의 위치를 정의",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197015458",
+      "diagram_type": "flowchart",
+      "diagram_title": "이미지 인식 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"메모리\"]\n    300[\"다층 객체 모델\"]\n    400[\"바운딩 박스\"]\n    100 -->|\"저장된 명령어를 실행\"| 200\n    200 -->|\"이미지에 액세스\"| 300\n    300 -->|\"검출 계층을 통해 객체 검출\"| 400\n    400 -->|\"관심 객체 검출\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "이미지 인식 및 객체 검출을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 명령어를 저장하는 저장 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "다층 객체 모델",
+          "component_type": "process",
+          "description": "이미지 내 객체를 검출하기 위한 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검출 계층을 통해 객체 검출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "바운딩 박스",
+          "component_type": "data",
+          "description": "관심 객체를 포함하는 이미지 내의 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검출된 객체의 위치를 정의",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197015458/1020197015458_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197015458",
+      "diagram_type": "classDiagram",
+      "diagram_title": "다층 객체 모델 구조도",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +String 이미지인식()\n        +String 객체검출()\n    }\n    class 메모리 {\n        +String 명령어저장()\n    }\n    class 다층객체모델 {\n        +String 객체검출()\n    }\n    class 바운딩박스 {\n        +String 위치정의()\n    }\n    프로세서 --> 메모리 : \"저장된 명령어를 실행\"\n    프로세서 --> 다층객체모델 : \"검출 계층을 통해 객체 검출\"\n    다층객체모델 --> 바운딩박스 : \"검출된 객체의 위치를 정의\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "이미지 인식 및 객체 검출을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "프로세서가 실행할 명령어를 저장하는 저장 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "다층 객체 모델",
+          "component_type": "process",
+          "description": "이미지 내 객체를 검출하기 위한 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "검출 계층을 통해 객체 검출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "바운딩 박스",
+          "component_type": "data",
+          "description": "관심 객체를 포함하는 이미지 내의 영역",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "검출된 객체의 위치를 정의",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197015458/1020197015458_fig_2.mmd"
+    }
+  ]
+}

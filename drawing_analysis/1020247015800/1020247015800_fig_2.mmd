@@ -1,0 +1,23 @@
+%% 1020247015800 - 사람 식별 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 비디오입력 {
+        +String 비디오데이터
+    }
+    class STEM데이터생성모듈 {
+        +generateSTEM()
+    }
+    class FAGC네트워크 {
+        +processSTEM()
+    }
+    class IFV생성모듈 {
+        +generateIFV()
+    }
+    class 사람식별모듈 {
+        +identifyPerson()
+    }
+    비디오입력 --> STEM데이터생성모듈 : "입력"
+    STEM데이터생성모듈 --> FAGC네트워크 : "입력"
+    FAGC네트워크 --> IFV생성모듈 : "입력"
+    IFV생성모듈 --> 사람식별모듈 : "입력"

@@ -1,0 +1,215 @@
+{
+  "app_num": "1020220048990",
+  "invention_type": "system",
+  "main_concept": "가상화폐 거래소와 온오프라인 가맹점을 연계한 쇼핑몰 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "device",
+      "description": "가상화폐를 구매하고 상품을 결제하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 구매 및 결제 요청",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "가상화폐 구매 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "쇼핑몰 서비스 제공 서버",
+      "component_type": "system",
+      "description": "상품을 관리하고 결제 처리를 수행하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결제 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "상품 업로드 및 관리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "가상화폐 거래소",
+      "component_type": "system",
+      "description": "가상화폐를 거래하고 관리하는 시스템",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "가상화폐 구매 요청 처리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "중소기업지원부",
+      "component_type": "process",
+      "description": "중소기업 상품을 관리하고 지원하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 업로드",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220048990",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상화폐 및 결제 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"쇼핑몰 서비스 제공 서버\"]\n    300[\"가상화폐 거래소\"]\n    400[\"중소기업지원부\"]\n    100 -->|\"상품 구매 및 결제 요청\"| 200\n    100 -->|\"가상화폐 구매 요청\"| 300\n    200 <--|\"결제 정보 수신\"| 100\n    200 -->|\"상품 업로드 및 관리\"| 400\n    400 <--|\"상품 업로드\"| 200\n    300 <--|\"가상화폐 구매 요청 처리\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "가상화폐를 구매하고 상품을 결제하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 구매 및 결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "가상화폐 구매 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "쇼핑몰 서비스 제공 서버",
+          "component_type": "system",
+          "description": "상품을 관리하고 결제 처리를 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "상품 업로드 및 관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상화폐 거래소",
+          "component_type": "system",
+          "description": "가상화폐를 거래하고 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가상화폐 구매 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "중소기업지원부",
+          "component_type": "process",
+          "description": "중소기업 상품을 관리하고 지원하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 업로드",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220048990/1020220048990_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220048990",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 결제정보\n        +String 가상화폐정보\n        +상품구매요청()\n        +가상화폐구매요청()\n    }\n    class 쇼핑몰서비스제공서버 {\n        +String 상품정보\n        +결제처리()\n        +상품관리()\n    }\n    class 가상화폐거래소 {\n        +String 거래정보\n        +가상화폐구매처리()\n    }\n    class 중소기업지원부 {\n        +String 상품지원정보\n        +상품업로드()\n    }\n    사용자단말 --> 쇼핑몰서비스제공서버 : \"상품 구매 및 결제 요청\"\n    사용자단말 --> 가상화폐거래소 : \"가상화폐 구매 요청\"\n    쇼핑몰서비스제공서버 --> 사용자단말 : \"결제 정보 수신\"\n    쇼핑몰서비스제공서버 --> 중소기업지원부 : \"상품 업로드 및 관리\"\n    가상화폐거래소 --> 사용자단말 : \"가상화폐 구매 요청 처리\"\n    중소기업지원부 --> 쇼핑몰서비스제공서버 : \"상품 업로드\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "device",
+          "description": "가상화폐를 구매하고 상품을 결제하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 구매 및 결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "가상화폐 구매 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "쇼핑몰 서비스 제공 서버",
+          "component_type": "system",
+          "description": "상품을 관리하고 결제 처리를 수행하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "상품 업로드 및 관리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상화폐 거래소",
+          "component_type": "system",
+          "description": "가상화폐를 거래하고 관리하는 시스템",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가상화폐 구매 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "중소기업지원부",
+          "component_type": "process",
+          "description": "중소기업 상품을 관리하고 지원하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 업로드",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220048990/1020220048990_fig_2.mmd"
+    }
+  ]
+}

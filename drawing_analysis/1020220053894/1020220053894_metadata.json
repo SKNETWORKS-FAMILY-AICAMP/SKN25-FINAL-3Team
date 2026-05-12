@@ -1,0 +1,299 @@
+{
+  "app_num": "1020220053894",
+  "invention_type": "system",
+  "main_concept": "다이어트 식품 판매 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "다이어트 식품을 검색하고 구매 및 결제를 수행하는 사용자",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "주문 및 결제 요청",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "비교 결과 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "판매자 단말",
+      "component_type": "actor",
+      "description": "다이어트 식품을 업로드하고 배송 절차를 진행하는 판매자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "주문 접수",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "배송 안내 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "비교분석부",
+      "component_type": "process",
+      "description": "다이어트 식품의 항목별 비교 분석을 수행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비교 결과 전송",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "데이터 입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "배송안내부",
+      "component_type": "process",
+      "description": "배송 절차에 대한 안내를 사용자에게 전송",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "배송 절차 진행",
+          "direction": "<-"
+        },
+        {
+          "target": "100",
+          "label": "배송 안내 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "업로드부",
+      "component_type": "process",
+      "description": "다이어트 식품 및 데이터를 업로드하는 기능",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 입력",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "비교 분석 요청",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220053894",
+      "diagram_type": "flowchart",
+      "diagram_title": "다이어트 식품 판매 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"판매자 단말\"]\n    300[\"비교분석부\"]\n    400[\"배송안내부\"]\n    500[\"업로드부\"]\n    \n    100 -->|\"주문 및 결제 요청\"| 200\n    200 -->|\"주문 접수\"| 100\n    100 -->|\"비교 결과 수신\"| 300\n    300 -->|\"비교 결과 전송\"| 100\n    300 -->|\"데이터 입력\"| 500\n    500 -->|\"데이터 입력\"| 200\n    500 -->|\"비교 분석 요청\"| 300\n    200 -->|\"배송 절차 진행\"| 400\n    400 -->|\"배송 안내 전송\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "다이어트 식품을 검색하고 구매 및 결제를 수행하는 사용자",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "주문 및 결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "비교 결과 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "다이어트 식품을 업로드하고 배송 절차를 진행하는 판매자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "주문 접수",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "배송 안내 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "비교분석부",
+          "component_type": "process",
+          "description": "다이어트 식품의 항목별 비교 분석을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비교 결과 전송",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "배송안내부",
+          "component_type": "process",
+          "description": "배송 절차에 대한 안내를 사용자에게 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "배송 절차 진행",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "배송 안내 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "업로드부",
+          "component_type": "process",
+          "description": "다이어트 식품 및 데이터를 업로드하는 기능",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "비교 분석 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220053894/1020220053894_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220053894",
+      "diagram_type": "classDiagram",
+      "diagram_title": "다이어트 식품 판매 서비스 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 검색기능\n        +String 결제기능\n    }\n    class 판매자단말 {\n        +String 업로드기능\n        +String 배송절차\n    }\n    class 비교분석부 {\n        +String 비교분석기능\n        +String 결과전송\n    }\n    class 배송안내부 {\n        +String 배송안내기능\n    }\n    class 업로드부 {\n        +String 데이터업로드\n    }\n    사용자단말 --> 판매자단말 : \"주문 및 결제 요청\"\n    판매자단말 --> 사용자단말 : \"주문 접수\"\n    사용자단말 --> 비교분석부 : \"비교 결과 수신\"\n    비교분석부 --> 사용자단말 : \"비교 결과 전송\"\n    판매자단말 --> 배송안내부 : \"배송 절차 진행\"\n    배송안내부 --> 사용자단말 : \"배송 안내 전송\"\n    업로드부 --> 판매자단말 : \"데이터 입력\"\n    비교분석부 --> 업로드부 : \"비교 분석 요청\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "다이어트 식품을 검색하고 구매 및 결제를 수행하는 사용자",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "주문 및 결제 요청",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "비교 결과 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "판매자 단말",
+          "component_type": "actor",
+          "description": "다이어트 식품을 업로드하고 배송 절차를 진행하는 판매자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "주문 접수",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "배송 안내 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "비교분석부",
+          "component_type": "process",
+          "description": "다이어트 식품의 항목별 비교 분석을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비교 결과 전송",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "배송안내부",
+          "component_type": "process",
+          "description": "배송 절차에 대한 안내를 사용자에게 전송",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "배송 절차 진행",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "배송 안내 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "업로드부",
+          "component_type": "process",
+          "description": "다이어트 식품 및 데이터를 업로드하는 기능",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "비교 분석 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220053894/1020220053894_fig_2.mmd"
+    }
+  ]
+}

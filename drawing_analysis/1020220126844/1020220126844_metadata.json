@@ -1,0 +1,182 @@
+{
+  "app_num": "1020220126844",
+  "invention_type": "hybrid",
+  "main_concept": "자율 주행의 학습 장치 및 방법으로, 모방 학습과 강화 학습을 결합하여 에이전트의 행동을 최적화하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "주행 데이터를 이용한 모방 학습 및 강화 학습을 수행하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "학습 수행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "액터 네트워크",
+      "component_type": "data",
+      "description": "에이전트의 행동을 결정하는 정보를 출력하는 네트워크",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "출력 연결",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "크리틱 네트워크",
+      "component_type": "data",
+      "description": "에이전트의 행동을 평가하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "가치 평가값 출력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "완전 연결층",
+      "component_type": "data",
+      "description": "액터 네트워크와 크리틱 네트워크의 연결을 담당하는 층",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220126844",
+      "diagram_type": "flowchart",
+      "diagram_title": "자율 주행 학습 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"액터 네트워크\"]\n    300[\"크리틱 네트워크\"]\n    400[\"완전 연결층\"]\n    100 -->|\"학습 수행\"| 200\n    200 -->|\"출력 연결\"| 300\n    200 -->|\"연결\"| 400\n    300 -->|\"가치 평가값 출력\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "주행 데이터를 이용한 모방 학습 및 강화 학습을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "액터 네트워크",
+          "component_type": "data",
+          "description": "에이전트의 행동을 결정하는 정보를 출력하는 네트워크",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력 연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "크리틱 네트워크",
+          "component_type": "data",
+          "description": "에이전트의 행동을 평가하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가치 평가값 출력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "완전 연결층",
+          "component_type": "data",
+          "description": "액터 네트워크와 크리틱 네트워크의 연결을 담당하는 층",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220126844/1020220126844_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220126844",
+      "diagram_type": "classDiagram",
+      "diagram_title": "강화 학습 모델 구조",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +String 주행데이터\n        +모방학습수행()\n        +강화학습수행()\n    }\n    class 액터네트워크 {\n        +String 행동결정정보\n        +출력()\n    }\n    class 크리틱네트워크 {\n        +String 가치평가값\n        +평가()\n    }\n    class 완전연결층 {\n        +연결()\n    }\n    프로세서 --> 액터네트워크 : \"학습 수행\"\n    액터네트워크 --> 크리틱네트워크 : \"출력 연결\"\n    액터네트워크 --> 완전연결층 : \"연결\"\n    크리틱네트워크 --> 프로세서 : \"가치 평가값 출력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "주행 데이터를 이용한 모방 학습 및 강화 학습을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "액터 네트워크",
+          "component_type": "data",
+          "description": "에이전트의 행동을 결정하는 정보를 출력하는 네트워크",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "출력 연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "크리틱 네트워크",
+          "component_type": "data",
+          "description": "에이전트의 행동을 평가하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "가치 평가값 출력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "완전 연결층",
+          "component_type": "data",
+          "description": "액터 네트워크와 크리틱 네트워크의 연결을 담당하는 층",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220126844/1020220126844_fig_2.mmd"
+    }
+  ]
+}

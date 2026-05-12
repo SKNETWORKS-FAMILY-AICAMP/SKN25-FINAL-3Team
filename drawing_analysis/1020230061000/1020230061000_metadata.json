@@ -1,0 +1,245 @@
+{
+  "app_num": "1020230061000",
+  "invention_type": "system",
+  "main_concept": "교사모델에서 학생모델로 지식증류를 수행하는 전이학습용 데이터 생성 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 수신부",
+      "component_type": "device",
+      "description": "원본 데이터를 수신하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "튜터 네트워크부",
+      "component_type": "device",
+      "description": "학습예제를 생성하고 교사모델과 학생모델에 지식을 전이하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "원본 데이터 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "원본확률 추출부",
+      "component_type": "device",
+      "description": "입력예제의 원본토큰 예측확률을 추출하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력예제 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "토큰 교체부",
+      "component_type": "device",
+      "description": "마스킹된 토큰을 교체하여 학습예제를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "학습예제 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "학습예제 생성부",
+      "component_type": "device",
+      "description": "손상된 토큰으로 교체한 학습예제를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "토큰 교체",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "보상 피드백부",
+      "component_type": "device",
+      "description": "교사보상과 학생보상을 피드백 받아 학습예제를 갱신하는 역할",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "학습예제 갱신",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230061000",
+      "diagram_type": "flowchart",
+      "diagram_title": "전이학습용 데이터 생성 과정",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 수신부\"]\n    200[\"튜터 네트워크부\"]\n    300[\"원본확률 추출부\"]\n    400[\"토큰 교체부\"]\n    500[\"학습예제 생성부\"]\n    600[\"보상 피드백부\"]\n    \n    100 -->|\"원본 데이터 수신\"| 200\n    100 -->|\"입력예제 전달\"| 300\n    200 -->|\"학습예제 생성\"| 400\n    400 -->|\"토큰 교체\"| 500\n    500 -->|\"학습예제 갱신\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수신부",
+          "component_type": "device",
+          "description": "원본 데이터를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "튜터 네트워크부",
+          "component_type": "device",
+          "description": "학습예제를 생성하고 교사모델과 학생모델에 지식을 전이하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "원본 데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "원본확률 추출부",
+          "component_type": "device",
+          "description": "입력예제의 원본토큰 예측확률을 추출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력예제 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 교체부",
+          "component_type": "device",
+          "description": "마스킹된 토큰을 교체하여 학습예제를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습예제 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습예제 생성부",
+          "component_type": "device",
+          "description": "손상된 토큰으로 교체한 학습예제를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "토큰 교체",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "보상 피드백부",
+          "component_type": "device",
+          "description": "교사보상과 학생보상을 피드백 받아 학습예제를 갱신하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "학습예제 갱신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230061000/1020230061000_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230061000",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전이학습용 데이터 생성 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터수신부 {\n        +원본 데이터 수신()\n    }\n    class 원본확률추출부 {\n        +입력예제 전달()\n    }\n    class 토큰교체부 {\n        +학습예제 생성()\n    }\n    class 학습예제생성부 {\n        +토큰 교체()\n    }\n    class 보상피드백부 {\n        +학습예제 갱신()\n    }\n    class 튜터네트워크부 {\n        +교사모델과 학생모델에 지식 전이()\n    }\n    \n    데이터수신부 --> 원본확률추출부 : \"입력예제 전달\"\n    데이터수신부 --> 튜터네트워크부 : \"원본 데이터 수신\"\n    튜터네트워크부 --> 토큰교체부 : \"학습예제 생성\"\n    토큰교체부 --> 학습예제생성부 : \"토큰 교체\"\n    학습예제생성부 --> 보상피드백부 : \"학습예제 갱신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수신부",
+          "component_type": "device",
+          "description": "원본 데이터를 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "튜터 네트워크부",
+          "component_type": "device",
+          "description": "학습예제를 생성하고 교사모델과 학생모델에 지식을 전이하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "원본 데이터 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "원본확률 추출부",
+          "component_type": "device",
+          "description": "입력예제의 원본토큰 예측확률을 추출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력예제 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "토큰 교체부",
+          "component_type": "device",
+          "description": "마스킹된 토큰을 교체하여 학습예제를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "학습예제 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습예제 생성부",
+          "component_type": "device",
+          "description": "손상된 토큰으로 교체한 학습예제를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "토큰 교체",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "보상 피드백부",
+          "component_type": "device",
+          "description": "교사보상과 학생보상을 피드백 받아 학습예제를 갱신하는 역할",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "학습예제 갱신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230061000/1020230061000_fig_2.mmd"
+    }
+  ]
+}

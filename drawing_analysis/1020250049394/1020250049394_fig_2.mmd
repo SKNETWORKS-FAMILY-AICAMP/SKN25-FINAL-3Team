@@ -1,0 +1,18 @@
+%% 1020250049394 - 홍채 라벨링 보조 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 디스플레이모듈 {
+        +String UI
+    }
+    class 프로세서 {
+        +control()
+        +calculateParameters()
+    }
+    class 딥러닝모델 {
+        +String parameters
+        +extractParameters()
+    }
+    디스플레이모듈 <-- 프로세서 : "제어"
+    프로세서 --> 딥러닝모델 : "파라미터 산출"
+    딥러닝모델 <-- 프로세서 : "데이터 제공"

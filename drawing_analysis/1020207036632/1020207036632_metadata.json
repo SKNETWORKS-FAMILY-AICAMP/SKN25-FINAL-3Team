@@ -1,0 +1,128 @@
+{
+  "app_num": "1020207036632",
+  "invention_type": "system",
+  "main_concept": "환경과 상호 작용하는 에이전트를 제어하기 위한 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "저장 디바이스",
+      "component_type": "device",
+      "description": "제어 신경망 시스템을 구현하는 명령을 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "컨볼루션 LSTM 신경망",
+      "component_type": "process",
+      "description": "환경 상태를 처리하여 최종 LSTM 은닉 상태 출력을 생성",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력으로 관측의 표현을 수신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "액션 선택 신경망",
+      "component_type": "process",
+      "description": "액션 선택 정책에 따라 수행할 액션을 정의",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "최종 LSTM 은닉 상태 출력을 입력으로 수신",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020207036632",
+      "diagram_type": "flowchart",
+      "diagram_title": "에이전트 제어 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"저장 디바이스\"]\n    200[\"컨볼루션 LSTM 신경망\"]\n    300[\"액션 선택 신경망\"]\n    400[\"에이전트\"]\n    500[\"환경\"]\n    \n    500 -->|\"관측의 표현을 획득\"| 200\n    200 -->|\"입력으로 관측의 표현을 수신\"| 300\n    300 -->|\"액션 선택 출력 생성\"| 400\n    400 -->|\"선택된 액션 수행\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "저장 디바이스",
+          "component_type": "device",
+          "description": "제어 신경망 시스템을 구현하는 명령을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "컨볼루션 LSTM 신경망",
+          "component_type": "process",
+          "description": "환경 상태를 처리하여 최종 LSTM 은닉 상태 출력을 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력으로 관측의 표현을 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "액션 선택 신경망",
+          "component_type": "process",
+          "description": "액션 선택 정책에 따라 수행할 액션을 정의",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "최종 LSTM 은닉 상태 출력을 입력으로 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020207036632/1020207036632_fig_1.mmd"
+    },
+    {
+      "app_num": "1020207036632",
+      "diagram_type": "classDiagram",
+      "diagram_title": "컨볼루션 LSTM 신경망 구조",
+      "mermaid_code": "classDiagram\n    class 저장디바이스 {\n        +String 명령\n        +저장()\n    }\n    class 컨볼루션LSTM신경망 {\n        +String 관측표현\n        +처리()\n    }\n    class 액션선택신경망 {\n        +String 액션\n        +선택()\n    }\n    저장디바이스 --> 컨볼루션LSTM신경망 : \"명령 전달\"\n    컨볼루션LSTM신경망 --> 액션선택신경망 : \"입력으로 관측의 표현을 수신\"\n    액션선택신경망 --> 저장디바이스 : \"최종 LSTM 은닉 상태 출력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "저장 디바이스",
+          "component_type": "device",
+          "description": "제어 신경망 시스템을 구현하는 명령을 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "컨볼루션 LSTM 신경망",
+          "component_type": "process",
+          "description": "환경 상태를 처리하여 최종 LSTM 은닉 상태 출력을 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력으로 관측의 표현을 수신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "액션 선택 신경망",
+          "component_type": "process",
+          "description": "액션 선택 정책에 따라 수행할 액션을 정의",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "최종 LSTM 은닉 상태 출력을 입력으로 수신",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020207036632/1020207036632_fig_2.mmd"
+    }
+  ]
+}

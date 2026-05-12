@@ -1,0 +1,350 @@
+{
+  "app_num": "1020180125990",
+  "invention_type": "system",
+  "main_concept": "인공지능 기반 물성예측 시스템을 통한 복합수지의 물성 예측 및 최적 조성 제안",
+  "components": [
+    {
+      "component_id": "10",
+      "name": "제1DB부",
+      "component_type": "data",
+      "description": "복합수지에 대한 소재 관련 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "100",
+      "name": "모델생성부",
+      "component_type": "process",
+      "description": "사용자의 요청에 따라 물성모델을 생성",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "정보를 기반으로",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "물성계산부",
+      "component_type": "process",
+      "description": "물성모델에 의한 예측 물성 정보를 산출",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "모델 생성 결과를 사용하여",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "예측 정보를 전달",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "조성 정보를 전달받아",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "비교 판단 결과를 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "출력부",
+      "component_type": "device",
+      "description": "예측 물성 정보 및 최적 조성 정보를 출력",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "조성 생성부",
+      "component_type": "process",
+      "description": "조성을 한정하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "물성 정보를 전달받아",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "물성 비교판단부",
+      "component_type": "process",
+      "description": "예측 물성 정보를 비교하여 최적 조성을 판단",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "산출된 정보를 기반으로",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "판단 결과를 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "20",
+      "name": "제2DB부",
+      "component_type": "data",
+      "description": "복합수지에 대한 용도 관련 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "30",
+      "name": "제3DB부",
+      "component_type": "data",
+      "description": "복합수지에 대한 환경규제 관련 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "40",
+      "name": "제4DB부",
+      "component_type": "data",
+      "description": "복합수지에 대한 가격 관련 정보를 저장",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180125990",
+      "diagram_type": "flowchart",
+      "diagram_title": "인공지능 기반 물성예측 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    A[\"사용자로부터 물성 정보 입력 요청\"]\n    B[\"제1DB부\"]\n    C[\"모델생성부\"]\n    D[\"물성계산부\"]\n    E[\"조성 생성부\"]\n    F[\"물성 비교판단부\"]\n    G[\"출력부\"]\n\n    A -->| \"정보 요청\" | B\n    B -->| \"정보를 기반으로\" | C\n    C -->| \"모델 생성 결과를 사용하여\" | D\n    D -->| \"예측 정보를 전달\" | E\n    D -->| \"조성 정보를 전달받아\" | F\n    E -->| \"물성 정보를 전달받아\" | F\n    F -->| \"산출된 정보를 기반으로\" | D\n    F -->| \"판단 결과를 전달\" | G\n    D -->| \"예측 물성 정보 및 최적 조성 정보를 출력\" | G",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "제1DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 소재 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "100",
+          "name": "모델생성부",
+          "component_type": "process",
+          "description": "사용자의 요청에 따라 물성모델을 생성",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "물성계산부",
+          "component_type": "process",
+          "description": "물성모델에 의한 예측 물성 정보를 산출",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델 생성 결과를 사용하여",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "예측 정보를 전달",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "조성 정보를 전달받아",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "비교 판단 결과를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "출력부",
+          "component_type": "device",
+          "description": "예측 물성 정보 및 최적 조성 정보를 출력",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "조성 생성부",
+          "component_type": "process",
+          "description": "조성을 한정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "물성 정보를 전달받아",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "물성 비교판단부",
+          "component_type": "process",
+          "description": "예측 물성 정보를 비교하여 최적 조성을 판단",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "산출된 정보를 기반으로",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "판단 결과를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "20",
+          "name": "제2DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 용도 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "30",
+          "name": "제3DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 환경규제 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "40",
+          "name": "제4DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 가격 관련 정보를 저장",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180125990/1020180125990_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180125990",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인공지능 기반 물성예측 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 제1DB부 {\n        +정보 저장()\n    }\n    class 모델생성부 {\n        +물성모델 생성()\n    }\n    class 물성계산부 {\n        +예측 물성 정보 산출()\n    }\n    class 출력부 {\n        +결과 출력()\n    }\n    class 조성 생성부 {\n        +조성 한정()\n    }\n    class 물성 비교판단부 {\n        +최적 조성 판단()\n    }\n    제1DB부 --> 모델생성부 : \"정보를 기반으로\"\n    모델생성부 --> 물성계산부 : \"모델 생성 결과를 사용하여\"\n    물성계산부 --> 조성 생성부 : \"조성 정보를 전달받아\"\n    물성계산부 --> 물성 비교판단부 : \"비교 판단 결과를 전달\"\n    물성계산부 --> 출력부 : \"예측 정보를 전달\"\n    물성 비교판단부 --> 출력부 : \"판단 결과를 전달\"",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "제1DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 소재 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "100",
+          "name": "모델생성부",
+          "component_type": "process",
+          "description": "사용자의 요청에 따라 물성모델을 생성",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "정보를 기반으로",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "물성계산부",
+          "component_type": "process",
+          "description": "물성모델에 의한 예측 물성 정보를 산출",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모델 생성 결과를 사용하여",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "예측 정보를 전달",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "조성 정보를 전달받아",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "비교 판단 결과를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "출력부",
+          "component_type": "device",
+          "description": "예측 물성 정보 및 최적 조성 정보를 출력",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "조성 생성부",
+          "component_type": "process",
+          "description": "조성을 한정하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "물성 정보를 전달받아",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "물성 비교판단부",
+          "component_type": "process",
+          "description": "예측 물성 정보를 비교하여 최적 조성을 판단",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "산출된 정보를 기반으로",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "판단 결과를 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "20",
+          "name": "제2DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 용도 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "30",
+          "name": "제3DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 환경규제 관련 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "40",
+          "name": "제4DB부",
+          "component_type": "data",
+          "description": "복합수지에 대한 가격 관련 정보를 저장",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180125990/1020180125990_fig_2.mmd"
+    }
+  ]
+}

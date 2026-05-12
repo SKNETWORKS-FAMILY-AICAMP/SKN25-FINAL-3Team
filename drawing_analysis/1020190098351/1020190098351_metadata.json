@@ -1,0 +1,143 @@
+{
+  "app_num": "1020190098351",
+  "invention_type": "method",
+  "main_concept": "자료해석 기반의 실시간 침수 예측 방법 및 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "비선형 자기회귀 인공신경망",
+      "component_type": "process",
+      "description": "누적강우량과 누적월류량 정보를 학습하여 월류량을 예측하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "자기조직화 지도 인공신경망",
+      "component_type": "process",
+      "description": "강우 시나리오 및 실제 강우에 대한 2차원 침수지도 데이터를 도출하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "침수 범위 예측부",
+      "component_type": "process",
+      "description": "누적월류량 및 2차원 침수지도 데이터를 기반으로 침수 범위를 예측하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "예측 데이터 제공",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "예측 데이터 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190098351",
+      "diagram_type": "flowchart",
+      "diagram_title": "침수 예측 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"비선형 자기회귀 인공신경망\"]\n    200[\"자기조직화 지도 인공신경망\"]\n    300[\"침수 범위 예측부\"]\n    400[\"사용자\"]\n    500[\"시스템 관리자\"]\n    \n    400 -->|\"요청\"| 100\n    100 -->|\"데이터 입력\"| 200\n    200 -->|\"예측 데이터 제공\"| 300\n    100 -->|\"예측 데이터 제공\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비선형 자기회귀 인공신경망",
+          "component_type": "process",
+          "description": "누적강우량과 누적월류량 정보를 학습하여 월류량을 예측하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "자기조직화 지도 인공신경망",
+          "component_type": "process",
+          "description": "강우 시나리오 및 실제 강우에 대한 2차원 침수지도 데이터를 도출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "침수 범위 예측부",
+          "component_type": "process",
+          "description": "누적월류량 및 2차원 침수지도 데이터를 기반으로 침수 범위를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예측 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "예측 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190098351/1020190098351_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190098351",
+      "diagram_type": "classDiagram",
+      "diagram_title": "침수 예측 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 비선형_자기회귀_인공신경망 {\n        +String 누적강우량\n        +String 누적월류량\n        +학습()\n    }\n    class 자기조직화_지도_인공신경망 {\n        +String 강우_시나리오\n        +String 실제_강우\n        +도출()\n    }\n    class 침수_범위_예측부 {\n        +String 누적월류량\n        +String 침수지도_데이터\n        +예측()\n    }\n    비선형_자기회귀_인공신경망 --> 자기조직화_지도_인공신경망 : \"데이터 입력\"\n    비선형_자기회귀_인공신경망 --> 침수_범위_예측부 : \"예측 데이터 제공\"\n    자기조직화_지도_인공신경망 --> 침수_범위_예측부 : \"예측 데이터 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "비선형 자기회귀 인공신경망",
+          "component_type": "process",
+          "description": "누적강우량과 누적월류량 정보를 학습하여 월류량을 예측하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "자기조직화 지도 인공신경망",
+          "component_type": "process",
+          "description": "강우 시나리오 및 실제 강우에 대한 2차원 침수지도 데이터를 도출하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "침수 범위 예측부",
+          "component_type": "process",
+          "description": "누적월류량 및 2차원 침수지도 데이터를 기반으로 침수 범위를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "예측 데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "예측 데이터 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190098351/1020190098351_fig_2.mmd"
+    }
+  ]
+}

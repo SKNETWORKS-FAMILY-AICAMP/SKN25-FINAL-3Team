@@ -1,0 +1,18 @@
+%% 1020217023623 - 비휘발성 메모리 셀 및 구성 요소
+%% 생성일: 2026-05-11
+
+classDiagram
+    class NonVolatileMemoryCell {
+        +String weightValue
+        +output()
+    }
+    class ReferenceCurrentSource {
+        +String referenceValue
+        +provideOutput()
+    }
+    class DigitalOutputBit {
+        +String bitValue
+        +generateFromWeight()
+    }
+    NonVolatileMemoryCell --> ReferenceCurrentSource : "출력을 제공"
+    DigitalOutputBit <-- NonVolatileMemoryCell : "가중치 값으로부터 생성"

@@ -1,0 +1,236 @@
+{
+  "app_num": "1020227008703",
+  "invention_type": "system",
+  "main_concept": "기계 학습 모델을 사용하여 새로운 기록을 생성하고 평가하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨팅 장치",
+      "component_type": "device",
+      "description": "프로세서 및 메모리를 포함하여 기계 학습 모델을 실행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "훈련 데이터세트",
+      "component_type": "data",
+      "description": "기계 학습 모델의 훈련에 사용되는 다수의 기록",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장 및 분석",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제1 기계 학습 모델",
+      "component_type": "process",
+      "description": "훈련 데이터세트를 분석하여 새로운 기록을 생성하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "실행",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "분석",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제2 기계 학습 모델",
+      "component_type": "process",
+      "description": "새로운 기록을 평가하고 모델을 업데이트하는 역할을 하는 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "실행",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "평가",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제3 기계 학습 모델",
+      "component_type": "process",
+      "description": "제1 기계 학습 모델에 의해 생성된 새로운 기록을 사용하여 훈련되는 모델",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "훈련",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227008703",
+      "diagram_type": "flowchart",
+      "diagram_title": "기계 학습 모델 기반 기록 생성 및 평가 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨팅 장치\"]\n    200[\"훈련 데이터세트\"]\n    300[\"제1 기계 학습 모델\"]\n    400[\"제2 기계 학습 모델\"]\n    500[\"제3 기계 학습 모델\"]\n    200 -->|\"저장 및 분석\"| 100\n    100 -->|\"실행\"| 300\n    300 -->|\"분석\"| 200\n    100 -->|\"실행\"| 400\n    300 -->|\"평가\"| 400\n    200 -->|\"훈련\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "프로세서 및 메모리를 포함하여 기계 학습 모델을 실행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "훈련 데이터세트",
+          "component_type": "data",
+          "description": "기계 학습 모델의 훈련에 사용되는 다수의 기록",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장 및 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 기계 학습 모델",
+          "component_type": "process",
+          "description": "훈련 데이터세트를 분석하여 새로운 기록을 생성하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 기계 학습 모델",
+          "component_type": "process",
+          "description": "새로운 기록을 평가하고 모델을 업데이트하는 역할을 하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "평가",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제3 기계 학습 모델",
+          "component_type": "process",
+          "description": "제1 기계 학습 모델에 의해 생성된 새로운 기록을 사용하여 훈련되는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "훈련",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227008703/1020227008703_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227008703",
+      "diagram_type": "classDiagram",
+      "diagram_title": "기계 학습 모델 구성도",
+      "mermaid_code": "classDiagram\n    class 컴퓨팅장치 {\n        +프로세서\n        +메모리\n        +실행모델()\n    }\n    class 훈련데이터세트 {\n        +기록들\n        +저장()\n        +분석()\n    }\n    class 제1기계학습모델 {\n        +새로운기록생성()\n    }\n    class 제2기계학습모델 {\n        +새로운기록평가()\n        +모델업데이트()\n    }\n    class 제3기계학습모델 {\n        +훈련()\n    }\n    컴퓨팅장치 --> 훈련데이터세트 : \"저장 및 분석\"\n    컴퓨팅장치 --> 제1기계학습모델 : \"실행\"\n    제1기계학습모델 --> 훈련데이터세트 : \"분석\"\n    컴퓨팅장치 --> 제2기계학습모델 : \"실행\"\n    제2기계학습모델 --> 제1기계학습모델 : \"평가\"\n    제3기계학습모델 --> 훈련데이터세트 : \"훈련\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨팅 장치",
+          "component_type": "device",
+          "description": "프로세서 및 메모리를 포함하여 기계 학습 모델을 실행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "훈련 데이터세트",
+          "component_type": "data",
+          "description": "기계 학습 모델의 훈련에 사용되는 다수의 기록",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장 및 분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 기계 학습 모델",
+          "component_type": "process",
+          "description": "훈련 데이터세트를 분석하여 새로운 기록을 생성하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "분석",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 기계 학습 모델",
+          "component_type": "process",
+          "description": "새로운 기록을 평가하고 모델을 업데이트하는 역할을 하는 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "실행",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "평가",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제3 기계 학습 모델",
+          "component_type": "process",
+          "description": "제1 기계 학습 모델에 의해 생성된 새로운 기록을 사용하여 훈련되는 모델",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "훈련",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227008703/1020227008703_fig_2.mmd"
+    }
+  ]
+}

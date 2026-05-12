@@ -1,0 +1,30 @@
+%% 1020190093807 - 3D EDM 생성 및 인식 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class "2D EDM 생성부" {
+        +String 영상정보
+        +generate2DEDM()
+    }
+    class "3D EDM 생성부" {
+        +String 2DEDM
+        +generate3DEDM()
+    }
+    class "관절 정보 생성부" {
+        +String 3DEDM
+        +generateJointInfo()
+    }
+    class "오류보정부" {
+        +String jointInfo
+        +correctErrors()
+    }
+    class "인식부" {
+        +String 3DEDM
+        +String correctedInfo
+        +recognize()
+    }
+    "2D EDM 생성부" --> "3D EDM 생성부" : "입력"
+    "3D EDM 생성부" --> "관절 정보 생성부" : "입력"
+    "관절 정보 생성부" --> "오류보정부" : "입력"
+    "3D EDM 생성부" --> "인식부" : "입력"
+    "오류보정부" --> "인식부" : "입력"

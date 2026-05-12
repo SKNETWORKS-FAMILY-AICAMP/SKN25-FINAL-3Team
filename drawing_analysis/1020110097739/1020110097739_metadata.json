@@ -1,0 +1,359 @@
+{
+  "app_num": "1020110097739",
+  "invention_type": "hardware",
+  "main_concept": "단말 장치에서 문서 작성 시 디스플레이 영역을 제어하는 기술",
+  "components": [
+    {
+      "component_id": "110",
+      "name": "단말 장치",
+      "component_type": "device",
+      "description": "문서 작성 어플리케이션이 실행되는 모바일 단말기",
+      "relationships": [
+        {
+          "target": "111",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "112",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "113",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "114",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "115",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "116",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "111",
+      "name": "디스플레이부",
+      "component_type": "device",
+      "description": "문서 내용과 제어창 UI를 표시하는 화면",
+      "relationships": []
+    },
+    {
+      "component_id": "112",
+      "name": "제어창 구성부",
+      "component_type": "device",
+      "description": "문서 작성 관련 제어 명령을 포함하는 UI",
+      "relationships": []
+    },
+    {
+      "component_id": "113",
+      "name": "감지부",
+      "component_type": "device",
+      "description": "터치 입력을 감지하는 부품",
+      "relationships": []
+    },
+    {
+      "component_id": "114",
+      "name": "디스플레이 제어부",
+      "component_type": "device",
+      "description": "디스플레이부의 내용을 제어하는 부품",
+      "relationships": []
+    },
+    {
+      "component_id": "115",
+      "name": "기울기 감지부",
+      "component_type": "device",
+      "description": "단말 장치의 기울기를 감지하는 부품",
+      "relationships": []
+    },
+    {
+      "component_id": "116",
+      "name": "각도 판단부",
+      "component_type": "device",
+      "description": "감지된 기울기가 특정 각도를 초과하는지 판단하는 부품",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020110097739",
+      "diagram_type": "classDiagram",
+      "diagram_title": "단말 장치 구조",
+      "mermaid_code": "classDiagram\n    class 단말장치 {\n        +문서 작성 어플리케이션 실행\n    }\n    class 디스플레이부 {\n        +문서 내용 및 제어창 UI 표시\n    }\n    class 제어창구성부 {\n        +문서 작성 관련 제어 명령 포함\n    }\n    class 감지부 {\n        +터치 입력 감지\n    }\n    class 디스플레이제어부 {\n        +디스플레이부 내용 제어\n    }\n    class 기울기감지부 {\n        +단말 장치 기울기 감지\n    }\n    class 각도판단부 {\n        +기울기 각도 판단\n    }\n    단말장치 --> 디스플레이부 : \"포함\"\n    단말장치 --> 제어창구성부 : \"포함\"\n    단말장치 --> 감지부 : \"포함\"\n    단말장치 --> 디스플레이제어부 : \"포함\"\n    단말장치 --> 기울기감지부 : \"포함\"\n    단말장치 --> 각도판단부 : \"포함\"",
+      "components": [
+        {
+          "component_id": "110",
+          "name": "단말 장치",
+          "component_type": "device",
+          "description": "문서 작성 어플리케이션이 실행되는 모바일 단말기",
+          "relationships": [
+            {
+              "target": "111",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "112",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "113",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "114",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "115",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "116",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "111",
+          "name": "디스플레이부",
+          "component_type": "device",
+          "description": "문서 내용과 제어창 UI를 표시하는 화면",
+          "relationships": []
+        },
+        {
+          "component_id": "112",
+          "name": "제어창 구성부",
+          "component_type": "device",
+          "description": "문서 작성 관련 제어 명령을 포함하는 UI",
+          "relationships": []
+        },
+        {
+          "component_id": "113",
+          "name": "감지부",
+          "component_type": "device",
+          "description": "터치 입력을 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "114",
+          "name": "디스플레이 제어부",
+          "component_type": "device",
+          "description": "디스플레이부의 내용을 제어하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "115",
+          "name": "기울기 감지부",
+          "component_type": "device",
+          "description": "단말 장치의 기울기를 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "116",
+          "name": "각도 판단부",
+          "component_type": "device",
+          "description": "감지된 기울기가 특정 각도를 초과하는지 판단하는 부품",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020110097739/1020110097739_fig_1.mmd"
+    },
+    {
+      "app_num": "1020110097739",
+      "diagram_type": "flowchart",
+      "diagram_title": "디스플레이 제어 흐름",
+      "mermaid_code": "flowchart TD\n    110[\"단말 장치\"]\n    111[\"디스플레이부\"]\n    112[\"제어창 구성부\"]\n    113[\"감지부\"]\n    114[\"디스플레이 제어부\"]\n    115[\"기울기 감지부\"]\n    116[\"각도 판단부\"]\n    \n    110 -->| \"포함\" | 111\n    110 -->| \"포함\" | 112\n    110 -->| \"포함\" | 113\n    110 -->| \"포함\" | 114\n    110 -->| \"포함\" | 115\n    110 -->| \"포함\" | 116\n    \n    113 -->| \"터치 입력 감지\" | 115\n    115 -->| \"기울기 감지\" | 116\n    116 -->| \"각도 판단\" | 114\n    114 -->| \"디스플레이 영역 구분 및 내용 출력\" | 111",
+      "components": [
+        {
+          "component_id": "110",
+          "name": "단말 장치",
+          "component_type": "device",
+          "description": "문서 작성 어플리케이션이 실행되는 모바일 단말기",
+          "relationships": [
+            {
+              "target": "111",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "112",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "113",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "114",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "115",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "116",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "111",
+          "name": "디스플레이부",
+          "component_type": "device",
+          "description": "문서 내용과 제어창 UI를 표시하는 화면",
+          "relationships": []
+        },
+        {
+          "component_id": "112",
+          "name": "제어창 구성부",
+          "component_type": "device",
+          "description": "문서 작성 관련 제어 명령을 포함하는 UI",
+          "relationships": []
+        },
+        {
+          "component_id": "113",
+          "name": "감지부",
+          "component_type": "device",
+          "description": "터치 입력을 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "114",
+          "name": "디스플레이 제어부",
+          "component_type": "device",
+          "description": "디스플레이부의 내용을 제어하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "115",
+          "name": "기울기 감지부",
+          "component_type": "device",
+          "description": "단말 장치의 기울기를 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "116",
+          "name": "각도 판단부",
+          "component_type": "device",
+          "description": "감지된 기울기가 특정 각도를 초과하는지 판단하는 부품",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020110097739/1020110097739_fig_2.mmd"
+    },
+    {
+      "app_num": "1020110097739",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상 키보드 UI 표시 흐름",
+      "mermaid_code": "flowchart TD\n    110[\"단말 장치\"]\n    111[\"디스플레이부\"]\n    112[\"제어창 구성부\"]\n    113[\"감지부\"]\n    114[\"디스플레이 제어부\"]\n    115[\"기울기 감지부\"]\n    116[\"각도 판단부\"]\n    \n    110 -->| \"포함\" | 111\n    110 -->| \"포함\" | 112\n    110 -->| \"포함\" | 113\n    110 -->| \"포함\" | 114\n    110 -->| \"포함\" | 115\n    110 -->| \"포함\" | 116\n    \n    113 -->| \"터치 입력 감지\" | 115\n    115 -->| \"기울기 감지\" | 116\n    116 -->| \"각도 판단\" | 114\n    114 -->| \"디스플레이 내용 제어\" | 111",
+      "components": [
+        {
+          "component_id": "110",
+          "name": "단말 장치",
+          "component_type": "device",
+          "description": "문서 작성 어플리케이션이 실행되는 모바일 단말기",
+          "relationships": [
+            {
+              "target": "111",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "112",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "113",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "114",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "115",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "116",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "111",
+          "name": "디스플레이부",
+          "component_type": "device",
+          "description": "문서 내용과 제어창 UI를 표시하는 화면",
+          "relationships": []
+        },
+        {
+          "component_id": "112",
+          "name": "제어창 구성부",
+          "component_type": "device",
+          "description": "문서 작성 관련 제어 명령을 포함하는 UI",
+          "relationships": []
+        },
+        {
+          "component_id": "113",
+          "name": "감지부",
+          "component_type": "device",
+          "description": "터치 입력을 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "114",
+          "name": "디스플레이 제어부",
+          "component_type": "device",
+          "description": "디스플레이부의 내용을 제어하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "115",
+          "name": "기울기 감지부",
+          "component_type": "device",
+          "description": "단말 장치의 기울기를 감지하는 부품",
+          "relationships": []
+        },
+        {
+          "component_id": "116",
+          "name": "각도 판단부",
+          "component_type": "device",
+          "description": "감지된 기울기가 특정 각도를 초과하는지 판단하는 부품",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 3",
+      "output_path": "drawing_analysis/1020110097739/1020110097739_fig_3.mmd"
+    }
+  ]
+}

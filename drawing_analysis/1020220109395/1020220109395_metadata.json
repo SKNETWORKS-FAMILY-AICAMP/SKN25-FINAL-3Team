@@ -1,0 +1,188 @@
+{
+  "app_num": "1020220109395",
+  "invention_type": "system",
+  "main_concept": "수산 식품을 분류하여 처리하기 위한 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "로봇암",
+      "component_type": "device",
+      "description": "수산 식품을 파지하기 위한 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "소정 영역을 촬영하여 원본 영상을 생성하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "원본 영상 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "분류처리부",
+      "component_type": "process",
+      "description": "원본 영상을 분석하여 객체를 분류하는 처리부",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "분류 정보 도출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "파지처리부",
+      "component_type": "process",
+      "description": "객체를 파지하기 위한 정보를 도출하는 처리부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "파지 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "학습부",
+      "component_type": "process",
+      "description": "분류 모델을 학습시키는 부서",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220109395",
+      "diagram_type": "flowchart",
+      "diagram_title": "수산 식품 분류 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"로봇암\"]\n    200[\"카메라\"]\n    300[\"분류처리부\"]\n    400[\"파지처리부\"]\n    500[\"학습부\"]\n    200 -->| \"원본 영상 생성\" | 300\n    300 -->| \"분류 정보 도출\" | 400\n    400 -->| \"파지 정보 제공\" | 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로봇암",
+          "component_type": "device",
+          "description": "수산 식품을 파지하기 위한 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "소정 영역을 촬영하여 원본 영상을 생성하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "원본 영상 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "분류처리부",
+          "component_type": "process",
+          "description": "원본 영상을 분석하여 객체를 분류하는 처리부",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "분류 정보 도출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "파지처리부",
+          "component_type": "process",
+          "description": "객체를 파지하기 위한 정보를 도출하는 처리부",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파지 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "분류 모델을 학습시키는 부서",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220109395/1020220109395_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220109395",
+      "diagram_type": "classDiagram",
+      "diagram_title": "수산 식품 분류 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 로봇암 {\n        +String 파지정보\n        +grab()\n    }\n    class 카메라 {\n        +String 원본영상\n        +capture()\n    }\n    class 분류처리부 {\n        +String 분류정보\n        +classify()\n    }\n    class 파지처리부 {\n        +String 파지정보\n        +provideGripInfo()\n    }\n    class 학습부 {\n        +String 모델\n        +train()\n    }\n    카메라 --> 분류처리부 : \"원본 영상 생성\"\n    분류처리부 --> 파지처리부 : \"분류 정보 도출\"\n    파지처리부 --> 로봇암 : \"파지 정보 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로봇암",
+          "component_type": "device",
+          "description": "수산 식품을 파지하기 위한 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "소정 영역을 촬영하여 원본 영상을 생성하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "원본 영상 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "분류처리부",
+          "component_type": "process",
+          "description": "원본 영상을 분석하여 객체를 분류하는 처리부",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "분류 정보 도출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "파지처리부",
+          "component_type": "process",
+          "description": "객체를 파지하기 위한 정보를 도출하는 처리부",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "파지 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "학습부",
+          "component_type": "process",
+          "description": "분류 모델을 학습시키는 부서",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220109395/1020220109395_fig_2.mmd"
+    }
+  ]
+}

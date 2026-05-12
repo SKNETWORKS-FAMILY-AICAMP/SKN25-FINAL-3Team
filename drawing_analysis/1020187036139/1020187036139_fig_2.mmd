@@ -1,0 +1,29 @@
+%% 1020187036139 - 전자 디바이스 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 전자디바이스 {
+        +String 음성입력
+        +controlLED()
+    }
+    class 풀컬러LED어레이 {
+        +String 상태
+        +visualizeState()
+    }
+    class 마이크로폰 {
+        +String 오디오입력
+        +collectAudio()
+    }
+    class 프로세서 {
+        +String 프로그램
+        +processAudio()
+    }
+    class 메모리 {
+        +String 데이터
+        +storeProgram()
+    }
+    전자디바이스 --> 풀컬러LED어레이 : "포함"
+    전자디바이스 --> 마이크로폰 : "연결"
+    프로세서 --> 메모리 : "저장"
+    프로세서 --> 풀컬러LED어레이 : "제어"
+    프로세서 --> 전자디바이스 : "구성"

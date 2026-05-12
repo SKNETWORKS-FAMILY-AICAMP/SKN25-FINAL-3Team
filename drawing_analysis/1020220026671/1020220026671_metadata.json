@@ -1,0 +1,206 @@
+{
+  "app_num": "1020220026671",
+  "invention_type": "method",
+  "main_concept": "비디오 요약을 위한 키프레임 선택 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프레임 수준 영상특징 추출 모듈",
+      "component_type": "process",
+      "description": "입력 비디오에서 프레임 레벨 시각적 특징을 추출하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "주의 기반 비디오 요약 네트워크 모듈",
+      "component_type": "process",
+      "description": "주의 가중치를 계산하고 키프레임 선택을 위한 중요도 점수를 예측하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "평가 모듈",
+      "component_type": "process",
+      "description": "키프레임 간의 시각적 유사성 거리와 시간적 거리에 따른 보상 함수를 구하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "정책 경사 알고리즘 기반 학습 모듈",
+      "component_type": "process",
+      "description": "예측된 중요도 점수에 따라 키프레임 선택을 위한 학습을 수행하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "비디오 요약 생성 모듈",
+      "component_type": "process",
+      "description": "선택된 키프레임을 기반으로 비디오 요약을 생성하는 역할",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220026671",
+      "diagram_type": "flowchart",
+      "diagram_title": "비디오 요약 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"프레임 수준 영상특징 추출 모듈\"]\n    200[\"주의 기반 비디오 요약 네트워크 모듈\"]\n    300[\"평가 모듈\"]\n    400[\"정책 경사 알고리즘 기반 학습 모듈\"]\n    500[\"비디오 요약 생성 모듈\"]\n    100 -->|\"입력\"| 200\n    200 -->|\"출력\"| 300\n    300 -->|\"입력\"| 400\n    400 -->|\"입력\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프레임 수준 영상특징 추출 모듈",
+          "component_type": "process",
+          "description": "입력 비디오에서 프레임 레벨 시각적 특징을 추출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "주의 기반 비디오 요약 네트워크 모듈",
+          "component_type": "process",
+          "description": "주의 가중치를 계산하고 키프레임 선택을 위한 중요도 점수를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "평가 모듈",
+          "component_type": "process",
+          "description": "키프레임 간의 시각적 유사성 거리와 시간적 거리에 따른 보상 함수를 구하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정책 경사 알고리즘 기반 학습 모듈",
+          "component_type": "process",
+          "description": "예측된 중요도 점수에 따라 키프레임 선택을 위한 학습을 수행하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "비디오 요약 생성 모듈",
+          "component_type": "process",
+          "description": "선택된 키프레임을 기반으로 비디오 요약을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220026671/1020220026671_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220026671",
+      "diagram_type": "classDiagram",
+      "diagram_title": "비디오 요약 네트워크 구성도",
+      "mermaid_code": "classDiagram\n    class 프레임_수준_영상특징_추출_모듈 {\n        +extractFeatures()\n    }\n    class 주의_기반_비디오_요약_네트워크_모듈 {\n        +predictImportanceScores()\n    }\n    class 평가_모듈 {\n        +calculateRewardFunction()\n    }\n    class 정책_경사_알고리즘_기반_학습_모듈 {\n        +performLearning()\n    }\n    class 비디오_요약_생성_모듈 {\n        +generateSummary()\n    }\n    프레임_수준_영상특징_추출_모듈 --> 주의_기반_비디오_요약_네트워크_모듈 : \"입력\"\n    주의_기반_비디오_요약_네트워크_모듈 --> 평가_모듈 : \"출력\"\n    평가_모듈 --> 정책_경사_알고리즘_기반_학습_모듈 : \"입력\"\n    정책_경사_알고리즘_기반_학습_모듈 --> 비디오_요약_생성_모듈 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프레임 수준 영상특징 추출 모듈",
+          "component_type": "process",
+          "description": "입력 비디오에서 프레임 레벨 시각적 특징을 추출하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "주의 기반 비디오 요약 네트워크 모듈",
+          "component_type": "process",
+          "description": "주의 가중치를 계산하고 키프레임 선택을 위한 중요도 점수를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "평가 모듈",
+          "component_type": "process",
+          "description": "키프레임 간의 시각적 유사성 거리와 시간적 거리에 따른 보상 함수를 구하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "정책 경사 알고리즘 기반 학습 모듈",
+          "component_type": "process",
+          "description": "예측된 중요도 점수에 따라 키프레임 선택을 위한 학습을 수행하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "비디오 요약 생성 모듈",
+          "component_type": "process",
+          "description": "선택된 키프레임을 기반으로 비디오 요약을 생성하는 역할",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220026671/1020220026671_fig_2.mmd"
+    }
+  ]
+}

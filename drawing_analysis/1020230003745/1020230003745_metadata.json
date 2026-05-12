@@ -1,0 +1,245 @@
+{
+  "app_num": "1020230003745",
+  "invention_type": "method",
+  "main_concept": "특정 중고 서적 거래에 대한 인세 지급 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "actor",
+      "description": "중고 서적 거래 정보를 처리하고 인세를 지급하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 사용자 단말",
+      "component_type": "actor",
+      "description": "중고 서적을 판매하고자 하는 사용자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "판매 희망 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 사용자 단말",
+      "component_type": "actor",
+      "description": "중고 서적을 구매하고자 하는 사용자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "구매 희망 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "저자 단말",
+      "component_type": "actor",
+      "description": "저자 정보를 등록하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저자 정보 입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "인센티브 DB",
+      "component_type": "data",
+      "description": "사용자에게 지급되는 인센티브 정보를 저장",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "인센티브 정보 저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "인세 DB",
+      "component_type": "data",
+      "description": "저자에게 지급되는 인세 정보를 저장",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "인세 정보 저장",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230003745",
+      "diagram_type": "flowchart",
+      "diagram_title": "중고 서적 거래 인세 지급 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"제1 사용자 단말\"]\n    300[\"제2 사용자 단말\"]\n    400[\"저자 단말\"]\n    500[\"인센티브 DB\"]\n    600[\"인세 DB\"]\n    \n    200 -->| \"판매 희망 정보 전송\" | 100\n    300 -->| \"구매 희망 정보 전송\" | 100\n    400 -->| \"저자 정보 입력\" | 100\n    100 -->| \"인세 정보 저장\" | 600\n    100 -->| \"인센티브 정보 저장\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "중고 서적 거래 정보를 처리하고 인세를 지급하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 사용자 단말",
+          "component_type": "actor",
+          "description": "중고 서적을 판매하고자 하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매 희망 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 사용자 단말",
+          "component_type": "actor",
+          "description": "중고 서적을 구매하고자 하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구매 희망 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "저자 단말",
+          "component_type": "actor",
+          "description": "저자 정보를 등록하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저자 정보 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "인센티브 DB",
+          "component_type": "data",
+          "description": "사용자에게 지급되는 인센티브 정보를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인센티브 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "인세 DB",
+          "component_type": "data",
+          "description": "저자에게 지급되는 인세 정보를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인세 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230003745/1020230003745_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230003745",
+      "diagram_type": "flowchart",
+      "diagram_title": "커뮤니티 운영 및 인센티브 지급 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"제1 사용자 단말\"]\n    300[\"제2 사용자 단말\"]\n    400[\"저자 단말\"]\n    500[\"인센티브 DB\"]\n    600[\"인세 DB\"]\n    \n    200 -->| \"판매 희망 정보 전송\" | 100\n    300 -->| \"구매 희망 정보 전송\" | 100\n    400 -->| \"저자 정보 입력\" | 100\n    100 -->| \"인센티브 정보 저장\" | 500\n    100 -->| \"인세 정보 저장\" | 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "중고 서적 거래 정보를 처리하고 인세를 지급하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 사용자 단말",
+          "component_type": "actor",
+          "description": "중고 서적을 판매하고자 하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매 희망 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 사용자 단말",
+          "component_type": "actor",
+          "description": "중고 서적을 구매하고자 하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "구매 희망 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "저자 단말",
+          "component_type": "actor",
+          "description": "저자 정보를 등록하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저자 정보 입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "인센티브 DB",
+          "component_type": "data",
+          "description": "사용자에게 지급되는 인센티브 정보를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인센티브 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "인세 DB",
+          "component_type": "data",
+          "description": "저자에게 지급되는 인세 정보를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "인세 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230003745/1020230003745_fig_2.mmd"
+    }
+  ]
+}

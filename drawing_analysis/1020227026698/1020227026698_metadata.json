@@ -1,0 +1,182 @@
+{
+  "app_num": "1020227026698",
+  "invention_type": "method",
+  "main_concept": "오브젝트 검출 모델을 생성하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "중간 검출 모델",
+      "component_type": "data",
+      "description": "예비 트레이닝을 완료한 모델로, 배치 정규화 레이어의 스케일링 계수를 포함",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "스케일링 계수 선별 모듈",
+      "component_type": "process",
+      "description": "프루닝할 계수를 선별하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프루닝할 채널 선별 유닛",
+      "component_type": "process",
+      "description": "프루닝할 채널을 선별하고 채널 프루닝을 수행하는 유닛",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "사용",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연계",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "오브젝트 검출 모델",
+      "component_type": "data",
+      "description": "프루닝을 통해 생성된 최종 오브젝트 검출 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "생성",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227026698",
+      "diagram_type": "flowchart",
+      "diagram_title": "오브젝트 검출 모델 생성 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"중간 검출 모델\"]\n    200[\"스케일링 계수 선별 모듈\"]\n    300[\"프루닝할 채널 선별 유닛\"]\n    400[\"오브젝트 검출 모델\"]\n    100 -->|\"사용\"| 200\n    100 -->|\"사용\"| 300\n    200 -->|\"연계\"| 300\n    300 -->|\"생성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "중간 검출 모델",
+          "component_type": "data",
+          "description": "예비 트레이닝을 완료한 모델로, 배치 정규화 레이어의 스케일링 계수를 포함",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "스케일링 계수 선별 모듈",
+          "component_type": "process",
+          "description": "프루닝할 계수를 선별하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프루닝할 채널 선별 유닛",
+          "component_type": "process",
+          "description": "프루닝할 채널을 선별하고 채널 프루닝을 수행하는 유닛",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오브젝트 검출 모델",
+          "component_type": "data",
+          "description": "프루닝을 통해 생성된 최종 오브젝트 검출 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227026698/1020227026698_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227026698",
+      "diagram_type": "classDiagram",
+      "diagram_title": "모델 생성 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 중간검출모델 {\n        +String scalingCoefficients\n    }\n    class 스케일링계수선별모듈 {\n        +selectCoefficients()\n    }\n    class 프루닝할채널선별유닛 {\n        +selectChannels()\n        +performPruning()\n    }\n    class 오브젝트검출모델 {\n        +String finalModel\n    }\n    중간검출모델 --> 스케일링계수선별모듈 : \"사용\"\n    중간검출모델 --> 프루닝할채널선별유닛 : \"사용\"\n    스케일링계수선별모듈 --> 프루닝할채널선별유닛 : \"연계\"\n    프루닝할채널선별유닛 --> 오브젝트검출모델 : \"생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "중간 검출 모델",
+          "component_type": "data",
+          "description": "예비 트레이닝을 완료한 모델로, 배치 정규화 레이어의 스케일링 계수를 포함",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "스케일링 계수 선별 모듈",
+          "component_type": "process",
+          "description": "프루닝할 계수를 선별하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프루닝할 채널 선별 유닛",
+          "component_type": "process",
+          "description": "프루닝할 채널을 선별하고 채널 프루닝을 수행하는 유닛",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "사용",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연계",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오브젝트 검출 모델",
+          "component_type": "data",
+          "description": "프루닝을 통해 생성된 최종 오브젝트 검출 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227026698/1020227026698_fig_2.mmd"
+    }
+  ]
+}

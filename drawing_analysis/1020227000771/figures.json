@@ -1,0 +1,18 @@
+{
+  "figures": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "예시적인 실시형태에 따른 시스템의 개략도이다",
+      "purpose": "시스템의 구조와 구성 요소를 보여준다",
+      "source_text": "도 1은 예시적인 실시형태에 따른 시스템의 개략도이다"
+    },
+    {
+      "fig_number": "도 11a",
+      "diagram_type": "flowchart",
+      "title": "예시적인 실시형태의 시스템 및 방법을 도시한다",
+      "purpose": "시스템의 작동 방법을 설명한다",
+      "source_text": "도 11a는 예시적인 실시형태의 시스템 및 방법을 도시한다"
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "app_num": "1020157028995",
+  "invention_type": "method",
+  "main_concept": "회선 속도 상호 연결 처리 방법을 통한 입력 데이터의 효율적인 처리",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력 통신 경로",
+      "component_type": "data",
+      "description": "초기 입력 데이터를 수신하는 경로",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 스테이지 상호 연결 병렬 프로세서",
+      "component_type": "device",
+      "description": "초기 입력들의 사전 분류 및 클러스터링을 수행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력 데이터 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "중간 입력 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제2 스테이지 상호 연결 병렬 프로세서",
+      "component_type": "device",
+      "description": "중간 입력들의 최종 결합 및 분할을 수행",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "중간 입력 수신",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "결과 출력 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "결과 출력",
+      "component_type": "data",
+      "description": "최종적으로 생성된 출력 데이터",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "결과 전송",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020157028995",
+      "diagram_type": "flowchart",
+      "diagram_title": "회선 속도 상호 연결 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력 통신 경로\"]\n    200[\"제1 스테이지 상호 연결 병렬 프로세서\"]\n    300[\"제2 스테이지 상호 연결 병렬 프로세서\"]\n    400[\"결과 출력\"]\n    100 -->|\"입력 데이터 수신\"| 200\n    200 -->|\"중간 입력 생성\"| 300\n    300 -->|\"결과 출력 생성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 통신 경로",
+          "component_type": "data",
+          "description": "초기 입력 데이터를 수신하는 경로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 스테이지 상호 연결 병렬 프로세서",
+          "component_type": "device",
+          "description": "초기 입력들의 사전 분류 및 클러스터링을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "중간 입력 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 스테이지 상호 연결 병렬 프로세서",
+          "component_type": "device",
+          "description": "중간 입력들의 최종 결합 및 분할을 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "중간 입력 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 출력 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "결과 출력",
+          "component_type": "data",
+          "description": "최종적으로 생성된 출력 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020157028995/1020157028995_fig_1.mmd"
+    },
+    {
+      "app_num": "1020157028995",
+      "diagram_type": "classDiagram",
+      "diagram_title": "상호 연결 프로세서 구성도",
+      "mermaid_code": "classDiagram\n    class 입력통신경로 {\n        +String 초기입력데이터\n    }\n    class 제1스테이지상호연결병렬프로세서 {\n        +사전분류()\n        +클러스터링()\n    }\n    class 제2스테이지상호연결병렬프로세서 {\n        +결합()\n        +분할()\n    }\n    class 결과출력 {\n        +String 최종출력데이터\n    }\n    입력통신경로 --> 제1스테이지상호연결병렬프로세서 : \"입력 데이터 수신\"\n    제1스테이지상호연결병렬프로세서 --> 제2스테이지상호연결병렬프로세서 : \"중간 입력 생성\"\n    제2스테이지상호연결병렬프로세서 --> 결과출력 : \"결과 출력 생성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 통신 경로",
+          "component_type": "data",
+          "description": "초기 입력 데이터를 수신하는 경로",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 스테이지 상호 연결 병렬 프로세서",
+          "component_type": "device",
+          "description": "초기 입력들의 사전 분류 및 클러스터링을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력 데이터 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "중간 입력 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제2 스테이지 상호 연결 병렬 프로세서",
+          "component_type": "device",
+          "description": "중간 입력들의 최종 결합 및 분할을 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "중간 입력 수신",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "결과 출력 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "결과 출력",
+          "component_type": "data",
+          "description": "최종적으로 생성된 출력 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "결과 전송",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020157028995/1020157028995_fig_2.mmd"
+    }
+  ]
+}

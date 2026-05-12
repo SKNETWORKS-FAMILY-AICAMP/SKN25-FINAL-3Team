@@ -1,0 +1,197 @@
+{
+  "app_num": "1020240198833",
+  "invention_type": "system",
+  "main_concept": "실시간 데이터 분석을 이용한 BOM 구성요소의 동적 최적화 및 관리 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "생산 공정 데이터 수집부",
+      "component_type": "process",
+      "description": "자재 및 부품 입출고 이력, 생산 공정 이력 등을 수집",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "생산 공정 관리부",
+      "component_type": "process",
+      "description": "AI 기반의 예측, 시뮬레이션 및 최적화를 통해 생산 공정을 관리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "설비 고장 예측부",
+      "component_type": "process",
+      "description": "실시간 데이터를 이용하여 설비 고장을 예측",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수집",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "예측 결과 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "모니터링부",
+      "component_type": "process",
+      "description": "생산 공정을 실시간으로 모니터링하고 이상 징후를 탐지",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "모니터링 데이터 제공",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "예측 결과 활용",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240198833",
+      "diagram_type": "flowchart",
+      "diagram_title": "생산 공정 데이터 수집 및 관리 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"생산 공정 데이터 수집부\"]\n    200[\"생산 공정 관리부\"]\n    300[\"설비 고장 예측부\"]\n    400[\"모니터링부\"]\n    100 -->|\"데이터 수집\"| 200\n    100 -->|\"데이터 수집\"| 300\n    200 -->|\"모니터링 데이터 제공\"| 400\n    300 -->|\"예측 결과 제공\"| 200\n    400 -->|\"예측 결과 활용\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "생산 공정 데이터 수집부",
+          "component_type": "process",
+          "description": "자재 및 부품 입출고 이력, 생산 공정 이력 등을 수집",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "생산 공정 관리부",
+          "component_type": "process",
+          "description": "AI 기반의 예측, 시뮬레이션 및 최적화를 통해 생산 공정을 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "설비 고장 예측부",
+          "component_type": "process",
+          "description": "실시간 데이터를 이용하여 설비 고장을 예측",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "예측 결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모니터링부",
+          "component_type": "process",
+          "description": "생산 공정을 실시간으로 모니터링하고 이상 징후를 탐지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모니터링 데이터 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "예측 결과 활용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240198833/1020240198833_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240198833",
+      "diagram_type": "classDiagram",
+      "diagram_title": "생산 공정 관리부 구성도",
+      "mermaid_code": "classDiagram\n    class 생산공정데이터수집부 {\n        +String 자재부품입출고이력\n        +String 생산공정이력\n        +수집()\n    }\n    class 생산공정관리부 {\n        +String AI예측모델\n        +관리()\n    }\n    class 설비고장예측부 {\n        +String 실시간데이터\n        +예측()\n    }\n    class 모니터링부 {\n        +String 이상징후데이터\n        +모니터링()\n    }\n    생산공정데이터수집부 --> 생산공정관리부 : \"데이터 수집\"\n    생산공정데이터수집부 --> 설비고장예측부 : \"데이터 수집\"\n    생산공정관리부 --> 설비고장예측부 : \"예측 결과 제공\"\n    생산공정관리부 --> 모니터링부 : \"모니터링 데이터 제공\"\n    설비고장예측부 --> 모니터링부 : \"예측 결과 활용\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "생산 공정 데이터 수집부",
+          "component_type": "process",
+          "description": "자재 및 부품 입출고 이력, 생산 공정 이력 등을 수집",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "생산 공정 관리부",
+          "component_type": "process",
+          "description": "AI 기반의 예측, 시뮬레이션 및 최적화를 통해 생산 공정을 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "설비 고장 예측부",
+          "component_type": "process",
+          "description": "실시간 데이터를 이용하여 설비 고장을 예측",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "예측 결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "모니터링부",
+          "component_type": "process",
+          "description": "생산 공정을 실시간으로 모니터링하고 이상 징후를 탐지",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모니터링 데이터 제공",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "예측 결과 활용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240198833/1020240198833_fig_2.mmd"
+    }
+  ]
+}

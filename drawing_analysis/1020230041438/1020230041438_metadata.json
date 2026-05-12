@@ -1,0 +1,290 @@
+{
+  "app_num": "1020230041438",
+  "invention_type": "system",
+  "main_concept": "디지털 트윈 환경을 구성하기 위한 가상센서 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "엣지 게이트웨이",
+      "component_type": "device",
+      "description": "실물 센서에서 수집된 데이터를 처리하고 가상센서를 운용하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "데이터 데이터베이스",
+      "component_type": "data",
+      "description": "엣지 게이트웨이로부터 수집된 데이터를 저장하는 데이터베이스",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "저장된 데이터 제공",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "가상센서 학습모델 모듈",
+      "component_type": "process",
+      "description": "데이터를 학습하여 가상센서를 생성하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "데이터 입력",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "가상센서 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "가상센서",
+      "component_type": "device",
+      "description": "학습된 모델을 기반으로 운용되는 가상센서",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "모델 기반 운용",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "생성신호 오차 분석 모듈",
+      "component_type": "process",
+      "description": "가상센서의 오차를 분석하고 보정하는 모듈",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "오차 분석",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "데이터 비교",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "데이터 및 오차 모니터링 시각화 엔진",
+      "component_type": "process",
+      "description": "오차 모니터링 결과를 시각화하고 업데이트 요청을 처리하는 엔진",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "모니터링 결과 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "100",
+          "label": "업데이트 요청",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230041438",
+      "diagram_type": "classDiagram",
+      "diagram_title": "가상센서 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 엣지게이트웨이 {\n        +String 데이터처리\n        +운용()\n    }\n    class 데이터데이터베이스 {\n        +String 저장된데이터\n        +제공()\n    }\n    class 가상센서학습모델모듈 {\n        +String 학습데이터\n        +생성()\n    }\n    class 가상센서 {\n        +String 모델기반운용\n        +운용()\n    }\n    class 생성신호오차분석모듈 {\n        +String 오차분석결과\n        +보정()\n    }\n    class 데이터및오차모니터링시각화엔진 {\n        +String 모니터링결과\n        +업데이트요청()\n    }\n    엣지게이트웨이 --> 데이터데이터베이스 : \"저장된 데이터 제공\"\n    데이터데이터베이스 --> 가상센서학습모델모듈 : \"데이터 입력\"\n    가상센서학습모델모듈 --> 가상센서 : \"가상센서 생성\"\n    가상센서 --> 가상센서학습모델모듈 : \"모델 기반 운용\"\n    가상센서 --> 생성신호오차분석모듈 : \"오차 분석\"\n    데이터데이터베이스 --> 생성신호오차분석모듈 : \"데이터 비교\"\n    생성신호오차분석모듈 --> 데이터및오차모니터링시각화엔진 : \"모니터링 결과 수신\"\n    데이터및오차모니터링시각화엔진 --> 엣지게이트웨이 : \"업데이트 요청\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "엣지 게이트웨이",
+          "component_type": "device",
+          "description": "실물 센서에서 수집된 데이터를 처리하고 가상센서를 운용하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 데이터베이스",
+          "component_type": "data",
+          "description": "엣지 게이트웨이로부터 수집된 데이터를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상센서 학습모델 모듈",
+          "component_type": "process",
+          "description": "데이터를 학습하여 가상센서를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "가상센서 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "가상센서",
+          "component_type": "device",
+          "description": "학습된 모델을 기반으로 운용되는 가상센서",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델 기반 운용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "생성신호 오차 분석 모듈",
+          "component_type": "process",
+          "description": "가상센서의 오차를 분석하고 보정하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "오차 분석",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 비교",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "데이터 및 오차 모니터링 시각화 엔진",
+          "component_type": "process",
+          "description": "오차 모니터링 결과를 시각화하고 업데이트 요청을 처리하는 엔진",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "모니터링 결과 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "업데이트 요청",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230041438/1020230041438_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230041438",
+      "diagram_type": "flowchart",
+      "diagram_title": "가상센서 모델 학습 및 운용 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"엣지 게이트웨이\"]\n    200[\"데이터 데이터베이스\"]\n    300[\"가상센서 학습모델 모듈\"]\n    400[\"가상센서\"]\n    500[\"생성신호 오차 분석 모듈\"]\n    600[\"데이터 및 오차 모니터링 시각화 엔진\"]\n    \n    100 -->|\"저장된 데이터 제공\"| 200\n    200 -->|\"데이터 입력\"| 300\n    300 -->|\"가상센서 생성\"| 400\n    400 -->|\"모델 기반 운용\"| 300\n    400 -->|\"오차 분석\"| 500\n    500 -->|\"데이터 비교\"| 200\n    500 -->|\"모니터링 결과 수신\"| 600\n    600 -->|\"업데이트 요청\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "엣지 게이트웨이",
+          "component_type": "device",
+          "description": "실물 센서에서 수집된 데이터를 처리하고 가상센서를 운용하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "데이터 데이터베이스",
+          "component_type": "data",
+          "description": "엣지 게이트웨이로부터 수집된 데이터를 저장하는 데이터베이스",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "저장된 데이터 제공",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "가상센서 학습모델 모듈",
+          "component_type": "process",
+          "description": "데이터를 학습하여 가상센서를 생성하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "데이터 입력",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "가상센서 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "가상센서",
+          "component_type": "device",
+          "description": "학습된 모델을 기반으로 운용되는 가상센서",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "모델 기반 운용",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "생성신호 오차 분석 모듈",
+          "component_type": "process",
+          "description": "가상센서의 오차를 분석하고 보정하는 모듈",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "오차 분석",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "데이터 비교",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "데이터 및 오차 모니터링 시각화 엔진",
+          "component_type": "process",
+          "description": "오차 모니터링 결과를 시각화하고 업데이트 요청을 처리하는 엔진",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "모니터링 결과 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "업데이트 요청",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230041438/1020230041438_fig_2.mmd"
+    }
+  ]
+}

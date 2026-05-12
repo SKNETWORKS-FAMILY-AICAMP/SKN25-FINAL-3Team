@@ -1,0 +1,161 @@
+{
+  "app_num": "1020210158508",
+  "invention_type": "system",
+  "main_concept": "게이트볼 관련 헬스케어 서비스 및 구장 예약 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "게이트볼 관리 서버 시스템",
+      "component_type": "device",
+      "description": "게이트볼 관련 서비스 및 커뮤니티를 관리하는 서버 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "제어",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "게이트볼 서비스 App",
+      "component_type": "device",
+      "description": "스마트폰 및 태블릿 PC에서 게이트볼 서비스를 제공하는 애플리케이션",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "챗봇 서버",
+      "component_type": "data",
+      "description": "구매자와 상담원 간의 질의 응답을 처리하는 자연어 처리 기반의 챗봇",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210158508",
+      "diagram_type": "classDiagram",
+      "diagram_title": "게이트볼 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 게이트볼관리서버시스템 {\n        +String 서비스\n        +manageCommunity()\n    }\n    class 게이트볼서비스App {\n        +String 사용자인터페이스\n        +requestService()\n    }\n    class 챗봇서버 {\n        +String 질의응답\n        +processQuery()\n    }\n    게이트볼서비스App -->|연결| 게이트볼관리서버시스템 : 요청 처리\n    챗봇서버 -->|연결| 게이트볼관리서버시스템 : 질의 응답 수행",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "게이트볼 관리 서버 시스템",
+          "component_type": "device",
+          "description": "게이트볼 관련 서비스 및 커뮤니티를 관리하는 서버 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "게이트볼 서비스 App",
+          "component_type": "device",
+          "description": "스마트폰 및 태블릿 PC에서 게이트볼 서비스를 제공하는 애플리케이션",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "챗봇 서버",
+          "component_type": "data",
+          "description": "구매자와 상담원 간의 질의 응답을 처리하는 자연어 처리 기반의 챗봇",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210158508/1020210158508_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210158508",
+      "diagram_type": "flowchart",
+      "diagram_title": "게이트볼 서비스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"게이트볼 관리 서버 시스템\"]\n    200[\"게이트볼 서비스 App\"]\n    300[\"챗봇 서버\"]\n    400[\"사용자\"]\n    \n    400 -->|\"게이트볼 서비스 요청\"| 200\n    200 -->|\"연결\"| 100\n    100 -->|\"제어\"| 300\n    300 -->|\"질의 응답 수행\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "게이트볼 관리 서버 시스템",
+          "component_type": "device",
+          "description": "게이트볼 관련 서비스 및 커뮤니티를 관리하는 서버 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "제어",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "게이트볼 서비스 App",
+          "component_type": "device",
+          "description": "스마트폰 및 태블릿 PC에서 게이트볼 서비스를 제공하는 애플리케이션",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "챗봇 서버",
+          "component_type": "data",
+          "description": "구매자와 상담원 간의 질의 응답을 처리하는 자연어 처리 기반의 챗봇",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210158508/1020210158508_fig_2.mmd"
+    }
+  ]
+}

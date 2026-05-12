@@ -1,0 +1,128 @@
+{
+  "app_num": "1020200132040",
+  "invention_type": "method",
+  "main_concept": "임베디드 소프트웨어 컴포넌트 설계 방법론",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "시스템 분석부",
+      "component_type": "process",
+      "description": "임베디드 소프트웨어에 대해 시스템 분석을 수행하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "피처 분석부",
+      "component_type": "process",
+      "description": "펑션 블록 피처의 액션과 인터럽트를 분석하고 모델을 정의하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "분석 결과 기반",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "펑션 블록 구성부",
+      "component_type": "process",
+      "description": "펑션 블록 피처 모델을 기반으로 컴포넌트 구조를 설계하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "모델 기반",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200132040",
+      "diagram_type": "flowchart",
+      "diagram_title": "임베디드 소프트웨어 컴포넌트 설계 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"시스템 분석부\"]\n    200[\"피처 분석부\"]\n    300[\"펑션 블록 구성부\"]\n    400[\"설계 완료\"]\n    100 -->|\"분석 결과 기반\"| 200\n    200 -->|\"모델 기반\"| 300\n    300 -->|\"설계 결과\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시스템 분석부",
+          "component_type": "process",
+          "description": "임베디드 소프트웨어에 대해 시스템 분석을 수행하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "피처 분석부",
+          "component_type": "process",
+          "description": "펑션 블록 피처의 액션과 인터럽트를 분석하고 모델을 정의하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "분석 결과 기반",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "펑션 블록 구성부",
+          "component_type": "process",
+          "description": "펑션 블록 피처 모델을 기반으로 컴포넌트 구조를 설계하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모델 기반",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200132040/1020200132040_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200132040",
+      "diagram_type": "classDiagram",
+      "diagram_title": "임베디드 소프트웨어 컴포넌트 구조",
+      "mermaid_code": "classDiagram\n    class 시스템분석부 {\n        +분석 수행()\n    }\n    class 피처분석부 {\n        +액션 및 인터럽트 분석()\n        +모델 정의()\n    }\n    class 펑션블록구성부 {\n        +구성 설계()\n    }\n    시스템분석부 --> 피처분석부 : \"분석 결과 기반\"\n    피처분석부 --> 펑션블록구성부 : \"모델 기반\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "시스템 분석부",
+          "component_type": "process",
+          "description": "임베디드 소프트웨어에 대해 시스템 분석을 수행하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "피처 분석부",
+          "component_type": "process",
+          "description": "펑션 블록 피처의 액션과 인터럽트를 분석하고 모델을 정의하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "분석 결과 기반",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "펑션 블록 구성부",
+          "component_type": "process",
+          "description": "펑션 블록 피처 모델을 기반으로 컴포넌트 구조를 설계하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "모델 기반",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020200132040/1020200132040_fig_2.mmd"
+    }
+  ]
+}

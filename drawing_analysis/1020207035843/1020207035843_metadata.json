@@ -1,0 +1,167 @@
+{
+  "app_num": "1020207035843",
+  "invention_type": "method",
+  "main_concept": "순환 인공 신경 네트워크 내 활동을 특성화하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 프로세싱 장치",
+      "component_type": "device",
+      "description": "인공 신경 네트워크 내 활동을 특성화하는 방법을 수행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "인공 신경 네트워크",
+      "component_type": "actor",
+      "description": "신호 전송 활동을 수행하는 네트워크",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "활동을 특성화하는 방법을 수행",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "시간 윈도우",
+      "component_type": "data",
+      "description": "신호 전송 활동을 분석하기 위한 시간 구간",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "신호 전송 활동을 한정",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "소집단 패턴",
+      "component_type": "data",
+      "description": "신호 전송 활동의 특정 패턴",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "신호 전송 활동의 특성을 나타냄",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020207035843",
+      "diagram_type": "flowchart",
+      "diagram_title": "신경 네트워크 활동 특성화 방법",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 프로세싱 장치\"]\n    200[\"인공 신경 네트워크\"]\n    300[\"시간 윈도우\"]\n    400[\"소집단 패턴\"]\n    \n    300 -->|\"신호 전송 활동을 한정\"| 200\n    200 -->|\"활동을 특성화하는 방법을 수행\"| 100\n    200 -->|\"신호 전송 활동의 특성을 나타냄\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 프로세싱 장치",
+          "component_type": "device",
+          "description": "인공 신경 네트워크 내 활동을 특성화하는 방법을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공 신경 네트워크",
+          "component_type": "actor",
+          "description": "신호 전송 활동을 수행하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "활동을 특성화하는 방법을 수행",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "시간 윈도우",
+          "component_type": "data",
+          "description": "신호 전송 활동을 분석하기 위한 시간 구간",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신호 전송 활동을 한정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "소집단 패턴",
+          "component_type": "data",
+          "description": "신호 전송 활동의 특정 패턴",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신호 전송 활동의 특성을 나타냄",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020207035843/1020207035843_fig_1.mmd"
+    },
+    {
+      "app_num": "1020207035843",
+      "diagram_type": "flowchart",
+      "diagram_title": "시간 윈도우 및 소집단 패턴 식별",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 프로세싱 장치\"]\n    200[\"인공 신경 네트워크\"]\n    300[\"시간 윈도우\"]\n    400[\"소집단 패턴\"]\n    \n    300 -->|\"신호 전송 활동을 한정\"| 200\n    200 -->|\"활동을 특성화하는 방법을 수행\"| 100\n    200 -->|\"신호 전송 활동의 특성을 나타냄\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 프로세싱 장치",
+          "component_type": "device",
+          "description": "인공 신경 네트워크 내 활동을 특성화하는 방법을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공 신경 네트워크",
+          "component_type": "actor",
+          "description": "신호 전송 활동을 수행하는 네트워크",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "활동을 특성화하는 방법을 수행",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "시간 윈도우",
+          "component_type": "data",
+          "description": "신호 전송 활동을 분석하기 위한 시간 구간",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신호 전송 활동을 한정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "소집단 패턴",
+          "component_type": "data",
+          "description": "신호 전송 활동의 특정 패턴",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "신호 전송 활동의 특성을 나타냄",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020207035843/1020207035843_fig_2.mmd"
+    }
+  ]
+}

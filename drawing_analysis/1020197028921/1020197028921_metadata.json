@@ -1,0 +1,161 @@
+{
+  "app_num": "1020197028921",
+  "invention_type": "method",
+  "main_concept": "자동으로 라벨링된 이미지를 사용한 차량 내비게이션 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전자 프로세서",
+      "component_type": "device",
+      "description": "차량의 내비게이션을 위한 데이터 처리 및 이미지 라벨링 기능 수행",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "이미지 캡처",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "지도 로딩",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "카메라",
+      "component_type": "device",
+      "description": "도로의 이미지를 캡처하여 전자 프로세서에 전달",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 전송",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "지도",
+      "component_type": "data",
+      "description": "차량 내비게이션을 위한 피처 정보를 포함하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "로딩",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197028921",
+      "diagram_type": "flowchart",
+      "diagram_title": "자동 라벨링된 이미지 내비게이션 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"전자 프로세서\"]\n    200[\"카메라\"]\n    300[\"지도\"]\n    400[\"이미지 캡처\"]\n    500[\"지도 로딩\"]\n    600[\"피처 검출\"]\n    700[\"피처 정렬\"]\n    800[\"라벨링된 이미지 생성\"]\n    900[\"내비게이션 보조\"]\n\n    200 -->| \"데이터 전송\" | 100\n    100 -->| \"이미지 캡처\" | 400\n    100 -->| \"로딩\" | 300\n    300 -->| \"지도 로딩\" | 500\n    400 -->| \"피처 검출\" | 600\n    600 -->| \"피처 정렬\" | 700\n    700 -->| \"라벨링된 이미지 생성\" | 800\n    800 -->| \"내비게이션 보조\" | 900",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 프로세서",
+          "component_type": "device",
+          "description": "차량의 내비게이션을 위한 데이터 처리 및 이미지 라벨링 기능 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "이미지 캡처",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "지도 로딩",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "도로의 이미지를 캡처하여 전자 프로세서에 전달",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "지도",
+          "component_type": "data",
+          "description": "차량 내비게이션을 위한 피처 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "로딩",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197028921/1020197028921_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197028921",
+      "diagram_type": "classDiagram",
+      "diagram_title": "내비게이션 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 전자프로세서 {\n        +String 데이터처리\n        +String 이미지라벨링\n    }\n    class 카메라 {\n        +String 이미지캡처\n        +String 데이터전송\n    }\n    class 지도 {\n        +String 피처정보\n        +String 로딩\n    }\n    전자프로세서 --> 카메라 : \"이미지 캡처\"\n    전자프로세서 --> 지도 : \"지도 로딩\"\n    카메라 --> 전자프로세서 : \"데이터 전송\"\n    지도 --> 전자프로세서 : \"로딩\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전자 프로세서",
+          "component_type": "device",
+          "description": "차량의 내비게이션을 위한 데이터 처리 및 이미지 라벨링 기능 수행",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "이미지 캡처",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "지도 로딩",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "카메라",
+          "component_type": "device",
+          "description": "도로의 이미지를 캡처하여 전자 프로세서에 전달",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 전송",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "지도",
+          "component_type": "data",
+          "description": "차량 내비게이션을 위한 피처 정보를 포함하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "로딩",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020197028921/1020197028921_fig_2.mmd"
+    }
+  ]
+}

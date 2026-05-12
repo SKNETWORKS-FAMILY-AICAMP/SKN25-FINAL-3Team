@@ -1,0 +1,167 @@
+{
+  "app_num": "1020197037891",
+  "invention_type": "method",
+  "main_concept": "인공지능 프로세서에 적용되는 데이터 처리 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "오프라인 실행 파일",
+      "component_type": "data",
+      "description": "요구 사항을 충족하는 실행 결과를 포함하는 파일",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "인공지능 프로세서",
+      "component_type": "device",
+      "description": "데이터 처리 방법을 실행하는 하드웨어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "획득 모듈",
+      "component_type": "process",
+      "description": "오프라인 실행 파일을 획득하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "송신 모듈",
+      "component_type": "process",
+      "description": "요구 정보를 송신하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020197037891",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인공지능 프로세서 아키텍처",
+      "mermaid_code": "classDiagram\n    class OfflineExecutableFile {\n        +String requirements\n    }\n    class AIProcessor {\n        +processData()\n    }\n    class AcquisitionModule {\n        +getExecutableFile()\n    }\n    class TransmissionModule {\n        +sendInformation()\n    }\n    AIProcessor --> OfflineExecutableFile : \"생성\"\n    AIProcessor --> AcquisitionModule : \"포함\"\n    AIProcessor --> TransmissionModule : \"포함\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "오프라인 실행 파일",
+          "component_type": "data",
+          "description": "요구 사항을 충족하는 실행 결과를 포함하는 파일",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공지능 프로세서",
+          "component_type": "device",
+          "description": "데이터 처리 방법을 실행하는 하드웨어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "획득 모듈",
+          "component_type": "process",
+          "description": "오프라인 실행 파일을 획득하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "송신 모듈",
+          "component_type": "process",
+          "description": "요구 정보를 송신하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020197037891/1020197037891_fig_1.mmd"
+    },
+    {
+      "app_num": "1020197037891",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 처리 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"오프라인 실행 파일\"]\n    200[\"인공지능 프로세서\"]\n    300[\"획득 모듈\"]\n    400[\"송신 모듈\"]\n    300 -->|\"생성\"| 100\n    200 -->|\"포함\"| 300\n    200 -->|\"포함\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "오프라인 실행 파일",
+          "component_type": "data",
+          "description": "요구 사항을 충족하는 실행 결과를 포함하는 파일",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "인공지능 프로세서",
+          "component_type": "device",
+          "description": "데이터 처리 방법을 실행하는 하드웨어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "획득 모듈",
+          "component_type": "process",
+          "description": "오프라인 실행 파일을 획득하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "송신 모듈",
+          "component_type": "process",
+          "description": "요구 정보를 송신하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020197037891/1020197037891_fig_5.mmd"
+    }
+  ]
+}

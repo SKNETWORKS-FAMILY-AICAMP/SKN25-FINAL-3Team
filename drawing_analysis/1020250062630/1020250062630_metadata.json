@@ -1,0 +1,341 @@
+{
+  "app_num": "1020250062630",
+  "invention_type": "system",
+  "main_concept": "비대면 중고차 수출용 원스톱 상담 AI 처리 플랫폼 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "차량정보관리모듈",
+      "component_type": "process",
+      "description": "중고차 데이터를 수집하고 관리하는 모듈",
+      "relationships": [
+        {
+          "target": "110",
+          "label": "포함",
+          "direction": "->"
+        },
+        {
+          "target": "120",
+          "label": "포함",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "110",
+      "name": "데이터수집부",
+      "component_type": "process",
+      "description": "중고차 데이터를 수집하고 크롤링하는 부서",
+      "relationships": [
+        {
+          "target": "101",
+          "label": "저장",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "데이터품질관리부",
+      "component_type": "process",
+      "description": "수집된 중고차 데이터의 품질을 관리하고 평가하는 부서",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "바이어매칭모듈",
+      "component_type": "process",
+      "description": "바이어 정보를 분석하여 맞춤형 차량을 추천하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "AI상담관리모듈",
+      "component_type": "process",
+      "description": "바이어의 질문에 대한 답변을 제공하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "무역지원통합모듈",
+      "component_type": "process",
+      "description": "바이어의 신용등급을 분석하고 거래를 지원하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "대시보드모듈",
+      "component_type": "process",
+      "description": "실시간 수요 분석 정보를 제공하고 맞춤형 제안서를 생성하는 모듈",
+      "relationships": []
+    },
+    {
+      "component_id": "101",
+      "name": "중고차데이터베이스",
+      "component_type": "data",
+      "description": "수집된 중고차 데이터를 저장하는 데이터베이스",
+      "relationships": []
+    },
+    {
+      "component_id": "2",
+      "name": "외부서버",
+      "component_type": "actor",
+      "description": "중고차 데이터를 제공하는 외부 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "3",
+      "name": "바이어단말기",
+      "component_type": "actor",
+      "description": "바이어가 정보를 입력하고 차량을 추천받는 단말기",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 입력",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "질문 입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250062630",
+      "diagram_type": "classDiagram",
+      "diagram_title": "차량수출상담서버 구성도",
+      "mermaid_code": "classDiagram\n    class 차량정보관리모듈 {\n        +중고차 데이터 수집 및 관리\n    }\n    class 데이터수집부 {\n        +중고차 데이터 수집 및 크롤링\n    }\n    class 데이터품질관리부 {\n        +수집된 데이터 품질 관리 및 평가\n    }\n    class 바이어매칭모듈 {\n        +바이어 정보 분석 및 맞춤형 차량 추천\n    }\n    class AI상담관리모듈 {\n        +바이어 질문에 대한 답변 제공\n    }\n    class 무역지원통합모듈 {\n        +바이어 신용등급 분석 및 거래 지원\n    }\n    class 대시보드모듈 {\n        +실시간 수요 분석 정보 제공 및 제안서 생성\n    }\n    class 중고차데이터베이스 {\n        +수집된 중고차 데이터 저장\n    }\n    class 외부서버 {\n        +중고차 데이터 제공\n    }\n    class 바이어단말기 {\n        +정보 입력 및 차량 추천\n    }\n    외부서버 --> 차량정보관리모듈 : \"데이터 제공\"\n    차량정보관리모듈 --> 데이터수집부 : \"포함\"\n    차량정보관리모듈 --> 데이터품질관리부 : \"포함\"\n    바이어단말기 --> 바이어매칭모듈 : \"정보 입력\"\n    바이어단말기 --> AI상담관리모듈 : \"질문 입력\"\n    데이터수집부 --> 중고차데이터베이스 : \"저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "차량정보관리모듈",
+          "component_type": "process",
+          "description": "중고차 데이터를 수집하고 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "110",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "120",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "데이터수집부",
+          "component_type": "process",
+          "description": "중고차 데이터를 수집하고 크롤링하는 부서",
+          "relationships": [
+            {
+              "target": "101",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "데이터품질관리부",
+          "component_type": "process",
+          "description": "수집된 중고차 데이터의 품질을 관리하고 평가하는 부서",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "바이어매칭모듈",
+          "component_type": "process",
+          "description": "바이어 정보를 분석하여 맞춤형 차량을 추천하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "AI상담관리모듈",
+          "component_type": "process",
+          "description": "바이어의 질문에 대한 답변을 제공하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "무역지원통합모듈",
+          "component_type": "process",
+          "description": "바이어의 신용등급을 분석하고 거래를 지원하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "대시보드모듈",
+          "component_type": "process",
+          "description": "실시간 수요 분석 정보를 제공하고 맞춤형 제안서를 생성하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "101",
+          "name": "중고차데이터베이스",
+          "component_type": "data",
+          "description": "수집된 중고차 데이터를 저장하는 데이터베이스",
+          "relationships": []
+        },
+        {
+          "component_id": "2",
+          "name": "외부서버",
+          "component_type": "actor",
+          "description": "중고차 데이터를 제공하는 외부 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "3",
+          "name": "바이어단말기",
+          "component_type": "actor",
+          "description": "바이어가 정보를 입력하고 차량을 추천받는 단말기",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "질문 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250062630/1020250062630_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250062630",
+      "diagram_type": "flowchart",
+      "diagram_title": "데이터 수집 및 분석 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"차량정보관리모듈\"]\n    110[\"데이터수집부\"]\n    120[\"데이터품질관리부\"]\n    200[\"바이어매칭모듈\"]\n    300[\"AI상담관리모듈\"]\n    400[\"무역지원통합모듈\"]\n    500[\"대시보드모듈\"]\n    101[\"중고차데이터베이스\"]\n    2[\"외부서버\"]\n    3[\"바이어단말기\"]\n\n    2 -->| \"데이터 제공\" | 100\n    100 -->| \"포함\" | 110\n    100 -->| \"포함\" | 120\n    110 -->| \"저장\" | 101\n    3 -->| \"정보 입력\" | 200\n    3 -->| \"질문 입력\" | 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "차량정보관리모듈",
+          "component_type": "process",
+          "description": "중고차 데이터를 수집하고 관리하는 모듈",
+          "relationships": [
+            {
+              "target": "110",
+              "label": "포함",
+              "direction": "->"
+            },
+            {
+              "target": "120",
+              "label": "포함",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "110",
+          "name": "데이터수집부",
+          "component_type": "process",
+          "description": "중고차 데이터를 수집하고 크롤링하는 부서",
+          "relationships": [
+            {
+              "target": "101",
+              "label": "저장",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "데이터품질관리부",
+          "component_type": "process",
+          "description": "수집된 중고차 데이터의 품질을 관리하고 평가하는 부서",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "바이어매칭모듈",
+          "component_type": "process",
+          "description": "바이어 정보를 분석하여 맞춤형 차량을 추천하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "AI상담관리모듈",
+          "component_type": "process",
+          "description": "바이어의 질문에 대한 답변을 제공하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "무역지원통합모듈",
+          "component_type": "process",
+          "description": "바이어의 신용등급을 분석하고 거래를 지원하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "대시보드모듈",
+          "component_type": "process",
+          "description": "실시간 수요 분석 정보를 제공하고 맞춤형 제안서를 생성하는 모듈",
+          "relationships": []
+        },
+        {
+          "component_id": "101",
+          "name": "중고차데이터베이스",
+          "component_type": "data",
+          "description": "수집된 중고차 데이터를 저장하는 데이터베이스",
+          "relationships": []
+        },
+        {
+          "component_id": "2",
+          "name": "외부서버",
+          "component_type": "actor",
+          "description": "중고차 데이터를 제공하는 외부 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "3",
+          "name": "바이어단말기",
+          "component_type": "actor",
+          "description": "바이어가 정보를 입력하고 차량을 추천받는 단말기",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 입력",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "질문 입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250062630/1020250062630_fig_2.mmd"
+    }
+  ]
+}

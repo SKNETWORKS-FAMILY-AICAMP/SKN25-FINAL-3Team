@@ -1,0 +1,143 @@
+{
+  "app_num": "1020227027088",
+  "invention_type": "method",
+  "main_concept": "모바일 장치의 모션 신호를 이용하여 사용자의 구별적인 특징을 추출하고 인증하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "모바일 장치",
+      "component_type": "device",
+      "description": "모션 센서를 통해 사용자 모션 신호를 캡처하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "모션 신호를 처리하고 특징을 추출하는 역할을 하는 컴퓨터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "모바일 장치에서 모션 신호를 수신",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "세그먼트 변환 및 특징 추출 수행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "기계 학습 시스템",
+      "component_type": "process",
+      "description": "세그먼트 및 변형된 세그먼트로부터 특징을 추출하고 분류하는 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "프로세서로부터 입력을 받음",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227027088",
+      "diagram_type": "flowchart",
+      "diagram_title": "모바일 장치 사용자 인증 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"모바일 장치\"]\n    200[\"프로세서\"]\n    300[\"기계 학습 시스템\"]\n    400[\"사용자의 구별적인 특징 추출 및 인증\"]\n    \n    100 -->|\"모바일 장치에서 모션 신호를 수신\"| 200\n    200 -->|\"세그먼트 변환 및 특징 추출 수행\"| 300\n    300 -->|\"인증 결과\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "모바일 장치",
+          "component_type": "device",
+          "description": "모션 센서를 통해 사용자 모션 신호를 캡처하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "모션 신호를 처리하고 특징을 추출하는 역할을 하는 컴퓨터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모바일 장치에서 모션 신호를 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "세그먼트 변환 및 특징 추출 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계 학습 시스템",
+          "component_type": "process",
+          "description": "세그먼트 및 변형된 세그먼트로부터 특징을 추출하고 분류하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "프로세서로부터 입력을 받음",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227027088/1020227027088_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227027088",
+      "diagram_type": "classDiagram",
+      "diagram_title": "모바일 장치 구성 요소 다이어그램",
+      "mermaid_code": "classDiagram\n    class 모바일장치 {\n        +String 모션신호\n        +captureMotion()\n    }\n    class 프로세서 {\n        +String 처리된신호\n        +extractFeatures()\n    }\n    class 기계학습시스템 {\n        +String 특징\n        +classify()\n    }\n    모바일장치 --> 프로세서 : \"모바일 장치에서 모션 신호를 수신\"\n    프로세서 --> 기계학습시스템 : \"세그먼트 변환 및 특징 추출 수행\"\n    기계학습시스템 <-- 프로세서 : \"프로세서로부터 입력을 받음\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "모바일 장치",
+          "component_type": "device",
+          "description": "모션 센서를 통해 사용자 모션 신호를 캡처하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "모션 신호를 처리하고 특징을 추출하는 역할을 하는 컴퓨터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모바일 장치에서 모션 신호를 수신",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "세그먼트 변환 및 특징 추출 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기계 학습 시스템",
+          "component_type": "process",
+          "description": "세그먼트 및 변형된 세그먼트로부터 특징을 추출하고 분류하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "프로세서로부터 입력을 받음",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227027088/1020227027088_fig_2.mmd"
+    }
+  ]
+}

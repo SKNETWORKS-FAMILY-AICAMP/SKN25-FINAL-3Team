@@ -1,0 +1,214 @@
+{
+  "invention_type": "method",
+  "main_concept": "전문 상담 미디어 등록 처리 방법",
+  "technical_problem": "전문 상담 미디어를 보다 편리하게 작성 및 등록할 수 있는 방법의 필요성",
+  "solution_summary": "사용자 단말과 통신하며, 음성 합성 처리될 목소리를 학습하여 저장하는 운영서버를 통해 전문 상담 미디어 등록을 처리하는 방법",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "flowchart",
+      "title": "본 발명의 실시 방법에 따른 전문 상담 미디어를 등록하는 시스템 구성을 도시한 도면이다",
+      "purpose": "본 발명의 실시 방법에 따른 전문 상담 미디어를 등록하는 시스템 구성을 도시한 도면이다",
+      "source_text": "도 1은 본 발명의 실시 방법에 따른 전문 상담 미디어를 등록하는 시스템 구성을 도시한 도면이다"
+    },
+    {
+      "fig_number": "도 2",
+      "diagram_type": "flowchart",
+      "title": "본 발명의 실시 방법에 따라 하나 이상의 슬라이드를 포함하는 전문 상담 미디어 등록을 요청하는 과정",
+      "purpose": "본 발명의 실시 방법에 따라 하나 이상의 슬라이드를 포함하는 전문 상담 미디어 등록을 요청하는 과정",
+      "source_text": "도 2는 본 발명의 실시 방법에 따라 하나 이상의 슬라이드를 포함하는 전문 상담 미디어 등록을 요청하는 과정"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "100",
+      "name": "운영서버",
+      "component_type": "device",
+      "description": "전문 상담 미디어 등록을 처리하는 서버",
+      "source_text": "100 : 운영서버",
+      "relationships": []
+    },
+    {
+      "component_id": "130",
+      "name": "사용자 단말",
+      "component_type": "device",
+      "description": "전문 상담 미디어 등록 요청을 하는 단말",
+      "source_text": "130 : 사용자 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "통신",
+          "direction": "->",
+          "source_text": "사용자 단말과 통신하며"
+        }
+      ]
+    },
+    {
+      "component_id": "110",
+      "name": "대본 입력부",
+      "component_type": "module",
+      "description": "대본을 입력받는 모듈",
+      "source_text": "110 : 대본 입력부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->",
+          "source_text": "대본 입력부는 운영서버와 연결되어 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "115",
+      "name": "이미지 선택부",
+      "component_type": "module",
+      "description": "이미지 또는 영상을 선택하는 모듈",
+      "source_text": "115 : 이미지 선택부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->",
+          "source_text": "이미지 선택부는 운영서버와 연결되어 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "음성 합성부",
+      "component_type": "module",
+      "description": "입력된 대본을 음성 합성 처리하는 모듈",
+      "source_text": "120 : 음성 합성부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->",
+          "source_text": "음성 합성부는 운영서버와 연결되어 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "125",
+      "name": "출력 처리부",
+      "component_type": "module",
+      "description": "음성 합성 처리된 결과를 출력하는 모듈",
+      "source_text": "125 : 출력 처리부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->",
+          "source_text": "출력 처리부는 운영서버와 연결되어 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "105",
+      "name": "등록 확인부",
+      "component_type": "module",
+      "description": "등록 요청을 확인하는 모듈",
+      "source_text": "105 : 등록 확인부",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->",
+          "source_text": "등록 확인부는 운영서버와 연결되어 있다."
+        }
+      ]
+    },
+    {
+      "component_id": "10",
+      "name": "2530883",
+      "component_type": "module",
+      "description": "2530883",
+      "source_text": "10-2530883",
+      "relationships": []
+    },
+    {
+      "component_id": "12",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "12 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "13",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "13 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "14",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "14 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "15",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "15 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "16",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "16 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "17",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "17 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "전문 상담 미디어 등록 요청 확인",
+      "description": "사용자 단말로부터 전문 상담 미디어 등록 요청을 확인하는 단계",
+      "source_text": "전문 상담 미디어의 등록 요청을 확인하는 제1 단계"
+    },
+    {
+      "step_id": "S200",
+      "name": "대본 입력",
+      "description": "슬라이드에 대한 대본을 입력받는 단계",
+      "source_text": "음성 출력될 하나 이상의 문장을 포함하는 대본을 문장 단위로 입력받는 제2 단계"
+    },
+    {
+      "step_id": "S300",
+      "name": "이미지 또는 영상 선택",
+      "description": "슬라이드의 배경으로 사용할 이미지 또는 영상을 선택하는 단계",
+      "source_text": "하나 이상의 이미지 또는 영상을 선택하거나 입력받는 제3 단계"
+    },
+    {
+      "step_id": "S400",
+      "name": "음성 합성 처리",
+      "description": "입력된 대본을 음성 합성 처리하는 단계",
+      "source_text": "입력된 대본을 상기 제n 슬라이드와 매칭되도록 음성 합성 처리하는 제4 단계"
+    },
+    {
+      "step_id": "S500",
+      "name": "음성 출력 처리",
+      "description": "슬라이드의 플레이 시 매칭된 음성을 출력하는 단계",
+      "source_text": "제n 슬라이드의 플레이 시 매칭된 음성이 출력되도록 처리하는 제5 단계"
+    }
+  ],
+  "key_actors": [
+    "사용자",
+    "운영서버"
+  ]
+}

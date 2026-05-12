@@ -1,0 +1,32 @@
+%% 1020200142527 - 본 개시의 예시적 실시 예에 따른 컴퓨팅 시스템의 동작 방법을 설명하는 도면이다
+%% 도 4
+%% deterministic renderer v3
+%% style: patent_office
+%% quality: 85 / grade: B
+%% auto_repaired: True / rounds: 1
+%% 생성일: 2026-05-11
+
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Noto Sans KR, Arial', 'primaryColor': '#ffffff', 'primaryBorderColor': '#111111', 'lineColor': '#111111', 'textColor': '#111111'}}}%%
+flowchart TD
+    classDef device fill:#ffffff,stroke:#111111,stroke-width:1.4px,color:#111111;
+    classDef module fill:#ffffff,stroke:#111111,stroke-width:1.4px,color:#111111;
+    classDef process fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    classDef data fill:#ffffff,stroke:#111111,stroke-width:1.2px,stroke-dasharray: 4 3,color:#111111;
+    classDef database fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    classDef actor fill:#ffffff,stroke:#111111,stroke-width:1.2px,color:#111111;
+    S401["S401 이미지 파일 요청"]
+    S402["S402 이미지 파일 다운로드"]
+    S403["S403 컨테이너 생성"]
+    S404["S404 메타 데이터 제공"]
+    S405["S405 이미지 파일 저장"]
+
+    S401 -->|"다음 단계"| S402
+    S402 -->|"다음 단계"| S403
+    S403 -->|"다음 단계"| S404
+    S404 -->|"다음 단계"| S405
+
+    class S401 process;
+    class S402 process;
+    class S403 process;
+    class S404 process;
+    class S405 process;

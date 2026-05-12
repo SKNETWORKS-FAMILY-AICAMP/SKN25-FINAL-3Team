@@ -1,0 +1,239 @@
+{
+  "app_num": "1020250034744",
+  "invention_type": "hybrid",
+  "main_concept": "실시간으로 오류를 보정하는 하이브리드 양자계산시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제 1 큐비트레지스터",
+      "component_type": "device",
+      "description": "제 1 방식으로 구현된 큐비트를 포함하는 레지스터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "큐비트변환기",
+      "component_type": "device",
+      "description": "제 1 큐비트를 제 2 방식의 큐비트로 변환하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제 2 큐비트레지스터",
+      "component_type": "device",
+      "description": "제 2 방식으로 구현된 큐비트를 포함하는 레지스터",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "보정정보획득장치",
+      "component_type": "device",
+      "description": "환경정보에 기초하여 오류를 보정하기 위한 정보를 획득하는 장치",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "600",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "큐비트오류 보정장치",
+      "component_type": "device",
+      "description": "보정정보에 기초하여 큐비트 값을 보정하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "600",
+      "name": "측정센서",
+      "component_type": "device",
+      "description": "환경정보를 측정하는 센서",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250034744",
+      "diagram_type": "flowchart",
+      "diagram_title": "하이브리드 양자계산시스템 구성도",
+      "mermaid_code": "flowchart TD\n    100[\"제 1 큐비트레지스터\"]\n    200[\"큐비트변환기\"]\n    300[\"제 2 큐비트레지스터\"]\n    400[\"보정정보획득장치\"]\n    500[\"큐비트오류 보정장치\"]\n    600[\"측정센서\"]\n    \n    100 -->|\"연결\"| 200\n    200 -->|\"연결\"| 300\n    200 -->|\"연결\"| 400\n    400 -->|\"연결\"| 500\n    400 -->|\"연결\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제 1 큐비트레지스터",
+          "component_type": "device",
+          "description": "제 1 방식으로 구현된 큐비트를 포함하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "큐비트변환기",
+          "component_type": "device",
+          "description": "제 1 큐비트를 제 2 방식의 큐비트로 변환하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제 2 큐비트레지스터",
+          "component_type": "device",
+          "description": "제 2 방식으로 구현된 큐비트를 포함하는 레지스터",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "보정정보획득장치",
+          "component_type": "device",
+          "description": "환경정보에 기초하여 오류를 보정하기 위한 정보를 획득하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "큐비트오류 보정장치",
+          "component_type": "device",
+          "description": "보정정보에 기초하여 큐비트 값을 보정하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "측정센서",
+          "component_type": "device",
+          "description": "환경정보를 측정하는 센서",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250034744/1020250034744_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250034744",
+      "diagram_type": "flowchart",
+      "diagram_title": "오류 보정 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"제 1 큐비트레지스터\"]\n    200[\"큐비트변환기\"]\n    300[\"제 2 큐비트레지스터\"]\n    400[\"보정정보획득장치\"]\n    500[\"큐비트오류 보정장치\"]\n    600[\"측정센서\"]\n    \n    100 -->|\"연결\"| 200\n    200 -->|\"연결\"| 300\n    200 -->|\"연결\"| 400\n    400 -->|\"연결\"| 500\n    400 -->|\"연결\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제 1 큐비트레지스터",
+          "component_type": "device",
+          "description": "제 1 방식으로 구현된 큐비트를 포함하는 레지스터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "큐비트변환기",
+          "component_type": "device",
+          "description": "제 1 큐비트를 제 2 방식의 큐비트로 변환하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제 2 큐비트레지스터",
+          "component_type": "device",
+          "description": "제 2 방식으로 구현된 큐비트를 포함하는 레지스터",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "보정정보획득장치",
+          "component_type": "device",
+          "description": "환경정보에 기초하여 오류를 보정하기 위한 정보를 획득하는 장치",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "600",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "큐비트오류 보정장치",
+          "component_type": "device",
+          "description": "보정정보에 기초하여 큐비트 값을 보정하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "600",
+          "name": "측정센서",
+          "component_type": "device",
+          "description": "환경정보를 측정하는 센서",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250034744/1020250034744_fig_2.mmd"
+    }
+  ]
+}

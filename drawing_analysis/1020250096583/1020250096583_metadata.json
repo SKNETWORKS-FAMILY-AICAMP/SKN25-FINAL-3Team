@@ -1,0 +1,89 @@
+{
+  "app_num": "1020250096583",
+  "invention_type": "method",
+  "main_concept": "비디오 영상을 통한 행동 인식 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터처리부",
+      "component_type": "device",
+      "description": "비디오 영상으로부터 관절 좌표 및 위치 정보를 생성하고 입력 벡터를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력 벡터를 생성하여 인식부에 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "인식부",
+      "component_type": "device",
+      "description": "입력 벡터를 통해 행동을 인식하는 역할",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250096583",
+      "diagram_type": "flowchart",
+      "diagram_title": "행동 인식 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터처리부\"]\n    200[\"인식부\"]\n    300[\"비디오 영상 입력\"]\n    400[\"관절 좌표 및 위치 정보 생성\"]\n    500[\"차분 정보 생성\"]\n    600[\"입력 벡터 생성\"]\n    700[\"행동 인식\"]\n    \n    300 --> 400\n    400 --> 500\n    500 --> 600\n    600 -->|\"입력 벡터를 생성하여 인식부에 전달\"| 200\n    200 --> 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터처리부",
+          "component_type": "device",
+          "description": "비디오 영상으로부터 관절 좌표 및 위치 정보를 생성하고 입력 벡터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력 벡터를 생성하여 인식부에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "인식부",
+          "component_type": "device",
+          "description": "입력 벡터를 통해 행동을 인식하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250096583/1020250096583_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250096583",
+      "diagram_type": "classDiagram",
+      "diagram_title": "행동 인식 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터처리부 {\n        +String 비디오영상\n        +generateJointCoordinates()\n        +generateInputVector()\n    }\n    class 인식부 {\n        +String 입력벡터\n        +recognizeAction()\n    }\n    데이터처리부 --> 인식부 : \"입력 벡터를 생성하여 인식부에 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터처리부",
+          "component_type": "device",
+          "description": "비디오 영상으로부터 관절 좌표 및 위치 정보를 생성하고 입력 벡터를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력 벡터를 생성하여 인식부에 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "인식부",
+          "component_type": "device",
+          "description": "입력 벡터를 통해 행동을 인식하는 역할",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250096583/1020250096583_fig_2.mmd"
+    }
+  ]
+}

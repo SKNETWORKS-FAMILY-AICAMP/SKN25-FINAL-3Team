@@ -1,0 +1,30 @@
+%% 1020200019152 - 무인 상점 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 무인상점장치 {
+        +String 사용자정보
+        +processIdentification()
+        +processPayment()
+    }
+    class 서버 {
+        +String 결제정보
+        +managePayment()
+    }
+    class 사용자식별부 {
+        +identifyUser()
+    }
+    class 카메라부 {
+        +detectUserBehavior()
+    }
+    class 결제처리부 {
+        +processTransaction()
+    }
+    class 디스플레이부 {
+        +showPriceInfo()
+    }
+    무인상점장치 --> 서버 : "제어"
+    무인상점장치 --> 사용자식별부 : "구성"
+    무인상점장치 --> 카메라부 : "구성"
+    무인상점장치 --> 결제처리부 : "구성"
+    무인상점장치 --> 디스플레이부 : "구성"

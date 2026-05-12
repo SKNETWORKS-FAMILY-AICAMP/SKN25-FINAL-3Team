@@ -1,0 +1,221 @@
+{
+  "app_num": "1020180167336",
+  "invention_type": "hardware",
+  "main_concept": "폴더블 전자 장치의 구조 및 열 확산 메커니즘",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "플렉서블 디스플레이",
+      "component_type": "device",
+      "description": "폴더블 전자 장치의 화면을 구성하는 유연한 디스플레이",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "힌지 어셈블리",
+      "component_type": "device",
+      "description": "디스플레이의 접힘 및 펼침을 가능하게 하는 구조",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "지지",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "열 확산 부재",
+      "component_type": "device",
+      "description": "전자 부품에서 발생하는 열을 분산시키는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "열 전도",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "위치",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제1 브래킷",
+      "component_type": "device",
+      "description": "제1 힌지 프레임을 고정하는 구조",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "고정",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제2 브래킷",
+      "component_type": "device",
+      "description": "제2 힌지 프레임을 고정하는 구조",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "고정",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180167336",
+      "diagram_type": "classDiagram",
+      "diagram_title": "폴더블 전자 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 플렉서블디스플레이 {\n        +String 화면구성\n    }\n    class 힌지어셈블리 {\n        +String 접힘기능\n    }\n    class 열확산부재 {\n        +String 열분산기능\n    }\n    class 제1브래킷 {\n        +String 고정기능\n    }\n    class 제2브래킷 {\n        +String 고정기능\n    }\n    플렉서블디스플레이 --> 힌지어셈블리 : \"지지\"\n    플렉서블디스플레이 --> 열확산부재 : \"열 전도\"\n    힌지어셈블리 --> 제1브래킷 : \"고정\"\n    힌지어셈블리 --> 제2브래킷 : \"고정\"\n    열확산부재 --> 힌지어셈블리 : \"위치\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플렉서블 디스플레이",
+          "component_type": "device",
+          "description": "폴더블 전자 장치의 화면을 구성하는 유연한 디스플레이",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "힌지 어셈블리",
+          "component_type": "device",
+          "description": "디스플레이의 접힘 및 펼침을 가능하게 하는 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "열 확산 부재",
+          "component_type": "device",
+          "description": "전자 부품에서 발생하는 열을 분산시키는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "열 전도",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "위치",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 브래킷",
+          "component_type": "device",
+          "description": "제1 힌지 프레임을 고정하는 구조",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "고정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 브래킷",
+          "component_type": "device",
+          "description": "제2 힌지 프레임을 고정하는 구조",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "고정",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180167336/1020180167336_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180167336",
+      "diagram_type": "flowchart",
+      "diagram_title": "열 확산 과정 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"플렉서블 디스플레이\"]\n    200[\"힌지 어셈블리\"]\n    300[\"열 확산 부재\"]\n    400[\"제1 브래킷\"]\n    500[\"제2 브래킷\"]\n    \n    100 -->|\"지지\"| 200\n    200 -->|\"고정\"| 400\n    200 -->|\"고정\"| 500\n    300 -->|\"열 전도\"| 100\n    300 -->|\"위치\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "플렉서블 디스플레이",
+          "component_type": "device",
+          "description": "폴더블 전자 장치의 화면을 구성하는 유연한 디스플레이",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "힌지 어셈블리",
+          "component_type": "device",
+          "description": "디스플레이의 접힘 및 펼침을 가능하게 하는 구조",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "지지",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "열 확산 부재",
+          "component_type": "device",
+          "description": "전자 부품에서 발생하는 열을 분산시키는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "열 전도",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "위치",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 브래킷",
+          "component_type": "device",
+          "description": "제1 힌지 프레임을 고정하는 구조",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "고정",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 브래킷",
+          "component_type": "device",
+          "description": "제2 힌지 프레임을 고정하는 구조",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "고정",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180167336/1020180167336_fig_2.mmd"
+    }
+  ]
+}

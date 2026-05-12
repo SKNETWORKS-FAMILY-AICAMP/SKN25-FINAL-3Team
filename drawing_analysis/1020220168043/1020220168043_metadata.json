@@ -1,0 +1,182 @@
+{
+  "app_num": "1020220168043",
+  "invention_type": "hardware",
+  "main_concept": "인메모리 연산을 수행하는 메모리 장치 및 동작 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입출력단",
+      "component_type": "device",
+      "description": "메모리 컨트롤러에서 출력하는 데이터, 커맨드 및 어드레스 신호를 입력 받는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "PIM IU",
+      "component_type": "device",
+      "description": "입력신호를 수신하여 인메모리 연산을 수행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입출력신호 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "메모리 뱅크와 연산 요청 처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "메모리 뱅크",
+      "component_type": "device",
+      "description": "인메모리 연산을 수행하는 복수의 메모리 뱅크",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "PIM IU와 연산 요청 처리",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "레지스터",
+      "component_type": "device",
+      "description": "데이터를 저장하고 연산 결과를 전달하는 레지스터",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "메모리 뱅크와 데이터 저장 및 전달",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220168043",
+      "diagram_type": "flowchart",
+      "diagram_title": "인메모리 연산 동작 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입출력단\"]\n    200[\"PIM IU\"]\n    300[\"메모리 뱅크\"]\n    400[\"레지스터\"]\n    100 -->|\"입출력신호 수신\"| 200\n    200 -->|\"메모리 뱅크와 연산 요청 처리\"| 300\n    300 -->|\"메모리 뱅크와 데이터 저장 및 전달\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입출력단",
+          "component_type": "device",
+          "description": "메모리 컨트롤러에서 출력하는 데이터, 커맨드 및 어드레스 신호를 입력 받는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "PIM IU",
+          "component_type": "device",
+          "description": "입력신호를 수신하여 인메모리 연산을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력신호 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "메모리 뱅크와 연산 요청 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리 뱅크",
+          "component_type": "device",
+          "description": "인메모리 연산을 수행하는 복수의 메모리 뱅크",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "PIM IU와 연산 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "레지스터",
+          "component_type": "device",
+          "description": "데이터를 저장하고 연산 결과를 전달하는 레지스터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메모리 뱅크와 데이터 저장 및 전달",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220168043/1020220168043_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220168043",
+      "diagram_type": "classDiagram",
+      "diagram_title": "인메모리 연산 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 입출력단 {\n        +String 데이터\n        +String 커맨드\n        +String 어드레스\n    }\n    class PIM_IU {\n        +String 입력신호\n        +processRequest()\n    }\n    class 메모리_뱅크 {\n        +performInMemoryOperation()\n    }\n    class 레지스터 {\n        +String 저장된데이터\n        +String 결과전달()\n    }\n    입출력단 --> PIM_IU : \"입출력신호 수신\"\n    PIM_IU --> 메모리_뱅크 : \"메모리 뱅크와 연산 요청 처리\"\n    메모리_뱅크 --> 레지스터 : \"메모리 뱅크와 데이터 저장 및 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입출력단",
+          "component_type": "device",
+          "description": "메모리 컨트롤러에서 출력하는 데이터, 커맨드 및 어드레스 신호를 입력 받는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "PIM IU",
+          "component_type": "device",
+          "description": "입력신호를 수신하여 인메모리 연산을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입출력신호 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "메모리 뱅크와 연산 요청 처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "메모리 뱅크",
+          "component_type": "device",
+          "description": "인메모리 연산을 수행하는 복수의 메모리 뱅크",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "PIM IU와 연산 요청 처리",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "레지스터",
+          "component_type": "device",
+          "description": "데이터를 저장하고 연산 결과를 전달하는 레지스터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "메모리 뱅크와 데이터 저장 및 전달",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220168043/1020220168043_fig_2.mmd"
+    }
+  ]
+}

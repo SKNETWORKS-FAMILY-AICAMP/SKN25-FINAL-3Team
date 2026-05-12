@@ -1,0 +1,182 @@
+{
+  "app_num": "1020250081552",
+  "invention_type": "system",
+  "main_concept": "AI 기반의 물류 운영 최적화 장치 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 저장 유닛",
+      "component_type": "data",
+      "description": "상품 정보와 차량 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "물류 흐름 제어 모듈",
+      "component_type": "process",
+      "description": "적재 호환성 지수를 산출하고 적재 방식을 제어",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "배송 계획 모듈",
+      "component_type": "process",
+      "description": "동적 배차 적합도 지수를 산출하여 최적의 차량을 할당",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 제공",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "적재 정보 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "운영 최적화 모듈",
+      "component_type": "process",
+      "description": "과거 배송 데이터를 분석하여 시스템 개선",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "피드백 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020250081552",
+      "diagram_type": "flowchart",
+      "diagram_title": "물류 운영 최적화 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 저장 유닛\"]\n    200[\"물류 흐름 제어 모듈\"]\n    300[\"배송 계획 모듈\"]\n    400[\"운영 최적화 모듈\"]\n    100 -->|\"데이터 제공\"| 200\n    100 -->|\"데이터 제공\"| 300\n    200 -->|\"적재 정보 요청\"| 300\n    300 -->|\"피드백 제공\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 저장 유닛",
+          "component_type": "data",
+          "description": "상품 정보와 차량 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "물류 흐름 제어 모듈",
+          "component_type": "process",
+          "description": "적재 호환성 지수를 산출하고 적재 방식을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "배송 계획 모듈",
+          "component_type": "process",
+          "description": "동적 배차 적합도 지수를 산출하여 최적의 차량을 할당",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "적재 정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "운영 최적화 모듈",
+          "component_type": "process",
+          "description": "과거 배송 데이터를 분석하여 시스템 개선",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "피드백 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020250081552/1020250081552_fig_1.mmd"
+    },
+    {
+      "app_num": "1020250081552",
+      "diagram_type": "classDiagram",
+      "diagram_title": "물류 운영 최적화 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터저장유닛 {\n        +String 상품정보\n        +String 차량정보\n    }\n    class 물류흐름제어모듈 {\n        +산출적재호환성지수()\n        +제어적재방식()\n    }\n    class 배송계획모듈 {\n        +산출동적배차적합도지수()\n        +할당최적차량()\n    }\n    class 운영최적화모듈 {\n        +분석과거배송데이터()\n        +개선시스템()\n    }\n    데이터저장유닛 --> 물류흐름제어모듈 : \"데이터 제공\"\n    데이터저장유닛 --> 배송계획모듈 : \"데이터 제공\"\n    물류흐름제어모듈 --> 배송계획모듈 : \"적재 정보 요청\"\n    배송계획모듈 --> 운영최적화모듈 : \"피드백 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 저장 유닛",
+          "component_type": "data",
+          "description": "상품 정보와 차량 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "물류 흐름 제어 모듈",
+          "component_type": "process",
+          "description": "적재 호환성 지수를 산출하고 적재 방식을 제어",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "배송 계획 모듈",
+          "component_type": "process",
+          "description": "동적 배차 적합도 지수를 산출하여 최적의 차량을 할당",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 제공",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "적재 정보 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "운영 최적화 모듈",
+          "component_type": "process",
+          "description": "과거 배송 데이터를 분석하여 시스템 개선",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "피드백 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020250081552/1020250081552_fig_2.mmd"
+    }
+  ]
+}

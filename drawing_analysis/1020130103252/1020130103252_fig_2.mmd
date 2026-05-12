@@ -1,0 +1,18 @@
+%% 1020130103252 - 컨텐츠 재생 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 터치스크린 {
+        +String 터치입력
+        +displayContent()
+    }
+    class 메모리 {
+        +String 명령어
+        +storeCommand()
+    }
+    class 프로세서 {
+        +String 제어신호
+        +processInput()
+    }
+    터치스크린 --> 프로세서 : "제어 신호 전송"
+    프로세서 <-- 메모리 : "저장된 명령어 제공"

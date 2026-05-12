@@ -1,0 +1,167 @@
+{
+  "app_num": "1020220088711",
+  "invention_type": "method",
+  "main_concept": "지역 공공데이터를 활용한 미세먼지 농도 예측 및 발생원 추론 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 수집 인터페이스",
+      "component_type": "device",
+      "description": "특정 지역에서 공공 데이터를 수집하여 시계열 데이터를 생성하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "CNN 모델",
+      "component_type": "process",
+      "description": "수집된 시계열 데이터를 학습하여 미세먼지 발생 여부를 판단하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 수집",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "RNN 모델",
+      "component_type": "process",
+      "description": "미세먼지 발생 등급을 보정하고 농도를 예측하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "미세먼지 발생 등급 보정",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "CAM 적용 프로세서",
+      "component_type": "process",
+      "description": "미세먼지 발생원을 추론하고 시각적으로 표시하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "미세먼지 발생 등급 사용",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220088711",
+      "diagram_type": "flowchart",
+      "diagram_title": "미세먼지 농도 예측 및 발생원 추론 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 수집 인터페이스\"]\n    200[\"CNN 모델\"]\n    300[\"RNN 모델\"]\n    400[\"CAM 적용 프로세서\"]\n    100 -->|\"데이터 수집\"| 200\n    200 -->|\"미세먼지 발생 등급 보정\"| 300\n    300 -->|\"미세먼지 발생 등급 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집 인터페이스",
+          "component_type": "device",
+          "description": "특정 지역에서 공공 데이터를 수집하여 시계열 데이터를 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "CNN 모델",
+          "component_type": "process",
+          "description": "수집된 시계열 데이터를 학습하여 미세먼지 발생 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "RNN 모델",
+          "component_type": "process",
+          "description": "미세먼지 발생 등급을 보정하고 농도를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "미세먼지 발생 등급 보정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "CAM 적용 프로세서",
+          "component_type": "process",
+          "description": "미세먼지 발생원을 추론하고 시각적으로 표시하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "미세먼지 발생 등급 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220088711/1020220088711_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220088711",
+      "diagram_type": "flowchart",
+      "diagram_title": "미세먼지 발생 등급 추론 및 보정 과정",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 수집 인터페이스\"]\n    200[\"CNN 모델\"]\n    300[\"RNN 모델\"]\n    400[\"CAM 적용 프로세서\"]\n    100 -->|\"데이터 수집\"| 200\n    200 -->|\"미세먼지 발생 등급 보정\"| 300\n    300 -->|\"미세먼지 발생 등급 사용\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집 인터페이스",
+          "component_type": "device",
+          "description": "특정 지역에서 공공 데이터를 수집하여 시계열 데이터를 생성하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "CNN 모델",
+          "component_type": "process",
+          "description": "수집된 시계열 데이터를 학습하여 미세먼지 발생 여부를 판단하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 수집",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "RNN 모델",
+          "component_type": "process",
+          "description": "미세먼지 발생 등급을 보정하고 농도를 예측하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "미세먼지 발생 등급 보정",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "CAM 적용 프로세서",
+          "component_type": "process",
+          "description": "미세먼지 발생원을 추론하고 시각적으로 표시하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "미세먼지 발생 등급 사용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220088711/1020220088711_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "app_num": "1020240151668",
+  "invention_type": "system",
+  "main_concept": "피지망을 이용한 비대면 결제 요청 채권회수 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "ERP 사용자 단말",
+      "component_type": "actor",
+      "description": "결제 요청 및 채권 회수 요청을 수행하는 사용자 단말",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "통신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "결제 플랫폼 서버",
+      "component_type": "device",
+      "description": "결제 승인 및 정산 과정을 제어하는 서버",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "결제 대행 회사 서버",
+      "component_type": "device",
+      "description": "결제 대행 및 인증 과정을 수행하는 서버",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "신용 카드사 서버",
+      "component_type": "device",
+      "description": "카드 결제 승인 및 정산 과정을 수행하는 서버",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "외상매출금 데이터베이스",
+      "component_type": "data",
+      "description": "외상매출금 관련 데이터를 저장하는 데이터베이스",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240151668",
+      "diagram_type": "flowchart",
+      "diagram_title": "비대면 결제 요청 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"ERP 사용자 단말\"]\n    200[\"결제 플랫폼 서버\"]\n    300[\"결제 대행 회사 서버\"]\n    400[\"신용 카드사 서버\"]\n    500[\"외상매출금 데이터베이스\"]\n    \n    100 -->|\"결제 요청\"| 200\n    200 -->|\"결제 승인 요청\"| 300\n    300 -->|\"인증 및 승인 처리\"| 400\n    400 -->|\"결제 승인\"| 200\n    200 -->|\"정산 처리\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "ERP 사용자 단말",
+          "component_type": "actor",
+          "description": "결제 요청 및 채권 회수 요청을 수행하는 사용자 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "결제 플랫폼 서버",
+          "component_type": "device",
+          "description": "결제 승인 및 정산 과정을 제어하는 서버",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제 대행 회사 서버",
+          "component_type": "device",
+          "description": "결제 대행 및 인증 과정을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신용 카드사 서버",
+          "component_type": "device",
+          "description": "카드 결제 승인 및 정산 과정을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "외상매출금 데이터베이스",
+          "component_type": "data",
+          "description": "외상매출금 관련 데이터를 저장하는 데이터베이스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240151668/1020240151668_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240151668",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class ERP사용자단말 {\n        +String 요청\n        +결제요청()\n    }\n    class 결제플랫폼서버 {\n        +String 승인상태\n        +결제승인요청()\n        +정산처리()\n    }\n    class 결제대행회사서버 {\n        +String 인증상태\n        +인증처리()\n    }\n    class 신용카드사서버 {\n        +String 결제상태\n        +결제승인()\n    }\n    class 외상매출금데이터베이스 {\n        +String 데이터\n        +저장()\n    }\n    ERP사용자단말 -->| \"통신\" | 결제플랫폼서버\n    결제플랫폼서버 -->| \"연결\" | 결제대행회사서버\n    결제플랫폼서버 -->| \"연결\" | 신용카드사서버\n    결제대행회사서버 -->| \"연결\" | 외상매출금데이터베이스",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "ERP 사용자 단말",
+          "component_type": "actor",
+          "description": "결제 요청 및 채권 회수 요청을 수행하는 사용자 단말",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "통신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "결제 플랫폼 서버",
+          "component_type": "device",
+          "description": "결제 승인 및 정산 과정을 제어하는 서버",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "결제 대행 회사 서버",
+          "component_type": "device",
+          "description": "결제 대행 및 인증 과정을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "신용 카드사 서버",
+          "component_type": "device",
+          "description": "카드 결제 승인 및 정산 과정을 수행하는 서버",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "외상매출금 데이터베이스",
+          "component_type": "data",
+          "description": "외상매출금 관련 데이터를 저장하는 데이터베이스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240151668/1020240151668_fig_2.mmd"
+    }
+  ]
+}

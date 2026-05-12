@@ -1,0 +1,26 @@
+{
+  "app_num": "1020227000771",
+  "created_at": "2026-05-11T15:43:56.742729",
+  "renderer": "deterministic",
+  "result_count": 2,
+  "results": [
+    {
+      "app_num": "1020227000771",
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "diagram_title": "예시적인 실시형태에 따른 시스템의 개략도이다",
+      "fig_json_path": "drawing_analysis/1020227000771/1020227000771_fig_1.json",
+      "mermaid_path": "drawing_analysis/1020227000771/1020227000771_fig_1.mmd",
+      "validation_path": "drawing_analysis/1020227000771/1020227000771_fig_1_validation.json"
+    },
+    {
+      "app_num": "1020227000771",
+      "fig_number": "도 11a",
+      "diagram_type": "flowchart",
+      "diagram_title": "예시적인 실시형태의 시스템 및 방법을 도시한다",
+      "fig_json_path": "drawing_analysis/1020227000771/1020227000771_fig_11a.json",
+      "mermaid_path": "drawing_analysis/1020227000771/1020227000771_fig_11a.mmd",
+      "validation_path": "drawing_analysis/1020227000771/1020227000771_fig_11a_validation.json"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "app_num": "1020230036605",
+  "invention_type": "method",
+  "main_concept": "인공지능 기반 감정 분석을 활용한 유해 컨텐츠 필터링 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제1 AI 모델",
+      "component_type": "process",
+      "description": "사용자 업로드 컨텐츠의 감정 정보를 획득하는 인공지능 모델",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "AI 모델 추론 모듈",
+      "component_type": "process",
+      "description": "감정 정보를 기반으로 유해 스코어를 산출하는 모듈",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "유해 컨텐츠 필터링 모듈",
+      "component_type": "process",
+      "description": "유해 지수를 기준으로 컨텐츠를 필터링하는 모듈",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제2 AI 모델",
+      "component_type": "process",
+      "description": "감정 데이터에 기반하여 유해 값을 산출하는 인공지능 모델",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230036605",
+      "diagram_type": "flowchart",
+      "diagram_title": "유해 컨텐츠 필터링 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"제1 AI 모델\"]\n    200[\"AI 모델 추론 모듈\"]\n    300[\"유해 컨텐츠 필터링 모듈\"]\n    400[\"제2 AI 모델\"]\n    100 -->|\"사용자 업로드 컨텐츠 입력\"| 200\n    200 -->|\"유해 스코어 산출\"| 300\n    100 -->|\"감정 정보 입력\"| 400\n    400 -->|\"유해 값 산출\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 AI 모델",
+          "component_type": "process",
+          "description": "사용자 업로드 컨텐츠의 감정 정보를 획득하는 인공지능 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "AI 모델 추론 모듈",
+          "component_type": "process",
+          "description": "감정 정보를 기반으로 유해 스코어를 산출하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "유해 컨텐츠 필터링 모듈",
+          "component_type": "process",
+          "description": "유해 지수를 기준으로 컨텐츠를 필터링하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 AI 모델",
+          "component_type": "process",
+          "description": "감정 데이터에 기반하여 유해 값을 산출하는 인공지능 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230036605/1020230036605_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230036605",
+      "diagram_type": "classDiagram",
+      "diagram_title": "유해 컨텐츠 필터링 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 제1AI모델 {\n        +String 사용자업로드컨텐츠\n        +감정정보획득()\n    }\n    class AI모델추론모듈 {\n        +String 감정정보\n        +유해스코어산출()\n    }\n    class 유해컨텐츠필터링모듈 {\n        +String 유해지수\n        +필터링()\n    }\n    class 제2AI모델 {\n        +String 감정데이터\n        +유해값산출()\n    }\n    제1AI모델 --> AI모델추론모듈 : \"입력\"\n    제1AI모델 --> 제2AI모델 : \"입력\"\n    AI모델추론모듈 --> 유해컨텐츠필터링모듈 : \"입력\"\n    제2AI모델 --> AI모델추론모듈 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 AI 모델",
+          "component_type": "process",
+          "description": "사용자 업로드 컨텐츠의 감정 정보를 획득하는 인공지능 모델",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "AI 모델 추론 모듈",
+          "component_type": "process",
+          "description": "감정 정보를 기반으로 유해 스코어를 산출하는 모듈",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "유해 컨텐츠 필터링 모듈",
+          "component_type": "process",
+          "description": "유해 지수를 기준으로 컨텐츠를 필터링하는 모듈",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 AI 모델",
+          "component_type": "process",
+          "description": "감정 데이터에 기반하여 유해 값을 산출하는 인공지능 모델",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230036605/1020230036605_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "app_num": "1020180116750",
+  "invention_type": "method",
+  "main_concept": "생성모델을 이용한 실험 가설 생성 방법 및 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "전처리부",
+      "component_type": "process",
+      "description": "실험 디자인을 구성하는 요소를 벡터화하여 수치화하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "실험 변수 인코딩부",
+      "component_type": "process",
+      "description": "수치화된 실험 디자인을 기반으로 실험 변수들을 인코딩하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "실험 생성 모델부",
+      "component_type": "process",
+      "description": "인코딩된 실험 변수들의 조합을 통해 실험 디자인을 재구성하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "가설 시각화 모듈",
+      "component_type": "data",
+      "description": "인코딩된 실험 변수를 시각화하고 하이라이트하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "출력",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "가설 임베딩 모듈",
+      "component_type": "data",
+      "description": "사용자가 의도한 변수 조합을 반영하는 잠재 태스크 벡터 정보를 제공하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "입력",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020180116750",
+      "diagram_type": "flowchart",
+      "diagram_title": "실험 가설 생성 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"전처리부\"]\n    200[\"실험 변수 인코딩부\"]\n    300[\"실험 생성 모델부\"]\n    400[\"가설 시각화 모듈\"]\n    500[\"가설 임베딩 모듈\"]\n    \n    100 -->|\"입력\"| 200\n    200 -->|\"입력\"| 300\n    200 -->|\"출력\"| 400\n    300 -->|\"입력\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전처리부",
+          "component_type": "process",
+          "description": "실험 디자인을 구성하는 요소를 벡터화하여 수치화하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "실험 변수 인코딩부",
+          "component_type": "process",
+          "description": "수치화된 실험 디자인을 기반으로 실험 변수들을 인코딩하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "실험 생성 모델부",
+          "component_type": "process",
+          "description": "인코딩된 실험 변수들의 조합을 통해 실험 디자인을 재구성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "가설 시각화 모듈",
+          "component_type": "data",
+          "description": "인코딩된 실험 변수를 시각화하고 하이라이트하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "가설 임베딩 모듈",
+          "component_type": "data",
+          "description": "사용자가 의도한 변수 조합을 반영하는 잠재 태스크 벡터 정보를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020180116750/1020180116750_fig_1.mmd"
+    },
+    {
+      "app_num": "1020180116750",
+      "diagram_type": "classDiagram",
+      "diagram_title": "실험 가설 생성 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 전처리부 {\n        +vectorize()\n    }\n    class 실험 변수 인코딩부 {\n        +encode()\n    }\n    class 실험 생성 모델부 {\n        +reconstruct()\n    }\n    class 가설 시각화 모듈 {\n        +visualize()\n    }\n    class 가설 임베딩 모듈 {\n        +provideEmbedding()\n    }\n    전처리부 --> 실험 변수 인코딩부 : \"입력\"\n    실험 변수 인코딩부 --> 실험 생성 모델부 : \"입력\"\n    실험 변수 인코딩부 --> 가설 시각화 모듈 : \"출력\"\n    실험 생성 모델부 --> 가설 임베딩 모듈 : \"입력\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "전처리부",
+          "component_type": "process",
+          "description": "실험 디자인을 구성하는 요소를 벡터화하여 수치화하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "실험 변수 인코딩부",
+          "component_type": "process",
+          "description": "수치화된 실험 디자인을 기반으로 실험 변수들을 인코딩하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "실험 생성 모델부",
+          "component_type": "process",
+          "description": "인코딩된 실험 변수들의 조합을 통해 실험 디자인을 재구성하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "가설 시각화 모듈",
+          "component_type": "data",
+          "description": "인코딩된 실험 변수를 시각화하고 하이라이트하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "출력",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "가설 임베딩 모듈",
+          "component_type": "data",
+          "description": "사용자가 의도한 변수 조합을 반영하는 잠재 태스크 벡터 정보를 제공하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "입력",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020180116750/1020180116750_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "app_num": "1020230044382",
+  "invention_type": "method",
+  "main_concept": "매장 내 카드 리더기 병합형 태블릿을 이용한 카드 결제 누락 방지 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "태블릿",
+      "component_type": "device",
+      "description": "매장 내 테이블마다 구비되어 카드 결제를 수행하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "무선통신 연동",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "결제 승인 신호 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "POS 단말",
+      "component_type": "device",
+      "description": "주문 결제 조회를 실행하고 태블릿과 연동되는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "무선통신 연동",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "유선통신 연동",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "외부 결제 서버",
+      "component_type": "device",
+      "description": "결제 정보를 처리하고 승인 신호를 송신하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "유선통신 연동",
+          "direction": "<-"
+        },
+        {
+          "target": "100",
+          "label": "결제 승인 신호 송신",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230044382",
+      "diagram_type": "flowchart",
+      "diagram_title": "카드 결제 순서도",
+      "mermaid_code": "flowchart TD\n    100[\"태블릿\"]\n    200[\"POS 단말\"]\n    300[\"외부 결제 서버\"]\n    400[\"결제 정보 전송 및 대기 상태 유지\"]\n    500[\"결제 승인 신호 수신\"]\n    600[\"결제 완료 신호 출력\"]\n    700[\"가상 결제 승인 신호 전달 또는 관리자 확인 요청\"]\n\n    100 -->|\"무선통신 연동\"| 200\n    200 -->|\"유선통신 연동\"| 300\n    300 -->|\"결제 승인 신호 송신\"| 100\n    100 --> 400\n    400 --> 500\n    500 --> 600\n    600 --> 700",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "태블릿",
+          "component_type": "device",
+          "description": "매장 내 테이블마다 구비되어 카드 결제를 수행하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무선통신 연동",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결제 승인 신호 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "POS 단말",
+          "component_type": "device",
+          "description": "주문 결제 조회를 실행하고 태블릿과 연동되는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "무선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "유선통신 연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "외부 결제 서버",
+          "component_type": "device",
+          "description": "결제 정보를 처리하고 승인 신호를 송신하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "유선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "결제 승인 신호 송신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230044382/1020230044382_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230044382",
+      "diagram_type": "classDiagram",
+      "diagram_title": "태블릿 카드 결제 누락 방지 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 태블릿 {\n        +String description\n        +receiveApprovalSignal()\n    }\n    class POS단말 {\n        +String description\n        +executePaymentInquiry()\n    }\n    class 외부결제서버 {\n        +String description\n        +sendApprovalSignal()\n    }\n    태블릿 --> POS단말 : \"무선통신 연동\"\n    POS단말 --> 외부결제서버 : \"유선통신 연동\"\n    외부결제서버 --> 태블릿 : \"결제 승인 신호 송신\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "태블릿",
+          "component_type": "device",
+          "description": "매장 내 테이블마다 구비되어 카드 결제를 수행하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무선통신 연동",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결제 승인 신호 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "POS 단말",
+          "component_type": "device",
+          "description": "주문 결제 조회를 실행하고 태블릿과 연동되는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "무선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "유선통신 연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "외부 결제 서버",
+          "component_type": "device",
+          "description": "결제 정보를 처리하고 승인 신호를 송신하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "유선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "결제 승인 신호 송신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230044382/1020230044382_fig_2.mmd"
+    },
+    {
+      "app_num": "1020230044382",
+      "diagram_type": "flowchart",
+      "diagram_title": "카드 결제 누락 방지 방법 순서도",
+      "mermaid_code": "flowchart TD\n    100[\"태블릿\"]\n    200[\"POS 단말\"]\n    300[\"외부 결제 서버\"]\n    400[\"결제 정보 전송 및 대기 상태 유지\"]\n    500[\"조회 신호 반복 전송\"]\n    600[\"결제 승인 신호 수신\"]\n    700[\"결제 완료 신호 출력\"]\n    800[\"가상 결제 승인 신호 전달 또는 관리자 확인 요청\"]\n\n    100 -->|\"무선통신 연동\"| 200\n    200 -->|\"유선통신 연동\"| 300\n    100 --> 400\n    400 --> 500\n    500 --> 600\n    600 --> 700\n    700 -->|\"결제 완료\"| 800",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "태블릿",
+          "component_type": "device",
+          "description": "매장 내 테이블마다 구비되어 카드 결제를 수행하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "무선통신 연동",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "결제 승인 신호 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "POS 단말",
+          "component_type": "device",
+          "description": "주문 결제 조회를 실행하고 태블릿과 연동되는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "무선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "유선통신 연동",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "외부 결제 서버",
+          "component_type": "device",
+          "description": "결제 정보를 처리하고 승인 신호를 송신하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "유선통신 연동",
+              "direction": "<-"
+            },
+            {
+              "target": "100",
+              "label": "결제 승인 신호 송신",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 4",
+      "output_path": "drawing_analysis/1020230044382/1020230044382_fig_4.mmd"
+    }
+  ]
+}

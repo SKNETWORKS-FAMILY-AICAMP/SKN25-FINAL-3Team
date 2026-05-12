@@ -1,0 +1,374 @@
+{
+  "app_num": "1020230193866",
+  "invention_type": "system",
+  "main_concept": "스마트 전통시장에서의 판매 예측 및 상품 거래 활성화 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "상점 단말기",
+      "component_type": "device",
+      "description": "상품관리, 주문관리, 판매관리 등을 수행하는 단말기",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "소비자 단말기",
+      "component_type": "device",
+      "description": "소비자가 사용하는 장치로, 상품 검색 및 주문 요청을 수행",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "주문 및 배송 요청 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "라이브커머스 서비스 제공부",
+      "component_type": "process",
+      "description": "상품 판매 방송 및 온라인 매출 정보 생성",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "오픈마켓 서비스 제공부",
+      "component_type": "process",
+      "description": "상품 정보를 소비자 단말기로 전송하고 온라인 매출 정보 생성",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "상품 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "DB",
+      "component_type": "data",
+      "description": "온오프라인 매출 정보를 저장하고 카테고리화",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "상점 정보 저장",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "매출 정보 저장",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "매출 정보 저장",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "판매 예측 모듈",
+      "component_type": "process",
+      "description": "판매 예측 및 소비자 행동 분석",
+      "relationships": [
+        {
+          "target": "500",
+          "label": "매출 정보 분석",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "안내정보 제공 모듈",
+      "component_type": "process",
+      "description": "길찾기 및 교통정보 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "800",
+      "name": "3D 정보 제공 모듈",
+      "component_type": "process",
+      "description": "3D 모델링 기반의 전통시장 로드맵 정보 제공",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "900",
+      "name": "증강현실 제공부",
+      "component_type": "process",
+      "description": "증강현실 기반의 전통시장 모델 구축",
+      "relationships": [
+        {
+          "target": "800",
+          "label": "정보 활용",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230193866",
+      "diagram_type": "flowchart",
+      "diagram_title": "스마트 전통시장 판매 예측 시스템 개요",
+      "mermaid_code": "flowchart TD\n    100[\"상점 단말기\"]\n    200[\"소비자 단말기\"]\n    300[\"라이브커머스 서비스 제공부\"]\n    400[\"오픈마켓 서비스 제공부\"]\n    500[\"DB\"]\n    600[\"판매 예측 모듈\"]\n    700[\"안내정보 제공 모듈\"]\n    800[\"3D 정보 제공 모듈\"]\n    900[\"증강현실 제공부\"]\n\n    100 -->| \"상점 정보 저장\" | 500\n    200 -->| \"주문 및 배송 요청 전송\" | 100\n    200 -->| \"상품 정보 제공\" | 300\n    200 -->| \"상품 정보 전송\" | 400\n    300 -->| \"매출 정보 저장\" | 500\n    400 -->| \"매출 정보 저장\" | 500\n    500 -->| \"매출 정보 분석\" | 600\n    200 -->| \"정보 제공\" | 800\n    800 -->| \"정보 활용\" | 900",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "상점 단말기",
+          "component_type": "device",
+          "description": "상품관리, 주문관리, 판매관리 등을 수행하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "소비자 단말기",
+          "component_type": "device",
+          "description": "소비자가 사용하는 장치로, 상품 검색 및 주문 요청을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "주문 및 배송 요청 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "라이브커머스 서비스 제공부",
+          "component_type": "process",
+          "description": "상품 판매 방송 및 온라인 매출 정보 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오픈마켓 서비스 제공부",
+          "component_type": "process",
+          "description": "상품 정보를 소비자 단말기로 전송하고 온라인 매출 정보 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "DB",
+          "component_type": "data",
+          "description": "온오프라인 매출 정보를 저장하고 카테고리화",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상점 정보 저장",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "매출 정보 저장",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "매출 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "판매 예측 모듈",
+          "component_type": "process",
+          "description": "판매 예측 및 소비자 행동 분석",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "매출 정보 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "안내정보 제공 모듈",
+          "component_type": "process",
+          "description": "길찾기 및 교통정보 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "800",
+          "name": "3D 정보 제공 모듈",
+          "component_type": "process",
+          "description": "3D 모델링 기반의 전통시장 로드맵 정보 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "증강현실 제공부",
+          "component_type": "process",
+          "description": "증강현실 기반의 전통시장 모델 구축",
+          "relationships": [
+            {
+              "target": "800",
+              "label": "정보 활용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230193866/1020230193866_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230193866",
+      "diagram_type": "classDiagram",
+      "diagram_title": "구성 요소 및 관계",
+      "mermaid_code": "classDiagram\n    class 상점단말기 {\n        +String 상품관리\n        +String 주문관리\n        +String 판매관리\n    }\n    class 소비자단말기 {\n        +String 상품검색\n        +String 주문요청\n    }\n    class 라이브커머스서비스제공부 {\n        +String 상품판매방송\n        +String 온라인매출정보생성\n    }\n    class 오픈마켓서비스제공부 {\n        +String 상품정보전송\n        +String 온라인매출정보생성\n    }\n    class DB {\n        +String 온오프라인매출정보저장\n        +String 카테고리화\n    }\n    class 판매예측모듈 {\n        +String 판매예측\n        +String 소비자행동분석\n    }\n    class 안내정보제공모듈 {\n        +String 길찾기\n        +String 교통정보제공\n    }\n    class 3D정보제공모듈 {\n        +String 3D모델링\n        +String 전통시장로드맵정보제공\n    }\n    class 증강현실제공부 {\n        +String 증강현실모델구축\n    }\n\n    소비자단말기 -->| \"주문 및 배송 요청 전송\" | 상점단말기\n    라이브커머스서비스제공부 -->| \"상품 정보 제공\" | 소비자단말기\n    오픈마켓서비스제공부 -->| \"상품 정보 전송\" | 소비자단말기\n    상점단말기 <--| \"상점 정보 저장\" | DB\n    라이브커머스서비스제공부 <--| \"매출 정보 저장\" | DB\n    오픈마켓서비스제공부 <--| \"매출 정보 저장\" | DB\n    판매예측모듈 <--| \"매출 정보 분석\" | DB\n    3D정보제공모듈 -->| \"정보 제공\" | 소비자단말기\n    증강현실제공부 <--| \"정보 활용\" | 3D정보제공모듈",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "상점 단말기",
+          "component_type": "device",
+          "description": "상품관리, 주문관리, 판매관리 등을 수행하는 단말기",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "소비자 단말기",
+          "component_type": "device",
+          "description": "소비자가 사용하는 장치로, 상품 검색 및 주문 요청을 수행",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "주문 및 배송 요청 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "라이브커머스 서비스 제공부",
+          "component_type": "process",
+          "description": "상품 판매 방송 및 온라인 매출 정보 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "오픈마켓 서비스 제공부",
+          "component_type": "process",
+          "description": "상품 정보를 소비자 단말기로 전송하고 온라인 매출 정보 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "상품 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "DB",
+          "component_type": "data",
+          "description": "온오프라인 매출 정보를 저장하고 카테고리화",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "상점 정보 저장",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "매출 정보 저장",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "매출 정보 저장",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "판매 예측 모듈",
+          "component_type": "process",
+          "description": "판매 예측 및 소비자 행동 분석",
+          "relationships": [
+            {
+              "target": "500",
+              "label": "매출 정보 분석",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "안내정보 제공 모듈",
+          "component_type": "process",
+          "description": "길찾기 및 교통정보 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "800",
+          "name": "3D 정보 제공 모듈",
+          "component_type": "process",
+          "description": "3D 모델링 기반의 전통시장 로드맵 정보 제공",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "900",
+          "name": "증강현실 제공부",
+          "component_type": "process",
+          "description": "증강현실 기반의 전통시장 모델 구축",
+          "relationships": [
+            {
+              "target": "800",
+              "label": "정보 활용",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230193866/1020230193866_fig_2.mmd"
+    }
+  ]
+}

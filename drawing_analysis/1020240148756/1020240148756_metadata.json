@@ -1,0 +1,209 @@
+{
+  "app_num": "1020240148756",
+  "invention_type": "system",
+  "main_concept": "위성 영상을 기반으로 오브젝트를 분할하고 특징을 추출하여 군집화하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "데이터 수집 모듈",
+      "component_type": "device",
+      "description": "위성 영상을 수신하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "분할 모듈",
+      "component_type": "process",
+      "description": "오브젝트를 분할하여 분할 결과를 생성",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "분할 결과 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "추출 모듈",
+      "component_type": "process",
+      "description": "분할된 오브젝트의 특징을 추출",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "특징 추출",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "군집화 모듈",
+      "component_type": "process",
+      "description": "특징을 기반으로 군집화를 수행하여 결과 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "전처리부",
+      "component_type": "process",
+      "description": "군집화를 위한 전처리 결과를 생성",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "전처리 결과 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "외부 데이터베이스",
+      "component_type": "data",
+      "description": "위성 영상을 저장하는 데이터베이스",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240148756",
+      "diagram_type": "flowchart",
+      "diagram_title": "오브젝트 군집화 프로세스 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"데이터 수집 모듈\"]\n    200[\"분할 모듈\"]\n    300[\"추출 모듈\"]\n    400[\"군집화 모듈\"]\n    500[\"전처리부\"]\n    600[\"외부 데이터베이스\"]\n    \n    100 -->|\"위성 영상 수신\"| 200\n    200 -->|\"분할 결과 생성\"| 300\n    300 -->|\"특징 추출\"| 500\n    500 -->|\"전처리 결과 제공\"| 400\n    400 -->|\"군집화 결과 생성\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집 모듈",
+          "component_type": "device",
+          "description": "위성 영상을 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분할 모듈",
+          "component_type": "process",
+          "description": "오브젝트를 분할하여 분할 결과를 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "분할 결과 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추출 모듈",
+          "component_type": "process",
+          "description": "분할된 오브젝트의 특징을 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "특징 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "군집화 모듈",
+          "component_type": "process",
+          "description": "특징을 기반으로 군집화를 수행하여 결과 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "전처리부",
+          "component_type": "process",
+          "description": "군집화를 위한 전처리 결과를 생성",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "전처리 결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "외부 데이터베이스",
+          "component_type": "data",
+          "description": "위성 영상을 저장하는 데이터베이스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240148756/1020240148756_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240148756",
+      "diagram_type": "classDiagram",
+      "diagram_title": "오브젝트 군집화 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 데이터수집모듈 {\n        +String 위성영상\n        +수신()\n    }\n    class 분할모듈 {\n        +String 분할결과\n        +분할()\n    }\n    class 추출모듈 {\n        +String 특징\n        +추출()\n    }\n    class 군집화모듈 {\n        +String 군집화결과\n        +군집화()\n    }\n    class 전처리부 {\n        +String 전처리결과\n        +전처리()\n    }\n    class 외부데이터베이스 {\n        +String 저장된영상\n        +저장()\n    }\n    \n    데이터수집모듈 --> 분할모듈 : \"위성 영상 수신\"\n    분할모듈 --> 추출모듈 : \"분할 결과 생성\"\n    추출모듈 --> 전처리부 : \"특징 추출\"\n    전처리부 --> 군집화모듈 : \"전처리 결과 제공\"\n    외부데이터베이스 --> 데이터수집모듈 : \"위성 영상 저장\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "데이터 수집 모듈",
+          "component_type": "device",
+          "description": "위성 영상을 수신하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "분할 모듈",
+          "component_type": "process",
+          "description": "오브젝트를 분할하여 분할 결과를 생성",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "분할 결과 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추출 모듈",
+          "component_type": "process",
+          "description": "분할된 오브젝트의 특징을 추출",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "특징 추출",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "군집화 모듈",
+          "component_type": "process",
+          "description": "특징을 기반으로 군집화를 수행하여 결과 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "전처리부",
+          "component_type": "process",
+          "description": "군집화를 위한 전처리 결과를 생성",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "전처리 결과 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "외부 데이터베이스",
+          "component_type": "data",
+          "description": "위성 영상을 저장하는 데이터베이스",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240148756/1020240148756_fig_2.mmd"
+    }
+  ]
+}

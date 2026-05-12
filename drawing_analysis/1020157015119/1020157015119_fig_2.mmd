@@ -1,0 +1,21 @@
+%% 1020157015119 - 바이오메트릭 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 카메라 {
+        +String 이미지
+        +captureImage()
+    }
+    class 디스플레이 {
+        +String 등록이미지
+        +String 후보이미지
+        +showImages()
+    }
+    class 사용자 {
+        +String 신체부위
+        +register()
+        +authenticate()
+    }
+    사용자 --> 카메라 : "신체 일부 제시"
+    디스플레이 <-- 카메라 : "이미지 제시"
+    사용자 --> 디스플레이 : "이미지 확인"

@@ -1,0 +1,16 @@
+%% 1020220091980 - 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class EdgeServer {
+        +String learningData
+        +collectData()
+        +performDistributedLearning()
+    }
+    class CentralServer {
+        +String resultData
+        +receiveData()
+        +provideCustomizedContent()
+    }
+    EdgeServer --> CentralServer : "결과 데이터를 중앙 서버로 전송"
+    CentralServer --> EdgeServer : "학습 데이터 요청"

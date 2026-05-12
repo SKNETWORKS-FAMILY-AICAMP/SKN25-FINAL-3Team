@@ -1,0 +1,128 @@
+{
+  "app_num": "1020230009358",
+  "invention_type": "method",
+  "main_concept": "사생활 보호를 보장하는 행동 인식 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "공공 데이터 모듈",
+      "component_type": "process",
+      "description": "공공 데이터를 ToF 센서 데이터 양식으로 변환하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "학습 모듈",
+      "component_type": "process",
+      "description": "변환된 데이터를 학습하여 특징 및 가중치를 생성하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "데이터 전달",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "행동 인식 모듈",
+      "component_type": "process",
+      "description": "학습된 특징 및 가중치를 기반으로 행동을 인식하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "특징 및 가중치 기반 인식",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230009358",
+      "diagram_type": "classDiagram",
+      "diagram_title": "행동 인식 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 공공데이터모듈 {\n        +String ToF센서데이터\n        +변환()\n    }\n    class 학습모듈 {\n        +String 특징\n        +String 가중치\n        +학습()\n    }\n    class 행동인식모듈 {\n        +String 인식결과\n        +인식()\n    }\n    공공데이터모듈 --> 학습모듈 : \"데이터 전달\"\n    학습모듈 --> 행동인식모듈 : \"특징 및 가중치 기반 인식\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "공공 데이터 모듈",
+          "component_type": "process",
+          "description": "공공 데이터를 ToF 센서 데이터 양식으로 변환하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습 모듈",
+          "component_type": "process",
+          "description": "변환된 데이터를 학습하여 특징 및 가중치를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 전달",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "행동 인식 모듈",
+          "component_type": "process",
+          "description": "학습된 특징 및 가중치를 기반으로 행동을 인식하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "특징 및 가중치 기반 인식",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230009358/1020230009358_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230009358",
+      "diagram_type": "flowchart",
+      "diagram_title": "행동 인식 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"공공 데이터 모듈\"]\n    200[\"학습 모듈\"]\n    300[\"행동 인식 모듈\"]\n    400[\"무의미한 영역 제거 및 데이터 변환\"]\n    \n    100 -->|\"데이터 전달\"| 400\n    400 -->|\"변환된 데이터\"| 200\n    200 -->|\"특징 및 가중치 기반 인식\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "공공 데이터 모듈",
+          "component_type": "process",
+          "description": "공공 데이터를 ToF 센서 데이터 양식으로 변환하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "학습 모듈",
+          "component_type": "process",
+          "description": "변환된 데이터를 학습하여 특징 및 가중치를 생성하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "데이터 전달",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "행동 인식 모듈",
+          "component_type": "process",
+          "description": "학습된 특징 및 가중치를 기반으로 행동을 인식하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "특징 및 가중치 기반 인식",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230009358/1020230009358_fig_2.mmd"
+    }
+  ]
+}

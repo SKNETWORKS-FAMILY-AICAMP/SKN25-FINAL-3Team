@@ -1,0 +1,511 @@
+{
+  "app_num": "1020220167302",
+  "invention_type": "system",
+  "main_concept": "이야기 콘텐츠 중개 플랫폼 서비스 제공 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자 단말",
+      "component_type": "actor",
+      "description": "이야기 콘텐츠를 업로드하는 사용자",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "구매자 단말",
+      "component_type": "actor",
+      "description": "이야기 콘텐츠에 대한 구매의사를 출력 및 결제를 진행하는 사용자",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "양방향 대화 진행",
+          "direction": "<->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "이야기구축부",
+      "component_type": "process",
+      "description": "이야기 콘텐츠를 업로드받는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "이야기 콘텐츠 업로드",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "일정관리부",
+      "component_type": "process",
+      "description": "구매의사를 출력 및 결제 후 일정을 설정하는 부서",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "일정 설정 요청",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "일정 전달",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "이야기전달부",
+      "component_type": "process",
+      "description": "설정된 일정에 따라 양방향 대화를 진행하는 채널 생성",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "채널 생성 요청",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "채널 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "콘텐츠판매부",
+      "component_type": "process",
+      "description": "대화 콘텐츠를 판매하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "대화 콘텐츠 공유 요청",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "대화 콘텐츠 판매",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "700",
+      "name": "직업훈련부",
+      "component_type": "process",
+      "description": "사용자를 전문가로 등록하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "전문가 등록 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "800",
+      "name": "익명화부",
+      "component_type": "process",
+      "description": "사용자의 얼굴 및 음성을 변조하는 부서",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "비식별화 요청",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "비식별화 처리",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220167302",
+      "diagram_type": "classDiagram",
+      "diagram_title": "이야기 콘텐츠 중개 플랫폼 서비스 제공 시스템",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 콘텐츠\n        +uploadContent()\n    }\n    class 구매자단말 {\n        +String 결제정보\n        +makePayment()\n    }\n    class 이야기구축부 {\n        +uploadContent()\n    }\n    class 일정관리부 {\n        +setSchedule()\n    }\n    class 이야기전달부 {\n        +createChannel()\n    }\n    class 콘텐츠판매부 {\n        +shareContent()\n        +sellContent()\n    }\n    class 직업훈련부 {\n        +registerExpert()\n    }\n    class 익명화부 {\n        +anonymize()\n    }\n    \n    사용자단말 --> 이야기구축부 : \"이야기 콘텐츠 업로드\"\n    구매자단말 <--> 사용자단말 : \"양방향 대화 진행\"\n    구매자단말 --> 일정관리부 : \"일정 설정 요청\"\n    일정관리부 --> 사용자단말 : \"일정 전달\"\n    구매자단말 --> 이야기전달부 : \"채널 생성 요청\"\n    이야기전달부 --> 사용자단말 : \"채널 생성\"\n    사용자단말 --> 콘텐츠판매부 : \"대화 콘텐츠 공유 요청\"\n    콘텐츠판매부 --> 구매자단말 : \"대화 콘텐츠 판매\"\n    사용자단말 --> 직업훈련부 : \"전문가 등록 요청\"\n    사용자단말 --> 익명화부 : \"비식별화 요청\"\n    익명화부 --> 구매자단말 : \"비식별화 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠를 업로드하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠에 대한 구매의사를 출력 및 결제를 진행하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "양방향 대화 진행",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이야기구축부",
+          "component_type": "process",
+          "description": "이야기 콘텐츠를 업로드받는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이야기 콘텐츠 업로드",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "일정관리부",
+          "component_type": "process",
+          "description": "구매의사를 출력 및 결제 후 일정을 설정하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "일정 설정 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "일정 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "이야기전달부",
+          "component_type": "process",
+          "description": "설정된 일정에 따라 양방향 대화를 진행하는 채널 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "채널 생성 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "채널 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "콘텐츠판매부",
+          "component_type": "process",
+          "description": "대화 콘텐츠를 판매하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "대화 콘텐츠 공유 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "대화 콘텐츠 판매",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "직업훈련부",
+          "component_type": "process",
+          "description": "사용자를 전문가로 등록하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전문가 등록 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "익명화부",
+          "component_type": "process",
+          "description": "사용자의 얼굴 및 음성을 변조하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비식별화 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "비식별화 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220167302/1020220167302_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220167302",
+      "diagram_type": "classDiagram",
+      "diagram_title": "플랫폼 서비스 제공 서버 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 콘텐츠\n        +uploadContent()\n    }\n    class 구매자단말 {\n        +String 결제정보\n        +makePayment()\n    }\n    class 이야기구축부 {\n        +uploadContent()\n    }\n    class 일정관리부 {\n        +setSchedule()\n    }\n    class 이야기전달부 {\n        +createChannel()\n    }\n    class 콘텐츠판매부 {\n        +sellContent()\n    }\n    class 직업훈련부 {\n        +registerExpert()\n    }\n    class 익명화부 {\n        +anonymize()\n    }\n    사용자단말 --> 이야기구축부 : \"이야기 콘텐츠 업로드\"\n    구매자단말 <--> 사용자단말 : \"양방향 대화 진행\"\n    구매자단말 --> 일정관리부 : \"일정 설정 요청\"\n    일정관리부 --> 사용자단말 : \"일정 전달\"\n    구매자단말 --> 이야기전달부 : \"채널 생성 요청\"\n    이야기전달부 --> 사용자단말 : \"채널 생성\"\n    사용자단말 --> 콘텐츠판매부 : \"대화 콘텐츠 공유 요청\"\n    콘텐츠판매부 --> 구매자단말 : \"대화 콘텐츠 판매\"\n    사용자단말 --> 직업훈련부 : \"전문가 등록 요청\"\n    사용자단말 --> 익명화부 : \"비식별화 요청\"\n    익명화부 --> 구매자단말 : \"비식별화 처리\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠를 업로드하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠에 대한 구매의사를 출력 및 결제를 진행하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "양방향 대화 진행",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이야기구축부",
+          "component_type": "process",
+          "description": "이야기 콘텐츠를 업로드받는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이야기 콘텐츠 업로드",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "일정관리부",
+          "component_type": "process",
+          "description": "구매의사를 출력 및 결제 후 일정을 설정하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "일정 설정 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "일정 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "이야기전달부",
+          "component_type": "process",
+          "description": "설정된 일정에 따라 양방향 대화를 진행하는 채널 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "채널 생성 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "채널 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "콘텐츠판매부",
+          "component_type": "process",
+          "description": "대화 콘텐츠를 판매하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "대화 콘텐츠 공유 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "대화 콘텐츠 판매",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "직업훈련부",
+          "component_type": "process",
+          "description": "사용자를 전문가로 등록하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전문가 등록 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "익명화부",
+          "component_type": "process",
+          "description": "사용자의 얼굴 및 음성을 변조하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비식별화 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "비식별화 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220167302/1020220167302_fig_2.mmd"
+    },
+    {
+      "app_num": "1020220167302",
+      "diagram_type": "flowchart",
+      "diagram_title": "이야기 콘텐츠 중개 플랫폼 서비스 제공 방법",
+      "mermaid_code": "flowchart TD\n    100[\"사용자 단말\"]\n    200[\"구매자 단말\"]\n    300[\"이야기구축부\"]\n    400[\"일정관리부\"]\n    500[\"이야기전달부\"]\n    600[\"콘텐츠판매부\"]\n    700[\"직업훈련부\"]\n    800[\"익명화부\"]\n\n    100 -->|\"이야기 콘텐츠 업로드\"| 300\n    200 -->|\"일정 설정 요청\"| 400\n    400 -->|\"일정 전달\"| 100\n    200 <-->|\"양방향 대화 진행\"| 100\n    400 -->|\"채널 생성 요청\"| 500\n    500 -->|\"채널 생성\"| 100\n    100 -->|\"대화 콘텐츠 공유 요청\"| 600\n    600 -->|\"대화 콘텐츠 판매\"| 200\n    100 -->|\"전문가 등록 요청\"| 700\n    100 -->|\"비식별화 요청\"| 800\n    800 -->|\"비식별화 처리\"| 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠를 업로드하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "구매자 단말",
+          "component_type": "actor",
+          "description": "이야기 콘텐츠에 대한 구매의사를 출력 및 결제를 진행하는 사용자",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "양방향 대화 진행",
+              "direction": "<->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "이야기구축부",
+          "component_type": "process",
+          "description": "이야기 콘텐츠를 업로드받는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "이야기 콘텐츠 업로드",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "일정관리부",
+          "component_type": "process",
+          "description": "구매의사를 출력 및 결제 후 일정을 설정하는 부서",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "일정 설정 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "일정 전달",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "이야기전달부",
+          "component_type": "process",
+          "description": "설정된 일정에 따라 양방향 대화를 진행하는 채널 생성",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "채널 생성 요청",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "채널 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "콘텐츠판매부",
+          "component_type": "process",
+          "description": "대화 콘텐츠를 판매하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "대화 콘텐츠 공유 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "대화 콘텐츠 판매",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "700",
+          "name": "직업훈련부",
+          "component_type": "process",
+          "description": "사용자를 전문가로 등록하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "전문가 등록 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "800",
+          "name": "익명화부",
+          "component_type": "process",
+          "description": "사용자의 얼굴 및 음성을 변조하는 부서",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "비식별화 요청",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "비식별화 처리",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 5",
+      "output_path": "drawing_analysis/1020220167302/1020220167302_fig_5.mmd"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "app_num": "1020170084177",
+  "invention_type": "method",
+  "main_concept": "사용자의 입력 영상을 기반으로 한 생체 정보 인증 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력 영상",
+      "component_type": "data",
+      "description": "사용자의 얼굴 및 홍채를 포함하는 영상",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 환경 정보",
+      "component_type": "data",
+      "description": "입력 영상이 촬영된 환경 조건을 나타내는 정보",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "매칭되는",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "등록 특징 벡터",
+      "component_type": "data",
+      "description": "등록된 생체 정보의 특징 벡터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "매칭되는",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "퓨전 유사도",
+      "component_type": "data",
+      "description": "제1 유사도와 제2 유사도를 기반으로 한 최종 유사도",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "인증 프로세서",
+      "component_type": "device",
+      "description": "사용자를 인증하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리하는",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "산출하는",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020170084177",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 인증 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"입력 영상\"]\n    200[\"제1 환경 정보\"]\n    300[\"등록 특징 벡터\"]\n    400[\"퓨전 유사도\"]\n    500[\"인증 프로세서\"]\n    \n    100 -->|\"처리하는\"| 500\n    500 -->|\"매칭되는\"| 200\n    200 -->|\"매칭되는\"| 300\n    500 -->|\"산출하는\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 영상",
+          "component_type": "data",
+          "description": "사용자의 얼굴 및 홍채를 포함하는 영상",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 환경 정보",
+          "component_type": "data",
+          "description": "입력 영상이 촬영된 환경 조건을 나타내는 정보",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "매칭되는",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "등록 특징 벡터",
+          "component_type": "data",
+          "description": "등록된 생체 정보의 특징 벡터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭되는",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "퓨전 유사도",
+          "component_type": "data",
+          "description": "제1 유사도와 제2 유사도를 기반으로 한 최종 유사도",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "인증 프로세서",
+          "component_type": "device",
+          "description": "사용자를 인증하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리하는",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "산출하는",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020170084177/1020170084177_fig_1.mmd"
+    },
+    {
+      "app_num": "1020170084177",
+      "diagram_type": "classDiagram",
+      "diagram_title": "사용자 인증 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 입력영상 {\n        +String 영상데이터\n    }\n    class 제1환경정보 {\n        +String 환경조건\n    }\n    class 등록특징벡터 {\n        +String 특징벡터\n    }\n    class 퓨전유사도 {\n        +String 최종유사도\n    }\n    class 인증프로세서 {\n        +인증()\n    }\n    입력영상 --> 인증프로세서 : \"처리하는\"\n    제1환경정보 --> 등록특징벡터 : \"매칭되는\"\n    등록특징벡터 --> 제1환경정보 : \"매칭되는\"\n    인증프로세서 --> 퓨전유사도 : \"산출하는\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "입력 영상",
+          "component_type": "data",
+          "description": "사용자의 얼굴 및 홍채를 포함하는 영상",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 환경 정보",
+          "component_type": "data",
+          "description": "입력 영상이 촬영된 환경 조건을 나타내는 정보",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "매칭되는",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "등록 특징 벡터",
+          "component_type": "data",
+          "description": "등록된 생체 정보의 특징 벡터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "매칭되는",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "퓨전 유사도",
+          "component_type": "data",
+          "description": "제1 유사도와 제2 유사도를 기반으로 한 최종 유사도",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "인증 프로세서",
+          "component_type": "device",
+          "description": "사용자를 인증하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리하는",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "산출하는",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020170084177/1020170084177_fig_2.mmd"
+    }
+  ]
+}

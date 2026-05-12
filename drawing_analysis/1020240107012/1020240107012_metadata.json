@@ -1,0 +1,305 @@
+{
+  "app_num": "1020240107012",
+  "invention_type": "system",
+  "main_concept": "요양보호 종합관리 시스템을 통해 피보호자와 요양보호사 간의 매칭 및 관리 서비스를 제공하는 시스템",
+  "components": [
+    {
+      "component_id": "10",
+      "name": "회원관리부",
+      "component_type": "process",
+      "description": "피보호자, 보호자 및 요양보호사의 회원가입 및 관리 수행",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "매칭서비스부",
+      "component_type": "process",
+      "description": "피보호자와 요양보호사 간의 매칭 및 관리 수행",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "회원정보를 기반으로 매칭",
+          "direction": "->"
+        },
+        {
+          "target": "30",
+          "label": "서비스 제공을 위한 매칭",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "30",
+      "name": "요양보호서비스부",
+      "component_type": "process",
+      "description": "요양보호 서비스를 제공하기 위한 모듈",
+      "relationships": [
+        {
+          "target": "20",
+          "label": "매칭된 요양보호사에게 서비스 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "40",
+      "name": "모니터링부",
+      "component_type": "process",
+      "description": "서비스에 대한 모니터링 및 평가 수행",
+      "relationships": []
+    },
+    {
+      "component_id": "50",
+      "name": "커뮤니티 관리부",
+      "component_type": "process",
+      "description": "사용자 및 요양보호사 간의 커뮤니티 형성",
+      "relationships": []
+    },
+    {
+      "component_id": "60",
+      "name": "사용자메뉴 관리부",
+      "component_type": "process",
+      "description": "사용자의 개인 이력 및 메뉴 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "70",
+      "name": "데이터베이스부",
+      "component_type": "data",
+      "description": "데이터 저장 및 관리",
+      "relationships": []
+    },
+    {
+      "component_id": "110",
+      "name": "회원정보획득모듈",
+      "component_type": "process",
+      "description": "회원의 프로필 정보 획득",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "회원관리부에 정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "회원등급관리모듈",
+      "component_type": "process",
+      "description": "회원의 등급을 부여하고 관리",
+      "relationships": [
+        {
+          "target": "10",
+          "label": "회원관리부에 등급 정보 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240107012",
+      "diagram_type": "classDiagram",
+      "diagram_title": "요양보호 종합관리 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 회원관리부 {\n        +회원가입()\n        +회원정보관리()\n    }\n    class 매칭서비스부 {\n        +피보호자와 요양보호사 매칭()\n    }\n    class 요양보호서비스부 {\n        +서비스 제공()\n    }\n    class 모니터링부 {\n        +서비스 모니터링()\n    }\n    class 커뮤니티 관리부 {\n        +커뮤니티 형성()\n    }\n    class 사용자메뉴 관리부 {\n        +개인 이력 관리()\n    }\n    class 데이터베이스부 {\n        +데이터 저장()\n    }\n    class 회원정보획득모듈 {\n        +회원 프로필 정보 획득()\n    }\n    class 회원등급관리모듈 {\n        +회원 등급 부여 및 관리()\n    }\n\n    회원관리부 --> 회원정보획득모듈 : \"회원관리부에 정보 제공\"\n    회원관리부 --> 회원등급관리모듈 : \"회원관리부에 등급 정보 제공\"\n    회원관리부 --> 매칭서비스부 : \"회원정보를 기반으로 매칭\"\n    매칭서비스부 --> 요양보호서비스부 : \"서비스 제공을 위한 매칭\"\n    요양보호서비스부 --> 모니터링부 : \"서비스 모니터링\"",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "회원관리부",
+          "component_type": "process",
+          "description": "피보호자, 보호자 및 요양보호사의 회원가입 및 관리 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "매칭서비스부",
+          "component_type": "process",
+          "description": "피보호자와 요양보호사 간의 매칭 및 관리 수행",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원정보를 기반으로 매칭",
+              "direction": "->"
+            },
+            {
+              "target": "30",
+              "label": "서비스 제공을 위한 매칭",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "요양보호서비스부",
+          "component_type": "process",
+          "description": "요양보호 서비스를 제공하기 위한 모듈",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "매칭된 요양보호사에게 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "모니터링부",
+          "component_type": "process",
+          "description": "서비스에 대한 모니터링 및 평가 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "50",
+          "name": "커뮤니티 관리부",
+          "component_type": "process",
+          "description": "사용자 및 요양보호사 간의 커뮤니티 형성",
+          "relationships": []
+        },
+        {
+          "component_id": "60",
+          "name": "사용자메뉴 관리부",
+          "component_type": "process",
+          "description": "사용자의 개인 이력 및 메뉴 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "70",
+          "name": "데이터베이스부",
+          "component_type": "data",
+          "description": "데이터 저장 및 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "110",
+          "name": "회원정보획득모듈",
+          "component_type": "process",
+          "description": "회원의 프로필 정보 획득",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원관리부에 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "회원등급관리모듈",
+          "component_type": "process",
+          "description": "회원의 등급을 부여하고 관리",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원관리부에 등급 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240107012/1020240107012_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240107012",
+      "diagram_type": "flowchart",
+      "diagram_title": "요양보호 서비스 신청 및 매칭 흐름도",
+      "mermaid_code": "flowchart TD\n    10[\"회원관리부\"]\n    20[\"매칭서비스부\"]\n    30[\"요양보호서비스부\"]\n    40[\"모니터링부\"]\n    110[\"회원정보획득모듈\"]\n    120[\"회원등급관리모듈\"]\n\n    10 -->|\"회원가입 및 정보 획득\"| 110\n    10 -->|\"회원 등급 부여 및 관리\"| 120\n    110 -->|\"회원정보 제공\"| 20\n    120 -->|\"등급 정보 제공\"| 20\n    20 -->|\"매칭된 요양보호사에게 서비스 제공\"| 30\n    30 -->|\"서비스 제공 및 모니터링\"| 40",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "회원관리부",
+          "component_type": "process",
+          "description": "피보호자, 보호자 및 요양보호사의 회원가입 및 관리 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "매칭서비스부",
+          "component_type": "process",
+          "description": "피보호자와 요양보호사 간의 매칭 및 관리 수행",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원정보를 기반으로 매칭",
+              "direction": "->"
+            },
+            {
+              "target": "30",
+              "label": "서비스 제공을 위한 매칭",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "요양보호서비스부",
+          "component_type": "process",
+          "description": "요양보호 서비스를 제공하기 위한 모듈",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "매칭된 요양보호사에게 서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "모니터링부",
+          "component_type": "process",
+          "description": "서비스에 대한 모니터링 및 평가 수행",
+          "relationships": []
+        },
+        {
+          "component_id": "50",
+          "name": "커뮤니티 관리부",
+          "component_type": "process",
+          "description": "사용자 및 요양보호사 간의 커뮤니티 형성",
+          "relationships": []
+        },
+        {
+          "component_id": "60",
+          "name": "사용자메뉴 관리부",
+          "component_type": "process",
+          "description": "사용자의 개인 이력 및 메뉴 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "70",
+          "name": "데이터베이스부",
+          "component_type": "data",
+          "description": "데이터 저장 및 관리",
+          "relationships": []
+        },
+        {
+          "component_id": "110",
+          "name": "회원정보획득모듈",
+          "component_type": "process",
+          "description": "회원의 프로필 정보 획득",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원관리부에 정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "회원등급관리모듈",
+          "component_type": "process",
+          "description": "회원의 등급을 부여하고 관리",
+          "relationships": [
+            {
+              "target": "10",
+              "label": "회원관리부에 등급 정보 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240107012/1020240107012_fig_2.mmd"
+    }
+  ]
+}

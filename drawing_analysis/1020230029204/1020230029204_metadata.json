@@ -1,0 +1,161 @@
+{
+  "app_num": "1020230029204",
+  "invention_type": "system",
+  "main_concept": "기업의 기술적 요소와 재무적 요소를 고려하여 투자 여부를 판단하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "투자 판단 장치",
+      "component_type": "device",
+      "description": "특정 산업 분야를 선정하고 관련 기업을 판단하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "기술 판단 장치",
+      "component_type": "device",
+      "description": "정량적 데이터 및 정성적 기술 분석을 수행하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결과 전달",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "기술 분석 기관",
+      "component_type": "actor",
+      "description": "기술 분석을 수행하고 결과를 제공하는 기관",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "분석 요청",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "분석 결과 제공",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230029204",
+      "diagram_type": "flowchart",
+      "diagram_title": "기업 투자 여부 판단 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"투자 판단 장치\"]\n    200[\"기술 판단 장치\"]\n    300[\"기술 분석 기관\"]\n    \n    100 -->|\"요청\"| 200\n    300 <--|\"분석 요청\"| 200\n    200 -->|\"분석 결과 제공\"| 300\n    200 <--|\"결과 전달\"| 100",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "투자 판단 장치",
+          "component_type": "device",
+          "description": "특정 산업 분야를 선정하고 관련 기업을 판단하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "기술 판단 장치",
+          "component_type": "device",
+          "description": "정량적 데이터 및 정성적 기술 분석을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결과 전달",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기술 분석 기관",
+          "component_type": "actor",
+          "description": "기술 분석을 수행하고 결과를 제공하는 기관",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "분석 요청",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "분석 결과 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230029204/1020230029204_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230029204",
+      "diagram_type": "classDiagram",
+      "diagram_title": "기업 투자 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 투자판단장치 {\n        +String 산업선정()\n        +String 기업판단()\n    }\n    class 기술판단장치 {\n        +String 정량적데이터산출()\n        +String 정성적기술분석()\n    }\n    class 기술분석기관 {\n        +String 분석요청()\n        +String 결과제공()\n    }\n    투자판단장치 --> 기술판단장치 : \"요청\"\n    기술분석기관 --> 기술판단장치 : \"분석 요청\"\n    기술판단장치 --> 기술분석기관 : \"분석 결과 제공\"\n    기술판단장치 <-- 투자판단장치 : \"결과 전달\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "투자 판단 장치",
+          "component_type": "device",
+          "description": "특정 산업 분야를 선정하고 관련 기업을 판단하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "기술 판단 장치",
+          "component_type": "device",
+          "description": "정량적 데이터 및 정성적 기술 분석을 수행하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결과 전달",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "기술 분석 기관",
+          "component_type": "actor",
+          "description": "기술 분석을 수행하고 결과를 제공하는 기관",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "분석 요청",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "분석 결과 제공",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230029204/1020230029204_fig_2.mmd"
+    }
+  ]
+}

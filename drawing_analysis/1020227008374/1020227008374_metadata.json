@@ -1,0 +1,164 @@
+{
+  "app_num": "1020227008374",
+  "invention_type": "system",
+  "main_concept": "어텐션 신경망을 사용하여 입력 시퀀스를 프로세싱하고 출력을 생성하는 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "어텐션 신경망",
+      "component_type": "device",
+      "description": "입력 시퀀스를 프로세싱하여 출력을 생성하는 신경망",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "구성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "어텐션 블록",
+      "component_type": "device",
+      "description": "쿼리, 키, 값 입력을 수신하여 어텐션 계층 출력을 생성하는 블록",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "구성",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "구성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "어텐션 신경망 계층",
+      "component_type": "device",
+      "description": "어텐션 계층 입력에 어텐션 메커니즘을 적용하여 출력을 생성",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "게이팅 신경망 계층",
+      "component_type": "device",
+      "description": "어텐션 계층 출력과 어텐션 블록 입력에 게이팅 메커니즘을 적용하여 출력을 생성",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227008374",
+      "diagram_type": "flowchart",
+      "diagram_title": "어텐션 신경망 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"어텐션 신경망\"]\n    200[\"어텐션 블록\"]\n    300[\"어텐션 신경망 계층\"]\n    400[\"게이팅 신경망 계층\"]\n    100 -->|\"구성\"| 200\n    200 -->|\"구성\"| 300\n    200 -->|\"구성\"| 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "어텐션 신경망",
+          "component_type": "device",
+          "description": "입력 시퀀스를 프로세싱하여 출력을 생성하는 신경망",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "어텐션 블록",
+          "component_type": "device",
+          "description": "쿼리, 키, 값 입력을 수신하여 어텐션 계층 출력을 생성하는 블록",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "어텐션 신경망 계층",
+          "component_type": "device",
+          "description": "어텐션 계층 입력에 어텐션 메커니즘을 적용하여 출력을 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "게이팅 신경망 계층",
+          "component_type": "device",
+          "description": "어텐션 계층 출력과 어텐션 블록 입력에 게이팅 메커니즘을 적용하여 출력을 생성",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227008374/1020227008374_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227008374",
+      "diagram_type": "classDiagram",
+      "diagram_title": "어텐션 블록 구성도",
+      "mermaid_code": "classDiagram\n    class AttentionNetwork {\n        +String inputSequence\n        +process()\n    }\n    class AttentionBlock {\n        +String query\n        +String key\n        +String value\n        +generateOutput()\n    }\n    class AttentionLayer {\n        +applyAttentionMechanism()\n    }\n    class GatingLayer {\n        +applyGatingMechanism()\n    }\n    AttentionNetwork --> AttentionBlock : \"구성\"\n    AttentionBlock --> AttentionLayer : \"구성\"\n    AttentionBlock --> GatingLayer : \"구성\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "어텐션 신경망",
+          "component_type": "device",
+          "description": "입력 시퀀스를 프로세싱하여 출력을 생성하는 신경망",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "어텐션 블록",
+          "component_type": "device",
+          "description": "쿼리, 키, 값 입력을 수신하여 어텐션 계층 출력을 생성하는 블록",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "구성",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "구성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "어텐션 신경망 계층",
+          "component_type": "device",
+          "description": "어텐션 계층 입력에 어텐션 메커니즘을 적용하여 출력을 생성",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "게이팅 신경망 계층",
+          "component_type": "device",
+          "description": "어텐션 계층 출력과 어텐션 블록 입력에 게이팅 메커니즘을 적용하여 출력을 생성",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227008374/1020227008374_fig_2.mmd"
+    }
+  ]
+}

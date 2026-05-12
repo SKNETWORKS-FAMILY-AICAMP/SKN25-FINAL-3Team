@@ -1,0 +1,161 @@
+{
+  "app_num": "1020230130050",
+  "invention_type": "software",
+  "main_concept": "플랫폼 서비스를 통해 탄소 저감 이벤트를 판별하고 탄소 배출권을 획득하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "device",
+      "description": "탄소 저감 이벤트를 처리하고 배출권을 획득하는 주체",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "명령어를 실행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "메모리",
+      "component_type": "data",
+      "description": "서버의 동작을 위한 명령어를 저장",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "명령어를 실행하여 탄소 저감 이벤트를 처리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "서버의 일부",
+          "direction": "<-"
+        },
+        {
+          "target": "200",
+          "label": "명령어를 실행",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230130050",
+      "diagram_type": "flowchart",
+      "diagram_title": "탄소 저감 이벤트 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"메모리\"]\n    300[\"프로세서\"]\n    400[\"탄소 저감 이벤트 획득\"]\n    500[\"탄소 저감량 판별\"]\n    600[\"탄소 배출권 획득\"]\n    \n    400 -->|\"이벤트 수집\"| 100\n    100 -->|\"명령어를 실행\"| 300\n    300 -->|\"판별 결과\"| 500\n    500 -->|\"배출권 획득\"| 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "탄소 저감 이벤트를 처리하고 배출권을 획득하는 주체",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "서버의 동작을 위한 명령어를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "명령어를 실행하여 탄소 저감 이벤트를 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버의 일부",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230130050/1020230130050_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230130050",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 서버 {\n        +String 이벤트처리\n        +배출권획득()\n    }\n    class 메모리 {\n        +String 명령어저장\n    }\n    class 프로세서 {\n        +String 명령어실행\n        +이벤트처리()\n    }\n    서버 --> 메모리 : \"명령어를 실행\"\n    프로세서 --> 서버 : \"서버의 일부\"\n    프로세서 --> 메모리 : \"명령어를 실행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "device",
+          "description": "탄소 저감 이벤트를 처리하고 배출권을 획득하는 주체",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "메모리",
+          "component_type": "data",
+          "description": "서버의 동작을 위한 명령어를 저장",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "명령어를 실행하여 탄소 저감 이벤트를 처리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "서버의 일부",
+              "direction": "<-"
+            },
+            {
+              "target": "200",
+              "label": "명령어를 실행",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230130050/1020230130050_fig_2.mmd"
+    }
+  ]
+}

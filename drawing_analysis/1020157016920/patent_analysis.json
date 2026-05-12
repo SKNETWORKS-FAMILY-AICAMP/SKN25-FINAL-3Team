@@ -1,0 +1,55 @@
+{
+  "invention_type": "method",
+  "main_concept": "기계어 명령을 실행하기 위한 방법",
+  "technical_problem": "기계어 명령 실행의 효율성을 개선하고자 하는 기술적 과제",
+  "solution_summary": "처리 회로에 의해 판독 가능한 명령들을 저장하는 비-일시적인 컴퓨터 읽기가능 저장 매체를 통해 기계어 명령을 실행하는 방법",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "기계어 명령 실행 시스템 구성도",
+      "purpose": "기계어 명령 실행을 위한 시스템의 구성 요소를 나타내기 위함",
+      "source_text": "하나 또는 그 이상의 특징들이 구체적으로 언급되고 본 명세서의 끝 부분의 청구 범위에서 예시로서 분명하게 청구된다."
+    },
+    {
+      "fig_number": "도 2",
+      "diagram_type": "flowchart",
+      "title": "기계어 명령 실행 처리 흐름도",
+      "purpose": "기계어 명령 실행 과정의 단계별 흐름을 설명하기 위함",
+      "source_text": "상기 방법은: 실행을 위한 기계어 명령을, 처리 회로에 의해서, 획득하는 단계 및 상기 기계어 명령을 실행하는 단계를 포함하고"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "10",
+      "name": "1740839",
+      "component_type": "data",
+      "description": "기계어 명령을 저장하는 비-일시적인 컴퓨터 읽기가능 저장 매체",
+      "source_text": "저장하는 비-일시적인 컴퓨터 읽기가능 저장 매체로서"
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "명령 획득",
+      "description": "처리 회로에 의해 기계어 명령을 획득하는 단계",
+      "source_text": "실행을 위한 기계어 명령을, 처리 회로에 의해서, 획득하는 단계"
+    },
+    {
+      "step_id": "S200",
+      "name": "명령 실행",
+      "description": "획득한 기계어 명령을 실행하는 단계",
+      "source_text": "상기 기계어 명령을 실행하는 단계를 포함하고"
+    },
+    {
+      "step_id": "S300",
+      "name": "결과 배치",
+      "description": "제1 결과를 선택된 엘리먼트 내에 배치하는 단계",
+      "source_text": "상기 제1 오퍼랜드의 선택된(selected) 엘리먼트 내에 상기 제1 결과를 배치하는 단계"
+    }
+  ],
+  "key_actors": [
+    "프로세서",
+    "저장 매체"
+  ]
+}

@@ -1,0 +1,23 @@
+%% 1020220153912 - 레이블링 장치 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 객체탐지부 {
+        +String 영상프레임
+        +detectObjects()
+    }
+    class 객체추적부 {
+        +String 고유식별자
+        +trackObjects()
+    }
+    class 행위식별부 {
+        +String 행위정보
+        +identifyBehavior()
+    }
+    class 행동검출부 {
+        +String 이상행동정보
+        +detectAnomalies()
+    }
+    객체탐지부 --> 객체추적부 : "객체 탐지 결과를 기반으로"
+    객체추적부 --> 행위식별부 : "객체 추적 결과를 기반으로"
+    행위식별부 --> 행동검출부 : "행위 식별 결과를 기반으로"

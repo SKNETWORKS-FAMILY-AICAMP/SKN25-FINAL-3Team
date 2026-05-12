@@ -1,0 +1,24 @@
+%% 1020230142119 - 펫 진단 시스템
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 프로세서 {
+        +String pcrResult
+        +predictDisease()
+    }
+    class 메모리 {
+        +String dataStorage
+        +storeData()
+    }
+    class 사용자디바이스 {
+        +String userInput
+        +sendInput()
+    }
+    class 서버 {
+        +String processedData
+        +provideResult()
+    }
+    프로세서 --> 메모리 : "연결"
+    사용자디바이스 --> 서버 : "통신"
+    서버 --> 사용자디바이스 : "통신"
+    서버 --> 프로세서 : "연결"

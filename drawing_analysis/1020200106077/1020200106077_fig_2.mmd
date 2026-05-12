@@ -1,0 +1,21 @@
+%% 1020200106077 - 메모리 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class MemoryDevice {
+        +String description
+    }
+    class MemoryController {
+        +String description
+        +control()
+    }
+    class MapCache {
+        +String description
+    }
+    class Timer {
+        +String description
+        +setTimer()
+    }
+    MemoryDevice <|-- MemoryController : "제어"
+    MemoryController --> MapCache : "사용"
+    MapCache --> Timer : "연결"

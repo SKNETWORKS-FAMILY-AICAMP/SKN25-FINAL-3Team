@@ -1,0 +1,161 @@
+{
+  "app_num": "1020200015713",
+  "invention_type": "hardware",
+  "main_concept": "전자 장치를 이용하여 다양한 타입의 콘텐츠를 운용하는 방법 및 장치",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "무선 통신 회로",
+      "component_type": "device",
+      "description": "전자 장치 간의 무선 통신을 담당",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "터치 디스플레이",
+      "component_type": "device",
+      "description": "사용자와의 인터페이스를 제공",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "메모리",
+      "component_type": "device",
+      "description": "데이터 및 태그 정보를 저장",
+      "relationships": []
+    },
+    {
+      "component_id": "400",
+      "name": "프로세서",
+      "component_type": "device",
+      "description": "데이터 처리 및 콘텐츠 운용을 관리",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "연결",
+          "direction": "->"
+        },
+        {
+          "target": "300",
+          "label": "연결",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020200015713",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 장치의 블록도",
+      "mermaid_code": "classDiagram\n    class 무선통신회로 {\n        +String 통신데이터\n    }\n    class 터치디스플레이 {\n        +String 사용자입력\n    }\n    class 메모리 {\n        +String 태그정보\n    }\n    class 프로세서 {\n        +String 처리결과\n        +데이터처리()\n        +콘텐츠운용()\n    }\n    프로세서 --> 무선통신회로 : \"연결\"\n    프로세서 --> 터치디스플레이 : \"연결\"\n    프로세서 --> 메모리 : \"연결\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "무선 통신 회로",
+          "component_type": "device",
+          "description": "전자 장치 간의 무선 통신을 담당",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "터치 디스플레이",
+          "component_type": "device",
+          "description": "사용자와의 인터페이스를 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "데이터 및 태그 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "데이터 처리 및 콘텐츠 운용을 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020200015713/1020200015713_fig_1.mmd"
+    },
+    {
+      "app_num": "1020200015713",
+      "diagram_type": "flowchart",
+      "diagram_title": "콘텐츠 운용 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"무선 통신 회로\"]\n    200[\"터치 디스플레이\"]\n    300[\"메모리\"]\n    400[\"프로세서\"]\n    500[\"태그 정보를 수신하여 데이터베이스 업데이트\"]\n    600[\"특정 키워드를 갖는 태그 정보 획득 및 검색 결과 표시\"]\n    700[\"콘텐츠 선택 정보 수신\"]\n    800[\"선택된 콘텐츠에 대한 액션 정보 수신\"]\n    900[\"콘텐츠 그룹화 및 전송\"]\n    1000[\"URI 가공 및 액션 수행\"]\n\n    400 -->|\"연결\"| 100\n    400 -->|\"연결\"| 200\n    400 -->|\"연결\"| 300\n    400 --> 500\n    500 --> 600\n    600 --> 700\n    700 --> 800\n    800 --> 900\n    900 --> 1000",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "무선 통신 회로",
+          "component_type": "device",
+          "description": "전자 장치 간의 무선 통신을 담당",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "터치 디스플레이",
+          "component_type": "device",
+          "description": "사용자와의 인터페이스를 제공",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "메모리",
+          "component_type": "device",
+          "description": "데이터 및 태그 정보를 저장",
+          "relationships": []
+        },
+        {
+          "component_id": "400",
+          "name": "프로세서",
+          "component_type": "device",
+          "description": "데이터 처리 및 콘텐츠 운용을 관리",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "연결",
+              "direction": "->"
+            },
+            {
+              "target": "300",
+              "label": "연결",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 4",
+      "output_path": "drawing_analysis/1020200015713/1020200015713_fig_4.mmd"
+    }
+  ]
+}

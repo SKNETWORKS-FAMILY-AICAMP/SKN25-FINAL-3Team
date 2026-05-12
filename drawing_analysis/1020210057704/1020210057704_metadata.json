@@ -1,0 +1,221 @@
+{
+  "app_num": "1020210057704",
+  "invention_type": "method",
+  "main_concept": "제조된 반도체 시편의 이미지를 세그먼트화하는 컴퓨터화된 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서 및 메모리 회로(PMC)",
+      "component_type": "device",
+      "description": "이미지 처리 및 세그먼트화 작업을 수행하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "제1 확률 맵",
+      "component_type": "data",
+      "description": "이미지의 픽셀에 대한 예측된 확률을 표시하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제1 라벨 맵",
+      "component_type": "data",
+      "description": "세그먼트 및 라벨 정보를 제공하는 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "생성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제2 확률 맵",
+      "component_type": "data",
+      "description": "모의실험된 확률을 표시하는 데이터",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "기반하여 생성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제2 라벨 맵",
+      "component_type": "data",
+      "description": "세그먼트화된 이미지에 대한 최종 라벨 정보를 제공하는 데이터",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "기반하여 생성됨",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "기반하여 생성됨",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020210057704",
+      "diagram_type": "flowchart",
+      "diagram_title": "반도체 시편 이미지 세그먼트화 과정",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서 및 메모리 회로(PMC)\"]\n    200[\"제1 확률 맵\"]\n    300[\"제1 라벨 맵\"]\n    400[\"제2 확률 맵\"]\n    500[\"제2 라벨 맵\"]\n    \n    100 -->|\"생성됨\"| 200\n    100 -->|\"생성됨\"| 300\n    300 -->|\"기반하여 생성됨\"| 400\n    200 -->|\"기반하여 생성됨\"| 500\n    400 -->|\"기반하여 생성됨\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서 및 메모리 회로(PMC)",
+          "component_type": "device",
+          "description": "이미지 처리 및 세그먼트화 작업을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 확률 맵",
+          "component_type": "data",
+          "description": "이미지의 픽셀에 대한 예측된 확률을 표시하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 라벨 맵",
+          "component_type": "data",
+          "description": "세그먼트 및 라벨 정보를 제공하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 확률 맵",
+          "component_type": "data",
+          "description": "모의실험된 확률을 표시하는 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 라벨 맵",
+          "component_type": "data",
+          "description": "세그먼트화된 이미지에 대한 최종 라벨 정보를 제공하는 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020210057704/1020210057704_fig_1.mmd"
+    },
+    {
+      "app_num": "1020210057704",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 프로세서및메모리회로PMC {\n        +String 이미지처리\n        +segment화()\n    }\n    class 제1확률맵 {\n        +String 픽셀확률\n    }\n    class 제1라벨맵 {\n        +String 세그먼트정보\n    }\n    class 제2확률맵 {\n        +String 모의실험확률\n    }\n    class 제2라벨맵 {\n        +String 최종라벨정보\n    }\n    프로세서및메모리회로PMC --> 제1확률맵 : \"생성됨\"\n    프로세서및메모리회로PMC --> 제1라벨맵 : \"생성됨\"\n    제1라벨맵 --> 제2확률맵 : \"기반하여 생성됨\"\n    제1확률맵 --> 제2라벨맵 : \"기반하여 생성됨\"\n    제2확률맵 --> 제2라벨맵 : \"기반하여 생성됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서 및 메모리 회로(PMC)",
+          "component_type": "device",
+          "description": "이미지 처리 및 세그먼트화 작업을 수행하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "제1 확률 맵",
+          "component_type": "data",
+          "description": "이미지의 픽셀에 대한 예측된 확률을 표시하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 라벨 맵",
+          "component_type": "data",
+          "description": "세그먼트 및 라벨 정보를 제공하는 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 확률 맵",
+          "component_type": "data",
+          "description": "모의실험된 확률을 표시하는 데이터",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제2 라벨 맵",
+          "component_type": "data",
+          "description": "세그먼트화된 이미지에 대한 최종 라벨 정보를 제공하는 데이터",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "기반하여 생성됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020210057704/1020210057704_fig_2.mmd"
+    }
+  ]
+}

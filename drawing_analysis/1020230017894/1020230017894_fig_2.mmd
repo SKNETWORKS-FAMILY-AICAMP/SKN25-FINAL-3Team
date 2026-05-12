@@ -1,0 +1,26 @@
+%% 1020230017894 - 성형후기 매칭 서비스 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 사용자단말 {
+        +String 안면이미지
+        +receiveReviewData()
+    }
+    class 빅데이터화부 {
+        +collectData()
+        +mapAndStore()
+    }
+    class 매핑부 {
+        +extractSimilarImages()
+    }
+    class 추출부 {
+        +sendReviewData()
+    }
+    class 전송부 {
+        +transmitData()
+    }
+    사용자단말 --> 빅데이터화부 : "안면 이미지 업로드"
+    빅데이터화부 --> 매핑부 : "데이터를 매핑하여 저장"
+    매핑부 --> 추출부 : "유사한 성형전 이미지 추출"
+    추출부 --> 전송부 : "후기 데이터 전송"
+    전송부 --> 사용자단말 : "후기 데이터 전송"

@@ -1,0 +1,27 @@
+%% 1020230075924 - 광고 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 마켓플레이스서버 {
+        +String 광고판매정보
+        +receiveAdInfo()
+        +sendAdSelectionScreen()
+    }
+    class 사용자기기 {
+        +String 광고영역정보
+        +sendAdInfo()
+    }
+    class 광고주서비스서버 {
+        +String 광고구매요청
+        +receivePurchaseRequest()
+        +sendPurchaseConfirmation()
+    }
+    class 데이터베이스 {
+        +String 광고판매정보저장
+        +storeAdInfo()
+    }
+    사용자기기 --> 마켓플레이스서버 : "광고 판매 정보 전송"
+    마켓플레이스서버 --> 광고주서비스서버 : "광고 구매 요청 수신"
+    마켓플레이스서버 --> 데이터베이스 : "광고 판매 정보 저장"
+    광고주서비스서버 --> 마켓플레이스서버 : "광고 구매 요청 전송"
+    광고주서비스서버 --> 데이터베이스 : "광고 구매 정보 수신"

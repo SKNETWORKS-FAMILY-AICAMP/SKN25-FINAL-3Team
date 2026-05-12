@@ -1,0 +1,22 @@
+%% 1020197012085 - 신경망 구성 요소 다이어그램
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 컴퓨팅디바이스 {
+        +String 입력활성화
+        +processActivation()
+    }
+    class 제어기 {
+        +manageMemory()
+        +processInput()
+    }
+    class 메모리뱅크 {
+        +String 저장된활성화
+        +storeActivation()
+    }
+    class 계산어레이 {
+        +performInference()
+    }
+    제어기 --> 컴퓨팅디바이스 : "제어"
+    메모리뱅크 <-- 제어기 : "저장"
+    계산어레이 <-- 제어기 : "액세스"

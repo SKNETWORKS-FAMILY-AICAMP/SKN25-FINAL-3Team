@@ -1,0 +1,236 @@
+{
+  "app_num": "1020220088007",
+  "invention_type": "method",
+  "main_concept": "인공지능 기반 인플루언서 연계 제품 구매 및 판매 플랫폼 서비스 제공 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "제1 업체 단말",
+      "component_type": "actor",
+      "description": "판매 요청 정보를 전송하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "SNS 서버",
+      "component_type": "data",
+      "description": "인플루언서 정보를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "판매 요청 정보 수신",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "인공지능 시스템",
+      "component_type": "process",
+      "description": "판매 요구 사항 및 SNS 활동 현황을 분석하는 시스템",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "인플루언서 정보 분석",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "추천 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제1 인플루언서 단말",
+      "component_type": "actor",
+      "description": "추천 정보를 수신하고 판매 페이지를 생성하는 장치",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "추천 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "500",
+          "label": "판매 페이지 생성",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "제1 페이지",
+      "component_type": "data",
+      "description": "판매를 위한 웹 페이지",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "판매 페이지 제공",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220088007",
+      "diagram_type": "flowchart",
+      "diagram_title": "인플루언서 연계 제품 판매 프로세스",
+      "mermaid_code": "flowchart TD\n    100[\"제1 업체 단말\"]\n    200[\"SNS 서버\"]\n    300[\"인공지능 시스템\"]\n    400[\"제1 인플루언서 단말\"]\n    500[\"제1 페이지\"]\n\n    100 -->|\"판매 요청 정보 수신\"| 200\n    200 -->|\"인플루언서 정보 분석\"| 300\n    300 -->|\"추천 정보 전송\"| 400\n    400 -->|\"판매 페이지 생성\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 업체 단말",
+          "component_type": "actor",
+          "description": "판매 요청 정보를 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "SNS 서버",
+          "component_type": "data",
+          "description": "인플루언서 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매 요청 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "인공지능 시스템",
+          "component_type": "process",
+          "description": "판매 요구 사항 및 SNS 활동 현황을 분석하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "인플루언서 정보 분석",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "추천 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 인플루언서 단말",
+          "component_type": "actor",
+          "description": "추천 정보를 수신하고 판매 페이지를 생성하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "추천 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "판매 페이지 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제1 페이지",
+          "component_type": "data",
+          "description": "판매를 위한 웹 페이지",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "판매 페이지 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220088007/1020220088007_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220088007",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 제1업체단말 {\n        +판매요청정보전송()\n    }\n    class SNS서버 {\n        +인플루언서정보제공()\n    }\n    class 인공지능시스템 {\n        +판매요구사항분석()\n        +SNS활동현황분석()\n    }\n    class 제1인플루언서단말 {\n        +추천정보수신()\n        +판매페이지생성()\n    }\n    class 제1페이지 {\n        +판매페이지제공()\n    }\n    제1업체단말 --> SNS서버 : \"판매 요청 정보 수신\"\n    SNS서버 --> 인공지능시스템 : \"인플루언서 정보 분석\"\n    인공지능시스템 --> 제1인플루언서단말 : \"추천 정보 전송\"\n    제1인플루언서단말 --> 제1페이지 : \"판매 페이지 생성\"\n    제1페이지 --> 제1인플루언서단말 : \"판매 페이지 제공\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "제1 업체 단말",
+          "component_type": "actor",
+          "description": "판매 요청 정보를 전송하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "SNS 서버",
+          "component_type": "data",
+          "description": "인플루언서 정보를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "판매 요청 정보 수신",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "인공지능 시스템",
+          "component_type": "process",
+          "description": "판매 요구 사항 및 SNS 활동 현황을 분석하는 시스템",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "인플루언서 정보 분석",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "추천 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제1 인플루언서 단말",
+          "component_type": "actor",
+          "description": "추천 정보를 수신하고 판매 페이지를 생성하는 장치",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "추천 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "500",
+              "label": "판매 페이지 생성",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "제1 페이지",
+          "component_type": "data",
+          "description": "판매를 위한 웹 페이지",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "판매 페이지 제공",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220088007/1020220088007_fig_2.mmd"
+    }
+  ]
+}

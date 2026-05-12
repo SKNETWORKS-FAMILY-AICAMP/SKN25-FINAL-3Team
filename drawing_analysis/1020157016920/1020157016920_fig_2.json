@@ -1,0 +1,47 @@
+{
+  "fig_number": "도 2",
+  "title": "기계어 명령 실행 처리 흐름도",
+  "diagram_type": "flowchart",
+  "purpose": "기계어 명령 실행 과정의 단계별 흐름을 설명하기 위함",
+  "figure_source_text": "상기 방법은: 실행을 위한 기계어 명령을, 처리 회로에 의해서, 획득하는 단계 및 상기 기계어 명령을 실행하는 단계를 포함하고",
+  "elements": [
+    {
+      "id": "S100",
+      "ref_no": "S100",
+      "name": "명령 획득",
+      "type": "process",
+      "description": "처리 회로에 의해 기계어 명령을 획득하는 단계",
+      "source_text": "실행을 위한 기계어 명령을, 처리 회로에 의해서, 획득하는 단계"
+    },
+    {
+      "id": "S200",
+      "ref_no": "S200",
+      "name": "명령 실행",
+      "type": "process",
+      "description": "획득한 기계어 명령을 실행하는 단계",
+      "source_text": "상기 기계어 명령을 실행하는 단계를 포함하고"
+    },
+    {
+      "id": "S300",
+      "ref_no": "S300",
+      "name": "결과 배치",
+      "type": "process",
+      "description": "제1 결과를 선택된 엘리먼트 내에 배치하는 단계",
+      "source_text": "상기 제1 오퍼랜드의 선택된(selected) 엘리먼트 내에 상기 제1 결과를 배치하는 단계"
+    }
+  ],
+  "relations": [
+    {
+      "from": "S100",
+      "to": "S200",
+      "label": "다음 단계",
+      "source_text": "상기 기계어 명령을 실행하는 단계를 포함하고"
+    },
+    {
+      "from": "S200",
+      "to": "S300",
+      "label": "다음 단계",
+      "source_text": "상기 제1 오퍼랜드의 선택된(selected) 엘리먼트 내에 상기 제1 결과를 배치하는 단계"
+    }
+  ]
+}

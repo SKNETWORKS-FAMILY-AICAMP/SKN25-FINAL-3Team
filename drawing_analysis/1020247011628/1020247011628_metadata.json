@@ -1,0 +1,236 @@
+{
+  "app_num": "1020247011628",
+  "invention_type": "system",
+  "main_concept": "전자 디바이스 제조 시스템에서 이송 챔버 로봇과 센서 툴을 결합하여 프로세스 챔버 내에서 측정을 수행하는 기술",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "이송 챔버",
+      "component_type": "device",
+      "description": "기판을 프로세스 챔버로 이송하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "툴 스테이션",
+      "component_type": "device",
+      "description": "이송 챔버 내에 위치하여 센서 툴을 리트리브하는 역할",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "리트리브",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "프로세스 챔버",
+      "component_type": "device",
+      "description": "기판 제조 과정에서 사용되는 챔버",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "결합",
+          "direction": "<-"
+        },
+        {
+          "target": "400",
+          "label": "측정 수행",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "이송 챔버 로봇",
+      "component_type": "device",
+      "description": "기판을 이송하고 센서 툴을 통해 측정을 수행하는 로봇",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "측정 수행",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "결합",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "센서 툴",
+      "component_type": "device",
+      "description": "측정을 수행하는 센서들이 포함된 툴",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "결합",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020247011628",
+      "diagram_type": "classDiagram",
+      "diagram_title": "전자 디바이스 제조 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 이송챔버 {\n        +String 역할: 기판을 프로세스 챔버로 이송하는 역할\n    }\n    class 툴스테이션 {\n        +String 역할: 이송 챔버 내에 위치하여 센서 툴을 리트리브하는 역할\n    }\n    class 프로세스챔버 {\n        +String 역할: 기판 제조 과정에서 사용되는 챔버\n    }\n    class 이송챔버로봇 {\n        +String 역할: 기판을 이송하고 센서 툴을 통해 측정을 수행하는 로봇\n    }\n    class 센서툴 {\n        +String 역할: 측정을 수행하는 센서들이 포함된 툴\n    }\n    이송챔버 --> 프로세스챔버 : \"결합\"\n    툴스테이션 <-- 이송챔버로봇 : \"리트리브\"\n    프로세스챔버 <-- 이송챔버로봇 : \"측정 수행\"\n    이송챔버로봇 --> 센서툴 : \"결합\"\n    프로세스챔버 <-- 센서툴 : \"측정 수행\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이송 챔버",
+          "component_type": "device",
+          "description": "기판을 프로세스 챔버로 이송하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "툴 스테이션",
+          "component_type": "device",
+          "description": "이송 챔버 내에 위치하여 센서 툴을 리트리브하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "리트리브",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세스 챔버",
+          "component_type": "device",
+          "description": "기판 제조 과정에서 사용되는 챔버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결합",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "측정 수행",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이송 챔버 로봇",
+          "component_type": "device",
+          "description": "기판을 이송하고 센서 툴을 통해 측정을 수행하는 로봇",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "측정 수행",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "결합",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "센서 툴",
+          "component_type": "device",
+          "description": "측정을 수행하는 센서들이 포함된 툴",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결합",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020247011628/1020247011628_fig_1.mmd"
+    },
+    {
+      "app_num": "1020247011628",
+      "diagram_type": "flowchart",
+      "diagram_title": "이송 챔버 로봇의 작동 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"이송 챔버\"]\n    200[\"툴 스테이션\"]\n    300[\"프로세스 챔버\"]\n    400[\"이송 챔버 로봇\"]\n    500[\"센서 툴\"]\n    \n    100 -->|\"결합\"| 300\n    300 -->|\"리트리브\"| 200\n    400 -->|\"측정 수행\"| 300\n    200 -->|\"결합\"| 500\n    400 -->|\"센서 데이터 획득\"| 500\n    400 -->|\"부분 제거\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "이송 챔버",
+          "component_type": "device",
+          "description": "기판을 프로세스 챔버로 이송하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "툴 스테이션",
+          "component_type": "device",
+          "description": "이송 챔버 내에 위치하여 센서 툴을 리트리브하는 역할",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "리트리브",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "프로세스 챔버",
+          "component_type": "device",
+          "description": "기판 제조 과정에서 사용되는 챔버",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "결합",
+              "direction": "<-"
+            },
+            {
+              "target": "400",
+              "label": "측정 수행",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "이송 챔버 로봇",
+          "component_type": "device",
+          "description": "기판을 이송하고 센서 툴을 통해 측정을 수행하는 로봇",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "측정 수행",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "결합",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "센서 툴",
+          "component_type": "device",
+          "description": "측정을 수행하는 센서들이 포함된 툴",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결합",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020247011628/1020247011628_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{
+  "app_num": "1020230160410",
+  "invention_type": "method",
+  "main_concept": "브랜드 로고 도용 탐지 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "로고 이미지",
+      "component_type": "data",
+      "description": "도용 탐지의 대상이 되는 브랜드 로고의 이미지",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "로고 텍스트",
+      "component_type": "data",
+      "description": "브랜드 로고의 텍스트 정보",
+      "relationships": []
+    },
+    {
+      "component_id": "300",
+      "name": "도용 의심 이미지",
+      "component_type": "data",
+      "description": "도용이 의심되는 이미지",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "포함된 로고 이미지",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "포함된 로고 텍스트",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "로고 식별 모델",
+      "component_type": "process",
+      "description": "로고 도용 여부를 판단하는 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "도용 의심 이미지 분석",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "로고 이미지 비교",
+          "direction": "->"
+        },
+        {
+          "target": "200",
+          "label": "로고 텍스트 비교",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "도용 탐지 정보",
+      "component_type": "data",
+      "description": "도용 여부에 대한 최종 정보",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "도용 의심 이미지 기반",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "로고 식별 모델 결과",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230160410",
+      "diagram_type": "flowchart",
+      "diagram_title": "브랜드 로고 도용 탐지 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"로고 이미지\"]\n    200[\"로고 텍스트\"]\n    300[\"도용 의심 이미지\"]\n    400[\"로고 식별 모델\"]\n    500[\"도용 탐지 정보\"]\n    \n    100 -->|\"포함된 로고 이미지\"| 300\n    200 -->|\"포함된 로고 텍스트\"| 300\n    300 -->|\"도용 의심 이미지 분석\"| 400\n    400 -->|\"로고 이미지 비교\"| 100\n    400 -->|\"로고 텍스트 비교\"| 200\n    300 -->|\"도용 의심 이미지 기반\"| 500\n    400 -->|\"로고 식별 모델 결과\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로고 이미지",
+          "component_type": "data",
+          "description": "도용 탐지의 대상이 되는 브랜드 로고의 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "로고 텍스트",
+          "component_type": "data",
+          "description": "브랜드 로고의 텍스트 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "도용 의심 이미지",
+          "component_type": "data",
+          "description": "도용이 의심되는 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "포함된 로고 이미지",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "포함된 로고 텍스트",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "로고 식별 모델",
+          "component_type": "process",
+          "description": "로고 도용 여부를 판단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "도용 의심 이미지 분석",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "로고 이미지 비교",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "로고 텍스트 비교",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "도용 탐지 정보",
+          "component_type": "data",
+          "description": "도용 여부에 대한 최종 정보",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "도용 의심 이미지 기반",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "로고 식별 모델 결과",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230160410/1020230160410_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230160410",
+      "diagram_type": "classDiagram",
+      "diagram_title": "브랜드 로고 도용 탐지 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 로고이미지 {\n        +String 이미지\n    }\n    class 로고텍스트 {\n        +String 텍스트\n    }\n    class 도용의심이미지 {\n        +String 이미지\n    }\n    class 로고식별모델 {\n        +String 모델\n        +분석()\n    }\n    class 도용탐지정보 {\n        +String 정보\n    }\n    도용의심이미지 --> 로고이미지 : \"포함된 로고 이미지\"\n    도용의심이미지 --> 로고텍스트 : \"포함된 로고 텍스트\"\n    로고식별모델 --> 도용의심이미지 : \"도용 의심 이미지 분석\"\n    로고식별모델 --> 로고이미지 : \"로고 이미지 비교\"\n    로고식별모델 --> 로고텍스트 : \"로고 텍스트 비교\"\n    도용탐지정보 --> 도용의심이미지 : \"도용 의심 이미지 기반\"\n    도용탐지정보 --> 로고식별모델 : \"로고 식별 모델 결과\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "로고 이미지",
+          "component_type": "data",
+          "description": "도용 탐지의 대상이 되는 브랜드 로고의 이미지",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "로고 텍스트",
+          "component_type": "data",
+          "description": "브랜드 로고의 텍스트 정보",
+          "relationships": []
+        },
+        {
+          "component_id": "300",
+          "name": "도용 의심 이미지",
+          "component_type": "data",
+          "description": "도용이 의심되는 이미지",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "포함된 로고 이미지",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "포함된 로고 텍스트",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "로고 식별 모델",
+          "component_type": "process",
+          "description": "로고 도용 여부를 판단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "도용 의심 이미지 분석",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "로고 이미지 비교",
+              "direction": "->"
+            },
+            {
+              "target": "200",
+              "label": "로고 텍스트 비교",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "도용 탐지 정보",
+          "component_type": "data",
+          "description": "도용 여부에 대한 최종 정보",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "도용 의심 이미지 기반",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "로고 식별 모델 결과",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230160410/1020230160410_fig_2.mmd"
+    }
+  ]
+}

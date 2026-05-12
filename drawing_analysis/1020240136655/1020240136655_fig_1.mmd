@@ -1,0 +1,36 @@
+%% 1020240136655 - 오퍼랜드리스 인스트럭션 체계 기반 프로세서 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 인스트럭션프로세싱유닛 {
+        +String description
+    }
+    class 제1기능프로세싱모듈 {
+        +String description
+    }
+    class 제2기능프로세싱모듈 {
+        +String description
+    }
+    class ALU레지스터 {
+        +String description
+    }
+    class FPU스택 {
+        +String description
+    }
+    class 프로그램카운터 {
+        +String description
+    }
+    class 인스트럭션로더 {
+        +String description
+    }
+    class 인스트럭션큐 {
+        +String description
+    }
+    
+    인스트럭션프로세싱유닛 <|-- 제1기능프로세싱모듈 : "구성 요소"
+    인스트럭션프로세싱유닛 <|-- 제2기능프로세싱모듈 : "구성 요소"
+    제1기능프로세싱모듈 --> ALU레지스터 : "접근"
+    제2기능프로세싱모듈 --> FPU스택 : "접근"
+    인스트럭션프로세싱유닛 <|-- 프로그램카운터 : "연결"
+    인스트럭션프로세싱유닛 <|-- 인스트럭션로더 : "연결"
+    인스트럭션프로세싱유닛 <|-- 인스트럭션큐 : "연결"

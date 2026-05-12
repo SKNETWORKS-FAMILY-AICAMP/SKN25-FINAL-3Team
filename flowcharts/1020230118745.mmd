@@ -1,0 +1,13 @@
+flowchart TD
+    A[지하 공동구 내에 설치된 센서에서 입력값 측정] --> B[Residual CNN-LSTM 모델을 적용하여 온도변화 예측]
+    B --> C[예측값 구하기]
+    C --> D[특정 길이의 시계열 데이터에 ConvLSTM-VAE 모델 적용]
+    D --> E[이상 현상 예측]
+    E --> F[Residual CNN-LSTM 모델의 제1과정: 공간적 특성 학습 및 추출]
+    F --> G[Residual CNN-LSTM 모델의 제2과정: 시간적 특징 학습 및 추출]
+    G --> H[Residual CNN-LSTM 모델의 제3과정: 마지막 출력값 예측]
+    H --> I[ConvLSTM-VAE 모델의 인코딩 과정: 근사화 확률분포 추출]
+    I --> J[ConvLSTM-VAE 모델의 재매개변수화 과정: 은닉변수 생성]
+    J --> K[ConvLSTM-VAE 모델의 디코딩 과정: 새로운 출력데이터 출력]
+    K --> L[Anomaly score 산출과정]
+    L --> M[판단과정: 이상현상 발생 가능성 판단]

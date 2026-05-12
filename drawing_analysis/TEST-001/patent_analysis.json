@@ -1,0 +1,106 @@
+{
+  "invention_type": "system",
+  "main_concept": "딥러닝 기반 이미지 분류 시스템",
+  "technical_problem": "이미지를 효과적으로 분류하는 방법",
+  "solution_summary": "입력부에서 이미지를 입력받고, 전처리부에서 이미지를 전처리한 후, CNN 모델부에서 분석하여 출력부에서 결과를 출력하는 시스템",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "이미지 분류 시스템의 전체 구성도이다",
+      "purpose": "이미지 분류 시스템의 전체 구성도이다",
+      "source_text": "도 1은 이미지 분류 시스템의 전체 구성도이다"
+    },
+    {
+      "fig_number": "도 2",
+      "diagram_type": "flowchart",
+      "title": "이미지 분류 방법의 처리 흐름도이다",
+      "purpose": "이미지 분류 방법의 처리 흐름도이다",
+      "source_text": "도 2는 이미지 분류 방법의 처리 흐름도이다"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "100",
+      "name": "입력부",
+      "component_type": "module",
+      "description": "이미지를 입력받는 역할",
+      "source_text": "100: 입력부",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "입력부에서 전처리부로 이미지를 전달",
+          "direction": "->",
+          "source_text": "입력부(100)는 이미지를 입력받는다."
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "전처리부",
+      "component_type": "module",
+      "description": "입력 이미지를 전처리하는 역할",
+      "source_text": "200: 전처리부",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "전처리부에서 CNN 모델부로 전처리된 이미지를 전달",
+          "direction": "->",
+          "source_text": "전처리부(200)는 입력 이미지를 전처리한다."
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "CNN 모델부",
+      "component_type": "module",
+      "description": "전처리된 이미지를 분석하는 역할",
+      "source_text": "300: CNN 모델부",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "CNN 모델부에서 출력부로 분석 결과를 전달",
+          "direction": "->",
+          "source_text": "CNN 모델부(300)는 전처리된 이미지를 분석한다."
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "출력부",
+      "component_type": "module",
+      "description": "분류 결과를 출력하는 역할",
+      "source_text": "400: 출력부"
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "이미지 입력",
+      "description": "사용자가 이미지를 입력부에 제공한다.",
+      "source_text": "입력부(100)는 이미지를 입력받는다."
+    },
+    {
+      "step_id": "S200",
+      "name": "이미지 전처리",
+      "description": "전처리부에서 입력된 이미지를 전처리한다.",
+      "source_text": "전처리부(200)는 입력 이미지를 전처리한다."
+    },
+    {
+      "step_id": "S300",
+      "name": "이미지 분석",
+      "description": "CNN 모델부에서 전처리된 이미지를 분석한다.",
+      "source_text": "CNN 모델부(300)는 전처리된 이미지를 분석한다."
+    },
+    {
+      "step_id": "S400",
+      "name": "결과 출력",
+      "description": "출력부에서 분석 결과를 출력한다.",
+      "source_text": "출력부(400)는 분류 결과를 출력한다."
+    }
+  ],
+  "key_actors": [
+    "사용자",
+    "서버"
+  ]
+}

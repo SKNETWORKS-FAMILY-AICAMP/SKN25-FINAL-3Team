@@ -1,0 +1,221 @@
+{
+  "app_num": "1020220072515",
+  "invention_type": "method",
+  "main_concept": "다수 개의 OCT 이미지를 이용한 딥러닝 모델 학습 및 안과질환 진단 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "프로세서",
+      "component_type": "actor",
+      "description": "OCT 이미지 처리 및 딥러닝 모델 학습을 수행하는 주체",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "OCT 이미지",
+      "component_type": "data",
+      "description": "안과질환 진단을 위한 입력 데이터",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "처리",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "제1 데이터셋",
+      "component_type": "data",
+      "description": "라벨링된 OCT 이미지로 구성된 데이터셋",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "학습에 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "제2 데이터셋",
+      "component_type": "data",
+      "description": "안과학 기반의 OCT 이미지로 구성된 데이터셋",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "라벨링에 사용",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "딥러닝 모델",
+      "component_type": "process",
+      "description": "OCT 이미지를 분석하여 안과질환을 진단하는 모델",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "학습",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "진단",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220072515",
+      "diagram_type": "flowchart",
+      "diagram_title": "딥러닝 모델 학습 및 진단 과정",
+      "mermaid_code": "flowchart TD\n    100[\"프로세서\"]\n    200[\"OCT 이미지\"]\n    300[\"제1 데이터셋\"]\n    400[\"제2 데이터셋\"]\n    500[\"딥러닝 모델\"]\n    \n    200 -->| \"처리\" | 100\n    300 -->| \"학습에 사용\" | 100\n    400 -->| \"라벨링에 사용\" | 100\n    300 -->| \"학습\" | 500\n    400 -->| \"진단\" | 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "OCT 이미지 처리 및 딥러닝 모델 학습을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "OCT 이미지",
+          "component_type": "data",
+          "description": "안과질환 진단을 위한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 데이터셋",
+          "component_type": "data",
+          "description": "라벨링된 OCT 이미지로 구성된 데이터셋",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "학습에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 데이터셋",
+          "component_type": "data",
+          "description": "안과학 기반의 OCT 이미지로 구성된 데이터셋",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "라벨링에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "딥러닝 모델",
+          "component_type": "process",
+          "description": "OCT 이미지를 분석하여 안과질환을 진단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "학습",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "진단",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220072515/1020220072515_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220072515",
+      "diagram_type": "classDiagram",
+      "diagram_title": "딥러닝 모델 구조",
+      "mermaid_code": "classDiagram\n    class 프로세서 {\n        +String 처리\n        +학습()\n    }\n    class OCT이미지 {\n        +String 이미지데이터\n    }\n    class 제1데이터셋 {\n        +String 라벨링된이미지\n    }\n    class 제2데이터셋 {\n        +String 안과학이미지\n    }\n    class 딥러닝모델 {\n        +String 분석결과\n        +진단()\n    }\n    프로세서 --> OCT이미지 : \"처리\"\n    프로세서 --> 제1데이터셋 : \"학습에 사용\"\n    프로세서 --> 제2데이터셋 : \"라벨링에 사용\"\n    딥러닝모델 --> 제1데이터셋 : \"학습\"\n    딥러닝모델 --> 제2데이터셋 : \"진단\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "프로세서",
+          "component_type": "actor",
+          "description": "OCT 이미지 처리 및 딥러닝 모델 학습을 수행하는 주체",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "OCT 이미지",
+          "component_type": "data",
+          "description": "안과질환 진단을 위한 입력 데이터",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "처리",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "제1 데이터셋",
+          "component_type": "data",
+          "description": "라벨링된 OCT 이미지로 구성된 데이터셋",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "학습에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "제2 데이터셋",
+          "component_type": "data",
+          "description": "안과학 기반의 OCT 이미지로 구성된 데이터셋",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "라벨링에 사용",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "딥러닝 모델",
+          "component_type": "process",
+          "description": "OCT 이미지를 분석하여 안과질환을 진단하는 모델",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "학습",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "진단",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220072515/1020220072515_fig_2.mmd"
+    }
+  ]
+}

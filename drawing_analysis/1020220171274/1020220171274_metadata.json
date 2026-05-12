@@ -1,0 +1,245 @@
+{
+  "app_num": "1020220171274",
+  "invention_type": "method",
+  "main_concept": "대구경 파일 효과를 고려한 해상풍력터빈 지지구조물의 세굴 위험도 평가 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "해상풍력터빈 구조물",
+      "component_type": "actor",
+      "description": "세굴 위험도 평가의 대상이 되는 구조물",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "지반",
+      "component_type": "actor",
+      "description": "해상풍력터빈 구조물이 설치되는 지반",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "설치됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "환경하중",
+      "component_type": "data",
+      "description": "풍속, 파랑하중 및 조류속을 포함하는 하중",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "영향을 미침",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "세굴 취약도",
+      "component_type": "data",
+      "description": "구조물의 세굴에 대한 취약성을 나타내는 값",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "평가됨",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "500",
+      "name": "KC",
+      "component_type": "data",
+      "description": "해저면 진폭을 반영하여 계산된 값",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "관계 있음",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "600",
+      "name": "세굴 위험도",
+      "component_type": "data",
+      "description": "세굴 취약도와 세굴 깊이의 결합으로 계산된 위험도",
+      "relationships": [
+        {
+          "target": "400",
+          "label": "결합하여 평가됨",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220171274",
+      "diagram_type": "flowchart",
+      "diagram_title": "세굴 위험도 평가 방법의 순서도",
+      "mermaid_code": "flowchart TD\n    100[\"해상풍력터빈 구조물\"]\n    200[\"지반\"]\n    300[\"환경하중 정의\"]\n    400[\"세굴 취약도 산출\"]\n    500[\"KC 계산\"]\n    600[\"세굴 위험도 평가\"]\n\n    200 -->| \"설치됨\" | 100\n    100 -->| \"영향을 미침\" | 300\n    300 -->| \"구조해석 수행\" | 400\n    400 -->| \"관계 있음\" | 500\n    500 -->| \"결합하여 평가됨\" | 600",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "해상풍력터빈 구조물",
+          "component_type": "actor",
+          "description": "세굴 위험도 평가의 대상이 되는 구조물",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "지반",
+          "component_type": "actor",
+          "description": "해상풍력터빈 구조물이 설치되는 지반",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "설치됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "환경하중",
+          "component_type": "data",
+          "description": "풍속, 파랑하중 및 조류속을 포함하는 하중",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영향을 미침",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "세굴 취약도",
+          "component_type": "data",
+          "description": "구조물의 세굴에 대한 취약성을 나타내는 값",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "평가됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "KC",
+          "component_type": "data",
+          "description": "해저면 진폭을 반영하여 계산된 값",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "관계 있음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "세굴 위험도",
+          "component_type": "data",
+          "description": "세굴 취약도와 세굴 깊이의 결합으로 계산된 위험도",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결합하여 평가됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220171274/1020220171274_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220171274",
+      "diagram_type": "classDiagram",
+      "diagram_title": "해상풍력터빈 및 석션버켓을 탑재한 펜타포드 지지구조물",
+      "mermaid_code": "classDiagram\n    class 해상풍력터빈구조물 {\n        +String 구조물설명\n    }\n    class 지반 {\n        +String 지반설명\n    }\n    class 환경하중 {\n        +String 하중설명\n    }\n    class 세굴취약도 {\n        +String 취약도설명\n    }\n    class KC {\n        +String KC설명\n    }\n    class 세굴위험도 {\n        +String 위험도설명\n    }\n    해상풍력터빈구조물 --> 지반 : \"설치됨\"\n    환경하중 --> 해상풍력터빈구조물 : \"영향을 미침\"\n    세굴취약도 --> 해상풍력터빈구조물 : \"평가됨\"\n    KC --> 세굴취약도 : \"관계 있음\"\n    세굴위험도 --> 세굴취약도 : \"결합하여 평가됨\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "해상풍력터빈 구조물",
+          "component_type": "actor",
+          "description": "세굴 위험도 평가의 대상이 되는 구조물",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "지반",
+          "component_type": "actor",
+          "description": "해상풍력터빈 구조물이 설치되는 지반",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "설치됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "환경하중",
+          "component_type": "data",
+          "description": "풍속, 파랑하중 및 조류속을 포함하는 하중",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "영향을 미침",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "세굴 취약도",
+          "component_type": "data",
+          "description": "구조물의 세굴에 대한 취약성을 나타내는 값",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "평가됨",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "500",
+          "name": "KC",
+          "component_type": "data",
+          "description": "해저면 진폭을 반영하여 계산된 값",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "관계 있음",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "600",
+          "name": "세굴 위험도",
+          "component_type": "data",
+          "description": "세굴 취약도와 세굴 깊이의 결합으로 계산된 위험도",
+          "relationships": [
+            {
+              "target": "400",
+              "label": "결합하여 평가됨",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220171274/1020220171274_fig_2.mmd"
+    }
+  ]
+}

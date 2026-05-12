@@ -1,0 +1,218 @@
+{
+  "app_num": "1020240044918",
+  "invention_type": "system",
+  "main_concept": "증강현실을 이용한 방문자 보상 시스템",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "사용자단말",
+      "component_type": "device",
+      "description": "사용자의 위치정보를 획득하고 점포의 간판을 인식하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "위치정보 및 간판 인식",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "서버",
+      "component_type": "process",
+      "description": "사용자의 방문을 확인하고 코인을 제공하는 시스템",
+      "relationships": [
+        {
+          "target": "300",
+          "label": "코인 사용 승인",
+          "direction": "->"
+        },
+        {
+          "target": "400",
+          "label": "방문 확인 및 가치 계산",
+          "direction": "->"
+        },
+        {
+          "target": "500",
+          "label": "장소 추천",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "점포단말",
+      "component_type": "device",
+      "description": "사용자가 보유한 코인을 사용하는 것을 승인하는 장치",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "코인 차감 및 할인",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "방문확인부",
+      "component_type": "process",
+      "description": "사용자의 위치정보를 확인하여 방문 여부를 판단",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "장소추천부",
+      "component_type": "process",
+      "description": "사용자에게 다른 점포를 추천하는 기능",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020240044918",
+      "diagram_type": "flowchart",
+      "diagram_title": "사용자 방문자 보상 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"사용자단말\"]\n    200[\"서버\"]\n    300[\"점포단말\"]\n    400[\"방문확인부\"]\n    500[\"장소추천부\"]\n    \n    100 -->|\"위치정보 및 간판 인식\"| 200\n    200 -->|\"방문 확인 및 가치 계산\"| 400\n    400 -->|\"코인 사용 승인\"| 300\n    300 <--|\"코인 차감 및 할인\"| 200\n    200 -->|\"장소 추천\"| 500",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자단말",
+          "component_type": "device",
+          "description": "사용자의 위치정보를 획득하고 점포의 간판을 인식하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "위치정보 및 간판 인식",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "process",
+          "description": "사용자의 방문을 확인하고 코인을 제공하는 시스템",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "코인 사용 승인",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "방문 확인 및 가치 계산",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "장소 추천",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "점포단말",
+          "component_type": "device",
+          "description": "사용자가 보유한 코인을 사용하는 것을 승인하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "코인 차감 및 할인",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "방문확인부",
+          "component_type": "process",
+          "description": "사용자의 위치정보를 확인하여 방문 여부를 판단",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "장소추천부",
+          "component_type": "process",
+          "description": "사용자에게 다른 점포를 추천하는 기능",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020240044918/1020240044918_fig_1.mmd"
+    },
+    {
+      "app_num": "1020240044918",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 사용자단말 {\n        +String 위치정보\n        +인식()\n    }\n    class 서버 {\n        +String 방문확인\n        +코인제공()\n        +장소추천()\n    }\n    class 점포단말 {\n        +String 보유코인\n        +코인사용승인()\n    }\n    class 방문확인부 {\n        +String 위치정보\n        +방문여부판단()\n    }\n    class 장소추천부 {\n        +String 추천점포\n        +추천기능()\n    }\n    사용자단말 --> 서버 : \"위치정보 및 간판 인식\"\n    서버 --> 점포단말 : \"코인 사용 승인\"\n    서버 --> 방문확인부 : \"방문 확인 및 가치 계산\"\n    서버 --> 장소추천부 : \"장소 추천\"\n    점포단말 <-- 서버 : \"코인 차감 및 할인\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "사용자단말",
+          "component_type": "device",
+          "description": "사용자의 위치정보를 획득하고 점포의 간판을 인식하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "위치정보 및 간판 인식",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "서버",
+          "component_type": "process",
+          "description": "사용자의 방문을 확인하고 코인을 제공하는 시스템",
+          "relationships": [
+            {
+              "target": "300",
+              "label": "코인 사용 승인",
+              "direction": "->"
+            },
+            {
+              "target": "400",
+              "label": "방문 확인 및 가치 계산",
+              "direction": "->"
+            },
+            {
+              "target": "500",
+              "label": "장소 추천",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "점포단말",
+          "component_type": "device",
+          "description": "사용자가 보유한 코인을 사용하는 것을 승인하는 장치",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "코인 차감 및 할인",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "방문확인부",
+          "component_type": "process",
+          "description": "사용자의 위치정보를 확인하여 방문 여부를 판단",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "장소추천부",
+          "component_type": "process",
+          "description": "사용자에게 다른 점포를 추천하는 기능",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020240044918/1020240044918_fig_2.mmd"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "invention_type": "system",
+  "main_concept": "시스템 및 소프트웨어 요구사항 검증 시스템",
+  "technical_problem": "시스템 및 소프트웨어를 개발하거나 유지 보수할 때 요구사항에 대한 품질 및 적합성을 검증하여 개발자에게 적절한 요구사항을 전달할 수 있도록 하는 것",
+  "solution_summary": "사용자 단말기와 네트워크를 통해 연결되는 요구사항 검증 시스템으로, 입력부, 인식부, 처리부, 유도부를 포함하여 요구사항을 검증하고 품질 점수를 생성함",
+  "recommended_diagrams": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템을 도시하는 도면이다",
+      "purpose": "본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템을 도시하는 도면이다",
+      "source_text": "도 1은 본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템을 도시하는 도면이다"
+    },
+    {
+      "fig_number": "도 2",
+      "diagram_type": "flowchart",
+      "title": "본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템의 실시 흐름도이다",
+      "purpose": "본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템의 실시 흐름도이다",
+      "source_text": "도 2는 본 발명의 일 실시예에 따른 시스템 및 소프트웨어 요구사항 검증 시스템의 실시 흐름도이다"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "100",
+      "name": "시스템 및 소프트웨어 요구사항 검증 시스템",
+      "component_type": "system",
+      "description": "사용자 단말기와 네트워크를 통해 연결되는 요구사항 검증 시스템",
+      "source_text": "100: 시스템 및 소프트웨어 요구사항 검증 시스템",
+      "relationships": [
+        {
+          "target": "101",
+          "label": "요구사항을 전송받아 저장하는",
+          "direction": "->",
+          "source_text": "사용자 단말기로부터 요구사항을 전송받아 저장하는 입력부"
+        },
+        {
+          "target": "102",
+          "label": "검증 정보로 생성하는",
+          "direction": "->",
+          "source_text": "입력부에 저장된 요구사항을 인식하고 분석하여 검증 정보로 생성하는 인식부"
+        },
+        {
+          "target": "103",
+          "label": "품질 점수를 생성하는",
+          "direction": "->",
+          "source_text": "품질 정보를 바탕으로 하여 검증 정보를 검증하고 품질 점수를 생성하는 처리부"
+        },
+        {
+          "target": "104",
+          "label": "제공 정보를 생성하는",
+          "direction": "->",
+          "source_text": "품질 정보 및 산출된 품질 점수에 따라 제공 정보를 생성하고 사용자 단말기에 전송하는 유도부"
+        }
+      ]
+    },
+    {
+      "component_id": "101",
+      "name": "입력부",
+      "component_type": "module",
+      "description": "사용자 단말기로부터 요구사항을 전송받아 저장하는 역할",
+      "source_text": "101: 입력부"
+    },
+    {
+      "component_id": "102",
+      "name": "인식부",
+      "component_type": "module",
+      "description": "입력부에 저장된 요구사항을 인식하고 분석하여 검증 정보로 생성하는 역할",
+      "source_text": "102: 인식부"
+    },
+    {
+      "component_id": "103",
+      "name": "처리부",
+      "component_type": "module",
+      "description": "검증 정보를 검증하고 품질 점수를 생성하는 역할",
+      "source_text": "103: 처리부"
+    },
+    {
+      "component_id": "104",
+      "name": "유도부",
+      "component_type": "module",
+      "description": "제공 정보를 생성하고 사용자 단말기에 전송하는 역할",
+      "source_text": "104: 유도부"
+    },
+    {
+      "component_id": "10",
+      "name": "2620983",
+      "component_type": "module",
+      "description": "2620983",
+      "source_text": "10-2620983",
+      "relationships": []
+    },
+    {
+      "component_id": "16",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "16 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "17",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "17 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "18",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "18 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    },
+    {
+      "component_id": "19",
+      "name": "--- [페이지 구분] ---",
+      "component_type": "module",
+      "description": "--- [페이지 구분] ---",
+      "source_text": "19 -\n\n\n--- [페이지 구분] ---",
+      "relationships": []
+    }
+  ],
+  "process_flow": [
+    {
+      "step_id": "S100",
+      "name": "요구사항 전송",
+      "description": "사용자 단말기로부터 요구사항을 전송받아 저장하는 단계",
+      "source_text": "사용자 단말기로부터 요구사항을 전송받아 저장하는 입력부"
+    },
+    {
+      "step_id": "S101",
+      "name": "요구사항 인식 및 분석",
+      "description": "입력부에 저장된 요구사항을 인식하고 분석하여 검증 정보로 생성하는 단계",
+      "source_text": "입력부에 저장된 요구사항을 인식하고 분석하여 검증 정보로 생성하는 인식부"
+    },
+    {
+      "step_id": "S102",
+      "name": "검증 정보 검증",
+      "description": "품질 정보를 바탕으로 하여 검증 정보를 검증하고 품질 점수를 생성하는 단계",
+      "source_text": "품질 정보를 바탕으로 하여 검증 정보를 검증하고 품질 점수를 생성하는 처리부"
+    },
+    {
+      "step_id": "S103",
+      "name": "제공 정보 생성",
+      "description": "품질 정보 및 산출된 품질 점수에 따라 제공 정보를 생성하고 사용자 단말기에 전송하는 단계",
+      "source_text": "품질 정보 및 산출된 품질 점수에 따라 제공 정보를 생성하고 사용자 단말기에 전송하는 유도부"
+    }
+  ],
+  "key_actors": [
+    "사용자",
+    "서버"
+  ]
+}

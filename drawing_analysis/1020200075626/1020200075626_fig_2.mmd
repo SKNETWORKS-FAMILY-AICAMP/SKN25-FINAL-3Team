@@ -1,0 +1,26 @@
+%% 1020200075626 - 파일 관리 시스템 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 탐색창 표시부 {
+        +String 명령 수신
+        +showExplorer()
+    }
+    class 관리 폴더 복사부 {
+        +copyToFolder()
+    }
+    class 파일 표시부 {
+        +String 파일명
+        +String 경로
+        +displayFiles()
+    }
+    class 파일 복사부 {
+        +copySelectedFile()
+    }
+    class 파일 삭제부 {
+        +deleteSelectedFile()
+    }
+    탐색창 표시부 --> 관리 폴더 복사부 : "파일 탐색창과 연결"
+    탐색창 표시부 --> 파일 표시부 : "탐색창과 연결"
+    탐색창 표시부 --> 파일 복사부 : "탐색창과 연결"
+    탐색창 표시부 --> 파일 삭제부 : "탐색창과 연결"

@@ -1,0 +1,25 @@
+%% 1020227015590 - 신경망 하드웨어 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class Controller {
+        +String inputBundle
+        +compressInput()
+    }
+    class AddressRegister {
+        +String compressedInputLocation
+        +identifyMemoryLocation()
+    }
+    class ActivationMemory {
+        +String inputData
+        +String compressedInputData
+    }
+    class ParameterMemory {
+        +String weightValues
+    }
+    class CalculationUnit {
+        +multiplyMatrices()
+    }
+    Controller --> AddressRegister : "입력 묶음을 처리하여"
+    AddressRegister --> ActivationMemory : "메모리 위치를 저장하여"
+    ActivationMemory --> ParameterMemory : "가중치 값을 저장하는"

@@ -1,0 +1,19 @@
+%% 1020160065686 - 터치 입력 장치 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 터치입력부 {
+        +String 터치데이터
+        +detectInput()
+    }
+    class 제어부 {
+        +processInput()
+        +controlCharacter()
+    }
+    class 캐릭터 {
+        +String 행동상태
+        +performAction()
+    }
+    터치입력부 --> 제어부 : "입력 데이터 수신"
+    제어부 --> 캐릭터 : "행동 제어"
+    캐릭터 <-- 제어부 : "행동 수행 지시"

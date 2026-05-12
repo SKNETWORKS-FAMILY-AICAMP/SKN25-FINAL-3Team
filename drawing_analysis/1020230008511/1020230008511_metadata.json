@@ -1,0 +1,185 @@
+{
+  "app_num": "1020230008511",
+  "invention_type": "method",
+  "main_concept": "서버가 농장을 분양하고 수익을 분배하는 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "서버",
+      "component_type": "actor",
+      "description": "농장 분양 및 수익 분배를 관리하는 중앙 시스템",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "농장 관리자 단말",
+      "component_type": "actor",
+      "description": "농장 정보를 제공하는 관리자 측 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "정보 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "수분양자 단말",
+      "component_type": "actor",
+      "description": "농장 분양을 신청하고 수익을 받는 사용자 측 단말",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "청약 정보 제공",
+          "direction": "->"
+        },
+        {
+          "target": "100",
+          "label": "수익 분배 방법 선택",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "산출물",
+      "component_type": "data",
+      "description": "농장에서 생산되는 제품",
+      "relationships": []
+    },
+    {
+      "component_id": "500",
+      "name": "판매 링크",
+      "component_type": "data",
+      "description": "상품 구매를 위한 링크",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020230008511",
+      "diagram_type": "flowchart",
+      "diagram_title": "농장 분양 및 수익 분배 방법 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"농장 관리자 단말\"]\n    300[\"수분양자 단말\"]\n    400[\"산출물\"]\n    500[\"판매 링크\"]\n    \n    200 -->| \"정보 제공\" | 100\n    300 -->| \"청약 정보 제공\" | 100\n    100 -->| \"분양 결과 제공\" | 300\n    100 -->| \"수익 분배 방법 제공\" | 300\n    300 -->| \"수익 분배 방법 선택\" | 100\n    100 -->| \"판매 시세 정보 획득 및 비교\" | 300\n    100 -->| \"수익 분배 방법 결정\" | 300\n    100 -->| \"상품 정보 및 판매 링크 제공\" | 500\n    300 -->| \"주문 정보 획득 및 판매 실적 식별\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "농장 분양 및 수익 분배를 관리하는 중앙 시스템",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "농장 관리자 단말",
+          "component_type": "actor",
+          "description": "농장 정보를 제공하는 관리자 측 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "수분양자 단말",
+          "component_type": "actor",
+          "description": "농장 분양을 신청하고 수익을 받는 사용자 측 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "청약 정보 제공",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "수익 분배 방법 선택",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "산출물",
+          "component_type": "data",
+          "description": "농장에서 생산되는 제품",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "판매 링크",
+          "component_type": "data",
+          "description": "상품 구매를 위한 링크",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020230008511/1020230008511_fig_1.mmd"
+    },
+    {
+      "app_num": "1020230008511",
+      "diagram_type": "flowchart",
+      "diagram_title": "수익 분배 방법 선택 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"서버\"]\n    200[\"농장 관리자 단말\"]\n    300[\"수분양자 단말\"]\n    400[\"산출물\"]\n    500[\"판매 링크\"]\n    \n    200 -->| \"정보 제공\" | 100\n    300 -->| \"청약 정보 제공\" | 100\n    100 -->| \"분양 결과 제공\" | 300\n    100 -->| \"수익 분배 방법 제공\" | 300\n    300 -->| \"수익 분배 방법 선택\" | 100\n    100 -->| \"판매 시세 정보 획득 및 비교\" | 300\n    100 -->| \"수익 분배 방법 결정\" | 300\n    300 -->| \"상품 정보 및 판매 링크 제공\" | 500\n    300 -->| \"주문 정보 획득 및 판매 실적 식별\" | 400",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "서버",
+          "component_type": "actor",
+          "description": "농장 분양 및 수익 분배를 관리하는 중앙 시스템",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "농장 관리자 단말",
+          "component_type": "actor",
+          "description": "농장 정보를 제공하는 관리자 측 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "정보 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "수분양자 단말",
+          "component_type": "actor",
+          "description": "농장 분양을 신청하고 수익을 받는 사용자 측 단말",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "청약 정보 제공",
+              "direction": "->"
+            },
+            {
+              "target": "100",
+              "label": "수익 분배 방법 선택",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "산출물",
+          "component_type": "data",
+          "description": "농장에서 생산되는 제품",
+          "relationships": []
+        },
+        {
+          "component_id": "500",
+          "name": "판매 링크",
+          "component_type": "data",
+          "description": "상품 구매를 위한 링크",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020230008511/1020230008511_fig_2.mmd"
+    }
+  ]
+}

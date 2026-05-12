@@ -1,0 +1,16 @@
+{
+  "layout_type": "patent_block_svg",
+  "canvas": {
+    "width": 1200,
+    "height": 860
+  },
+  "system_box": [
+    310,
+    110,
+    800,
+    670
+  ],
+  "element_count": 14,
+  "internal_count": 12,
+  "external_count": 1
+}

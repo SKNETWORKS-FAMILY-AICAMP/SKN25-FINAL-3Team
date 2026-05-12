@@ -1,0 +1,320 @@
+{
+  "app_num": "1020070078202",
+  "invention_type": "system",
+  "main_concept": "IPTV 쇼핑몰에서 타인에게 대행결제를 요청하는 장치 및 방법",
+  "components": [
+    {
+      "component_id": "10",
+      "name": "IPTV 쇼핑몰 사용자",
+      "component_type": "actor",
+      "description": "상품 구매를 요청하고 대행결제를 요청하는 사용자",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "IPTV 쇼핑몰 운영서버",
+      "component_type": "device",
+      "description": "쇼핑몰 콘텐츠를 제공하고 대행결제 요청을 처리하는 서버",
+      "relationships": [
+        {
+          "target": "30",
+          "label": "주문자 정보 및 상품 정보 처리",
+          "direction": "->"
+        },
+        {
+          "target": "40",
+          "label": "대행결제 요청 메시지 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "30",
+      "name": "기간계 서버",
+      "component_type": "device",
+      "description": "주문자 정보와 상품 정보를 처리하고 결제 요청을 관리하는 서버",
+      "relationships": [
+        {
+          "target": "20",
+          "label": "주문자 정보 및 상품 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "60",
+          "label": "결제 요청 정보 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "40",
+      "name": "SMS 서버",
+      "component_type": "device",
+      "description": "대행결제 요청 메시지를 수신하고 모바일 사용자에게 전송하는 서버",
+      "relationships": [
+        {
+          "target": "20",
+          "label": "대행결제 요청 메시지 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "50",
+          "label": "URL 콜백 SMS 전송",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "50",
+      "name": "모바일 사용자",
+      "component_type": "actor",
+      "description": "대행결제를 수행하는 모바일 사용자",
+      "relationships": [
+        {
+          "target": "40",
+          "label": "대행결제 요청 메시지 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "60",
+          "label": "결제 요청 수행",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "60",
+      "name": "모바일 쇼핑몰 서버",
+      "component_type": "device",
+      "description": "모바일 사용자가 접속하여 결제를 진행하는 서버",
+      "relationships": [
+        {
+          "target": "50",
+          "label": "결제 정보 수신",
+          "direction": "<-"
+        },
+        {
+          "target": "30",
+          "label": "결제 요청 정보 전송",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020070078202",
+      "diagram_type": "classDiagram",
+      "diagram_title": "IPTV 쇼핑몰 대행결제 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class IPTV쇼핑몰사용자 {\n        +상품 선택()\n        +대행결제 요청()\n    }\n    class IPTV쇼핑몰운영서버 {\n        +주문자 정보 및 상품 정보 처리()\n        +대행결제 요청 메시지 전송()\n    }\n    class 기간계서버 {\n        +주문자 정보 및 상품 정보 수신()\n        +결제 요청 정보 전송()\n    }\n    class SMS서버 {\n        +대행결제 요청 메시지 수신()\n        +URL 콜백 SMS 전송()\n    }\n    class 모바일사용자 {\n        +대행결제 요청 메시지 수신()\n        +결제 요청 수행()\n    }\n    class 모바일쇼핑몰서버 {\n        +결제 정보 수신()\n        +결제 요청 정보 전송()\n    }\n    \n    IPTV쇼핑몰사용자 --> IPTV쇼핑몰운영서버 : \"주문자 정보 및 상품 정보 처리\"\n    IPTV쇼핑몰운영서버 --> SMS서버 : \"대행결제 요청 메시지 전송\"\n    SMS서버 --> 모바일사용자 : \"URL 콜백 SMS 전송\"\n    모바일사용자 --> 모바일쇼핑몰서버 : \"결제 요청 수행\"\n    모바일쇼핑몰서버 --> 기간계서버 : \"결제 요청 정보 전송\"\n    기간계서버 --> IPTV쇼핑몰운영서버 : \"주문자 정보 및 상품 정보 수신\"",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "IPTV 쇼핑몰 사용자",
+          "component_type": "actor",
+          "description": "상품 구매를 요청하고 대행결제를 요청하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "IPTV 쇼핑몰 운영서버",
+          "component_type": "device",
+          "description": "쇼핑몰 콘텐츠를 제공하고 대행결제 요청을 처리하는 서버",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "주문자 정보 및 상품 정보 처리",
+              "direction": "->"
+            },
+            {
+              "target": "40",
+              "label": "대행결제 요청 메시지 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "기간계 서버",
+          "component_type": "device",
+          "description": "주문자 정보와 상품 정보를 처리하고 결제 요청을 관리하는 서버",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "주문자 정보 및 상품 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "60",
+              "label": "결제 요청 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "SMS 서버",
+          "component_type": "device",
+          "description": "대행결제 요청 메시지를 수신하고 모바일 사용자에게 전송하는 서버",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "대행결제 요청 메시지 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "50",
+              "label": "URL 콜백 SMS 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "50",
+          "name": "모바일 사용자",
+          "component_type": "actor",
+          "description": "대행결제를 수행하는 모바일 사용자",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "대행결제 요청 메시지 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "60",
+              "label": "결제 요청 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "60",
+          "name": "모바일 쇼핑몰 서버",
+          "component_type": "device",
+          "description": "모바일 사용자가 접속하여 결제를 진행하는 서버",
+          "relationships": [
+            {
+              "target": "50",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "30",
+              "label": "결제 요청 정보 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020070078202/1020070078202_fig_1.mmd"
+    },
+    {
+      "app_num": "1020070078202",
+      "diagram_type": "flowchart",
+      "diagram_title": "대행결제 처리 흐름도",
+      "mermaid_code": "flowchart TD\n    10[\"IPTV 쇼핑몰 사용자\"]\n    20[\"IPTV 쇼핑몰 운영서버\"]\n    30[\"기간계 서버\"]\n    40[\"SMS 서버\"]\n    50[\"모바일 사용자\"]\n    60[\"모바일 쇼핑몰 서버\"]\n    \n    10 -->|\"상품 선택 후 대행결제 요청\"| 20\n    20 -->|\"주문자 정보 및 상품 정보 처리\"| 30\n    20 -->|\"대행결제 요청 메시지 전송\"| 40\n    40 -->|\"대행결제 요청 메시지 수신\"| 50\n    50 -->|\"SMS 수신 후 모바일 쇼핑몰 서버 접속\"| 60\n    60 -->|\"결제 요청 정보 전송\"| 30\n    30 -->|\"결제 처리 완료\"| 20",
+      "components": [
+        {
+          "component_id": "10",
+          "name": "IPTV 쇼핑몰 사용자",
+          "component_type": "actor",
+          "description": "상품 구매를 요청하고 대행결제를 요청하는 사용자",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "IPTV 쇼핑몰 운영서버",
+          "component_type": "device",
+          "description": "쇼핑몰 콘텐츠를 제공하고 대행결제 요청을 처리하는 서버",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "주문자 정보 및 상품 정보 처리",
+              "direction": "->"
+            },
+            {
+              "target": "40",
+              "label": "대행결제 요청 메시지 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "30",
+          "name": "기간계 서버",
+          "component_type": "device",
+          "description": "주문자 정보와 상품 정보를 처리하고 결제 요청을 관리하는 서버",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "주문자 정보 및 상품 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "60",
+              "label": "결제 요청 정보 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "SMS 서버",
+          "component_type": "device",
+          "description": "대행결제 요청 메시지를 수신하고 모바일 사용자에게 전송하는 서버",
+          "relationships": [
+            {
+              "target": "20",
+              "label": "대행결제 요청 메시지 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "50",
+              "label": "URL 콜백 SMS 전송",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "50",
+          "name": "모바일 사용자",
+          "component_type": "actor",
+          "description": "대행결제를 수행하는 모바일 사용자",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "대행결제 요청 메시지 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "60",
+              "label": "결제 요청 수행",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "60",
+          "name": "모바일 쇼핑몰 서버",
+          "component_type": "device",
+          "description": "모바일 사용자가 접속하여 결제를 진행하는 서버",
+          "relationships": [
+            {
+              "target": "50",
+              "label": "결제 정보 수신",
+              "direction": "<-"
+            },
+            {
+              "target": "30",
+              "label": "결제 요청 정보 전송",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020070078202/1020070078202_fig_2.mmd"
+    }
+  ]
+}

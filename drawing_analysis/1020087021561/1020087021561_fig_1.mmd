@@ -1,0 +1,27 @@
+%% 1020087021561 - 병렬 프로세서 시스템 구조
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 병렬프로세서 {
+        +String 스레드
+        +processThread()
+    }
+    class 마스터프로세서 {
+        +manageProcessors()
+    }
+    class 컴퓨터메모리 {
+        +String 데이터
+        +accessData()
+    }
+    class 로컬캐시 {
+        +String 캐시데이터
+        +allocateCache()
+    }
+    class 특정레지스터 {
+        +String 레지스터데이터
+        +useRegister()
+    }
+    마스터프로세서 --> 병렬프로세서 : "관리"
+    컴퓨터메모리 <-- 병렬프로세서 : "액세스"
+    로컬캐시 --> 병렬프로세서 : "할당"
+    특정레지스터 --> 병렬프로세서 : "사용"

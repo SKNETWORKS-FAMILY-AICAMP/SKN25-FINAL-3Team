@@ -1,0 +1,260 @@
+{
+  "app_num": "1020257019800",
+  "invention_type": "method",
+  "main_concept": "변압기 권선 프로세스를 모니터링하는 방법",
+  "components": [
+    {
+      "component_id": "30",
+      "name": "권선 장치",
+      "component_type": "device",
+      "description": "변압기 권선을 형성하는 장치",
+      "relationships": []
+    },
+    {
+      "component_id": "20",
+      "name": "변압기 권선",
+      "component_type": "data",
+      "description": "형성되는 권선",
+      "relationships": [
+        {
+          "target": "30",
+          "label": "형성됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "40",
+      "name": "컴퓨터 비전 시스템",
+      "component_type": "device",
+      "description": "권선 프로세스를 모니터링하고 불일치를 검출하는 시스템",
+      "relationships": [
+        {
+          "target": "30",
+          "label": "모니터링",
+          "direction": "->"
+        },
+        {
+          "target": "20",
+          "label": "이미지 프로세싱",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "37",
+      "name": "인간 기계 인터페이스(HMI)",
+      "component_type": "actor",
+      "description": "검출된 불일치에 대한 정보를 출력하는 인터페이스",
+      "relationships": [
+        {
+          "target": "40",
+          "label": "제어됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "49",
+      "name": "설계 데이터",
+      "component_type": "data",
+      "description": "변압기 권선에 대한 설계 정보",
+      "relationships": [
+        {
+          "target": "40",
+          "label": "비교됨",
+          "direction": "<-"
+        }
+      ]
+    },
+    {
+      "component_id": "100",
+      "name": "머신 러닝 모델",
+      "component_type": "process",
+      "description": "오브젝트 분류를 수행하는 모델",
+      "relationships": [
+        {
+          "target": "40",
+          "label": "실행됨",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020257019800",
+      "diagram_type": "flowchart",
+      "diagram_title": "권선 프로세스 모니터링 흐름도",
+      "mermaid_code": "flowchart TD\n    30[\"권선 장치\"]\n    20[\"변압기 권선\"]\n    40[\"컴퓨터 비전 시스템\"]\n    37[\"인간 기계 인터페이스(HMI)\"]\n    49[\"설계 데이터\"]\n    100[\"머신 러닝 모델\"]\n\n    30 <--|형성됨| 20\n    30 -->|모니터링| 40\n    20 -->|이미지 프로세싱| 40\n    40 -->|실행됨| 100\n    40 <--|비교됨| 49\n    40 -->|불일치 검출| 37",
+      "components": [
+        {
+          "component_id": "30",
+          "name": "권선 장치",
+          "component_type": "device",
+          "description": "변압기 권선을 형성하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "변압기 권선",
+          "component_type": "data",
+          "description": "형성되는 권선",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "형성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "컴퓨터 비전 시스템",
+          "component_type": "device",
+          "description": "권선 프로세스를 모니터링하고 불일치를 검출하는 시스템",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "모니터링",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "이미지 프로세싱",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "37",
+          "name": "인간 기계 인터페이스(HMI)",
+          "component_type": "actor",
+          "description": "검출된 불일치에 대한 정보를 출력하는 인터페이스",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "제어됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "49",
+          "name": "설계 데이터",
+          "component_type": "data",
+          "description": "변압기 권선에 대한 설계 정보",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "비교됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "100",
+          "name": "머신 러닝 모델",
+          "component_type": "process",
+          "description": "오브젝트 분류를 수행하는 모델",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "실행됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020257019800/1020257019800_fig_1.mmd"
+    },
+    {
+      "app_num": "1020257019800",
+      "diagram_type": "classDiagram",
+      "diagram_title": "시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 권선장치 {\n        +String description: \"변압기 권선을 형성하는 장치\"\n    }\n    class 변압기권선 {\n        +String description: \"형성되는 권선\"\n    }\n    class 컴퓨터비전시스템 {\n        +String description: \"권선 프로세스를 모니터링하고 불일치를 검출하는 시스템\"\n    }\n    class 인간기계인터페이스 {\n        +String description: \"검출된 불일치에 대한 정보를 출력하는 인터페이스\"\n    }\n    class 설계데이터 {\n        +String description: \"변압기 권선에 대한 설계 정보\"\n    }\n    class 머신러닝모델 {\n        +String description: \"오브젝트 분류를 수행하는 모델\"\n    }\n    \n    권선장치 <-- 변압기권선 : \"형성됨\"\n    컴퓨터비전시스템 --> 권선장치 : \"모니터링\"\n    컴퓨터비전시스템 --> 변압기권선 : \"이미지 프로세싱\"\n    인간기계인터페이스 <-- 컴퓨터비전시스템 : \"제어됨\"\n    설계데이터 <-- 컴퓨터비전시스템 : \"비교됨\"\n    머신러닝모델 <-- 컴퓨터비전시스템 : \"실행됨\"",
+      "components": [
+        {
+          "component_id": "30",
+          "name": "권선 장치",
+          "component_type": "device",
+          "description": "변압기 권선을 형성하는 장치",
+          "relationships": []
+        },
+        {
+          "component_id": "20",
+          "name": "변압기 권선",
+          "component_type": "data",
+          "description": "형성되는 권선",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "형성됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "40",
+          "name": "컴퓨터 비전 시스템",
+          "component_type": "device",
+          "description": "권선 프로세스를 모니터링하고 불일치를 검출하는 시스템",
+          "relationships": [
+            {
+              "target": "30",
+              "label": "모니터링",
+              "direction": "->"
+            },
+            {
+              "target": "20",
+              "label": "이미지 프로세싱",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "37",
+          "name": "인간 기계 인터페이스(HMI)",
+          "component_type": "actor",
+          "description": "검출된 불일치에 대한 정보를 출력하는 인터페이스",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "제어됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "49",
+          "name": "설계 데이터",
+          "component_type": "data",
+          "description": "변압기 권선에 대한 설계 정보",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "비교됨",
+              "direction": "<-"
+            }
+          ]
+        },
+        {
+          "component_id": "100",
+          "name": "머신 러닝 모델",
+          "component_type": "process",
+          "description": "오브젝트 분류를 수행하는 모델",
+          "relationships": [
+            {
+              "target": "40",
+              "label": "실행됨",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020257019800/1020257019800_fig_2.mmd"
+    }
+  ]
+}

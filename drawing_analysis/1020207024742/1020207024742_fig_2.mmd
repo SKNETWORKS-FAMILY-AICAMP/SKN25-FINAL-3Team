@@ -1,0 +1,22 @@
+%% 1020207024742 - 차량 탑재 제어 유닛 구성도
+%% 생성일: 2026-05-11
+
+classDiagram
+    class 제1시스템온칩SoC {
+        +FPGA fpga
+        +ARM arm
+        +receiveVideoData()
+        +performVisualDetection()
+    }
+    class 마이크로제어유닛MCU {
+        +processDecisionInfo()
+        +generateControlCommand()
+    }
+    class 제2시스템온칩SoC {
+        +FPGA fpga
+        +ARM arm
+        +receiveVideoData()
+        +performVisualDetection()
+    }
+    제1시스템온칩SoC --> 마이크로제어유닛MCU : "데이터 수신"
+    마이크로제어유닛MCU --> 제2시스템온칩SoC : "결정 정보 전송"

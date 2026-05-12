@@ -1,0 +1,167 @@
+{
+  "app_num": "1020190101984",
+  "invention_type": "hardware",
+  "main_concept": "심층 신경망 학습 장치의 효율적인 오류 전사 및 가중치 갱신 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "오류 전사 처리부",
+      "component_type": "device",
+      "description": "N번째 레이어에서 생성된 오류를 기반으로 오류 전사값을 결정하고 전사하는 역할",
+      "relationships": []
+    },
+    {
+      "component_id": "200",
+      "name": "가중치 갱신 처리부",
+      "component_type": "device",
+      "description": "오류 전사값과 추론값을 기반으로 포워드 가중치를 갱신하는 역할",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "오류 전사값을 받아 갱신",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "추론 처리부",
+      "component_type": "device",
+      "description": "갱신된 포워드 가중치를 이용하여 추론을 진행하는 역할",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "갱신된 가중치를 받아 추론",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "400",
+      "name": "난수 생성기",
+      "component_type": "device",
+      "description": "각 레이어별로 고정된 난수를 생성하여 오류 전사값 결정에 사용",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "오류 전사값 결정에 사용",
+          "direction": "->"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020190101984",
+      "diagram_type": "flowchart",
+      "diagram_title": "심층 신경망 학습 과정",
+      "mermaid_code": "flowchart TD\n    100[\"오류 전사 처리부\"]\n    200[\"가중치 갱신 처리부\"]\n    300[\"추론 처리부\"]\n    400[\"난수 생성기\"]\n    400 -->|\"오류 전사값 결정에 사용\"| 100\n    100 -->|\"오류 전사값을 받아 갱신\"| 200\n    200 -->|\"갱신된 가중치를 받아 추론\"| 300",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "오류 전사 처리부",
+          "component_type": "device",
+          "description": "N번째 레이어에서 생성된 오류를 기반으로 오류 전사값을 결정하고 전사하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가중치 갱신 처리부",
+          "component_type": "device",
+          "description": "오류 전사값과 추론값을 기반으로 포워드 가중치를 갱신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "오류 전사값을 받아 갱신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추론 처리부",
+          "component_type": "device",
+          "description": "갱신된 포워드 가중치를 이용하여 추론을 진행하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "갱신된 가중치를 받아 추론",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "난수 생성기",
+          "component_type": "device",
+          "description": "각 레이어별로 고정된 난수를 생성하여 오류 전사값 결정에 사용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "오류 전사값 결정에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020190101984/1020190101984_fig_1.mmd"
+    },
+    {
+      "app_num": "1020190101984",
+      "diagram_type": "classDiagram",
+      "diagram_title": "심층 신경망 학습 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 오류전사처리부 {\n        +결정된오류전사값\n        +전사()\n    }\n    class 가중치갱신처리부 {\n        +갱신된가중치\n        +갱신()\n    }\n    class 추론처리부 {\n        +추론결과\n        +추론진행()\n    }\n    class 난수생성기 {\n        +고정난수\n        +생성()\n    }\n    오류전사처리부 --> 가중치갱신처리부 : \"오류 전사값을 받아 갱신\"\n    난수생성기 --> 오류전사처리부 : \"오류 전사값 결정에 사용\"\n    가중치갱신처리부 --> 추론처리부 : \"갱신된 가중치를 받아 추론\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "오류 전사 처리부",
+          "component_type": "device",
+          "description": "N번째 레이어에서 생성된 오류를 기반으로 오류 전사값을 결정하고 전사하는 역할",
+          "relationships": []
+        },
+        {
+          "component_id": "200",
+          "name": "가중치 갱신 처리부",
+          "component_type": "device",
+          "description": "오류 전사값과 추론값을 기반으로 포워드 가중치를 갱신하는 역할",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "오류 전사값을 받아 갱신",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "추론 처리부",
+          "component_type": "device",
+          "description": "갱신된 포워드 가중치를 이용하여 추론을 진행하는 역할",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "갱신된 가중치를 받아 추론",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "400",
+          "name": "난수 생성기",
+          "component_type": "device",
+          "description": "각 레이어별로 고정된 난수를 생성하여 오류 전사값 결정에 사용",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "오류 전사값 결정에 사용",
+              "direction": "->"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020190101984/1020190101984_fig_2.mmd"
+    }
+  ]
+}

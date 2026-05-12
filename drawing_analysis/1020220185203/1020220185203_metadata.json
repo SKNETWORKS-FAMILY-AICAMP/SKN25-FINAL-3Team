@@ -1,0 +1,161 @@
+{
+  "app_num": "1020220185203",
+  "invention_type": "system",
+  "main_concept": "원격 서비스 응답 블로킹 대기 상태의 트랜잭션 제어 시스템 및 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "어플리케이션 서버",
+      "component_type": "actor",
+      "description": "사용자의 요청에 의해 트랜잭션을 수행하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "트랜잭션 요청",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "200",
+      "name": "트랜잭션 제어 장치",
+      "component_type": "device",
+      "description": "트랜잭션 처리를 모니터링하고 제어하는 장치",
+      "relationships": [
+        {
+          "target": "100",
+          "label": "모니터링 및 제어",
+          "direction": "<-"
+        },
+        {
+          "target": "300",
+          "label": "서비스 제공",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "300",
+      "name": "원격 서비스 서버",
+      "component_type": "actor",
+      "description": "트랜잭션에 의한 서비스를 제공하는 서버",
+      "relationships": [
+        {
+          "target": "200",
+          "label": "서비스 요청",
+          "direction": "<-"
+        }
+      ]
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020220185203",
+      "diagram_type": "flowchart",
+      "diagram_title": "트랜잭션 제어 시스템 흐름도",
+      "mermaid_code": "flowchart TD\n    100[\"어플리케이션 서버\"]\n    200[\"트랜잭션 제어 장치\"]\n    300[\"원격 서비스 서버\"]\n    400[\"트랜잭션 시작\"]\n    500[\"트랜잭션 정보 수집\"]\n    600[\"프록시 객체 생성\"]\n    700[\"프록시 객체 전달\"]\n    800[\"타임아웃 설정\"]\n    900[\"예외 신호 발생\"]\n    100 -->| \"트랜잭션 요청\" | 200\n    200 -->| \"서비스 제공\" | 300\n    200 -->| \"모니터링 및 제어\" | 100\n    400 -->| \"정보 수집\" | 500\n    500 -->| \"프록시 생성\" | 600\n    600 -->| \"프록시 전달\" | 700\n    700 -->| \"타임아웃 설정\" | 800\n    800 -->| \"예외 발생\" | 900\n    900 -->| \"트랜잭션 종료\" | 200",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "어플리케이션 서버",
+          "component_type": "actor",
+          "description": "사용자의 요청에 의해 트랜잭션을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "트랜잭션 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "트랜잭션 제어 장치",
+          "component_type": "device",
+          "description": "트랜잭션 처리를 모니터링하고 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모니터링 및 제어",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "원격 서비스 서버",
+          "component_type": "actor",
+          "description": "트랜잭션에 의한 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020220185203/1020220185203_fig_1.mmd"
+    },
+    {
+      "app_num": "1020220185203",
+      "diagram_type": "classDiagram",
+      "diagram_title": "트랜잭션 제어 장치 구성도",
+      "mermaid_code": "classDiagram\n    class 어플리케이션서버 {\n        +String 요청\n        +트랜잭션시작()\n    }\n    class 트랜잭션제어장치 {\n        +모니터링()\n        +제어()\n    }\n    class 원격서비스서버 {\n        +String 서비스요청\n        +서비스제공()\n    }\n    어플리케이션서버 --> 트랜잭션제어장치 : \"트랜잭션 요청\"\n    트랜잭션제어장치 --> 어플리케이션서버 : \"모니터링 및 제어\"\n    트랜잭션제어장치 --> 원격서비스서버 : \"서비스 제공\"\n    원격서비스서버 --> 트랜잭션제어장치 : \"서비스 요청\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "어플리케이션 서버",
+          "component_type": "actor",
+          "description": "사용자의 요청에 의해 트랜잭션을 수행하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "트랜잭션 요청",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "200",
+          "name": "트랜잭션 제어 장치",
+          "component_type": "device",
+          "description": "트랜잭션 처리를 모니터링하고 제어하는 장치",
+          "relationships": [
+            {
+              "target": "100",
+              "label": "모니터링 및 제어",
+              "direction": "<-"
+            },
+            {
+              "target": "300",
+              "label": "서비스 제공",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "300",
+          "name": "원격 서비스 서버",
+          "component_type": "actor",
+          "description": "트랜잭션에 의한 서비스를 제공하는 서버",
+          "relationships": [
+            {
+              "target": "200",
+              "label": "서비스 요청",
+              "direction": "<-"
+            }
+          ]
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020220185203/1020220185203_fig_2.mmd"
+    }
+  ]
+}

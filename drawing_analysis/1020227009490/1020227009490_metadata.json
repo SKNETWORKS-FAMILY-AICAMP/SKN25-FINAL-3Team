@@ -1,0 +1,239 @@
+{
+  "app_num": "1020227009490",
+  "invention_type": "method",
+  "main_concept": "정책에 따라 물리적 환경과 상호작용하는 컴퓨터 구현 방법",
+  "components": [
+    {
+      "component_id": "100",
+      "name": "컴퓨터 제어 시스템",
+      "component_type": "system",
+      "description": "정책에 따라 물리적 환경과 상호작용하는 시스템",
+      "relationships": [
+        {
+          "target": "120",
+          "label": "데이터 인터페이스",
+          "direction": "->"
+        },
+        {
+          "target": "160",
+          "label": "센서 인터페이스",
+          "direction": "->"
+        },
+        {
+          "target": "180",
+          "label": "액추에이터 인터페이스",
+          "direction": "->"
+        },
+        {
+          "target": "140",
+          "label": "프로세서 서브시스템",
+          "direction": "->"
+        }
+      ]
+    },
+    {
+      "component_id": "120",
+      "name": "데이터 인터페이스",
+      "component_type": "device",
+      "description": "정책의 파라미터 세트에 액세스하기 위한 인터페이스",
+      "relationships": []
+    },
+    {
+      "component_id": "140",
+      "name": "프로세서 서브시스템",
+      "component_type": "device",
+      "description": "상호작용을 제어하는 프로세서",
+      "relationships": []
+    },
+    {
+      "component_id": "160",
+      "name": "센서 인터페이스",
+      "component_type": "device",
+      "description": "센서 데이터를 획득하기 위한 인터페이스",
+      "relationships": []
+    },
+    {
+      "component_id": "180",
+      "name": "액추에이터 인터페이스",
+      "component_type": "device",
+      "description": "액추에이터에 데이터를 제공하는 인터페이스",
+      "relationships": []
+    },
+    {
+      "component_id": "030",
+      "name": "기본 가중치 행렬 데이터",
+      "component_type": "data",
+      "description": "신경망의 최종 계층에 대한 기본 가중치 행렬을 나타내는 데이터",
+      "relationships": []
+    },
+    {
+      "component_id": "040",
+      "name": "파라미터 세트",
+      "component_type": "data",
+      "description": "정책의 파라미터들을 포함하는 데이터",
+      "relationships": []
+    }
+  ],
+  "drawings": [
+    {
+      "app_num": "1020227009490",
+      "diagram_type": "flowchart",
+      "diagram_title": "물리적 환경과의 상호작용 방법",
+      "mermaid_code": "flowchart TD\n    100[\"컴퓨터 제어 시스템\"]\n    120[\"데이터 인터페이스\"]\n    140[\"프로세서 서브시스템\"]\n    160[\"센서 인터페이스\"]\n    180[\"액추에이터 인터페이스\"]\n    030[\"기본 가중치 행렬 데이터\"]\n    040[\"파라미터 세트\"]\n\n    100 -->| \"정책의 파라미터 세트에 액세스\" | 120\n    120 -->| \"기본 가중치 행렬 데이터 획득\" | 030\n    160 -->| \"센서 데이터 획득\" | 100\n    100 -->| \"신경망의 최종 계층 적용\" | 030\n    100 -->| \"액추에이터 데이터 제공\" | 180",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨터 제어 시스템",
+          "component_type": "system",
+          "description": "정책에 따라 물리적 환경과 상호작용하는 시스템",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "데이터 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "160",
+              "label": "센서 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "180",
+              "label": "액추에이터 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "140",
+              "label": "프로세서 서브시스템",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "데이터 인터페이스",
+          "component_type": "device",
+          "description": "정책의 파라미터 세트에 액세스하기 위한 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "140",
+          "name": "프로세서 서브시스템",
+          "component_type": "device",
+          "description": "상호작용을 제어하는 프로세서",
+          "relationships": []
+        },
+        {
+          "component_id": "160",
+          "name": "센서 인터페이스",
+          "component_type": "device",
+          "description": "센서 데이터를 획득하기 위한 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "180",
+          "name": "액추에이터 인터페이스",
+          "component_type": "device",
+          "description": "액추에이터에 데이터를 제공하는 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "030",
+          "name": "기본 가중치 행렬 데이터",
+          "component_type": "data",
+          "description": "신경망의 최종 계층에 대한 기본 가중치 행렬을 나타내는 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "040",
+          "name": "파라미터 세트",
+          "component_type": "data",
+          "description": "정책의 파라미터들을 포함하는 데이터",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 1",
+      "output_path": "drawing_analysis/1020227009490/1020227009490_fig_1.mmd"
+    },
+    {
+      "app_num": "1020227009490",
+      "diagram_type": "classDiagram",
+      "diagram_title": "컴퓨터 제어 시스템 구성도",
+      "mermaid_code": "classDiagram\n    class 컴퓨터제어시스템 {\n        +String 설명\n    }\n    class 데이터인터페이스 {\n        +String 설명\n    }\n    class 프로세서서브시스템 {\n        +String 설명\n    }\n    class 센서인터페이스 {\n        +String 설명\n    }\n    class 액추에이터인터페이스 {\n        +String 설명\n    }\n    class 기본가중치행렬데이터 {\n        +String 설명\n    }\n    class 파라미터세트 {\n        +String 설명\n    }\n    컴퓨터제어시스템 --> 데이터인터페이스 : \"데이터 인터페이스\"\n    컴퓨터제어시스템 --> 센서인터페이스 : \"센서 인터페이스\"\n    컴퓨터제어시스템 --> 액추에이터인터페이스 : \"액추에이터 인터페이스\"\n    컴퓨터제어시스템 --> 프로세서서브시스템 : \"프로세서 서브시스템\"\n    프로세서서브시스템 --> 기본가중치행렬데이터 : \"기본 가중치 행렬 데이터\"\n    프로세서서브시스템 --> 파라미터세트 : \"파라미터 세트\"",
+      "components": [
+        {
+          "component_id": "100",
+          "name": "컴퓨터 제어 시스템",
+          "component_type": "system",
+          "description": "정책에 따라 물리적 환경과 상호작용하는 시스템",
+          "relationships": [
+            {
+              "target": "120",
+              "label": "데이터 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "160",
+              "label": "센서 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "180",
+              "label": "액추에이터 인터페이스",
+              "direction": "->"
+            },
+            {
+              "target": "140",
+              "label": "프로세서 서브시스템",
+              "direction": "->"
+            }
+          ]
+        },
+        {
+          "component_id": "120",
+          "name": "데이터 인터페이스",
+          "component_type": "device",
+          "description": "정책의 파라미터 세트에 액세스하기 위한 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "140",
+          "name": "프로세서 서브시스템",
+          "component_type": "device",
+          "description": "상호작용을 제어하는 프로세서",
+          "relationships": []
+        },
+        {
+          "component_id": "160",
+          "name": "센서 인터페이스",
+          "component_type": "device",
+          "description": "센서 데이터를 획득하기 위한 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "180",
+          "name": "액추에이터 인터페이스",
+          "component_type": "device",
+          "description": "액추에이터에 데이터를 제공하는 인터페이스",
+          "relationships": []
+        },
+        {
+          "component_id": "030",
+          "name": "기본 가중치 행렬 데이터",
+          "component_type": "data",
+          "description": "신경망의 최종 계층에 대한 기본 가중치 행렬을 나타내는 데이터",
+          "relationships": []
+        },
+        {
+          "component_id": "040",
+          "name": "파라미터 세트",
+          "component_type": "data",
+          "description": "정책의 파라미터들을 포함하는 데이터",
+          "relationships": []
+        }
+      ],
+      "fig_number": "도 2",
+      "output_path": "drawing_analysis/1020227009490/1020227009490_fig_2.mmd"
+    }
+  ]
+}
