@@ -1,0 +1,10 @@
+pymupdf
+python-docx
+olefile
+sqlalchemy
+psycopg2-binary
+openai
+pillow
+python-dotenv
+streamlit
+numpy
