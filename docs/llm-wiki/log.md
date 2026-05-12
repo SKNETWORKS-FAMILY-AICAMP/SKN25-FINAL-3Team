@@ -97,9 +97,9 @@ Changed files:
 ## [2026-05-12] update | branch naming rule simplified
 
 - Simplified `BRANCH_RULES.md` to focus only on branch naming.
-- Adopted personal integration branch style: `hw`, then task branches like `hw/docs/llm-wiki`, `hw/data/pilot-manifest`, `hw/feat/consultation-agent`.
-- Removed the old `feature/hyunwoo-g06f-data` branch after it had already been merged.
-- Created `hw` as the current personal integration branch.
+- Adopted a generic personal integration branch style: `<name>`, then task branches like `<name>/docs/llm-wiki`, `<name>/data/pilot-manifest`, `<name>/feat/consultation-agent`.
+- Removed the old feature branch after it had already been merged.
+- Created a personal integration branch for ongoing work.
 
 Changed files:
 
