@@ -232,9 +232,12 @@ HOME_CSS = COMMON_CSS + '''
 def render_home_html():
     nav = build_nav_html()
     hero_imgs = [
-        "https://source.unsplash.com/1920x1080/?gwanghwamun,seoul,korea",
-        "https://source.unsplash.com/1920x1080/?namsan,seoul,tower",
-        "https://source.unsplash.com/1920x1080/?lotte,world,tower,seoul",
+        # 광화문 / 경복궁 계열 고화질 이미지
+        "https://commons.wikimedia.org/wiki/Special:FilePath/Gwanghwamun%20Plaza%20-%20Gwanghwamun%20Gate%20back%20-%20Gyeongbokgung%20Palace%202016.jpg",
+        # 제2롯데월드타워 고화질 이미지
+        "https://commons.wikimedia.org/wiki/Special:FilePath/Lotte%20World%20Tower%20%2822074455581%29.jpg",
+        # 남산타워 고화질 이미지
+        "https://commons.wikimedia.org/wiki/Special:FilePath/N%20Seoul%20Tower%20%2813952097192%29.jpg",
     ]
     html = f'''
 <!DOCTYPE html>
@@ -313,12 +316,26 @@ def render_home_html():
 let heroIndex = 0;
 const slides = document.querySelectorAll('.slide');
 const heroDots = document.querySelectorAll('.hero-dot');
+slides.forEach(function(slide) {{
+    const bg = slide.style.backgroundImage
+        .replace('url("', '')
+        .replace('")', '')
+        .replace("url('", "")
+        .replace("')", "");
+    if (bg) {{
+        const img = new Image();
+        img.src = bg;
+    }}
+}});
 function showHero(i) {{
     slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
     heroDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
     heroIndex = i;
 }}
-setInterval(() => showHero((heroIndex + 1) % slides.length), 5000);
+setInterval(function() {{
+    heroIndex = (heroIndex + 1) % slides.length;
+    showHero(heroIndex);
+}}, 5000);
 let newsIndex = 0;
 const newsTrack = document.getElementById('newsTrack');
 const newsDots = document.querySelectorAll('.news-dot');
@@ -438,6 +455,70 @@ def generic_agent_page(title_key, sub_key, module_name=None, function_names=None
                 st.error(str(e))
     st.markdown('</div>', unsafe_allow_html=True)
     render_footer()
+
+
+def page_team():
+    render_simple_nav()
+    render_page_header("구성원 소개", "PatentAI 프로젝트를 함께 개발하는 6명의 팀원을 소개합니다.")
+
+    st.markdown("""
+    <div style="background:#F5F4F1;padding:4rem 5rem;">
+        <div style="width:38px;height:2px;background:#C9A84C;margin-bottom:1rem;"></div>
+        <div style="font-family:serif;font-size:1.9rem;color:#1A1A2E;margin-bottom:.5rem;">Our Team</div>
+        <div style="color:#777;font-size:.9rem;margin-bottom:2rem;">
+            특허 상담, 선행기술 조사, 명세서 작성, 도면 생성, UI/UX, 데이터 파이프라인을 함께 구축합니다.
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-bottom:1.3rem;">
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">01</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">김서현</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Frontend / PatentAI UI</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">홈페이지 UI, 다국어 전환, Streamlit 화면 구성, 도면 에이전트 연동을 담당합니다.</div>
+            </div>
+
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">02</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">팀원 2</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Prior Art Agent</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">선행기술 조사, 특허 데이터 검색, 유사도 분석 기능을 담당합니다.</div>
+            </div>
+
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">03</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">팀원 3</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Consultation Agent</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">발명 상담 흐름, 상담 로그 구조화, 발명 요약 기능을 담당합니다.</div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;">
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">04</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">팀원 4</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Specification Agent</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">청구항, 명세서 초안, 발명의 효과 및 구성요소 정리 기능을 담당합니다.</div>
+            </div>
+
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">05</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">팀원 5</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Drawing Agent</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">특허 도면 자동 생성, Mermaid 변환, SVG/PNG 렌더링 기능을 담당합니다.</div>
+            </div>
+
+            <div style="background:white;border:1px solid #E8E4DC;padding:2rem;min-height:285px;box-shadow:0 12px 30px rgba(0,0,0,.04);">
+                <div style="width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,#1A1A2E,#C9A84C);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;color:white;font-size:2rem;font-family:serif;">06</div>
+                <div style="font-size:1.1rem;font-weight:600;color:#1A1A2E;">팀원 6</div>
+                <div style="font-size:.82rem;color:#C9A84C;margin:.4rem 0;">Review / Integration</div>
+                <div style="font-size:.85rem;color:#666;line-height:1.7;">검토 에이전트, 전체 서비스 통합, 테스트 및 발표 자료 정리를 담당합니다.</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    render_footer()
+
 
 def page_drawing():
     render_simple_nav()
@@ -562,7 +643,7 @@ elif page == "review":
 elif page == "about":
     page_ready("nav_about")
 elif page == "team":
-    page_ready("nav_team")
+    page_team()
 elif page == "news":
     page_ready("nav_news")
 else:
