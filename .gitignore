@@ -4,3 +4,8 @@ temp_uploads/
 temp_imgs/
 *.pyc
 .DS_Store
+.venv/
+db.sqlite3
+*.egg-info/
+.claude/
+data/raw_pdf-*.pdf

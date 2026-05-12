@@ -1,0 +1,52 @@
+[project]
+name = "patent-agent"
+version = "0.1.0"
+description = "특허 명세서 자동 작성 서비스 — 멀티 에이전트"
+requires-python = ">=3.11"
+dependencies = [
+    # Agent API server
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    # LangGraph
+    "langgraph>=0.2.0",
+    "langchain-openai>=0.2.0",
+    # Data
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "sqlalchemy>=2.0.0",
+    # Document parsing
+    "pypdf2>=3.0.0",
+    "python-docx>=1.1.0",
+    "httpx>=0.27.0",
+    "streamlit>=1.57.0",
+]
+
+[project.optional-dependencies]
+backend = [
+    "django>=5.0.0",
+    "djangorestframework>=3.15.0",
+    "psycopg2-binary>=2.9.0",
+]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",     # TestClient용
+    "ruff>=0.4.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "ruff>=0.4.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+# Django 테스트 추가 시 아래 주석 해제
+# DJANGO_SETTINGS_MODULE = "backend.config.settings"
+
+[tool.ruff]
+line-length = 100
