@@ -20,8 +20,6 @@ temp_imgs/
 temp_uploads/
 .prior_art_index.pkl
 
-# 특허 추출 텍스트 (자동 생성, 57MB+)
-상담에이전트/patents_txt/extracted_texts/
 
 # DB
 *.sqlite3

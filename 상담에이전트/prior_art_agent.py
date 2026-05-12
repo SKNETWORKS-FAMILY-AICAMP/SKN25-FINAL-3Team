@@ -102,7 +102,8 @@ def load_patent_corpus(patents_dir: str = None) -> list[dict]:
         print(f"[선행기술조사] {d} 디렉토리를 생성했습니다. TXT 특허 파일을 넣어주세요.")
         return []
 
-    files = list(d.glob("*.txt"))
+    files = list(d.glob("*.txt")) + list(d.glob("**/*.txt"))
+    files = list(set(files))
     if not files:
         print(f"[선행기술조사] {d} 에 .txt 파일이 없습니다.")
         return []
