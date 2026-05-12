@@ -7,5 +7,4 @@ temp_imgs/
 .venv/
 db.sqlite3
 *.egg-info/
-.claude/
 data/raw_pdf-*.pdf
