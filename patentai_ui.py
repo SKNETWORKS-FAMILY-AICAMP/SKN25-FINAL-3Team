@@ -99,6 +99,7 @@ a { text-decoration: none; }
     display: flex;
     gap: 1.6rem;
     align-items: center;
+    flex: 1;
 }
 
 .menu a {
@@ -111,6 +112,29 @@ a { text-decoration: none; }
     color: #C9A84C;
 }
 
+.nav-actions {
+    display: flex;
+    gap: .7rem;
+    margin-left: auto;
+}
+
+.login-btn {
+    height: 34px;
+    padding: 0 .95rem;
+    border: 1px solid rgba(201,168,76,.45);
+    color: #C8C8D8;
+    display: flex;
+    align-items: center;
+    font-size: .72rem;
+    white-space: nowrap;
+}
+
+.login-btn:hover {
+    color: #111128;
+    background: #C9A84C;
+    border-color: #C9A84C;
+}
+
 .hero {
     background: #111128;
     padding: 7rem 5.5rem;
@@ -119,16 +143,59 @@ a { text-decoration: none; }
 }
 
 .hero.home {
+    position: relative;
     height: 720px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background:
-        linear-gradient(rgba(10,10,22,.45), rgba(10,10,22,.92)),
-        url('https://commons.wikimedia.org/wiki/Special:FilePath/N%20Seoul%20Tower%20%2813952097192%29.jpg');
+    overflow: hidden;
+    background: #0A0A16;
+    padding: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
     background-size: cover;
     background-position: center;
+    opacity: 0;
+    animation: heroFade 15s infinite;
+    filter: brightness(.48) saturate(.95);
+}
+
+.hero-slide:nth-child(1) {
+    background-image:
+        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
+        url('https://commons.wikimedia.org/wiki/Special:FilePath/N%20Seoul%20Tower%20%2813952097192%29.jpg');
+    animation-delay: 0s;
+}
+
+.hero-slide:nth-child(2) {
+    background-image:
+        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
+        url('https://commons.wikimedia.org/wiki/Special:FilePath/Lotte%20World%20Tower%20%2822074455581%29.jpg');
+    animation-delay: 5s;
+}
+
+.hero-slide:nth-child(3) {
+    background-image:
+        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
+        url('https://commons.wikimedia.org/wiki/Special:FilePath/Gwanghwamun%20Plaza%2C%20Seoul.jpg');
+    animation-delay: 10s;
+}
+
+@keyframes heroFade {
+    0% { opacity: 0; transform: scale(1.03); }
+    8% { opacity: 1; }
+    33% { opacity: 1; }
+    41% { opacity: 0; transform: scale(1.08); }
+    100% { opacity: 0; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
 }
 
 .tag {
@@ -383,6 +450,10 @@ a { text-decoration: none; }
         display: none;
     }
 
+    .nav-actions {
+        display: none;
+    }
+
     .grid,
     .stats,
     .workflow {
@@ -392,6 +463,11 @@ a { text-decoration: none; }
     .section,
     .hero {
         padding: 4rem 1.5rem;
+    }
+
+    .hero.home {
+        height: 640px;
+        padding: 0 1.5rem;
     }
 
     .hero h1,
@@ -405,11 +481,17 @@ a { text-decoration: none; }
 NAV = """
 <div class="nav">
     <a class="logo" href="/" target="_self">PATENT<em>AI</em><span>지식재산 상담 시스템</span></a>
+
     <div class="menu">
         <a href="/" target="_self">홈</a>
         <a href="/서비스_소개" target="_self">서비스 소개</a>
         <a href="/구성원" target="_self">구성원</a>
         <a href="/소식_자료" target="_self">소식/자료</a>
+    </div>
+
+    <div class="nav-actions">
+        <a class="login-btn" href="#" target="_self">고객 로그인</a>
+        <a class="login-btn" href="#" target="_self">직원 로그인</a>
     </div>
 </div>
 """
@@ -428,7 +510,11 @@ def render_home():
     {NAV}
 
     <div class="hero home">
-        <div>
+        <div class="hero-slide"></div>
+        <div class="hero-slide"></div>
+        <div class="hero-slide"></div>
+
+        <div class="hero-content">
             <div class="tag">AI-POWERED PATENT CONSULTATION SYSTEM</div>
             <h1>발명의 가치를<br>권리로 만들어 드립니다</h1>
             <div class="line"></div>
