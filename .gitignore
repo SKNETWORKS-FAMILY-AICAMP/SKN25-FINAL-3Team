@@ -1,1 +1,7 @@
+__pycache__/
+*.pyc
 .env
+venv/
+data/raw/
+data/processed/
+*.sqlite3.env
