@@ -154,42 +154,35 @@ a { text-decoration: none; }
     padding: 0;
 }
 
-.hero-slide {
+.hero-img {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     opacity: 0;
     animation: heroFade 15s infinite;
     filter: brightness(.48) saturate(.95);
+    transform: scale(1.03);
 }
 
-.hero-slide:nth-child(1) {
-    background-image:
-        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
-        url('https://commons.wikimedia.org/wiki/Special:FilePath/N%20Seoul%20Tower%20%2813952097192%29.jpg');
+.hero-img.img1 {
     animation-delay: 0s;
 }
 
-.hero-slide:nth-child(2) {
-    background-image:
-        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
-        url('https://commons.wikimedia.org/wiki/Special:FilePath/Lotte%20World%20Tower%20%2822074455581%29.jpg');
+.hero-img.img2 {
     animation-delay: 5s;
 }
 
-.hero-slide:nth-child(3) {
-    background-image:
-        linear-gradient(rgba(10,10,22,.25), rgba(10,10,22,.88)),
-        url('https://commons.wikimedia.org/wiki/Special:FilePath/Gwanghwamun%20Plaza%2C%20Seoul.jpg');
+.hero-img.img3 {
     animation-delay: 10s;
 }
 
 @keyframes heroFade {
     0% { opacity: 0; transform: scale(1.03); }
-    8% { opacity: 1; }
-    33% { opacity: 1; }
-    41% { opacity: 0; transform: scale(1.08); }
+    6% { opacity: 1; }
+    30% { opacity: 1; }
+    36% { opacity: 0; transform: scale(1.08); }
     100% { opacity: 0; }
 }
 
@@ -490,8 +483,8 @@ NAV = """
     </div>
 
     <div class="nav-actions">
-        <a class="login-btn" href="#" target="_self">고객 로그인</a>
-        <a class="login-btn" href="#" target="_self">직원 로그인</a>
+        <a class="login-btn" href="/고객_로그인" target="_self">고객 로그인</a>
+        <a class="login-btn" href="/직원_로그인" target="_self">직원 로그인</a>
     </div>
 </div>
 """
@@ -510,9 +503,14 @@ def render_home():
     {NAV}
 
     <div class="hero home">
-        <div class="hero-slide"></div>
-        <div class="hero-slide"></div>
-        <div class="hero-slide"></div>
+        <img class="hero-img img1"
+             src="https://upload.wikimedia.org/wikipedia/commons/3/3f/N_Seoul_Tower_%2813952097192%29.jpg">
+
+        <img class="hero-img img2"
+             src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Lotte_World_Tower_from_Olympic_Park.jpg">
+
+        <img class="hero-img img3"
+             src="https://upload.wikimedia.org/wikipedia/commons/5/51/Statue_of_King_Sejong_and_Gwanghwamun_Square.jpg">
 
         <div class="hero-content">
             <div class="tag">AI-POWERED PATENT CONSULTATION SYSTEM</div>
