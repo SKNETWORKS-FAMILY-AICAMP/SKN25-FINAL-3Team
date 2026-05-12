@@ -149,8 +149,12 @@ with st.sidebar:
             ("effect", "🚀 기대효과", "🟣")
         ]:
             if s[key]:
-                with st.expander(f"{label}", expanded=False):
+                is_ok = s.get(f"{key}_sufficient", False)
+                status_icon = "✅" if is_ok else "⚠️"
+                with st.expander(f"{status_icon} {label.split(' ')[1]}", expanded=not is_ok):
                     st.write(s[key])
+                    if not is_ok and s.get(f"{key}_feedback"):
+                        st.caption(f"💬 {s[f'{key}_feedback']}")
             else:
                 st.caption(f"{icon} {label.split(' ')[1]}: 탐색 중...")
 
@@ -192,7 +196,22 @@ with st.sidebar:
                         f.write(uploaded_file.getvalue())
                     
                     st.session_state.agent.extract_from_file(temp_path)
-                    res = st.session_state.agent._extract_and_interact("[파일 분석 완료]")
+                    
+                    agent = st.session_state.agent
+                    all_filled = all(agent.state.get(f"{k}_sufficient", False) for k in ["problem", "solution", "differentiation", "effect"])
+                    if all_filled and len(agent.state["algorithm_steps"]) >= 3:
+                        st.session_state.phase = 2
+                        res = (
+                            "문서에서 핵심 내용을 잘 파악했습니다. "
+                            "특허 요건상 기본 구성은 갖춰졌으나, "
+                            "청구항을 더 탄탄하게 만들기 위해 몇 가지 확인이 더 필요합니다.\n\n"
+                            f"{PHASE2_QUESTION}"
+                        )
+                    elif all_filled:
+                        st.session_state.collecting_steps = True
+                        res = "핵심 요소 파악이 순조롭습니다! 👏 문서에 구체적인 작동 순서가 부족하네요. 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
+                    else:
+                        res = agent._extract_and_interact("[파일 분석 완료. 부족한 항목 확인 후 질문하세요.]")
                     
                     st.session_state.messages.append({"role": "user", "content": f"📎 파일을 업로드했습니다: `{uploaded_file.name}`"})
                     if res:
@@ -264,7 +283,8 @@ if prompt := st.chat_input("발명에 대해 자유롭게 설명해 주세요...
                             st.session_state.collecting_steps = False
                             response = agent._extract_and_interact("[알고리즘 10단계 수집 완료]")
                         else:
-                            response = f"**{len(agent.state['algorithm_steps'])+1}단계**를 말씀해 주세요.\n(마치시려면 '완료' 또는 '끝'이라고 입력해 주세요.)"
+                            current_len = len(agent.state["algorithm_steps"])
+                            response = f"**{current_len}단계**까지 입력되었습니다. **{current_len + 1}단계**를 말씀해 주세요.\n(마치시려면 '완료' 또는 '끝'이라고 입력해 주세요.)"
                 else:
                     # 일반 4대 요소 추출 모드
                     agent.state["raw_log"].append({"role": "user", "content": prompt})
@@ -276,7 +296,12 @@ if prompt := st.chat_input("발명에 대해 자유롭게 설명해 주세요...
                     response = "핵심 요소 파악이 순조롭습니다! 👏 이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
                 elif response is None:
                     st.session_state.phase = 2
-                    response = f"훌륭합니다! 독립항 구성을 위한 핵심 정보 수집이 완료되었습니다. ✅\n\n{PHASE2_QUESTION}"
+                    response = (
+                        "핵심 내용을 잘 파악했습니다. "
+                        "특허 요건상 기본 구성은 갖춰졌으나, "
+                        "청구항을 더 탄탄하게 만들기 위해 몇 가지 확인이 더 필요합니다.\n\n"
+                        f"{PHASE2_QUESTION}"
+                    )
             
             # Phase 2: 심화 정보 수집
             elif st.session_state.phase == 2:

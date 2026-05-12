@@ -106,7 +106,7 @@ PHASE1_SYSTEM = "당신은 정밀한 특허 분석가입니다. 지시한 JSON �
 
 # [STEP 1] 추출 및 요약 전용 프롬프트 (gpt-4o용)
 PHASE1_EXTRACT_PROMPT = """
-당신은 베테랑 변리사입니다. 사용자의 답변에서 발명의 4대 핵심 요소를 정밀 추출하고 요약하세요.
+당신은 베테랑 변리사입니다. 사용자의 답변에서 발명의 4대 핵심 요소를 정밀 추출하고 특허 명세서 작성 기준의 품질을 평가하세요.
 
 [현재 상태]
 - 문제점: {problem}
@@ -115,33 +115,59 @@ PHASE1_EXTRACT_PROMPT = """
 - 기대효과: {effect}
 
 [지침]
-1. 사용자 답변에서 새로 파악된 내용을 4대 요소에 업데이트하세요.
-2. **반드시 핵심 기술적 특징 위주로 명료하고 전문적으로 요약하여 저장하세요.**
-3. 추측하지 말고, 언급되지 않은 내용은 기존 상태를 유지하거나 null로 두세요.
-4. 반드시 아래 JSON 형식으로만 응답하세요.
+1. 사용자 답변에서 새로 파악된 내용을 업데이트하세요.
+2. 각 항목이 특허 명세서 작성에 충분히 구체적인지 평가(is_sufficient)하고 피드백(feedback)을 작성하세요.
+  - 문제점: 단순 불편함이 아닌, 기존 기술의 구조적/기술적 한계가 명시되었는가?
+  - 해결방법: 추상적 아이디어가 아닌, 구체적인 기술 구성 요소나 로직이 있는가?
+  - 차별성: 종래 기술 대비 추가된 구체적 구성/단계가 명확한가?
+3. 반드시 아래 JSON 형식으로만 응답하세요.
 
 {{
-    "problem": "요약된 문자열 또는 null",
-    "solution": "요약된 문자열 또는 null",
-    "differentiation": "요약된 문자열 또는 null",
-    "effect": "요약된 문자열 또는 null"
+    "problem": {{"content": "요약된 문자열 또는 null", "is_sufficient": false, "feedback": "부족한 점 또는 빈 문자열"}},
+    "solution": {{"content": "요약된 문자열 또는 null", "is_sufficient": false, "feedback": "부족한 점 또는 빈 문자열"}},
+    "differentiation": {{"content": "요약된 문자열 또는 null", "is_sufficient": false, "feedback": "부족한 점 또는 빈 문자열"}},
+    "effect": {{"content": "요약된 문자열 또는 null", "is_sufficient": false, "feedback": "부족한 점 또는 빈 문자열"}}
+}}
+"""
+
+# [STEP 1.5] 포괄적 자동 추출 프롬프트 (파일 업로드 전용)
+COMPREHENSIVE_EXTRACT_PROMPT = """
+당신은 베테랑 변리사입니다. 사용자가 제출한 문서를 분석하여 특허 출원에 필요한 정보를 추출하고 품질을 평가하세요.
+
+[지침]
+1. 문서에 명시된 내용만 추출하고 절대 추측하지 마세요.
+2. 4대 요소는 특허 요건에 맞게 구체적인지 평가(is_sufficient)하고 피드백(feedback)을 작성하세요.
+  - 문제점: 단순 불편함이 아닌, 기존 기술의 구조적/기술적 한계 유무
+  - 해결방법: 추상적 아이디어가 아닌, 구체적인 기술 구성 요소 유무
+  - 차별성: 종래 대비 추가된 구체적 구성 명확성
+3. 알고리즘 작동 단계(최소 3단계)와 심화 정보도 추출하세요.
+4. 반드시 아래 JSON 형식으로만 응답하세요:
+
+{{
+    "problem": {{"content": "...", "is_sufficient": false, "feedback": "..."}},
+    "solution": {{"content": "...", "is_sufficient": false, "feedback": "..."}},
+    "differentiation": {{"content": "...", "is_sufficient": false, "feedback": "..."}},
+    "effect": {{"content": "...", "is_sufficient": false, "feedback": "..."}},
+    "algorithm_steps": ["1단계", "2단계", "..."],
+    "implementations": [], "parameters": [], "algorithms": [], "optional_features": [], "error_handling": []
 }}
 """
 
 # [STEP 2] 대화 및 질문 생성 프롬프트 (gpt-4o-mini용)
 PHASE1_CHAT_PROMPT = """
 당신은 친절하고 전문적인 변리사입니다. 
-사용자의 최근 답변에 대해 전문적인 공감과 피드백을 해주고, 자연스럽게 다음 질문을 던지세요.
+사용자의 최근 답변에 대해 공감하고, 다음 항목에 대해 질문하세요.
 
 [수집 현황]
 {state_summary}
 
 [다음에 물어볼 항목]
-{target_label}
+- 항목: {target_label}
+- 피드백(부족한 점): {target_feedback}
 
 [지침]
 1. 사용자의 답변에 대해 전문적인 공감과 짧은 피드백을 먼저 하세요.
-2. 아직 비어있는 항목 중 우선순위가 높은 항목에 대해 구체적으로 질문하세요.
+2. 만약 '피드백(부족한 점)'이 있다면, 특허 요건을 충족하기 위해 왜 그 정보가 구체적으로 필요한지 설명하며 보완을 요청하세요.
 3. 특히 '기대 효과' 질문 시에는 사용자가 얻을 구체적 편익을 상황 중심으로 물어보세요.
 """
 
@@ -212,7 +238,10 @@ class PatentConsultant:
         self.phase            = 1
         self.client           = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.state = {
-            "problem": None, "solution": None, "differentiation": None, "effect": None,
+            "problem": None, "problem_sufficient": False, "problem_feedback": "",
+            "solution": None, "solution_sufficient": False, "solution_feedback": "",
+            "differentiation": None, "differentiation_sufficient": False, "differentiation_feedback": "",
+            "effect": None, "effect_sufficient": False, "effect_feedback": "",
             "algorithm_steps": [],
             "implementations": [], "parameters": [], "algorithms": [], "optional_features": [], "error_handling": [],
             "raw_log": [], "file_path": None, "confirmed": False,
@@ -239,6 +268,34 @@ class PatentConsultant:
         elif ext == ".hwp":  extracted_text = extract_text_from_hwp(file_path)
         if extracted_text.strip():
             self.state["raw_log"].append({"role": "file_text", "content": extracted_text[:4000]})
+            self._analyze_comprehensive(extracted_text[:4000])
+
+    def _analyze_comprehensive(self, text: str):
+        """문서 전체를 분석하여 모든 가능한 필드를 한꺼번에 채움"""
+        resp = self.client.chat.completions.create(
+            model=EXTRACT_MODEL,
+            messages=[
+                {"role": "system", "content": PHASE1_SYSTEM},
+                {"role": "user", "content": f"{COMPREHENSIVE_EXTRACT_PROMPT}\n\n[문서 내용]\n{text}"}
+            ],
+            response_format={"type": "json_object"}
+        )
+        data = json.loads(resp.choices[0].message.content)
+        
+        for key in ["problem", "solution", "differentiation", "effect"]:
+            val = data.get(key)
+            if val and val.get("content"):
+                self.state[key] = val["content"]
+                self.state[f"{key}_sufficient"] = val.get("is_sufficient", False)
+                self.state[f"{key}_feedback"] = val.get("feedback", "")
+        
+        if data.get("algorithm_steps"):
+            self.state["algorithm_steps"] = data["algorithm_steps"]
+            
+        for key in ["implementations", "parameters", "algorithms", "optional_features", "error_handling"]:
+            if data.get(key):
+                if not self.state[key]: self.state[key] = []
+                self.state[key].extend(data[key])
 
     def _analyze_vision(self, image_path: str) -> str:
         base64_img = encode_image_to_base64(image_path)
@@ -270,15 +327,15 @@ class PatentConsultant:
         1. gpt-4o: 고성능 추출 및 요약
         2. gpt-4o-mini: 저렴하고 자연스러운 질문 생성
         """
-        all_filled = all(self.state[k] for k in ["problem", "solution", "differentiation", "effect"])
+        all_filled = all(self.state.get(f"{k}_sufficient", False) for k in ["problem", "solution", "differentiation", "effect"])
         if all_filled and len(self.state["algorithm_steps"]) >= 3: return None
         if all_filled and len(self.state["algorithm_steps"]) < 3 and user_input.startswith("["): return "COLLECT_ALGORITHM"
 
         target_field = None
-        if not self.state["problem"]: target_field = "problem"
-        elif not self.state["solution"]: target_field = "solution"
-        elif not self.state["differentiation"]: target_field = "differentiation"
-        elif not self.state["effect"]: target_field = "effect"
+        for key in ["problem", "solution", "differentiation", "effect"]:
+            if not self.state.get(f"{key}_sufficient", False):
+                target_field = key
+                break
 
         # STEP 1: gpt-4o 추출
         extract_prompt = PHASE1_EXTRACT_PROMPT.format(
@@ -294,13 +351,17 @@ class PatentConsultant:
         )
         ext_data = json.loads(ext_resp.choices[0].message.content)
         for key in ["problem", "solution", "differentiation", "effect"]:
-            if ext_data.get(key): self.state[key] = ext_data[key]
+            val = ext_data.get(key)
+            if val and val.get("content"):
+                self.state[key] = val["content"]
+                self.state[f"{key}_sufficient"] = val.get("is_sufficient", False)
+                self.state[f"{key}_feedback"] = val.get("feedback", "")
         
-        if target_field and not self.state.get(target_field):
-            if user_input and not user_input.startswith("[") and user_input != "상담을 시작합니다.":
+        if target_field and not self.state.get(f"{target_field}_sufficient", False):
+            if user_input and not user_input.startswith("[") and user_input != "상담을 시작합니다." and not self.state[target_field]:
                 self.state[target_field] = user_input.strip()
 
-        all_filled_now = all(self.state[k] for k in ["problem", "solution", "differentiation", "effect"])
+        all_filled_now = all(self.state.get(f"{k}_sufficient", False) for k in ["problem", "solution", "differentiation", "effect"])
         if all_filled_now and len(self.state["algorithm_steps"]) < 3: return "COLLECT_ALGORITHM"
         if all_filled_now and len(self.state["algorithm_steps"]) >= 3: return None
 
@@ -311,12 +372,14 @@ class PatentConsultant:
             history.append({"role": role, "content": m["content"]})
         state_summary = "\n".join([f"- {FIELD_LABELS[k]}: {self.state[k] or '미파악'}" for k in ["problem", "solution", "differentiation", "effect"]])
         target_label = FIELD_LABELS.get(target_field, "전반적인 내용")
+        target_feedback = self.state.get(f"{target_field}_feedback", "")
+        
         chat_resp = self.client.chat.completions.create(
             model=CHAT_MODEL,
             messages=[
-                {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
+                {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label, target_feedback=target_feedback)},
                 *history,
-                {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
+                {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 항목({target_label})에 대해 질문해줘."}
             ]
         )
         return chat_resp.choices[0].message.content.strip()
@@ -378,7 +441,7 @@ if __name__ == "__main__":
             break
         if action == "COLLECT_ALGORITHM": 
             agent.collect_algorithm_steps()
-            all_filled = all(agent.state[k] for k in ["problem", "solution", "differentiation", "effect"])
+            all_filled = all(agent.state.get(f"{k}_sufficient", False) for k in ["problem", "solution", "differentiation", "effect"])
             action = None if (all_filled and len(agent.state["algorithm_steps"]) >= 3) else agent._extract_and_interact("[알고리즘 수집 완료]")
             continue
         print(f"\n[변리사]: {action}")
@@ -386,7 +449,13 @@ if __name__ == "__main__":
         if user_in == "종료": exit()
         if os.path.exists(user_in):
             agent.extract_from_file(user_in)
-            action = agent._extract_and_interact("[파일이 업로드되었습니다]")
+            all_filled = all(agent.state.get(f"{k}_sufficient", False) for k in ["problem", "solution", "differentiation", "effect"])
+            if all_filled and len(agent.state["algorithm_steps"]) >= 3:
+                action = None
+            elif all_filled:
+                action = "COLLECT_ALGORITHM"
+            else:
+                action = agent._extract_and_interact("[파일 분석 완료. 부족한 항목 확인 후 질문하세요.]")
         else:
             agent.state["raw_log"].append({"role": "user", "content": user_in})
             action = agent._extract_and_interact(user_in)
