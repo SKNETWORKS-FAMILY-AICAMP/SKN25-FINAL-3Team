@@ -1,10 +1,13 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Integer, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-load_dotenv()
+_ENV_DIR = Path(__file__).resolve().parent
+load_dotenv(_ENV_DIR.parents[1] / ".env")
+load_dotenv(_ENV_DIR / ".env", override=True)
 
 Base = declarative_base()
 
