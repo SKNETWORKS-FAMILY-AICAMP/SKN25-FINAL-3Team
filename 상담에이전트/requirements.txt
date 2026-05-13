@@ -8,4 +8,6 @@ pillow
 python-dotenv
 streamlit
 numpy
+pydantic
+requests
 
