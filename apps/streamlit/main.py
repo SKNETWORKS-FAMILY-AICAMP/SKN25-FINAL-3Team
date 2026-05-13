@@ -1,10 +1,19 @@
 import streamlit as st
 import os
+import sys
 import json
 import shutil
+from pathlib import Path
 from dotenv import load_dotenv
-from 상담에이전트.consultation_agent import PatentConsultant, FIELD_LABELS, PHASE2_QUESTION, PHASE2_SKIP_KEYWORDS, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM
-from 상담에이전트.document_utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp, extract_images_from_pdf
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CONSULTATION_AGENT_DIR = REPO_ROOT / "agents" / "consultation"
+sys.path.insert(0, str(CONSULTATION_AGENT_DIR))
+load_dotenv(REPO_ROOT / ".env")
+load_dotenv(CONSULTATION_AGENT_DIR / ".env", override=True)
+
+from consultation_agent import PatentConsultant, FIELD_LABELS, PHASE2_QUESTION, PHASE2_SKIP_KEYWORDS, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM
+from document_utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp, extract_images_from_pdf
 
 # ─────────────────────────────────────────────
 # 페이지 설정

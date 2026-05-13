@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Integer, Text, JSON, ForeignKeyConstraint
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,7 +16,9 @@ from document_utils import (
     encode_image_to_base64
 )
 
-load_dotenv()
+_ENV_DIR = Path(__file__).resolve().parent
+load_dotenv(_ENV_DIR.parents[1] / ".env")
+load_dotenv(_ENV_DIR / ".env", override=True)
 
 # ─────────────────────────────────────────────
 # 모델 설정 (.env의 OPENAI_MODEL로 일괄 변경 가능)
