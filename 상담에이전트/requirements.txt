@@ -8,12 +8,6 @@ pillow
 python-dotenv
 streamlit
 numpy
-fastapi
-uvicorn
 pydantic
-torch
-transformers
-peft
 requests
-huggingface-hub
 
