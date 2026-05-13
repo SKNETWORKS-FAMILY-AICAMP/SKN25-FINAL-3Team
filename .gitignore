@@ -1,29 +1,46 @@
-.env
-__pycache__/
-temp_uploads/
-temp_imgs/
-*.pyc
-.DS_Store
-
-# Local Python / app caches
+# Python
+venv/
 .venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 .pytest_cache/
+
+# 환경변수 (절대 커밋 금지!)
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 임시/캐시 파일
+temp_imgs/
+temp_uploads/
+.prior_art_index.pkl
+
+
+# DB
 *.sqlite3
 *.db
 
-# Patent data policy
-# Track manifests and small docs, but do not track bulk raw/processed/report/tmp outputs.
-!data/
-!data/README.md
-!data/manifests/
-!data/manifests/**
+# 대용량/바이너리
+*.pdf
 
+# Claude Code 내부
+.claude/
+
+# Data 폴더 정책: 매니페스트와 README만 추적
 data/raw/**
 data/processed/**
 data/reports/**
 data/tmp/**
 
-# Keep folder skeletons and README files visible.
+!data/
+!data/README.md
+!data/manifests/
+!data/manifests/**
 !data/raw/**/
 !data/raw/**/.gitkeep
 !data/raw/**/README.md
