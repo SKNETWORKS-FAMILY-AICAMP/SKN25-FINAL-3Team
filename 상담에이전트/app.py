@@ -2,9 +2,54 @@ import streamlit as st
 import os
 import json
 import time
+import requests  # API 호출용 추가
 import agent_payloads
 from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS, PHASE2_SKIP_KEYWORDS
 from prior_art_agent import run_prior_art_agent
+
+# 런팟 대시보드의 'Connect' -> 'HTTP Service (Port 8000)'에서 복사한 주소를 넣으세요.
+# 맨 뒤에 슬래시(/)는 빼고 입력합니다.
+BACKEND_URL = "https://iu0c50cr6tlboh-8000.proxy.runpod.net"
+# 백엔드 헬스 체크
+def is_backend_available():
+    try:
+        response = requests.get(f"{BACKEND_URL}/health", timeout=5)
+        return response.status_code == 200
+    except requests.RequestException:
+        return False
+
+# 청구항 생성 API 호출 함수
+
+def generate_claims(prior_art, consultation_note):
+    url = f"{BACKEND_URL}/generate-claims"
+    
+    payload = {
+        "prior_art": prior_art,
+        "consultation_note": consultation_note
+    }
+    
+    if not is_backend_available():
+        return {"error": (
+            "연결 오류: 백엔드 서버가 실행 중인지 확인하세요.\n"
+            f"백엔드 URL: {BACKEND_URL}\n"
+            "터미널에서 `python main.py`를 실행하세요."
+        )}
+    
+    try:
+        # LLM(7.8B) 추론 시간을 고려하여 타임아웃을 180초로 대폭 늘림
+        response = requests.post(url, json=payload, timeout=180)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # 수정된 main.py의 응답 구조에 맞게 반환
+            return {
+                "claim_1": data.get("claim_1", "제1항 생성 실패"),
+                "dependent_claims": data.get("dependent_claims", "종속항 생성 실패")
+            }
+        else:
+            return {"error": f"API 오류: {response.status_code} - {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"연결 오류: {str(e)}"}
 
 
 # ─────────────────────────────────────────────
@@ -110,6 +155,8 @@ if "messages" not in st.session_state: st.session_state.messages = []
 if "user_id" not in st.session_state: st.session_state.user_id = ""
 if "phase" not in st.session_state: st.session_state.phase = 1
 if "collecting_steps" not in st.session_state: st.session_state.collecting_steps = False
+if "prior_art_result" not in st.session_state: st.session_state.prior_art_result = None
+if "generated_claim" not in st.session_state: st.session_state.generated_claim = ""
 
 def initialize_agent(u_id):
     st.session_state.user_id = u_id
@@ -137,10 +184,18 @@ with st.sidebar:
 
     st.divider()
 
+    backend_ok = is_backend_available()
+    if backend_ok:
+        st.success(f"백엔드 서버 연결됨: {BACKEND_URL}")
+    else:
+        st.error(
+            "백엔드 서버 미연결: main.py를 실행해 주세요.\n"
+            f"URL: {BACKEND_URL}/health"
+        )
+
     if st.session_state.agent:
         st.subheader("🔍 실시간 추출 정보")
         s = st.session_state.agent.state
-        
         # Phase 1: 핵심 4대 요소
         for key, label, icon in [
             ("problem", "🚩 문제점", "🔴"), 
@@ -364,14 +419,12 @@ if st.session_state.agent and st.session_state.phase >= 2:
                 res = st.session_state.agent.confirm_and_save()
                 
                 # [모듈화된 Payload 전송 시스템] 
-                # 1. 상태를 기반으로 마스터 payload 생성
                 master_payload = agent_payloads.build_invention_payload(
                     st.session_state.agent.state, 
                     st.session_state.agent.user_id, 
                     st.session_state.agent.consultation_idx
                 )
                 
-                # 2. 각 후속 에이전트 맞춤형 Payload 분리
                 prior_art_payload = agent_payloads.build_prior_art_payload(master_payload)
                 claims_payload = agent_payloads.build_claim_payload(master_payload)
                 spec_payload = agent_payloads.build_specification_payload(master_payload)
@@ -379,10 +432,13 @@ if st.session_state.agent and st.session_state.phase >= 2:
                 st.success(res)
                 st.balloons()
 
-            # 선행기술조사 에이전트 실행
-            with st.spinner("🔍 선행기술조사 에이전트가 분석 중입니다... (1~2분 소요)"):
-                prior_art_result = run_prior_art_agent(master_payload)
+                # 선행기술조사 에이전트 실행
+                with st.spinner("🔍 선행기술조사 에이전트가 분석 중입니다... (1~2분 소요)"):
+                    prior_art_result = run_prior_art_agent(master_payload)
+                    st.session_state.prior_art_result = prior_art_result
 
+        if st.session_state.prior_art_result:
+            prior_art_result = st.session_state.prior_art_result
             st.subheader("📋 선행기술조사 결과")
 
             overall = prior_art_result.get("overall_risk", {})
@@ -416,3 +472,37 @@ if st.session_state.agent and st.session_state.phase >= 2:
                         st.markdown(f"**대응 전략:** {item['recommendation']}")
 
             st.info("상담이 성공적으로 종료되었으며, 선행기술조사까지 완료되었습니다.")
+
+            # 청구항 생성 섹션 추가 (버튼은 사이드바에 유지, 결과는 메인 화면으로 전송)
+            st.divider()
+            st.subheader("📝 특허 청구항 생성")
+            
+            if st.button("🤖 AI 모델로 청구항 생성", use_container_width=True, type="primary"):
+                with st.spinner("AI 모델이 제1항 및 종속항을 순차적으로 생성 중입니다. (1~3분 소요될 수 있습니다)"):
+                    prior_art_summary = "\n".join([
+                        f"- {item['title']} (유사도: {item['similarity_score']:.2%}, 리스크: {item['risk_level']})"
+                        for item in prior_art_result.get("prior_art_results", [])[:5]
+                    ])
+                    consultation_note = st.session_state.agent.build_summary()
+                    
+                    # API 호출
+                    generated = generate_claims(prior_art_summary, consultation_note)
+                    st.session_state.generated_claim = generated
+                    
+                    if "error" not in generated:
+                        # 🎯 핵심: 기존 채팅 내역에서 "### 📝 AI 생성 특허 청구항"으로 시작하는 메시지 찾아 삭제
+                        st.session_state.messages = [
+                            msg for msg in st.session_state.messages 
+                            if not (msg["role"] == "assistant" and msg["content"].startswith("### 📝 AI 생성 특허 청구항"))
+                        ]
+
+                        claim_msg = "### 📝 AI 생성 특허 청구항\n\n"
+                        claim_msg += "#### 🔹 독립항 (제1항)\n"
+                        claim_msg += f"{generated.get('claim_1', '')}\n\n"
+                        claim_msg += "#### 🔸 종속항 (제2항 ~)\n"
+                        claim_msg += f"{generated.get('dependent_claims', '')}"
+                        
+                        st.session_state.messages.append({"role": "assistant", "content": claim_msg})
+                        st.rerun() 
+                    else:
+                        st.error(f"청구항 생성에 실패했습니다: {generated['error']}")
