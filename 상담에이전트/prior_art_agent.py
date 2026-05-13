@@ -1,27 +1,22 @@
 """
 선행기술조사 에이전트
-- patents_txt/ 디렉토리의 .txt 특허 파일을 코퍼스로 사용
+- Supabase DB의 patent_corpus 테이블에서 특허 데이터 및 임베딩 로드
 - invention_payload JSON → 쿼리 추출 → 임베딩 유사도 검색 → 근거문장 + 리스크 분석
 """
 
 import os
 import json
 import re
-import glob
-import pickle
 from pathlib import Path
-from typing import Any
 import numpy as np
 from openai import OpenAI
-import os 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-PATENTS_DIR = Path(__file__).parent / "patents_txt"
-INDEX_CACHE  = Path(__file__).parent / ".prior_art_index.pkl"
+PATENTS_DIR = Path(__file__).parent / "patents_txt"  # load_corpus.py에서 사용
 
 EMBED_MODEL   = "text-embedding-3-small"
 EXTRACT_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
@@ -121,12 +116,11 @@ def load_patent_corpus(patents_dir: str = None) -> list[dict]:
 
 
 # ─────────────────────────────────────────────────────────────
-# 2. 임베딩 인덱스 구축 (파일 변경 시 자동 재구축)
+# 2. 임베딩 유틸 (load_corpus.py에서도 재사용)
 # ─────────────────────────────────────────────────────────────
 
 def _embed_texts(texts: list[str]) -> np.ndarray:
-    """OpenAI 임베딩 API 호출 (배치)"""
-    # API 최대 2048개 제한에 맞춰 배치 처리
+    """OpenAI 임베딩 API 호출 (배치, 최대 100건씩)"""
     batch_size = 100
     all_vecs = []
     for i in range(0, len(texts), batch_size):
@@ -137,50 +131,39 @@ def _embed_texts(texts: list[str]) -> np.ndarray:
     return np.array(all_vecs, dtype=np.float32)
 
 
-def _corpus_fingerprint(corpus: list[dict]) -> str:
-    """코퍼스 변경 감지용 핑거프린트 (파일명+크기)"""
-    parts = [f"{p['file_name']}:{len(p['raw_text'])}" for p in corpus]
-    return "|".join(sorted(parts))
+# ─────────────────────────────────────────────────────────────
+# 3. DB에서 코퍼스 + 임베딩 로드
+# ─────────────────────────────────────────────────────────────
 
+def load_corpus_from_db() -> tuple[np.ndarray, list[dict]]:
+    """Supabase DB에서 특허 코퍼스와 임베딩을 로드합니다."""
+    from patent_db import PatentCorpus, SessionLocal
 
-def build_or_load_index(corpus: list[dict]) -> tuple[np.ndarray, list[dict]]:
-    """
-    임베딩 인덱스를 빌드하거나 캐시에서 로드합니다.
-    코퍼스가 바뀌면 자동으로 재구축합니다.
-    """
-    fp = str(INDEX_CACHE)
-    fingerprint = _corpus_fingerprint(corpus)
+    db = SessionLocal()
+    try:
+        patents = db.query(PatentCorpus).all()
+        if not patents:
+            print("[선행기술조사] DB에 특허 데이터가 없습니다. load_corpus.py를 먼저 실행하세요.")
+            return np.array([]), []
 
-    if INDEX_CACHE.exists():
-        with open(fp, "rb") as f:
-            cached = pickle.load(f)
-        if cached.get("fingerprint") == fingerprint:
-            print("[선행기술조사] 캐시된 임베딩 인덱스 사용")
-            return cached["vectors"], cached["corpus"]
+        corpus, vectors = [], []
+        for p in patents:
+            corpus.append({
+                "file_name":     p.file_name or "",
+                "patent_number": p.patent_number or "",
+                "title":         p.title or "",
+                "applicant":     p.applicant or "",
+                "abstract":      p.abstract or "",
+                "claims":        p.claims or "",
+                "description":   p.description or "",
+                "raw_text":      p.raw_text or "",
+            })
+            vectors.append(p.embedding)
 
-    print(f"[선행기술조사] 임베딩 인덱스 구축 중... ({len(corpus)}건)")
-
-    # 검색용 텍스트: 제목 + 요약 + 청구항 (없으면 raw_text 앞 1500자)
-    search_texts = []
-    for p in corpus:
-        parts = []
-        if p["title"]:
-            parts.append(p["title"])
-        if p["abstract"]:
-            parts.append(p["abstract"][:800])
-        if p["claims"]:
-            parts.append(p["claims"][:800])
-        if not parts:
-            parts.append(p["raw_text"][:1500])
-        search_texts.append(" ".join(parts))
-
-    vectors = _embed_texts(search_texts)
-
-    with open(fp, "wb") as f:
-        pickle.dump({"fingerprint": fingerprint, "vectors": vectors, "corpus": corpus}, f)
-
-    print("[선행기술조사] 인덱스 구축 및 캐시 저장 완료")
-    return vectors, corpus
+        print(f"[선행기술조사] DB에서 특허 {len(corpus)}건 로드 완료")
+        return np.array(vectors, dtype=np.float32), corpus
+    finally:
+        db.close()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -341,7 +324,6 @@ def _summarize_overall_risk(results: list[dict]) -> dict:
 def run_prior_art_agent(
     invention_payload: dict,
     top_n: int = 5,
-    patents_dir: str = None,
 ) -> dict:
     """
     선행기술조사 에이전트 메인 함수.
@@ -349,7 +331,6 @@ def run_prior_art_agent(
     Args:
         invention_payload: build_invention_payload() 가 반환한 JSON
         top_n: 반환할 유사 선행특허 수
-        patents_dir: TXT 파일이 있는 디렉토리 경로 (기본: patents_txt/)
 
     Returns:
         {
@@ -359,17 +340,14 @@ def run_prior_art_agent(
             "corpus_size": N,              # 검색 대상 특허 수
         }
     """
-    # 1. 코퍼스 로드
-    corpus = load_patent_corpus(patents_dir)
+    # 1. DB에서 코퍼스 + 임베딩 로드
+    vectors, corpus = load_corpus_from_db()
     if not corpus:
         return {
-            "error": "patents_txt/ 디렉토리에 TXT 파일이 없습니다.",
+            "error": "DB에 특허 데이터가 없습니다. load_corpus.py를 먼저 실행하세요.",
             "prior_art_results": [],
             "overall_risk": {"level": "unknown", "summary": "코퍼스 없음"},
         }
-
-    # 2. 인덱스 구축 또는 로드
-    vectors, corpus = build_or_load_index(corpus)
 
     # 3. 검색 쿼리 텍스트 구성
     query_text = _build_query_text(invention_payload)
