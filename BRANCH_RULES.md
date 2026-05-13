@@ -1,192 +1,190 @@
-# GitHub 협업 기본 규칙
+# GitHub 브랜치 이름 규칙
 
-GitHub 협업이 처음인 팀원을 위한 아주 간단한 규칙입니다.
+GitHub 협업이 처음인 팀원을 위한 **브랜치 이름 짓는 규칙**입니다.
 
-## 핵심 규칙
+이 문서는 PR 절차 전체가 아니라, 브랜치 이름을 어떻게 지을지만 정합니다.
 
-- `main` 브랜치에서 직접 작업하지 않기
-- 작업할 때는 각자 자기 브랜치를 만들어서 작업하기
-- 작업 시작 전에는 항상 최신 코드 받기
-- 작업 끝나면 GitHub에 올리고 Pull Request 만들기
-- 충돌 나면 혼자 막 고치지 말고 팀원에게 공유하기
-
----
-
-## 1. 처음 프로젝트 받기
-
-처음 한 번만 실행합니다.
-
-```bash
-git clone https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN25-FINAL-3Team.git
-cd SKN25-FINAL-3Team
-```
-
----
-
-## 2. 작업 시작 전에 최신 코드 받기
-
-작업 시작 전에는 항상 `main`을 최신 상태로 맞춥니다.
-
-```bash
-git checkout main
-git pull origin main
-```
-
----
-
-## 3. 내 작업 브랜치 만들기
-
-```bash
-git checkout -b feature/이름-작업내용
-```
-
-예시:
-
-```bash
-git checkout -b feature/hyunwoo-login
-git checkout -b feature/minji-main-page
-git checkout -b fix/jisoo-api-error
-```
-
-브랜치 이름은 간단하게:
+## 핵심 원칙
 
 ```text
-feature/이름-작업내용
-fix/이름-수정내용
+main = 최종 안정판
+개인이름 = 개인 통합 브랜치
+개인이름/type/작업내용 = 실제 작업 브랜치
 ```
 
----
+예:
 
-## 4. 작업한 내용 저장하기
-
-작업 후 아래 순서대로 실행합니다.
-
-```bash
-git add .
-git commit -m "작업 내용 간단히 작성"
+```text
+main
+name
+name/docs/llm-wiki
+name/feat/login
+name/fix/api-error
 ```
 
-예시:
+여기서 `name`은 각자 정한 짧은 이름을 씁니다.
 
-```bash
-git commit -m "로그인 화면 추가"
-git commit -m "메인 페이지 수정"
-git commit -m "API 오류 수정"
+예:
+
+```text
+본인 이름, 영문 이니셜, GitHub ID 일부 등
 ```
 
----
+## 1. main
 
-## 5. 내 브랜치를 GitHub에 올리기
+`main`은 최종 안정판입니다.
 
-처음 올릴 때:
+규칙:
 
-```bash
-git push -u origin 브랜치명
+- 직접 작업하지 않습니다.
+- 최종 반영된 코드만 둡니다.
+- 팀원이 공유/시연할 기준 브랜치입니다.
+
+## 2. 개인 통합 브랜치
+
+각자 자기 작업을 모아두는 브랜치입니다.
+
+형식:
+
+```text
+<name>
 ```
 
-예시:
+예:
 
-```bash
-git push -u origin feature/hyunwoo-login
+```text
+name
+user
+member
 ```
 
-그 다음부터는 간단히:
+용도:
 
-```bash
-git push
+- 내 작업들을 모아서 확인하는 공간
+- 아직 `main`에 넣기 애매한 작업 보관
+- 여러 작업 브랜치를 합쳐서 테스트할 때 사용
+
+## 3. 실제 작업 브랜치
+
+기능 개발, 버그 수정, 문서 수정, 데이터 작업은 실제 작업 브랜치에서 합니다.
+
+형식:
+
+```text
+<name>/<type>/<short-description>
 ```
 
----
+예:
 
-## 6. 작업 끝나면 Pull Request 만들기
+```text
+name/docs/llm-wiki
+name/data/pilot-manifest
+name/feat/consultation-agent
+name/fix/pdf-download
+name/exp/prompt-comparison
+```
 
-GitHub 사이트에서 진행합니다.
+## 4. type 규칙
 
-1. GitHub 저장소 접속
-2. `Compare & pull request` 클릭
-3. 내용 간단히 적기
-4. Pull Request 생성
-5. 팀원 확인 후 `main`에 합치기
+| type | 의미 | 예시 |
+|---|---|---|
+| `feat` | 기능 개발 | `name/feat/consultation-agent` |
+| `fix` | 버그 수정 | `name/fix/pdf-download` |
+| `docs` | 문서 수정 | `name/docs/llm-wiki` |
+| `data` | 데이터/manifest 작업 | `name/data/pilot-manifest` |
+| `exp` | 실험/비교 | `name/exp/prompt-comparison` |
+| `refactor` | 구조 개선 | `name/refactor/agent-state` |
+| `test` | 테스트 | `name/test/payload-validation` |
+| `chore` | 설정/잡무 | `name/chore/update-gitignore` |
 
----
+## 5. 추천 사용 예시
 
-## 7. main 최신 내용 내 브랜치에 합치기
-
-다른 팀원이 작업한 내용이 `main`에 합쳐졌다면, 내 브랜치에도 가져옵니다.
+LLM Wiki 문서를 고칠 때:
 
 ```bash
 git checkout main
 git pull origin main
-git checkout 내브랜치명
+git checkout <name>
 git merge main
+git checkout -b <name>/docs/llm-wiki
 ```
 
-예시:
+상담 에이전트 기능을 만들 때:
 
 ```bash
 git checkout main
 git pull origin main
-git checkout feature/hyunwoo-login
+git checkout <name>
 git merge main
+git checkout -b <name>/feat/consultation-agent
 ```
 
-충돌이 안 나면 그대로 작업을 계속하면 됩니다.
-
-충돌이 나면 팀원에게 공유하고 같이 해결합니다.
-
----
-
-## 8. 자주 쓰는 명령어 요약
-
-현재 브랜치 확인:
-
-```bash
-git branch
-```
-
-변경된 파일 확인:
-
-```bash
-git status
-```
-
-최신 코드 받기:
-
-```bash
-git pull origin main
-```
-
-작업 저장:
-
-```bash
-git add .
-git commit -m "작업 내용"
-```
-
-GitHub에 올리기:
-
-```bash
-git push
-```
-
----
-
-## 제일 많이 쓰는 흐름
-
-작업 시작:
+데이터 manifest 작업을 할 때:
 
 ```bash
 git checkout main
 git pull origin main
-git checkout -b feature/이름-작업내용
+git checkout <name>
+git merge main
+git checkout -b <name>/data/pilot-manifest
 ```
 
-작업 완료:
+## 6. PR 규칙: `main`에 넣을 때만 사용
 
-```bash
-git add .
-git commit -m "작업 내용"
-git push -u origin feature/이름-작업내용
+GitHub에서는 **PR(Pull Request)** 라고 부릅니다.
+GitLab에서는 비슷한 기능을 **MR(Merge Request)** 라고 부릅니다.
+우리 문서에서는 GitHub 기준으로 **PR**이라고 씁니다.
+
+규칙:
+
+- 개인 브랜치끼리 작업을 옮기거나 테스트할 때는 PR이 필수는 아닙니다.
+- **`main`에 반영할 때만 PR을 사용합니다.**
+- `main`에 직접 push하지 않습니다.
+- PR은 최종 반영 전에 팀이 확인하는 기록용 절차입니다.
+
+### main 반영 전 PR 체크리스트
+
+PR을 만들 때 아래 체크리스트를 본문에 넣고 확인합니다.
+
+```markdown
+## main 반영 전 체크리스트
+
+- [ ] 작업 목적이 PR 설명에 적혀 있다.
+- [ ] 변경 파일에 불필요한 대용량 파일, 임시 파일, 비밀값이 없다.
+- [ ] 실행/검증 방법을 적었다.
+- [ ] 문서 변경이 필요한 경우 관련 문서를 업데이트했다.
+- [ ] 충돌 없이 `main` 기준 최신 상태에서 확인했다.
+- [ ] 최종 PM 확인을 받았다.
 ```
 
-그 다음 GitHub에서 Pull Request를 만들면 됩니다.
+## 7. 피할 이름
+
+아래처럼 의미가 애매한 이름은 피합니다.
+
+```text
+test
+final
+new
+backup
+mybranch
+main2
+```
+
+이유:
+
+- 무슨 작업인지 모릅니다.
+- 누가 관리하는지 헷갈립니다.
+- 나중에 지워도 되는 브랜치인지 판단하기 어렵습니다.
+
+## 최종 요약
+
+```text
+main = 안정판, 직접 push 금지
+main 반영 = PR 사용 + 최종 PM 확인
+<name> = 개인 통합 브랜치
+<name>/docs/... = 문서 작업
+<name>/data/... = 데이터 작업
+<name>/feat/... = 기능 작업
+<name>/fix/... = 버그 수정
+<name>/exp/... = 실험 작업
+```
