@@ -12,11 +12,13 @@ import numpy as np
 from openai import OpenAI
 from dotenv import load_dotenv
 
-load_dotenv()
+_ENV_DIR = Path(__file__).resolve().parent
+load_dotenv(_ENV_DIR.parents[1] / ".env")
+load_dotenv(_ENV_DIR / ".env", override=True)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-PATENTS_DIR = Path(__file__).parent / "patents_txt"  # load_corpus.py에서 사용
+PATENTS_DIR = Path(os.getenv("PATENTS_TEXT_DIR", _ENV_DIR.parents[1] / "data" / "raw" / "texts" / "patents_txt"))  # load_corpus.py에서 사용
 
 EMBED_MODEL   = "text-embedding-3-small"
 EXTRACT_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")

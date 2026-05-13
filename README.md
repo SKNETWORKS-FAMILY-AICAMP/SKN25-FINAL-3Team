@@ -23,10 +23,39 @@ PR을 올릴 때는 아래만 가볍게 확인해 주세요.
 
 AI/소프트웨어 특허 상담 및 선행기술 분석 프로젝트입니다.
 
+## 개발 환경 세팅
+
+이 프로젝트는 Python 환경을 `uv`로 맞춥니다.
+
+```bash
+cd SKN25-FINAL-3Team
+uv venv
+uv sync --dev
+cp .env.example .env
+```
+
+그다음 `.env`에 OpenAI, DB, 외부 API 값을 채워 넣습니다. 실제 `.env`는 Git에 올리지 않습니다.
+
+자세한 폴더 구조와 실행 방법은 [프로젝트 폴더 구조와 개발 환경](docs/PROJECT_STRUCTURE.md)에 정리되어 있습니다.
+
+## 주요 실행 예시
+
+```bash
+# Streamlit 상담 데모
+uv run streamlit run apps/streamlit/main.py
+
+# Django 백엔드
+uv run python backend/django/manage.py runserver 8000
+
+# 특허 TXT 적재
+uv run python agents/consultation/load_corpus.py --dir data/raw/texts/patents_txt
+```
+
 ## 먼저 읽을 문서
 
 프로젝트 데이터 관리, 스키마, 파이프라인, 평가 기준은 LLM Wiki에서 관리합니다.
 
+- [프로젝트 폴더 구조와 개발 환경](docs/PROJECT_STRUCTURE.md)
 - [Git 브랜치 규칙](BRANCH_RULES.md)
 - [LLM Wiki 시작 문서](docs/llm-wiki/README.md)
 - [LLM Wiki 목차](docs/llm-wiki/index.md)
@@ -35,6 +64,18 @@ AI/소프트웨어 특허 상담 및 선행기술 분석 프로젝트입니다.
 - [Pilot 600 데이터셋](docs/llm-wiki/concepts/pilot-600-v1.md)
 - [특허 데이터 스키마](docs/llm-wiki/concepts/patent-data-schemas.md)
 - [파이프라인과 평가](docs/llm-wiki/concepts/pipeline-and-evaluation.md)
+
+## 현재 폴더 구조 요약
+
+```text
+agents/             AI 에이전트 코드
+backend/django/     Django 로그인/JWT 백엔드
+frontend/           향후 React + TypeScript 프론트엔드
+apps/streamlit/     빠른 검증용 Streamlit 앱
+data/               원천/가공 데이터, 리포트, 매니페스트
+docs/               팀 문서와 LLM Wiki
+scripts/            데이터/운영/개발 보조 스크립트
+```
 
 ## 데이터 폴더
 

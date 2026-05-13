@@ -7,13 +7,15 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-load_dotenv()
+_SETTINGS_FILE = Path(__file__).resolve()
+load_dotenv(_SETTINGS_FILE.parents[3] / ".env")
+load_dotenv(_SETTINGS_FILE.parents[1] / ".env", override=True)
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # backend/config/settings.py -> Root
+BASE_DIR = _SETTINGS_FILE.parents[1]  # backend/django
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production-key-12345')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,12 +66,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'patent_login',
-        'USER': 'root',
-        'PASSWORD': 'Test1234!',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': os.getenv('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('DJANGO_DB_NAME', str(BASE_DIR / 'db.sqlite3')),
+        'USER': os.getenv('DJANGO_DB_USER', ''),
+        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD', ''),
+        'HOST': os.getenv('DJANGO_DB_HOST', ''),
+        'PORT': os.getenv('DJANGO_DB_PORT', ''),
     }
 }
 

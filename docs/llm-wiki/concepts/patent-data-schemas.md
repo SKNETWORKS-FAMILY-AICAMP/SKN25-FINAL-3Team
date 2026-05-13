@@ -86,7 +86,7 @@ data/processed/simulated_consultations/{consultation_id}.json
 
 ## 3. invention_payload
 
-상담 에이전트가 만드는 canonical payload입니다. 현재 `invention_extraction_guide.md`와 `상담에이전트/agent_payloads.py`가 이 구조를 기준으로 합니다.
+상담 에이전트가 만드는 canonical payload입니다. 현재 `invention_extraction_guide.md`와 `agents/consultation/agent_payloads.py`가 이 구조를 기준으로 합니다.
 
 이 부분은 실제 코드와 연결되어 있으므로 현재 문서에 구조를 남깁니다.
 

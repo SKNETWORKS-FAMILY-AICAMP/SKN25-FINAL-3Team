@@ -2,7 +2,14 @@ import streamlit as st
 import os
 import json
 import time
+from pathlib import Path
 import requests  # API 호출용 추가
+from dotenv import load_dotenv
+
+_ENV_DIR = Path(__file__).resolve().parent
+load_dotenv(_ENV_DIR.parents[1] / ".env")
+load_dotenv(_ENV_DIR / ".env", override=True)
+
 import agent_payloads
 from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS, PHASE2_SKIP_KEYWORDS
 from prior_art_agent import run_prior_art_agent
@@ -10,7 +17,7 @@ from claim_agent import fetch_consultation_from_db, save_claims_to_db
 
 # 런팟 대시보드의 'Connect' -> 'HTTP Service (Port 8000)'에서 복사한 주소를 넣으세요.
 # 맨 뒤에 슬래시(/)는 빼고 입력합니다.
-BACKEND_URL = "https://iu0c50cr6tlboh-8000.proxy.runpod.net"
+BACKEND_URL = os.getenv("CLAIM_BACKEND_URL", "https://iu0c50cr6tlboh-8000.proxy.runpod.net")
 # 백엔드 헬스 체크
 def is_backend_available():
     try:
