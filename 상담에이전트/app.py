@@ -6,6 +6,7 @@ import requests  # API 호출용 추가
 import agent_payloads
 from consultation_agent import PatentConsultant, PHASE2_QUESTION, PHASE2_EXTRACT_PROMPT, PHASE1_SYSTEM, ALGO_EXIT_KEYWORDS, PHASE2_SKIP_KEYWORDS
 from prior_art_agent import run_prior_art_agent
+from claim_agent import fetch_consultation_from_db, save_claims_to_db
 
 # 런팟 대시보드의 'Connect' -> 'HTTP Service (Port 8000)'에서 복사한 주소를 넣으세요.
 # 맨 뒤에 슬래시(/)는 빼고 입력합니다.
@@ -20,34 +21,29 @@ def is_backend_available():
 
 # 청구항 생성 API 호출 함수
 
-def generate_claims(prior_art, consultation_note):
+def generate_claims(user_id, consultation_idx):
     url = f"{BACKEND_URL}/generate-claims"
     
+    if not is_backend_available():
+        return {"error": "연결 오류: 백엔드 서버가 실행 중인지 확인하세요."}
+    
+    try:
+        # 1. claim_agent를 통해 DB에서 프롬프트용 텍스트를 꺼내옵니다.
+        consultation_note = fetch_consultation_from_db(user_id, consultation_idx)
+    except Exception as e:
+        return {"error": f"DB 조회 오류: {str(e)}"}
+        
+    # 2. 런팟(main.py) 스펙에 맞게 payload 구성
     payload = {
-        "prior_art": prior_art,
         "consultation_note": consultation_note
     }
     
-    if not is_backend_available():
-        return {"error": (
-            "연결 오류: 백엔드 서버가 실행 중인지 확인하세요.\n"
-            f"백엔드 URL: {BACKEND_URL}\n"
-            "터미널에서 `python main.py`를 실행하세요."
-        )}
-    
     try:
-        # LLM(7.8B) 추론 시간을 고려하여 타임아웃을 180초로 대폭 늘림
-        response = requests.post(url, json=payload, timeout=180)
-        
+        response = requests.post(url, json=payload, timeout=180) 
         if response.status_code == 200:
-            data = response.json()
-            # 수정된 main.py의 응답 구조에 맞게 반환
-            return {
-                "claim_1": data.get("claim_1", "제1항 생성 실패"),
-                "dependent_claims": data.get("dependent_claims", "종속항 생성 실패")
-            }
+            return response.json()
         else:
-            return {"error": f"API 오류: {response.status_code} - {response.text}"}
+            return {"error": f"API 오류: {response.status_code} - {response.json().get('detail')}"}
     except requests.exceptions.RequestException as e:
         return {"error": f"연결 오류: {str(e)}"}
 
@@ -477,32 +473,49 @@ if st.session_state.agent and st.session_state.phase >= 2:
             st.divider()
             st.subheader("📝 특허 청구항 생성")
             
-            if st.button("🤖 AI 모델로 청구항 생성", use_container_width=True, type="primary"):
-                with st.spinner("AI 모델이 제1항 및 종속항을 순차적으로 생성 중입니다. (1~3분 소요될 수 있습니다)"):
-                    prior_art_summary = "\n".join([
-                        f"- {item['title']} (유사도: {item['similarity_score']:.2%}, 리스크: {item['risk_level']})"
-                        for item in prior_art_result.get("prior_art_results", [])[:5]
-                    ])
-                    consultation_note = st.session_state.agent.build_summary()
-                    
-                    # API 호출
-                    generated = generate_claims(prior_art_summary, consultation_note)
-                    st.session_state.generated_claim = generated
-                    
-                    if "error" not in generated:
-                        # 🎯 핵심: 기존 채팅 내역에서 "### 📝 AI 생성 특허 청구항"으로 시작하는 메시지 찾아 삭제
-                        st.session_state.messages = [
-                            msg for msg in st.session_state.messages 
-                            if not (msg["role"] == "assistant" and msg["content"].startswith("### 📝 AI 생성 특허 청구항"))
-                        ]
+            is_saved_to_db = st.session_state.agent.state.get("confirmed", False)
 
-                        claim_msg = "### 📝 AI 생성 특허 청구항\n\n"
-                        claim_msg += "#### 🔹 독립항 (제1항)\n"
-                        claim_msg += f"{generated.get('claim_1', '')}\n\n"
-                        claim_msg += "#### 🔸 종속항 (제2항 ~)\n"
-                        claim_msg += f"{generated.get('dependent_claims', '')}"
+            if not is_saved_to_db:
+                st.warning("⚠️ 청구항을 생성하려면 먼저 위의 '💾 DB 및 클라우드 저장' 버튼을 눌러주세요.")
+            else:
+                if st.button("🤖 AI 모델로 청구항 생성", use_container_width=True, type="primary"):
+                    with st.spinner("백엔드가 DB를 조회하여 청구항을 생성 중입니다..."):
                         
-                        st.session_state.messages.append({"role": "assistant", "content": claim_msg})
-                        st.rerun() 
-                    else:
-                        st.error(f"청구항 생성에 실패했습니다: {generated['error']}")
+                        u_id = st.session_state.agent.user_id
+                        c_idx = st.session_state.agent.consultation_idx
+                        
+                        # API 호출
+                        generated = generate_claims(u_id, c_idx)
+                        st.session_state.generated_claim = generated
+                        
+                        if "error" not in generated:
+                            # ▼▼▼ [DB 저장 로직 추가] ▼▼▼
+                            try:
+                                save_claims_to_db(
+                                    user_id=u_id, 
+                                    consultation_idx=c_idx, 
+                                    claim_1=generated.get('claim_1', ''), 
+                                    dependent_claims=generated.get('dependent_claims', '')
+                                )
+                            except Exception as e:
+                                st.error(f"DB 저장 중 오류가 발생했습니다: {e}")
+                            # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+                            # 기존 렌더링 메시지 지우기
+                            st.session_state.messages = [
+                                msg for msg in st.session_state.messages 
+                                if not (msg["role"] == "assistant" and msg["content"].startswith("### 📝 AI 생성 특허 청구항"))
+                            ]
+
+                            claim_msg = "### 📝 AI 생성 특허 청구항\n\n"
+                            claim_msg += "#### 🔹 독립항 (제1항)\n"
+                            claim_msg += f"{generated.get('claim_1', '')}\n\n"
+                            claim_msg += "#### 🔸 종속항 (제2항 ~)\n"
+                            claim_msg += f"{generated.get('dependent_claims', '')}"
+                            
+                            st.session_state.messages.append({"role": "assistant", "content": claim_msg})
+                            st.rerun() 
+                        else:
+                            st.error(f"청구항 생성에 실패했습니다: {generated['error']}")
+            
+            
