@@ -504,13 +504,13 @@ def render_home():
 
     <div class="hero home">
         <img class="hero-img img1"
-             src="https://upload.wikimedia.org/wikipedia/commons/3/3f/N_Seoul_Tower_%2813952097192%29.jpg">
+             src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg">
 
         <img class="hero-img img2"
-             src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Lotte_World_Tower_from_Olympic_Park.jpg">
+             src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Namsan_Seoul_Tower_at_night_%2849175252042%29.jpg">
 
         <img class="hero-img img3"
-             src="https://upload.wikimedia.org/wikipedia/commons/5/51/Statue_of_King_Sejong_and_Gwanghwamun_Square.jpg">
+             src="https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg">
 
         <div class="hero-content">
             <div class="tag">AI-POWERED PATENT CONSULTATION SYSTEM</div>
@@ -747,3 +747,6 @@ def render_news():
 </div>
 """
     render_html(html)
+
+setup_page()
+render_home()

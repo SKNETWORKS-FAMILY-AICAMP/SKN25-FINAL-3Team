@@ -8,17 +8,17 @@ export default function Home() {
       <Nav />
 
       <div className="hero home">
-        {/* 경복궁 - 산 배경, 사람 없음 */}
+        {/* 광화문 광장 야경 2024 - 사람 없음 */}
         <img className="hero-img img1"
-          src="https://images.unsplash.com/photo-1758384077399-2757a1de8b75?w=1600&q=80"
-          alt="경복궁" />
-        {/* N서울타워 - 남산, 사람 없음 */}
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg"
+          alt="광화문 광장" />
+        {/* N서울타워 + 정자 야경 - Canon 5D Mark III 장노출, 8.21MB 고화질 */}
         <img className="hero-img img2"
-          src="https://images.unsplash.com/photo-1685761341534-b155d516eb80?w=1600&q=80"
-          alt="N서울타워" />
-        {/* 롯데월드타워 - 한강 항공뷰 */}
+          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/N_Seoul_Tower_%2813952097192%29.jpg"
+          alt="N서울타워 야경" />
+        {/* 롯데월드타워 + 한강 야경 - 사람 없음 */}
         <img className="hero-img img3"
-          src="https://images.unsplash.com/photo-1678649495228-de07415b9d8e?w=1600&q=80"
+          src="https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg"
           alt="롯데월드타워" />
 
         <div className="hero-content">
