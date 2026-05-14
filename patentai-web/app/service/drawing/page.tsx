@@ -3,6 +3,51 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useState } from 'react'
+
+const drawings = [
+  { file:'/drawings/sample_block.svg', type:'BLOCK DIAGRAM', title:'이미지 분류 시스템 구성도', grade:'A', score:100 },
+  { file:'/drawings/sample_flow.svg',  type:'FLOWCHART',     title:'이미지 분류 처리 흐름도',  grade:'A', score:95  },
+  { file:'/drawings/patent_block.svg', type:'BLOCK DIAGRAM', title:'문장 제공 장치 구성도',     grade:'A', score:90  },
+  { file:'/drawings/patent_flow.svg',  type:'FLOWCHART',     title:'문장 제공 방법 흐름도',     grade:'B', score:85  },
+  { file:'/drawings/ai_block.svg',     type:'BLOCK DIAGRAM', title:'AI 시스템 구성도',          grade:'A', score:100 },
+  { file:'/drawings/ai_flow.svg',      type:'FLOWCHART',     title:'AI 처리 흐름도',            grade:'A', score:100 },
+  { file:'/drawings/rag_block.svg',    type:'BLOCK DIAGRAM', title:'RAG 시스템 구성도',         grade:'A', score:100 },
+  { file:'/drawings/rag_flow.svg',     type:'FLOWCHART',     title:'RAG 처리 흐름도',           grade:'A', score:100 },
+]
+
+function GalleryInline() {
+  const [selected, setSelected] = useState<typeof drawings[0] | null>(null)
+  return (
+    <>
+      <div className="gallery-inline">
+        {drawings.map((d, i) => (
+          <div key={i} className="gi-card" onClick={() => setSelected(d)}>
+            <img className="gi-img" src={d.file} alt={d.title} />
+            <div className="gi-body">
+              <div className="gi-type">{d.type}</div>
+              <div className="gi-title">{d.title}</div>
+              <div className="gi-meta">{d.grade}등급 · {d.score}점</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {selected && (
+        <div className="gi-modal-bg" onClick={() => setSelected(null)}>
+          <div className="gi-modal" onClick={e => e.stopPropagation()}>
+            <div className="gi-modal-hd">
+              <div className="gi-modal-title">{selected.title}</div>
+              <button className="gi-modal-close" onClick={() => setSelected(null)}>×</button>
+            </div>
+            <div className="gi-modal-body">
+              <img src={selected.file} alt={selected.title} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default function DrawingPage() {
   return (
@@ -221,22 +266,30 @@ export default function DrawingPage() {
             </div>
           </div>
 
-          {/* 도면 샘플 */}
+          {/* 도면 갤러리 */}
           <div className="det-section" id="samples">
-            <div className="det-kicker">SAMPLES</div>
-            <div className="det-h2">실제 생성 도면 샘플</div>
-            <div className="det-p">아래는 PatentAI 도면 에이전트가 실제로 생성한 도면입니다. 이미지 분류 시스템(딥러닝) 특허 명세서를 기반으로 자동 생성됐습니다.</div>
-            <div className="img-box">
-              <img src="/drawings/sample_block.svg" alt="블록도 샘플 — 이미지 분류 시스템 구성도" />
-              <div className="img-caption">SAMPLE — 이미지 분류 시스템 전체 구성도 (block_diagram) · 품질 100점 · A등급</div>
-            </div>
-            <div className="img-box">
-              <img src="/drawings/sample_flow.svg" alt="흐름도 샘플 — 이미지 분류 처리 흐름도" />
-              <div className="img-caption">SAMPLE — 이미지 분류 방법 처리 흐름도 (flowchart) · 품질 95점 · A등급</div>
-            </div>
-            <Link href="/gallery" style={{ display:'inline-block', marginTop:'.5rem', padding:'.65rem 1.5rem', border:'1px solid #C9A84C', color:'#C9A84C', fontSize:'.78rem', fontWeight:700, letterSpacing:'.06em' }}>
-              전체 갤러리 보기 →
-            </Link>
+            <div className="det-kicker">DRAWING GALLERY</div>
+            <div className="det-h2">실제 생성 도면 갤러리</div>
+            <div className="det-p">PatentAI 도면 에이전트가 실제 특허 명세서를 기반으로 자동 생성한 도면 샘플입니다. 클릭하면 크게 볼 수 있습니다.</div>
+            <style>{`
+              .gallery-inline { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#E0DDD8; margin:1rem 0; }
+              .gi-card { background:white; cursor:pointer; transition:background .15s; overflow:hidden; }
+              .gi-card:hover { background:#FAFAF8; }
+              .gi-img { width:100%; aspect-ratio:4/3; object-fit:contain; padding:.5rem; background:#FEFEFE; border-bottom:1px solid #F0EDE8; display:block; }
+              .gi-body { padding:1rem 1.2rem; }
+              .gi-type { font-size:.6rem; font-weight:700; letter-spacing:.2em; color:#C9A84C; margin-bottom:.2rem; }
+              .gi-title { font-size:.82rem; font-weight:700; color:#0A0A16; margin-bottom:.2rem; }
+              .gi-meta { font-size:.72rem; color:#999; }
+              .gi-modal-bg { position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:2rem; }
+              .gi-modal { background:white;max-width:900px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden; }
+              .gi-modal-hd { padding:1rem 1.4rem;border-bottom:1px solid #E8E4DC;display:flex;align-items:center;justify-content:space-between; }
+              .gi-modal-title { font-weight:700;font-size:.95rem;color:#0A0A16; }
+              .gi-modal-close { background:none;border:none;font-size:1.3rem;cursor:pointer;color:#999; }
+              .gi-modal-body { flex:1;overflow:auto;padding:1rem; }
+              .gi-modal-body img { width:100%;height:auto; }
+              @media(max-width:600px){ .gallery-inline { grid-template-columns:1fr; } }
+            `}</style>
+            <GalleryInline />
           </div>
 
           {/* 특허청 기준 */}

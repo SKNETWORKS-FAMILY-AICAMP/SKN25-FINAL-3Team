@@ -37,7 +37,7 @@ function buildMenu(lang: import('@/lib/i18n').Lang) {
         { href: '/service/drawing',       num: '04', label: l.agentItems[3], sub: 'Drawing Agent' },
         { href: '/service/review',        num: '05', label: l.agentItems[4], sub: 'Review' },
       ],
-      footer: { href: '/gallery', label: l.gallery },
+      footer: { href: '/service', label: lang === 'ko' ? '전체 서비스 보기' : lang === 'ja' ? '全サービス' : lang === 'zh' ? '查看全部服务' : 'All Services' },
     },
     {
       href: '/team', key: 'team', label: l.team,
