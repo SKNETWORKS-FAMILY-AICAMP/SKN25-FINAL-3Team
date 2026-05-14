@@ -15,9 +15,9 @@
 | 특허 txt 파싱 | 청구범위, 발명의 설명, 도면 목록, 부호 설명 자동 추출 |
 | LLM 분석 | GPT-4o-mini 기반 구성요소 및 처리 흐름 분석 |
 | SVG 직접 렌더링 | 좌표 기반 특허청 스타일 도면 생성 |
-| PNG 변환 | SVG → PNG 자동 변환 (cairosvg 또는 ImageMagick) |
+| PNG 변환 | SVG → PNG 자동 변환 |
 | 품질 검증 | 도면부호, 구성요소 수, 레이아웃 기반 자동 점수 산출 |
-| 자동 수정 | 품질 기준 미달 시 LLM 기반 자동 보정 (기본 1회) |
+| 자동 수정 | 품질 기준 미달 시 LLM 기반 자동 보정 |
 | Vision 검수 | GPT-4o Vision으로 생성된 도면 품질 검수 (선택) |
 
 ---
@@ -28,7 +28,7 @@
 |---|---|---|
 | `flowchart` | patent_flow_pro | 타원(시작/종료) + 마름모(판단/Yes/No) + 사각형(처리) + 평행사변형(입출력) |
 | `block_diagram` | patent_block_pro | 점선 시스템 경계 + 외부 엔티티 + 계층 구조 |
-| `sequence` | patent_sequence_pro | 생명선 + 활성화 박스 + 동기/비동기 화살표 + 자기루프 |
+| `sequence` | patent_sequence_pro | 생명선 + 활성화 박스 + 동기/비동기 화살표 |
 | `stateDiagram` | patent_state_pro | 둥근 사각형 상태 노드 + 초기/종료 마커 + 곡선 전이 |
 | `ui_screen` | patent_ui_pro | 디바이스 프레임 + 타입별 UI 요소 |
 
@@ -45,13 +45,11 @@ pip install openai python-dotenv pillow cairosvg
 OPENAI_API_KEY=your_api_key_here
 ```
 
-> PNG 변환은 cairosvg 우선, 없으면 ImageMagick(`magick` / `convert`)을 자동으로 찾습니다.
-
 ---
 
 ## Streamlit 웹 UI
 
-`patentai_ui.py` 메인 네비게이션에 **도면 에이전트** 메뉴가 추가되어 있습니다.
+`patentai_ui.py` 메인 네비게이션에 **도면 에이전트** 메뉴가 추가되었습니다.
 
 ```bash
 streamlit run patentai_ui.py
@@ -90,11 +88,6 @@ python drawing_agent.py real
 python drawing_agent.py run 10
 ```
 
-### 도면 이미지 Vision 분석
-```bash
-python drawing_agent.py analyze <이미지_경로> [<특허_txt_경로>]
-```
-
 ### 옵션
 
 | 옵션 | 설명 |
@@ -109,10 +102,7 @@ python drawing_agent.py analyze <이미지_경로> [<특허_txt_경로>]
 # 예시
 python drawing_agent.py run 10 --vision
 python drawing_agent.py run 10 --no-png
-python drawing_agent.py run 5 --repair-rounds 2
 ```
-
-> `--vision` 옵션 사용 시 `--no-png`와 함께 써도 PNG가 강제 생성됩니다.
 
 ---
 
@@ -133,71 +123,33 @@ SKN25-FINAL-3Team/
 ```
 drawing_analysis/
 └── {출원번호}/
-    ├── local_extraction.json            # 정규식 기반 도면/부호 추출
-    ├── patent_analysis.json             # LLM 기반 발명 분석 (구성요소, 처리 흐름)
-    ├── figures.json                     # 생성 대상 도면 목록
-    ├── {출원번호}_fig_1.json            # 도면 설계 JSON
-    ├── {출원번호}_fig_1.svg             # 특허청 스타일 SVG
-    ├── {출원번호}_fig_1.png             # PNG 변환본
-    ├── {출원번호}_fig_1_layout.json     # 레이아웃 메타데이터
-    ├── {출원번호}_fig_1_validation.json # 품질 검증 결과
-    ├── {출원번호}_metadata.json         # 전체 실행 메타데이터
-    └── report.md                        # 생성 리포트
-```
-
-Vision 검수 활성화 시:
-```
-    ├── {출원번호}_fig_1_vision.json     # Vision 검수 결과
+    ├── local_extraction.json       # 정규식 기반 도면/부호 추출
+    ├── patent_analysis.json        # LLM 기반 발명 분석
+    ├── figures.json                # 생성 대상 도면 목록
+    ├── {번호}_fig_1.json           # 도면 설계 JSON
+    ├── {번호}_fig_1.svg            # 특허청 스타일 SVG
+    ├── {번호}_fig_1.png            # PNG 변환본
+    ├── {번호}_fig_1_layout.json    # 레이아웃 메타데이터
+    ├── {번호}_fig_1_validation.json # 품질 검증 결과
+    └── report.md                   # 생성 리포트
 ```
 
 ---
 
 ## 품질 기준
 
-통과 기준: **75점 이상**
-
-| 등급 | 점수 | 상태 |
+| 등급 | 점수 | 기준 |
 |---|---|---|
-| A | 90점 이상 | 통과 |
-| B | 75점 이상 | 통과 |
+| A | 90점 이상 | 도면부호 완비, 구성요소 충분, 렌더러 정상 |
+| B | 75점 이상 | 통과 기준 |
 | C | 60점 이상 | 검토 필요 |
 | D | 60점 미만 | 자동 보정 대상 |
-
-주요 감점 항목:
-- 구성요소 3개 미만 (-15점)
-- 도면부호 없는 요소 (-4점/개, 최대 -15점)
-- 프로 렌더러 미사용 (-10점)
-- 검증 오류 발생 (-15점)
-
----
-
-## 외부 호출 예시
-
-```python
-from drawing_agent import generate_all_drawings, parse_patent_txt
-
-# txt 파일에서 직접
-parsed = parse_patent_txt("G06F/1020230090053.txt")
-results = generate_all_drawings(
-    invention_text=parsed["full"],
-    app_num=parsed["app_num"],
-    output_dir="drawing_analysis",
-    export_svg=True,
-    export_png=True,
-    vision_review=False,
-    auto_repair=True,
-    max_repair_rounds=1,
-)
-
-for r in results:
-    print(r.fig_number, r.quality_score, r.quality_grade)
-    print(r.svg_path)
-    print(r.png_path)
-```
 
 ---
 
 ## 파이프라인 연동
+
+다른 에이전트와의 연동 구조:
 
 ```
 상담 에이전트
@@ -213,6 +165,25 @@ for r in results:
 최종 특허 명세서
 ```
 
+### 외부 호출 예시
+
+```python
+from drawing_agent import generate_all_drawings
+
+results = generate_all_drawings(
+    invention_text="특허 명세서 전문...",
+    app_num="출원번호",
+    output_dir="drawing_analysis",
+    export_svg=True,
+    export_png=True,
+)
+
+for r in results:
+    print(r.svg_path)   # SVG 경로
+    print(r.png_path)   # PNG 경로
+    print(r.quality_score)  # 품질 점수
+```
+
 ---
 
 ## 버전 이력
@@ -220,6 +191,6 @@ for r in results:
 | 버전 | 변경 내용 |
 |---|---|
 | v7.1 | Streamlit 웹 UI 페이지 추가, patentai_ui.py 네비게이션 연동 |
-| v7 | 흐름도 타원/마름모 + Yes/No 분기, 시퀀스 활성화 박스 + 자기루프, 상태도 둥근 사각형 + 초기/종료 마커, UI 디바이스 프레임 |
+| v7 | 흐름도 타원/마름모 추가, 시퀀스 활성화 박스, 상태도 둥근 사각형, UI 디바이스 프레임 |
 | v6 | 시퀀스/상태도/UI 렌더러 추가 |
 | v5 | Mermaid 제거, SVG 직접 렌더링으로 전환 |
