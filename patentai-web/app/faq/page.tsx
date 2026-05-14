@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -140,9 +141,15 @@ const faqs = [
 ]
 
 export default function FaqPage() {
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('all')
   const [openIdx, setOpenIdx]     = useState<number | null>(null)
   const [search, setSearch]       = useState('')
+
+  useEffect(() => {
+    const cat = searchParams.get('cat')
+    if (cat) setActiveTab(cat)
+  }, [searchParams])
 
   const filtered = useMemo(() => {
     return faqs.filter(f => {
