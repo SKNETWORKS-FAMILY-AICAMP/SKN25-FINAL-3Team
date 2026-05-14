@@ -1,6 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 const services = [
   {
@@ -71,6 +75,8 @@ const services = [
 ]
 
 export default function ServicePage() {
+  const { lang } = useLang()
+  const sv = t.service
   return (
     <div className="site">
       <style>{`
@@ -119,18 +125,15 @@ export default function ServicePage() {
       <Nav />
 
       <div className="hero">
-        <div className="tag">SERVICE OVERVIEW</div>
-        <h1>AI 기반 특허 출원 서비스를<br />하나의 흐름으로 제공합니다</h1>
-        <p>
-          PatentAI는 발명 상담, 선행기술 조사, 명세서 작성, 도면 생성, 심사 대응까지<br />
-          특허 출원 전 과정을 자동화하는 지식재산 상담 시스템입니다.
-        </p>
+        <div className="tag">{tr(sv.tag, lang)}</div>
+        <h1>{tr(sv.h1, lang).split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}</h1>
+        <p>{tr(sv.tag, lang)}</p>
       </div>
 
       <div className="section">
         <div className="line"></div>
-        <div className="title">PatentAI 핵심 서비스</div>
-        <div className="sub">변리사 업무 흐름을 기준으로 단계별 AI 에이전트로 구성했습니다.</div>
+        <div className="title">{tr(sv.title, lang)}</div>
+        <div className="sub">{tr(sv.sub, lang)}</div>
 
         <div className="service-detail">
           {services.map(s => (
@@ -162,7 +165,7 @@ export default function ServicePage() {
             textDecoration: 'none',
             transition: '0.2s',
           }}>
-            상담 신청하기 →
+            {tr(sv.cta, lang)}
           </Link>
         </div>
       </div>

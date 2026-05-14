@@ -1,0 +1,91 @@
+export type Lang = 'ko' | 'en' | 'ja' | 'zh'
+
+export const LANGS: { code: Lang; label: string; flag: string }[] = [
+  { code: 'ko', label: '한국어', flag: '🇰🇷' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
+]
+
+export const t = {
+  nav: {
+    subtitle:    { ko: '지식재산 상담 시스템', en: 'IP Consultation System', ja: '知的財産相談システム', zh: '知识产权咨询系统' },
+    home:        { ko: '홈', en: 'Home', ja: 'ホーム', zh: '首页' },
+    service:     { ko: '서비스 소개', en: 'Services', ja: 'サービス紹介', zh: '服务介绍' },
+    team:        { ko: '구성원', en: 'Team', ja: 'メンバー', zh: '团队成员' },
+    news:        { ko: '소식/자료', en: 'News', ja: 'お知らせ', zh: '新闻资讯' },
+    contact:     { ko: '상담 신청', en: 'Contact', ja: 'お問い合わせ', zh: '联系我们' },
+    clientLogin: { ko: '고객 로그인', en: 'Client Login', ja: '顧客ログイン', zh: '客户登录' },
+    staffLogin:  { ko: '직원 로그인', en: 'Staff Login', ja: 'スタッフログイン', zh: '员工登录' },
+  },
+  home: {
+    tag:    { ko: 'AI-POWERED PATENT CONSULTATION SYSTEM', en: 'AI-POWERED PATENT CONSULTATION SYSTEM', ja: 'AI特許相談システム', zh: 'AI驱动专利咨询系统' },
+    h1:     { ko: '발명의 가치를\n권리로 만들어 드립니다', en: 'Turning Inventions\ninto Protected Rights', ja: '発明の価値を\n権利に変えます', zh: '将发明的价值\n转化为权利' },
+    desc:   { ko: '발명 내용을 자유롭게 설명해 주시면\nAI가 특허 출원에 필요한 정보를 체계적으로 구조화해 드립니다', en: 'Describe your invention freely,\nand our AI will systematically structure the information needed for patent filing.', ja: '発明内容を自由にご説明ください。\nAIが特許出願に必要な情報を体系的に整理いたします。', zh: '请自由描述您的发明内容，\nAI将系统整理专利申请所需的信息。' },
+    cta:    { ko: '서비스 살펴보기 →', en: 'Explore Services →', ja: 'サービスを見る →', zh: '了解服务 →' },
+    stat1:  { ko: '처리 특허 건수', en: 'Patents Processed', ja: '処理特許件数', zh: '处理专利数' },
+    stat2:  { ko: '고객 만족도', en: 'Client Satisfaction', ja: '顧客満足度', zh: '客户满意度' },
+    stat3:  { ko: 'AI 전문 모델', en: 'AI Models', ja: 'AI専門モデル', zh: 'AI专业模型' },
+    stat4:  { ko: '학습 특허 데이터', en: 'Training Patents', ja: '学習特許データ', zh: '训练专利数据' },
+    svcTitle:  { ko: '주요 서비스', en: 'Core Services', ja: '主要サービス', zh: '核心服务' },
+    svcSub:    { ko: 'AI 기반 특허 출원 전 과정을 지원합니다.', en: 'We support the entire patent filing process with AI.', ja: 'AI基盤で特許出願の全過程をサポートします。', zh: 'AI全程支持专利申请。' },
+    svc1h:     { ko: '선행기술 조사', en: 'Prior Art Search', ja: '先行技術調査', zh: '现有技术检索' },
+    svc1p:     { ko: '발명 내용을 기반으로 유사 특허와 선행기술을 자동으로 탐색합니다.', en: 'Automatically searches similar patents and prior art based on your invention.', ja: '発明内容をもとに類似特許と先行技術を自動探索します。', zh: '基于发明内容自动检索类似专利和现有技术。' },
+    svc2h:     { ko: '명세서 작성', en: 'Specification Writing', ja: '明細書作成', zh: '说明书撰写' },
+    svc2p:     { ko: '청구항, 발명의 설명, 도면 설명을 구조화하여 초안을 생성합니다.', en: 'Generates drafts of claims, descriptions, and drawing explanations.', ja: '請求項、発明の説明、図面説明を構造化して下書きを生成します。', zh: '结构化权利要求书、发明说明书和附图说明并生成草稿。' },
+    svc3h:     { ko: '도면 에이전트', en: 'Drawing Agent', ja: '図面エージェント', zh: '附图智能体' },
+    svc3p:     { ko: '특허 명세서를 분석하여 블록도와 흐름도를 자동 생성합니다.', en: 'Analyzes patent specifications to automatically generate block diagrams and flowcharts.', ja: '特許明細書を分析してブロック図とフローチャートを自動生成します。', zh: '分析专利说明书，自动生成框图和流程图。' },
+    flowTitle: { ko: 'PatentAI 업무 흐름', en: 'PatentAI Workflow', ja: 'PatentAI 業務フロー', zh: 'PatentAI 工作流程' },
+    flowSub:   { ko: '발명 상담부터 도면 생성과 검토까지 하나의 흐름으로 연결합니다.', en: 'From consultation to drawing generation and review — all in one seamless flow.', ja: '発明相談から図面生成・検討まで、一つの流れで繋ぎます。', zh: '从发明咨询到附图生成与审查，一气呵成。' },
+    step1: { ko: '발명 내용 입력', en: 'Input Invention', ja: '発明内容入力', zh: '输入发明内容' },
+    step2: { ko: 'AI 구조화', en: 'AI Structuring', ja: 'AI構造化', zh: 'AI结构化' },
+    step3: { ko: '선행기술 분석', en: 'Prior Art Analysis', ja: '先行技術分析', zh: '现有技术分析' },
+    step4: { ko: '명세서/도면 생성', en: 'Spec/Drawing Gen', ja: '明細書/図面生成', zh: '说明书/图面生成' },
+    step5: { ko: '검토 및 리포트', en: 'Review & Report', ja: '検討・レポート', zh: '审查与报告' },
+  },
+  service: {
+    tag:   { ko: 'SERVICE OVERVIEW', en: 'SERVICE OVERVIEW', ja: 'サービス概要', zh: '服务概览' },
+    h1:    { ko: 'AI 기반 특허 출원 서비스를\n하나의 흐름으로 제공합니다', en: 'AI-Powered Patent Filing\nServices in One Flow', ja: 'AI基盤の特許出願サービスを\n一つの流れで提供します', zh: 'AI驱动专利申请服务\n一体化流程' },
+    title: { ko: 'PatentAI 핵심 서비스', en: 'Core Services', ja: 'PatentAI コアサービス', zh: 'PatentAI 核心服务' },
+    sub:   { ko: '변리사 업무 흐름을 기준으로 단계별 AI 에이전트로 구성했습니다.', en: 'Structured as step-by-step AI agents based on patent attorney workflows.', ja: '弁理士の業務フローを基に段階的なAIエージェントで構成しています。', zh: '以专利代理人工作流程为基础，构建分步骤AI智能体。' },
+    cta:   { ko: '상담 신청하기 →', en: 'Request Consultation →', ja: 'お問い合わせ →', zh: '申请咨询 →' },
+  },
+  team: {
+    tag:   { ko: 'OUR TEAM', en: 'OUR TEAM', ja: 'チーム紹介', zh: '团队介绍' },
+    h1:    { ko: '구성원 소개', en: 'Meet the Team', ja: 'メンバー紹介', zh: '团队成员介绍' },
+    desc:  { ko: 'PatentAI 프로젝트를 함께 개발하는 팀원을 소개합니다.', en: 'Meet the team behind the PatentAI project.', ja: 'PatentAIプロジェクトを共に開発するメンバーをご紹介します。', zh: '介绍共同开发PatentAI项目的团队成员。' },
+    title: { ko: 'PatentAI Team', en: 'PatentAI Team', ja: 'PatentAI チーム', zh: 'PatentAI 团队' },
+    sub:   { ko: '특허 상담, 선행기술 조사, 명세서 작성, 도면 생성, 검토 에이전트를 함께 구축합니다.', en: 'Together building consultation, prior art, specification, drawing, and review agents.', ja: '特許相談、先行技術調査、明細書作成、図面生成、検討エージェントを共に構築します。', zh: '共同构建咨询、现有技术、说明书、附图及审查智能体。' },
+    profile: { ko: '프로필 보기 →', en: 'View Profile →', ja: 'プロフィールを見る →', zh: '查看简介 →' },
+  },
+  news: {
+    tag:   { ko: 'NEWS & INSIGHTS', en: 'NEWS & INSIGHTS', ja: 'ニュース＆インサイト', zh: '新闻与资讯' },
+    h1:    { ko: '소식 / 자료', en: 'News / Insights', ja: 'お知らせ / 資料', zh: '新闻 / 资料' },
+    desc:  { ko: 'AI 특허 자동화, 선행기술 조사, 명세서 작성 관련 주요 자료를 제공합니다.', en: 'Key resources on AI patent automation, prior art research, and specification writing.', ja: 'AI特許自動化、先行技術調査、明細書作成に関する主要資料を提供します。', zh: '提供AI专利自动化、现有技术调查、说明书撰写相关重要资料。' },
+    title: { ko: '최신 특허 뉴스', en: 'Latest Patent News', ja: '最新特許ニュース', zh: '最新专利新闻' },
+    sub:   { ko: '국내외 IP·AI 특허 동향을 정기적으로 업데이트합니다.', en: 'Regularly updated with domestic and international IP & AI patent trends.', ja: '国内外のIP・AI特許動向を定期的に更新します。', zh: '定期更新国内外IP与AI专利动态。' },
+  },
+  contact: {
+    tag:   { ko: 'CONTACT', en: 'CONTACT', ja: 'お問い合わせ', zh: '联系我们' },
+    h1:    { ko: '상담 신청', en: 'Request Consultation', ja: 'ご相談申込', zh: '申请咨询' },
+    desc:  { ko: '발명 내용을 남겨주시면 PatentAI 팀이 검토 후 연락드립니다.', en: 'Leave your invention details and our team will get back to you.', ja: '発明内容をご記入ください。PatentAIチームが確認後ご連絡いたします。', zh: '请留下您的发明内容，PatentAI团队审核后将与您联系。' },
+    name:  { ko: '성함', en: 'Name', ja: 'お名前', zh: '姓名' },
+    phone: { ko: '연락처', en: 'Phone', ja: '電話番号', zh: '联系电话' },
+    email: { ko: '이메일', en: 'Email', ja: 'メールアドレス', zh: '电子邮件' },
+    type:  { ko: '상담 유형', en: 'Consultation Type', ja: '相談種別', zh: '咨询类型' },
+    msg:   { ko: '발명 내용 / 문의사항', en: 'Invention Details / Inquiry', ja: '発明内容 / お問い合わせ', zh: '发明内容 / 咨询事项' },
+    submit: { ko: '상담 신청하기', en: 'Submit Request', ja: '申込む', zh: '提交申请' },
+    successTitle: { ko: '상담 신청이 접수되었습니다.', en: 'Your request has been submitted.', ja: 'ご相談申込を受け付けました。', zh: '咨询申请已提交。' },
+    successDesc:  { ko: '영업일 기준 1–2일 내 담당자가 연락드립니다.', en: 'Our team will contact you within 1–2 business days.', ja: '営業日基準1〜2日以内に担当者よりご連絡いたします。', zh: '工作日1-2天内，我们的专员将与您联系。' },
+  },
+  footer: {
+    desc:  { ko: 'AI 기반 지식재산 상담 시스템으로\n발명 상담부터 특허 명세서 작성, 도면 생성까지\n전 과정을 자동화합니다.', en: 'An AI-based IP consultation system\nautomating everything from invention consultation\nto patent specification and drawing generation.', ja: 'AI基盤の知的財産相談システムで\n発明相談から特許明細書作成、図面生成まで\n全工程を自動化します。', zh: 'AI驱动知识产权咨询系统，\n从发明咨询到专利说明书撰写、附图生成，\n全程自动化。' },
+    hours: { ko: '월–금 09:00 – 18:00\n토·일·공휴일 휴무', en: 'Mon–Fri 09:00 – 18:00\nClosed on weekends & holidays', ja: '月〜金 09:00 – 18:00\n土日祝休業', zh: '周一至周五 09:00–18:00\n周末及节假日休息' },
+    emergency: { ko: '긴급 문의는 이메일로 접수해 주세요.', en: 'For urgent inquiries, please contact us by email.', ja: '緊急のお問い合わせはメールにてお寄せください。', zh: '紧急咨询请通过电子邮件联系。' },
+    copyright: { ko: '© 2026 PatentAI. All rights reserved. · 사업자등록번호 000-00-00000', en: '© 2026 PatentAI. All rights reserved.', ja: '© 2026 PatentAI. All rights reserved.', zh: '© 2026 PatentAI. 版权所有。' },
+  },
+}
+
+export function tr(obj: Record<Lang, string>, lang: Lang): string {
+  return obj[lang] ?? obj['ko']
+}
