@@ -8,82 +8,147 @@ export default function Page() {
   return (
     <div className="site">
       <style>{`
-        .det-section { margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid #E8E4DC; }
-        .det-kicker { font-size:.65rem; font-weight:700; letter-spacing:.3em; color:#C9A84C; margin-bottom:.6rem; }
-        .det-h2 { font-family:'Noto Serif KR',serif; font-size:1.6rem; font-weight:300; color:#0A0A16; margin-bottom:1rem; }
-        .det-p { font-size:.9rem; color:#444; line-height:2; word-break:keep-all; margin-bottom:1rem; }
-        .det-list { list-style:none; padding:0; display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.2rem; }
-        .det-list li { display:flex; gap:.7rem; font-size:.88rem; color:#333; line-height:1.7; }
-        .det-list li::before { content:'—'; color:#C9A84C; flex-shrink:0; }
-        .det-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#E0DDD8; margin:1.2rem 0; }
-        .det-cell { background:white; padding:1.2rem; }
-        .det-cell-label { font-size:.62rem; font-weight:700; letter-spacing:.15em; color:#C9A84C; margin-bottom:.3rem; }
-        .det-cell-value { font-size:.86rem; color:#222; line-height:1.7; word-break:keep-all; }
-        .det-step { display:flex; gap:1rem; margin-bottom:1rem; }
-        .det-step-num { width:34px; height:34px; border:1px solid rgba(201,168,76,.3); display:flex; align-items:center; justify-content:center; font-family:'Noto Serif KR',serif; color:#C9A84C; font-size:.78rem; flex-shrink:0; }
-        .det-step-title { font-weight:700; font-size:.88rem; color:#0A0A16; margin-bottom:.3rem; }
-        .det-step-desc { font-size:.83rem; color:#555; line-height:1.8; word-break:keep-all; }
-        .qa-item { border:1px solid #E8E4DC; margin-bottom:.5rem; }
-        .qa-q { font-size:.88rem; font-weight:700; color:#0A0A16; padding:1rem 1.2rem; }
-        .qa-a { font-size:.83rem; color:#555; line-height:1.85; padding:.2rem 1.2rem 1rem; word-break:keep-all; }
-        @media(max-width:900px){ .det-grid { grid-template-columns:1fr; } }
+        .det-wrap{padding:3.5rem 6rem;max-width:960px;margin:0 auto;}
+        .det-section{margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid #E8E4DC;}
+        .det-kicker{font-size:.65rem;font-weight:700;letter-spacing:.3em;color:#C9A84C;margin-bottom:.6rem;}
+        .det-h2{font-family:'Noto Serif KR',serif;font-size:1.5rem;font-weight:300;color:#0A0A16;margin-bottom:1rem;}
+        .det-p{font-size:.9rem;color:#444;line-height:2;word-break:keep-all;margin-bottom:.9rem;}
+        .det-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#E0DDD8;margin:1.2rem 0;}
+        .det-cell{background:white;padding:1.2rem;}
+        .det-cell-label{font-size:.62rem;font-weight:700;letter-spacing:.15em;color:#C9A84C;margin-bottom:.3rem;}
+        .det-cell-value{font-size:.86rem;color:#222;line-height:1.7;word-break:keep-all;}
+        .det-step{display:flex;gap:1rem;margin-bottom:1rem;}
+        .det-step-num{width:34px;height:34px;border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;color:#C9A84C;font-size:.78rem;flex-shrink:0;}
+        .det-step-title{font-weight:700;font-size:.9rem;color:#0A0A16;margin-bottom:.3rem;}
+        .det-step-desc{font-size:.84rem;color:#555;line-height:1.85;word-break:keep-all;}
+        .det-code{background:#F0EDE8;border-left:3px solid #C9A84C;padding:.85rem 1.2rem;font-family:monospace;font-size:.8rem;color:#333;margin:1rem 0;line-height:1.8;}
+        .det-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.84rem;}
+        .det-table th{background:#08081A;color:#C9A84C;padding:.65rem 1rem;text-align:left;font-size:.68rem;letter-spacing:.12em;font-weight:700;}
+        .det-table td{padding:.65rem 1rem;border-bottom:1px solid #E8E4DC;color:#333;line-height:1.7;word-break:keep-all;}
+        .det-table tr:last-child td{border-bottom:none;}
+        .det-table tr:nth-child(even) td{background:#FAFAF8;}
+        .qa-item{border:1px solid #E8E4DC;margin-bottom:.5rem;}
+        .qa-q{font-size:.88rem;font-weight:700;color:#0A0A16;padding:1rem 1.2rem;}
+        .qa-a{font-size:.83rem;color:#555;line-height:1.85;padding:.2rem 1.2rem 1rem;word-break:keep-all;}
+        .det-badge{display:inline-block;border:1px solid rgba(201,168,76,.3);color:#C9A84C;font-size:.68rem;padding:2px 8px;margin:.2rem;}
+        @media(max-width:900px){.det-wrap{padding:2rem 1.5rem;}.det-grid{grid-template-columns:1fr;}}
       `}</style>
 
       <Nav />
       <div className="hero">
         <div className="tag">01 — CONSULTATION AGENT</div>
-        <h1>특허 상담<br/>에이전트</h1>
-        <p>발명 내용을 자유롭게 설명하면 AI가 문제점·해결수단·효과·구성요소를 체계적으로 구조화합니다.</p>
+        <h1>특허 상담 에이전트</h1>
+        <p>발명 내용을 자유롭게 설명하면 GPT-4o가 문제점·해결수단·차별성·효과를 구조화합니다.</p>
       </div>
 
-      <div style={{ padding:'3.5rem 6rem', maxWidth:900, margin:'0 auto' }}>
+      <div className="det-wrap">
 
         <div className="det-section">
           <div className="det-kicker">OVERVIEW</div>
-          <div className="det-h2">상담 에이전트란?</div>
-          <div className="det-p">PatentAI 상담 에이전트는 GPT-4o 기반 대화형 인터페이스로 발명 내용을 단계적으로 수집하고 구조화합니다. 기술적 배경 없이도 발명 아이디어만 있으면 특허 출원에 필요한 모든 정보를 AI가 정리해 드립니다.</div>
+          <div className="det-h2">PatentConsultant 클래스 기반 2-Phase 상담 시스템</div>
+          <div className="det-p">
+            <code style={{background:'#F0EDE8',padding:'1px 6px',fontSize:'.82rem'}}>agents/consultation/consultation_agent.py</code>의 <strong>PatentConsultant</strong> 클래스로 구현됩니다. 2단계 Phase로 구성되며, Phase 1에서 핵심 4요소를 수집하고 Phase 2에서 심화 기술 스펙을 수집합니다.
+          </div>
           <div className="det-grid">
-            <div className="det-cell"><div className="det-cell-label">AI 모델</div><div className="det-cell-value">GPT-4o (분석·구조화)</div></div>
-            <div className="det-cell"><div className="det-cell-label">처리 시간</div><div className="det-cell-value">5–10분 (대화 길이에 따라)</div></div>
-            <div className="det-cell"><div className="det-cell-label">파일 지원</div><div className="det-cell-value">PDF · DOCX · HWP 업로드</div></div>
-            <div className="det-cell"><div className="det-cell-label">저장</div><div className="det-cell-value">Supabase PostgreSQL DB</div></div>
+            <div className="det-cell"><div className="det-cell-label">추출 모델</div><div className="det-cell-value">gpt-4o (EXTRACT_MODEL) — 사용자 응답에서 발명 요소 추출</div></div>
+            <div className="det-cell"><div className="det-cell-label">질문 생성 모델</div><div className="det-cell-value">gpt-4o-mini (CHAT_MODEL) — 비용 최적화된 질문 생성</div></div>
+            <div className="det-cell"><div className="det-cell-label">정제 모델</div><div className="det-cell-value">gpt-4o (POLISH_MODEL) — 최종 명세서 품질 향상</div></div>
+            <div className="det-cell"><div className="det-cell-label">DB</div><div className="det-cell-value">Supabase PostgreSQL — consulting, algorithm_steps, detail_elements 테이블</div></div>
           </div>
         </div>
 
         <div className="det-section">
-          <div className="det-kicker">HOW IT WORKS</div>
-          <div className="det-h2">동작 원리</div>
-          {[
-            { n:'01', title:'1부 — 핵심 정보 수집', desc:'발명의 제목·기술분야·기존 기술의 문제점·해결 방법·기대효과·구성요소를 단계별 질문으로 수집합니다. 사용자가 자유롭게 설명하면 GPT-4o가 자동으로 각 항목을 추출합니다.' },
-            { n:'02', title:'알고리즘 단계 수집', desc:'소프트웨어·방법 발명의 경우 작동 순서를 단계별로 입력받습니다. 최소 3단계 이상을 입력하면 특허 명세서의 알고리즘 설명 섹션에 사용됩니다.' },
-            { n:'03', title:'2부 — 심화 정보 수집', desc:'구현 수단·파라미터·핵심 알고리즘·부가 기능·예외 처리 등 상세 기술 내용을 추가로 수집합니다. 이 정보는 명세서 실시예 작성에 활용됩니다.' },
-            { n:'04', title:'최종 요약 확인 및 저장', desc:'수집된 모든 정보를 GPT-4o로 정제하여 특허 명세서 형식에 맞게 구조화합니다. 확인 후 Supabase DB에 저장하며 이후 단계(선행기술 조사·명세서 작성·도면 생성)로 자동 연계됩니다.' },
-          ].map(s => (
-            <div key={s.n} className="det-step">
-              <div className="det-step-num">{s.n}</div>
-              <div><div className="det-step-title">{s.title}</div><div className="det-step-desc">{s.desc}</div></div>
-            </div>
-          ))}
+          <div className="det-kicker">PHASE 1 — 핵심 4요소 수집</div>
+          <div className="det-h2">FIELD_LABELS 기반 구조화</div>
+          <div className="det-p">코드에서 <strong>FIELD_LABELS</strong>로 정의된 4개 필드를 순서대로 수집합니다. GPT-4o가 사용자의 자유로운 설명에서 각 필드를 자동 추출합니다.</div>
+          <table className="det-table">
+            <thead><tr><th>필드</th><th>설명</th><th>예시</th></tr></thead>
+            <tbody>
+              {[
+                ['problem', '기존 기술의 문제점', '기존 카드 비교 서비스는 단순 스펙 나열에 그쳐...'],
+                ['solution', '해결 방법 (발명의 핵심)', 'GPT Vision OCR로 카드 약관 PDF를 정밀 분석하여...'],
+                ['differentiation', '기존 기술과의 차별점', 'RAIchU는 실제 소비 데이터를 활용하여 개인화...'],
+                ['effect', '기대 효과', '카드 추천 정확도 향상, 사용자 맞춤 서비스 제공...'],
+              ].map(([f, d, e]) => (
+                <tr key={f}><td><code style={{fontSize:'.78rem'}}>{f}</code></td><td>{d}</td><td style={{color:'#888',fontSize:'.78rem'}}>{e}</td></tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="det-p">완성도가 일정 수준(80% 이상)에 도달하면 알고리즘 단계 수집으로 자동 전환됩니다.</div>
         </div>
 
         <div className="det-section">
-          <div className="det-kicker">OUTPUT</div>
-          <div className="det-h2">출력 결과</div>
-          <ul className="det-list">
-            <li>발명 구조화 JSON (title, problem, solution, differentiation, effect, algorithm_steps, implementations 등)</li>
-            <li>상담 대화 로그 (원문 보존)</li>
-            <li>Supabase consultation 테이블 저장 (user_id, consultation_idx, raw_chat_log, summary)</li>
-            <li>다음 단계 자동 연계 (선행기술 조사·청구항 생성·도면 생성)</li>
-          </ul>
+          <div className="det-kicker">ALGORITHM STEPS — 단계별 알고리즘 수집</div>
+          <div className="det-h2">AlgorithmStep DB 테이블 저장</div>
+          <div className="det-p">소프트웨어·방법 발명의 핵심 알고리즘을 단계별로 수집합니다. 최소 3단계 이상 입력해야 하며, "완료" 입력 시 저장됩니다.</div>
+          <div className="det-code">
+            # ALGO_EXIT_KEYWORDS — 수집 종료 키워드<br/>
+            ["완료", "끝", "종료", "save", "done", "complete"]<br/><br/>
+            # DB 저장 구조<br/>
+            AlgorithmStep(user_id, consultation_idx, step_order, step_text)
+          </div>
+        </div>
+
+        <div className="det-section">
+          <div className="det-kicker">PHASE 2 — 심화 기술 스펙 수집</div>
+          <div className="det-h2">5개 추가 필드 수집</div>
+          <div className="det-p">Phase 2에서는 명세서 실시예 작성에 필요한 상세 기술 정보를 수집합니다. 아래 키워드가 입력되면 해당 필드는 건너뜁니다.</div>
+          <div className="det-code">
+            # PHASE2_SKIP_KEYWORDS<br/>
+            ["모르", "없어", "없음", "나중에", "패스", "skip", "생략"]
+          </div>
+          <table className="det-table">
+            <thead><tr><th>필드</th><th>설명</th></tr></thead>
+            <tbody>
+              {[
+                ['implementations', '구현 수단 (프레임워크, 언어, 인프라)'],
+                ['parameters', '파라미터·데이터 구조·DB 스키마'],
+                ['algorithms', '핵심 알고리즘 (수식, 모델, 아키텍처)'],
+                ['optional_features', '부가 기능 (확장 가능한 선택 기능)'],
+                ['error_handling', '예외 처리·장애 대응 로직'],
+              ].map(([f, d]) => (
+                <tr key={f}><td><code style={{fontSize:'.78rem'}}>{f}</code></td><td>{d}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="det-section">
+          <div className="det-kicker">FILE UPLOAD — 문서 파싱</div>
+          <div className="det-h2">PDF · DOCX · HWP 자동 파싱</div>
+          <div className="det-p"><code style={{background:'#F0EDE8',padding:'1px 6px',fontSize:'.82rem'}}>document_utils.py</code>의 유틸리티 함수로 첨부 파일에서 발명 관련 텍스트를 자동 추출합니다.</div>
+          <div className="det-code">
+            extract_text_from_pdf(file_path)   # pymupdf 활용<br/>
+            extract_text_from_docx(file_path)  # python-docx<br/>
+            extract_text_from_hwp(file_path)   # hwp 전용 파서<br/>
+            extract_images_from_pdf(file_path) # 이미지 추출 → GPT-4o Vision 분석
+          </div>
+        </div>
+
+        <div className="det-section">
+          <div className="det-kicker">DB SCHEMA</div>
+          <div className="det-h2">Supabase PostgreSQL 저장 구조</div>
+          <table className="det-table">
+            <thead><tr><th>테이블</th><th>주요 컬럼</th><th>설명</th></tr></thead>
+            <tbody>
+              {[
+                ['consulting', 'user_id, consultation_idx, raw_chat_log, summary_problem, summary_solution, summary_differentiation, summary_effect', '상담 세션 전체 저장'],
+                ['algorithm_steps', 'user_id, consultation_idx, step_order, step_text', '알고리즘 단계별 저장'],
+                ['detail_elements', 'user_id, consultation_idx, element_type, element_value', '심화 기술 스펙 저장'],
+              ].map(([t, c, d]) => (
+                <tr key={t}><td><code style={{fontSize:'.78rem'}}>{t}</code></td><td style={{fontSize:'.76rem',color:'#888'}}>{c}</td><td>{d}</td></tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         <div className="det-section">
           <div className="det-kicker">FAQ</div>
           <div className="det-h2">자주 묻는 질문</div>
           {[
-            { q:'기술적 지식이 없어도 사용할 수 있나요?', a:'네. AI가 단계별 질문으로 안내하기 때문에 발명 아이디어만 있으면 충분합니다. 전문 용어를 몰라도 일상 언어로 설명하시면 됩니다.' },
-            { q:'상담 내용은 안전하게 보호되나요?', a:'모든 상담 내용은 Supabase AES-256 암호화로 저장됩니다. 제3자 공유는 일절 없으며 개인정보보호법을 준수합니다.' },
-            { q:'PDF 첨부 파일의 내용도 분석되나요?', a:'네. pymupdf로 PDF 텍스트를 추출하고 GPT-4o로 발명 정보를 자동 파싱합니다. DOCX·HWP 형식도 지원합니다.' },
+            { q:'gpt-4o와 gpt-4o-mini를 같이 쓰는 이유는?', a:'추출·분석처럼 정확도가 중요한 작업은 gpt-4o를, 단순 질문 생성처럼 비용 부담이 큰 반복 작업은 gpt-4o-mini를 사용하여 품질과 비용을 동시에 최적화합니다.' },
+            { q:'상담이 중간에 끊겨도 다시 이어서 할 수 있나요?', a:'Supabase DB에 실시간 저장되므로 세션이 끊겨도 동일한 user_id와 consultation_idx로 재접속하면 이어서 진행할 수 있습니다.' },
+            { q:'Phase 2 정보를 나중에 추가할 수 있나요?', a:'PHASE2_SKIP_KEYWORDS를 사용해 건너뛴 필드는 나중에 보완할 수 있습니다. 상담 완료 후에도 detail_elements 테이블에 직접 추가가 가능합니다.' },
           ].map((item, i) => (
             <div key={i} className="qa-item">
               <div className="qa-q">Q. {item.q}</div>
@@ -92,9 +157,9 @@ export default function Page() {
           ))}
         </div>
 
-        <div style={{ display:'flex', gap:'1rem' }}>
-          <Link href="/service/prior-art" style={{ display:'inline-block', padding:'.85rem 2rem', background:'#111128', border:'1px solid #111128', color:'#C9A84C', fontSize:'.8rem', fontWeight:700 }}>다음: 선행기술 조사 →</Link>
-          <Link href="/contact" style={{ display:'inline-block', padding:'.85rem 2rem', border:'1px solid #E8E4DC', color:'#444', fontSize:'.8rem' }}>상담 신청</Link>
+        <div style={{display:'flex',gap:'1rem',flexWrap:'wrap'}}>
+          <Link href="/service/prior-art" style={{display:'inline-block',padding:'.85rem 2rem',background:'#111128',border:'1px solid #111128',color:'#C9A84C',fontSize:'.8rem',fontWeight:700}}>다음: 선행기술 조사 →</Link>
+          <Link href="/contact" style={{display:'inline-block',padding:'.85rem 2rem',border:'1px solid #E8E4DC',color:'#444',fontSize:'.8rem'}}>상담 신청</Link>
         </div>
       </div>
       <Footer />

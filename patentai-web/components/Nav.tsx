@@ -6,51 +6,66 @@ import { useState, useRef, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 import { LANGS, t, tr } from '@/lib/i18n'
 
-// ── 메뉴 설정 ─────────────────────────────────────────────
-const menuConfig = [
-  {
-    href: '/service',
-    key: 'agent',
-    label: '에이전트',
-    items: [
-      { href: '/service/consultation',  num: '01', label: '특허 상담 에이전트', sub: 'Consultation' },
-      { href: '/service/prior-art',     num: '02', label: '선행기술 조사',       sub: 'Prior Art Search' },
-      { href: '/service/specification', num: '03', label: '명세서 작성',         sub: 'Specification' },
-      { href: '/service/drawing',       num: '04', label: '도면 자동 생성',      sub: 'Drawing Agent' },
-      { href: '/service/review',        num: '05', label: '심사 대응',           sub: 'Patent Review' },
-    ],
-    footer: { href: '/gallery', label: '도면 갤러리 보기' },
-  },
-  {
-    href: '/team',
-    key: 'team',
-    label: '구성원',
-    items: [
-      { href: '/team/gayeongkwon',  num: '01', label: '권가영', sub: 'Prior Art Agent' },
-      { href: '/team/seohyunkim',   num: '02', label: '김서현', sub: 'Frontend / UI' },
-      { href: '/team/hongikkim',    num: '03', label: '김홍익', sub: 'Consultation' },
-      { href: '/team/beomsoopark',  num: '04', label: '박범수', sub: 'Specification' },
-      { href: '/team/eunseokjo',    num: '05', label: '조은석', sub: 'Drawing Agent' },
-      { href: '/team/hyeonwoochoi', num: '06', label: '최현우', sub: 'Integration' },
-    ],
-    footer: { href: '/team', label: '구성원 전체 보기' },
-  },
-  {
-    href: '/news',
-    key: 'news',
-    label: '소식/자료',
-    items: [
-      { href: '/news/ai-patent',      num: '01', label: 'AI 특허 동향',   sub: 'AI Patent Trends' },
-      { href: '/news/prior-art',      num: '02', label: '선행기술 자료',   sub: 'Prior Art' },
-      { href: '/news/policy',         num: '03', label: '특허청 정책',     sub: 'KIPO Policy' },
-      { href: '/news/classification', num: '04', label: 'IPC / CPC 분류', sub: 'Classification' },
-    ],
-    footer: { href: '/news', label: '전체 소식 보기' },
-  },
-  { href: '/contact', key: 'contact', label: '상담 신청', items: null },
-  { href: '/faq',     key: 'faq',     label: 'FAQ',       items: null },
-  { href: '/about',   key: 'about',   label: 'PatentAI 소개', items: null },
-]
+// ── 메뉴 설정 (lang 반응형) ───────────────────────────────
+function buildMenu(lang: import('@/lib/i18n').Lang) {
+  const L = {
+    ko: { agent:'에이전트', team:'구성원', news:'소식/자료', contact:'상담 신청', faq:'FAQ', about:'PatentAI 소개',
+          agentItems:['특허 상담 에이전트','선행기술 조사','명세서 작성','도면 자동 생성','심사 대응'],
+          teamAll:'구성원 전체 보기', newsAll:'전체 소식 보기', gallery:'도면 갤러리 보기',
+          newsItems:['AI 특허 동향','선행기술 자료','특허청 정책','IPC / CPC 분류'] },
+    en: { agent:'Agents', team:'Team', news:'News', contact:'Contact', faq:'FAQ', about:'About',
+          agentItems:['Consultation Agent','Prior Art Search','Specification','Drawing Agent','Patent Review'],
+          teamAll:'View All Members', newsAll:'View All News', gallery:'Drawing Gallery',
+          newsItems:['AI Patent Trends','Prior Art Resources','KIPO Policy','IPC / CPC'] },
+    ja: { agent:'エージェント', team:'メンバー', news:'お知らせ', contact:'お問い合わせ', faq:'FAQ', about:'会社紹介',
+          agentItems:['特許相談エージェント','先行技術調査','明細書作成','図面自動生成','審査対応'],
+          teamAll:'全員を見る', newsAll:'全ニュースを見る', gallery:'図面ギャラリー',
+          newsItems:['AI特許動向','先行技術資料','特許庁政策','IPC / CPC'] },
+    zh: { agent:'智能体', team:'团队成员', news:'新闻资讯', contact:'联系我们', faq:'FAQ', about:'关于我们',
+          agentItems:['专利咨询智能体','现有技术检索','说明书撰写','附图自动生成','审查应对'],
+          teamAll:'查看全部成员', newsAll:'查看全部新闻', gallery:'附图画廊',
+          newsItems:['AI专利动态','现有技术资料','特许厅政策','IPC / CPC'] },
+  }
+  const l = L[lang] ?? L.ko
+  return [
+    {
+      href: '/service', key: 'agent', label: l.agent,
+      items: [
+        { href: '/service/consultation',  num: '01', label: l.agentItems[0], sub: 'Consultation' },
+        { href: '/service/prior-art',     num: '02', label: l.agentItems[1], sub: 'Prior Art' },
+        { href: '/service/specification', num: '03', label: l.agentItems[2], sub: 'Specification' },
+        { href: '/service/drawing',       num: '04', label: l.agentItems[3], sub: 'Drawing Agent' },
+        { href: '/service/review',        num: '05', label: l.agentItems[4], sub: 'Review' },
+      ],
+      footer: { href: '/gallery', label: l.gallery },
+    },
+    {
+      href: '/team', key: 'team', label: l.team,
+      items: [
+        { href: '/team/gayeongkwon',  num: '01', label: '권가영', sub: 'Prior Art Agent' },
+        { href: '/team/seohyunkim',   num: '02', label: '김서현', sub: 'Frontend / UI' },
+        { href: '/team/hongikkim',    num: '03', label: '김홍익', sub: 'Consultation' },
+        { href: '/team/beomsoopark',  num: '04', label: '박범수', sub: 'Specification' },
+        { href: '/team/eunseokjo',    num: '05', label: '조은석', sub: 'Drawing Agent' },
+        { href: '/team/hyeonwoochoi', num: '06', label: '최현우', sub: 'Integration' },
+      ],
+      footer: { href: '/team', label: l.teamAll },
+    },
+    {
+      href: '/news', key: 'news', label: l.news,
+      items: [
+        { href: '/news/ai-patent',      num: '01', label: l.newsItems[0], sub: 'AI Patent Trends' },
+        { href: '/news/prior-art',      num: '02', label: l.newsItems[1], sub: 'Prior Art' },
+        { href: '/news/policy',         num: '03', label: l.newsItems[2], sub: 'KIPO Policy' },
+        { href: '/news/classification', num: '04', label: l.newsItems[3], sub: 'Classification' },
+      ],
+      footer: { href: '/news', label: l.newsAll },
+    },
+    { href: '/contact', key: 'contact', label: l.contact, items: null },
+    { href: '/faq',     key: 'faq',     label: 'FAQ',      items: null },
+    { href: '/about',   key: 'about',   label: l.about,    items: null },
+  ]
+}
 
 // ── 로고 SVG ─────────────────────────────────────────────
 function Logo() {
@@ -131,6 +146,7 @@ function SearchIcon() {
 export default function Nav() {
   const pathname = usePathname()
   const { lang, setLang } = useLang()
+  const menuConfig = buildMenu(lang)
   const [activeMenu, setActiveMenu]   = useState<string | null>(null)
   const [langOpen, setLangOpen]       = useState(false)
   const [loginOpen, setLoginOpen]     = useState(false)
