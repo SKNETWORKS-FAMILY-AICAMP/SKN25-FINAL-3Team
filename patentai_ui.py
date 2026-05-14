@@ -478,7 +478,6 @@ NAV = """
     <div class="menu">
         <a href="/" target="_self">홈</a>
         <a href="/서비스_소개" target="_self">서비스 소개</a>
-        <a href="/도면_에이전트" target="_self">도면 에이전트</a>
         <a href="/구성원" target="_self">구성원</a>
         <a href="/소식_자료" target="_self">소식/자료</a>
     </div>
