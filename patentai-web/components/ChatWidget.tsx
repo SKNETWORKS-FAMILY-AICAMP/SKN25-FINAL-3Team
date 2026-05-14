@@ -1,10 +1,102 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
 
-type Message = { role: 'user' | 'bot'; text: string }
+type Message = {
+  role: 'user' | 'bot'
+  text: string
+  links?: { label: string; href: string; external?: boolean }[]
+}
 
-const GREET = '안녕하세요! PatentAI 상담 도우미입니다.\n발명 내용이나 특허 관련 궁금한 점을 자유롭게 말씀해 주세요.'
+const GREET = '안녕하세요! PatentAI 상담 도우미입니다.\n특허 관련 궁금한 점을 자유롭게 물어보세요.'
+
+// ── 키워드 → 응답 + 링크 매핑 ───────────────────────────────
+const KEYWORD_MAP: {
+  keywords: string[]
+  text: string
+  links: { label: string; href: string; external?: boolean }[]
+}[] = [
+  {
+    keywords: ['선행기술', '선행 기술', '유사특허', '유사 특허', '신규성', '진보성', 'kipris', 'KIPRIS', '특허 검색', '특허검색'],
+    text: '선행기술 조사는 발명의 신규성·진보성을 확인하는 핵심 단계입니다.\nKIPRIS에서 무료로 검색하거나 PatentAI의 자동 조사 서비스를 이용할 수 있어요.',
+    links: [
+      { label: 'KIPRIS 특허 검색', href: 'https://www.kipris.or.kr', external: true },
+      { label: 'Google Patents', href: 'https://patents.google.com', external: true },
+      { label: 'PatentAI 서비스 소개', href: '/service' },
+    ],
+  },
+  {
+    keywords: ['도면', '블록도', '흐름도', '순서도', 'SVG', 'PNG', '도면 생성', '도면생성'],
+    text: '특허 도면은 명세서의 핵심입니다.\nPatentAI 도면 에이전트는 텍스트 입력만으로 블록도·흐름도·시퀀스 다이어그램을 자동 생성해 드립니다.',
+    links: [
+      { label: 'PatentAI 서비스 소개', href: '/service' },
+      { label: '특허청 도면 작성 가이드', href: 'https://www.kipo.go.kr', external: true },
+    ],
+  },
+  {
+    keywords: ['청구항', '청구 항', '명세서', '독립항', '종속항', '권리범위', '출원서'],
+    text: '청구항은 특허의 권리범위를 정의하는 가장 중요한 부분입니다.\nPatentAI가 발명 내용을 분석하여 독립항·종속항 초안을 자동 작성해 드립니다.',
+    links: [
+      { label: 'PatentAI 명세서 작성 서비스', href: '/service' },
+      { label: '특허로 온라인 출원', href: 'https://www.patent.go.kr', external: true },
+    ],
+  },
+  {
+    keywords: ['상담', '문의', '신청', '연락', '전화', '이메일', '어떻게 시작'],
+    text: '상담 신청 페이지에서 발명 내용을 남겨주시면\n영업일 기준 1–2일 내 담당자가 연락드립니다.',
+    links: [
+      { label: '상담 신청하기', href: '/contact' },
+    ],
+  },
+  {
+    keywords: ['서비스', '기능', '무엇을', '뭘', '어떤', '제공', '할 수 있'],
+    text: 'PatentAI는 다음 서비스를 제공합니다:\n① 특허 상담 에이전트\n② 선행기술 조사\n③ 명세서 작성\n④ 도면 자동 생성\n⑤ 심사 대응',
+    links: [
+      { label: '서비스 전체 보기', href: '/service' },
+    ],
+  },
+  {
+    keywords: ['팀', '구성원', '담당자', '누가', '개발자', '만든'],
+    text: 'PatentAI는 SKN25 3팀이 개발한 AI 기반 지식재산 상담 시스템입니다.\n팀 구성원 소개 페이지에서 더 자세히 확인하세요.',
+    links: [
+      { label: '구성원 소개', href: '/team' },
+    ],
+  },
+  {
+    keywords: ['뉴스', '소식', '최신', '동향', 'IPC', 'CPC', '특허청', 'WIPO', 'KIPO'],
+    text: '특허·IP 관련 최신 뉴스와 자료를 소식/자료 페이지에서 확인하세요.',
+    links: [
+      { label: '소식/자료 보기', href: '/news' },
+      { label: '특허청 공식 사이트', href: 'https://www.kipo.go.kr', external: true },
+    ],
+  },
+  {
+    keywords: ['로그인', '회원', '계정', '비밀번호', '가입'],
+    text: '고객 로그인과 직원 로그인 페이지를 이용해 주세요.',
+    links: [
+      { label: '고객 로그인', href: '/login/client' },
+      { label: '직원 로그인', href: '/login/staff' },
+    ],
+  },
+  {
+    keywords: ['비용', '가격', '요금', '얼마', '무료'],
+    text: '현재 PatentAI는 SKN25 프로젝트로 운영 중입니다.\n상담 신청 후 자세한 안내를 받아보실 수 있어요.',
+    links: [
+      { label: '상담 신청하기', href: '/contact' },
+    ],
+  },
+]
+
+function detectKeywords(text: string): typeof KEYWORD_MAP[0] | null {
+  const lower = text.toLowerCase()
+  for (const item of KEYWORD_MAP) {
+    if (item.keywords.some(k => lower.includes(k.toLowerCase()))) {
+      return item
+    }
+  }
+  return null
+}
 
 function BotAvatar() {
   return (
@@ -56,14 +148,24 @@ export default function ChatWidget() {
     setInput('')
     setMessages(prev => [...prev, { role: 'user', text }])
     setLoading(true)
-    try {
+
+    await new Promise(r => setTimeout(r, 600))
+
+    const matched = detectKeywords(text)
+    if (matched) {
       setMessages(prev => [...prev, {
         role: 'bot',
-        text: `"${text}"에 대해 검토 중입니다.\n\n더 자세한 상담은 전문 상담 에이전트를 통해 진행해 드립니다. 상담 신청 페이지로 이동하시겠어요?`,
+        text: matched.text,
+        links: matched.links,
       }])
-    } finally {
-      setLoading(false)
+    } else {
+      setMessages(prev => [...prev, {
+        role: 'bot',
+        text: '죄송합니다, 해당 내용은 전문 상담이 필요합니다.\n상담 신청 페이지에서 자세한 내용을 남겨주시면 담당자가 연락드립니다.',
+        links: [{ label: '상담 신청하기', href: '/contact' }],
+      }])
     }
+    setLoading(false)
   }
 
   return (
@@ -79,11 +181,9 @@ export default function ChatWidget() {
           transition: transform 0.2s, background 0.2s;
         }
         .chat-fab:hover { background: #C9A84C; transform: scale(1.08); }
-        .chat-fab svg { width: 26px; height: 26px; }
-
         .chat-panel {
           position: fixed; bottom: 6rem; right: 2rem;
-          width: 370px; height: 540px;
+          width: 370px; height: 560px;
           background: #fff; border: 1px solid #E8E4DC;
           box-shadow: 0 24px 60px rgba(0,0,0,0.18);
           display: flex; flex-direction: column;
@@ -93,7 +193,6 @@ export default function ChatWidget() {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-
         .chat-header {
           background: #111128; padding: 0.85rem 1.2rem;
           display: flex; align-items: center; gap: 0.75rem;
@@ -103,54 +202,48 @@ export default function ChatWidget() {
           width: 38px; height: 38px; border-radius: 50%;
           background: linear-gradient(135deg, #1a1a3e, #C9A84C);
           display: flex; align-items: center; justify-content: center;
-          border: 1.5px solid rgba(201,168,76,0.5);
-          flex-shrink: 0;
+          border: 1.5px solid rgba(201,168,76,0.5); flex-shrink: 0;
         }
-        .chat-header-info { flex: 1; }
-        .chat-header-name { color: #F0EDE6; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.03em; }
+        .chat-header-name { color: #F0EDE6; font-size: 0.9rem; font-weight: 700; }
         .chat-header-name em { color: #C9A84C; font-style: normal; }
         .chat-header-status { color: #7777A0; font-size: 0.72rem; display: flex; align-items: center; gap: 0.3rem; margin-top: 1px; }
         .chat-header-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; display: inline-block; }
-        .chat-close { background: none; border: none; color: #666; font-size: 1.3rem; cursor: pointer; padding: 0; transition: color 0.15s; }
+        .chat-close { background: none; border: none; color: #666; font-size: 1.3rem; cursor: pointer; padding: 0; margin-left: auto; }
         .chat-close:hover { color: #C9A84C; }
-
         .chat-messages {
           flex: 1; overflow-y: auto; padding: 1rem 0.9rem;
-          display: flex; flex-direction: column; gap: 1rem;
-          background: #F8F7F5;
+          display: flex; flex-direction: column; gap: 1rem; background: #F8F7F5;
         }
-
         .chat-row { display: flex; align-items: flex-end; gap: 0.5rem; }
         .chat-row.user { flex-direction: row-reverse; }
-
         .chat-name { font-size: 0.72rem; font-weight: 600; margin-bottom: 3px; color: #888; }
         .chat-row.bot .chat-name { color: #C9A84C; }
-
-        .chat-bubble-wrap { display: flex; flex-direction: column; max-width: 78%; }
+        .chat-bubble-wrap { display: flex; flex-direction: column; max-width: 80%; }
         .chat-row.user .chat-bubble-wrap { align-items: flex-end; }
-
         .chat-bubble {
-          padding: 0.65rem 0.95rem;
-          font-size: 0.875rem; line-height: 1.65; white-space: pre-wrap;
+          padding: 0.65rem 0.95rem; font-size: 0.875rem;
+          line-height: 1.65; white-space: pre-wrap;
         }
         .chat-bubble.bot {
           background: #fff; border: 1px solid #E8E4DC; color: #2a2a2a;
-          border-radius: 0 12px 12px 12px;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+          border-radius: 0 12px 12px 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         .chat-bubble.user {
-          background: #111128; color: #F0EDE6;
-          border-radius: 12px 12px 0 12px;
+          background: #111128; color: #F0EDE6; border-radius: 12px 12px 0 12px;
         }
-
-        .chat-typing {
-          display: flex; align-items: flex-end; gap: 0.5rem;
+        .chat-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
+        .chat-link-btn {
+          display: inline-flex; align-items: center; gap: 0.4rem;
+          padding: 0.4rem 0.85rem; font-size: 0.78rem; font-weight: 600;
+          border: 1px solid #C9A84C; color: #C9A84C; background: none;
+          cursor: pointer; text-decoration: none; transition: 0.15s;
+          border-radius: 20px; width: fit-content;
         }
+        .chat-link-btn:hover { background: #C9A84C; color: #111128; }
         .typing-dots {
           background: #fff; border: 1px solid #E8E4DC;
           border-radius: 0 12px 12px 12px;
-          padding: 0.65rem 1rem;
-          display: flex; gap: 4px; align-items: center;
+          padding: 0.65rem 1rem; display: flex; gap: 4px; align-items: center;
         }
         .typing-dots span {
           width: 6px; height: 6px; border-radius: 50%;
@@ -159,25 +252,14 @@ export default function ChatWidget() {
         .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes bounce {
-          0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+          0%,60%,100% { transform: translateY(0); opacity: 0.5; }
           30% { transform: translateY(-5px); opacity: 1; }
         }
-
-        .chat-input-row {
-          display: flex; border-top: 1px solid #E8E4DC; background: #fff;
-          align-items: center; padding: 0 0.3rem;
-        }
-        .chat-input {
-          flex: 1; border: none; padding: 0.9rem 0.7rem;
-          font-size: 0.875rem; outline: none; background: transparent; font-family: inherit;
-        }
-        .chat-send {
-          background: none; border: none; padding: 0 0.8rem;
-          cursor: pointer; color: #C9A84C; font-size: 1.1rem; transition: color 0.15s;
-        }
+        .chat-input-row { display: flex; border-top: 1px solid #E8E4DC; background: #fff; align-items: center; padding: 0 0.3rem; }
+        .chat-input { flex: 1; border: none; padding: 0.9rem 0.7rem; font-size: 0.875rem; outline: none; background: transparent; font-family: inherit; }
+        .chat-send { background: none; border: none; padding: 0 0.8rem; cursor: pointer; color: #C9A84C; font-size: 1.1rem; transition: color 0.15s; }
         .chat-send:hover { color: #111128; }
         .chat-send:disabled { color: #ddd; cursor: default; }
-
         @media (max-width: 480px) {
           .chat-panel { width: calc(100vw - 2rem); right: 1rem; bottom: 5rem; }
           .chat-fab { bottom: 1rem; right: 1rem; }
@@ -186,7 +268,6 @@ export default function ChatWidget() {
 
       {open && (
         <div className="chat-panel">
-          {/* 헤더 */}
           <div className="chat-header">
             <div className="chat-header-avatar">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F0EDE6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -195,63 +276,63 @@ export default function ChatWidget() {
                 <circle cx="12" cy="16" r="1.5" fill="#C9A84C" stroke="none"/>
               </svg>
             </div>
-            <div className="chat-header-info">
+            <div style={{ flex: 1 }}>
               <div className="chat-header-name">PATENT<em>AI</em> 어시스턴트</div>
               <div className="chat-header-status">온라인 · 특허 상담 AI</div>
             </div>
             <button className="chat-close" onClick={() => setOpen(false)}>×</button>
           </div>
 
-          {/* 메시지 */}
           <div className="chat-messages">
             {messages.map((m, i) => (
               <div key={i} className={`chat-row ${m.role}`}>
                 {m.role === 'bot' && <BotAvatar />}
                 {m.role === 'user' && <UserAvatar />}
                 <div className="chat-bubble-wrap">
-                  <div className="chat-name">
-                    {m.role === 'bot' ? 'PatentAI' : '나'}
-                  </div>
+                  <div className="chat-name">{m.role === 'bot' ? 'PatentAI' : '나'}</div>
                   <div className={`chat-bubble ${m.role}`}>{m.text}</div>
+                  {m.links && m.links.length > 0 && (
+                    <div className="chat-links">
+                      {m.links.map(link => (
+                        link.external
+                          ? <a key={link.href} className="chat-link-btn" href={link.href} target="_blank" rel="noopener noreferrer">→ {link.label}</a>
+                          : <Link key={link.href} className="chat-link-btn" href={link.href}>→ {link.label}</Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
             {loading && (
-              <div className="chat-typing">
+              <div className="chat-row bot">
                 <BotAvatar />
-                <div className="typing-dots">
-                  <span/><span/><span/>
-                </div>
+                <div className="typing-dots"><span/><span/><span/></div>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
 
-          {/* 입력 */}
           <div className="chat-input-row">
             <input
               className="chat-input"
-              placeholder="메시지를 입력하세요..."
+              placeholder="예: 선행기술 조사가 뭔가요?"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
               disabled={loading}
             />
-            <button className="chat-send" onClick={send} disabled={loading || !input.trim()}>
-              ➤
-            </button>
+            <button className="chat-send" onClick={send} disabled={loading || !input.trim()}>➤</button>
           </div>
         </div>
       )}
 
-      {/* FAB */}
       <button className="chat-fab" onClick={() => setOpen(o => !o)} aria-label="상담 챗봇 열기">
         {open ? (
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2.2" strokeLinecap="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2.2" strokeLinecap="round" width="26" height="26">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         ) : (
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="26" height="26">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
         )}
