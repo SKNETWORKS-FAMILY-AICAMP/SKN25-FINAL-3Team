@@ -1,4 +1,5 @@
-# 
+# pip install fastapi uvicorn pydantic python-dotenv
+# uvicorn main:app --host 0.0.0.0 --port 8000
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
