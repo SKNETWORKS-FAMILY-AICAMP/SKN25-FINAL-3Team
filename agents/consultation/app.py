@@ -536,6 +536,7 @@ if str(_REPO_ROOT) not in _sys.path:
 from drawing_agent import generate_all_drawings
 from drawing_db import save_drawings_to_db
 from specification_agent import fetch_data_for_specification, generate_specification, save_specification_to_db
+from patent_docx import generate_patent_docx
 
 if "drawing_results" not in st.session_state:
     st.session_state.drawing_results = None
@@ -677,13 +678,35 @@ if st.session_state.get("generated_specification"):
     _spec = st.session_state.generated_specification
     st.markdown("---")
     st.markdown("## 📖 발명의 설명")
+    st.markdown("### 기술분야")
+    st.write(_spec.get("tech_field", ""))
+    st.markdown("### 배경기술")
+    st.write(_spec.get("background_art", ""))
     st.markdown("### 해결하고자 하는 과제")
-    st.write(_spec.get("problem_to_solve", ""))
+    st.write(_spec.get("problem_statement", ""))
     st.markdown("### 과제의 해결수단")
     st.write(_spec.get("solution_means", ""))
     st.markdown("### 발명의 효과")
     st.write(_spec.get("effects", ""))
     st.markdown("### 도면의 간단한 설명")
-    st.write(_spec.get("drawing_desc", ""))
+    st.write(_spec.get("drawing_description", ""))
     st.markdown("### 발명을 실시하기 위한 구체적인 내용")
+    st.write(_spec.get("detailed_desc", ""))
+    st.markdown("### 실시예")
     st.write(_spec.get("embodiments", ""))
+
+    st.markdown("---")
+    try:
+        _docx_buffer = generate_patent_docx(
+            st.session_state.agent.user_id,
+            st.session_state.agent.consultation_idx
+        )
+        st.download_button(
+            label="📄 특허 명세서 Word 파일 다운로드",
+            data=_docx_buffer,
+            file_name=f"patent_{st.session_state.agent.user_id}_{st.session_state.agent.consultation_idx}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            use_container_width=True,
+        )
+    except Exception as _e:
+        st.error(f"Word 파일 생성 오류: {_e}")

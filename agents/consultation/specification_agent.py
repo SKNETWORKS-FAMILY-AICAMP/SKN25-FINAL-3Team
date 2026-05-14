@@ -21,11 +21,14 @@ class GeneratedSpecification(Base):
     )
     id               = Column(Integer, primary_key=True, autoincrement=True)
     user_id          = Column(String(50), nullable=False)
-    consultation_idx = Column(Integer,    nullable=False)
-    problem_to_solve = Column(Text, nullable=True)
+    consultation_idx = Column(Integer,    nullable=True)
+    tech_field        = Column(Text, nullable=True)
+    background_art    = Column(Text, nullable=True)
+    problem_statement = Column(Text, nullable=True)
     solution_means   = Column(Text, nullable=True)
     effects          = Column(Text, nullable=True)
-    drawing_desc     = Column(Text, nullable=True)
+    drawing_description     = Column(Text, nullable=True)
+    detailed_desc     = Column(Text, nullable=True)
     embodiments      = Column(Text, nullable=True)
     created_at       = Column(DateTime, default=datetime.datetime.utcnow)
 
@@ -66,7 +69,7 @@ def fetch_data_for_specification(user_id: str, consultation_idx: int) -> dict:
             "drawings": [
                 {"fig_number": d.fig_number, "title": d.diagram_title, "type": d.diagram_type}
                 for d in drawings
-            ],
+            ], 
         }
     finally:
         db.close()
@@ -102,13 +105,16 @@ def generate_specification(data: dict) -> dict:
 【 생성된 도면 목록 】
 {drawings_str}
 
-위 정보를 토대로 아래 5개 항목을 각각 작성해 주세요.
+위 정보를 토대로 아래 8개 항목을 각각 작성해 주세요.
 JSON 형식으로 반환하되, 키는 반드시 아래와 같이 사용하세요:
-- "problem_to_solve": 해결하고자 하는 과제 (상담 내용의 문제점 기반, 3~5문장)
+- "tech_field": 기술분야 (2~3문장)
+- "background_art": 배경기술 (3~5문장)
+- "problem_statement": 해결하고자 하는 과제 (상담 내용의 문제점 기반, 3~5문장)
 - "solution_means": 과제의 해결수단 (청구항 기반, 독립항과 종속항을 포함하여 3~5문장)
 - "effects": 발명의 효과 (상담 내용의 효과 기반, 3~5문장)
-- "drawing_desc": 도면의 간단한 설명 (도면 목록의 각 도면을 한 줄씩 설명)
-- "embodiments": 발명을 실시하기 위한 구체적인 내용 (위 모든 내용을 종합하여 상세히 작성, 10문장 이상)
+- "drawing_description": 도면의 간단한 설명 (도면 목록의 각 도면을 한 줄씩 설명)
+- "detailed_desc": 발명을 실시하기 위한 구체적인 내용 (10문장 이상)
+- "embodiments": 실시예 (5문장 이상)
 
 JSON 외 다른 텍스트는 출력하지 마세요."""
 
@@ -133,21 +139,27 @@ def save_specification_to_db(user_id: str, consultation_idx: int, spec: dict):
         ).first()
 
         if existing:
-            existing.problem_to_solve = spec.get("problem_to_solve")
-            existing.solution_means   = spec.get("solution_means")
-            existing.effects          = spec.get("effects")
-            existing.drawing_desc     = spec.get("drawing_desc")
-            existing.embodiments      = spec.get("embodiments")
-            existing.created_at       = datetime.datetime.utcnow()
+            existing.tech_field         = spec.get("tech_field")
+            existing.background_art     = spec.get("background_art")
+            existing.problem_statement  = spec.get("problem_statement")
+            existing.solution_means     = spec.get("solution_means")
+            existing.effects            = spec.get("effects")
+            existing.drawing_description = spec.get("drawing_description")
+            existing.detailed_desc      = spec.get("detailed_desc")
+            existing.embodiments        = spec.get("embodiments")
+            existing.created_at         = datetime.datetime.utcnow()
         else:
             db.add(GeneratedSpecification(
-                user_id          = user_id,
-                consultation_idx = consultation_idx,
-                problem_to_solve = spec.get("problem_to_solve"),
-                solution_means   = spec.get("solution_means"),
-                effects          = spec.get("effects"),
-                drawing_desc     = spec.get("drawing_desc"),
-                embodiments      = spec.get("embodiments"),
+                user_id              = user_id,
+                consultation_idx     = consultation_idx,
+                tech_field           = spec.get("tech_field"),
+                background_art       = spec.get("background_art"),
+                problem_statement    = spec.get("problem_statement"),
+                solution_means       = spec.get("solution_means"),
+                effects              = spec.get("effects"),
+                drawing_description  = spec.get("drawing_description"),
+                detailed_desc        = spec.get("detailed_desc"),
+                embodiments          = spec.get("embodiments"),
             ))
 
         db.commit()

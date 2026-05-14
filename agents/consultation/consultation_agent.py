@@ -425,7 +425,8 @@ class PatentConsultant:
             type_map = {"implementations": "implementation", "parameters": "parameter", "algorithms": "algorithm", "optional_features": "optional", "error_handling": "error_handling"}
             for key, e_type in type_map.items():
                 for seq, content in enumerate(self.state[key], start=1):
-                    db.add(DetailElement(user_id=self.user_id, consultation_idx=self.consultation_idx, element_type=e_type, seq=seq, content=content))
+                    content_str = json.dumps(content, ensure_ascii=False) if isinstance(content, dict) else str(content)
+                    db.add(DetailElement(user_id=self.user_id, consultation_idx=self.consultation_idx, element_type=e_type, seq=seq, content=content_str))
             db.commit(); self.state["confirmed"] = True
             return f"✅ 정제 및 저장 완료 (회차: {self.consultation_idx})"
         except Exception as e:
