@@ -368,18 +368,18 @@ export default function Nav() {
             )}
           </div>
 
-          {/* 로그인 드롭다운 */}
+          {/* 로그인 드롭다운 — 아이콘만 */}
           <div className="login-dropdown" ref={loginRef}>
             <button
               className="login-trigger"
+              style={{ padding:'4px 6px', border:'none', background:'none', cursor:'pointer' }}
               onMouseEnter={() => setLoginOpen(true)}
               onClick={() => setLoginOpen(o => !o)}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9999B8" strokeWidth="1.6" strokeLinecap="round">
                 <circle cx="12" cy="8" r="4"/>
                 <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
               </svg>
-              {tr(t.nav.clientLogin, lang).replace(' 로그인', '')} / {tr(t.nav.staffLogin, lang).replace(' 로그인', '')}
             </button>
             {loginOpen && (
               <div className="login-menu" onMouseLeave={() => setLoginOpen(false)}>

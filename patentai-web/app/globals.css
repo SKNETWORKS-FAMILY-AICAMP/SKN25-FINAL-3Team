@@ -235,7 +235,7 @@ html, body { background: #0A0A16; }
 }
 .step p { color: #8888A8; font-size: .86rem; line-height: 1.7; }
 
-/* ── 반응형 ── */
+/* ── 반응형 태블릿 ── */
 @media (max-width: 900px) {
   .nav { padding: 0 1.5rem; }
   .logo span { display: none; }
@@ -245,4 +245,29 @@ html, body { background: #0A0A16; }
   .section, .hero { padding: 4rem 1.5rem; }
   .hero.home { height: 620px; }
   .hero h1, .hero.home h1 { font-size: 2.4rem; }
+}
+
+/* ── 모바일 (폰) ── */
+@media (max-width: 480px) {
+  .nav { height: 60px; padding: 0 1rem; }
+  .menu { display: none; }
+  .logo { margin-right: 0; }
+  .nav-actions { gap: .5rem; }
+  .hero { padding: 3rem 1.2rem; }
+  .hero.home { height: 100svh; }
+  .hero h1, .hero.home h1 { font-size: 2rem; letter-spacing: -.02em; }
+  .hero p { font-size: .85rem; }
+  .tag { font-size: .6rem; letter-spacing: .25em; }
+  .section { padding: 3rem 1.2rem; }
+  .title, .sec-title { font-size: 1.6rem; }
+  .sub, .sec-sub { font-size: .84rem; margin-bottom: 2rem; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { padding: 1.5rem .5rem; }
+  .stat b { font-size: 1.8rem; }
+  .grid { grid-template-columns: 1fr; gap: 0; }
+  .card, .member { min-height: 160px; padding: 1.6rem; }
+  .workflow { grid-template-columns: 1fr 1fr; }
+  .num { font-size: 1.2rem; margin-bottom: .8rem; }
+  .card h3 { font-size: .95rem; }
+  .btn { padding: .85rem 2rem; font-size: .75rem; }
 }
