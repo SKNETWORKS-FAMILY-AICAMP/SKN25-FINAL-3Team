@@ -17,31 +17,31 @@ const services = [
   },
   {
     num: '02', href: '/service/prior-art',
-    tag: 'PRIOR ART', title: '선행기술 조사', summary: '전 세계 특허 DB 자동 분석',
+    tag: 'PRIOR ART', title: '선행기술 조사 에이전트', summary: '전 세계 특허 DB 자동 분석',
     desc: 'KIPRIS·USPTO·EPO를 벡터 유사도 검색으로 탐색하여 신규성·진보성 위험을 사전에 파악합니다.',
     steps: ['키워드·IPC 자동 추출', 'DB 대량 수집', '벡터 유사도 분석', '위험도 리포트 생성'],
     output: '유사 특허 TOP-N · 유사도 점수 · 위험도 등급', time: '2–5분',
   },
   {
     num: '03', href: '/service/specification',
-    tag: 'SPECIFICATION', title: '명세서 작성', summary: 'sLLM으로 청구항 자동 초안',
+    tag: 'SPECIFICATION', title: '명세서 작성 에이전트', summary: 'sLLM으로 청구항 자동 초안',
     desc: '특허 데이터로 파인튜닝한 EXAONE sLLM이 독립항·종속항·발명의 설명·실시예를 자동 작성합니다.',
     steps: ['상담 데이터 분석', '청구항 자동 생성 (sLLM)', '발명의 설명 초안화', '특허청 형식 출력'],
     output: '청구항 · 발명의 설명 · 실시예 초안', time: '3–7분',
   },
   {
     num: '04', href: '/service/drawing',
-    tag: 'DRAWING AGENT', title: '도면 자동 생성', summary: '특허청 기준 SVG 도면 생성',
+    tag: 'DRAWING AGENT', title: '도면 자동 생성 에이전트', summary: '특허청 기준 SVG 도면 생성',
     desc: '명세서 텍스트만으로 블록도·흐름도·시퀀스·상태도 등 5종 도면을 자동 생성. 품질 점수 A등급 달성.',
     steps: ['구성요소 자동 추출', '도면 유형 자동 분류', 'SVG 직접 렌더링', '품질 자동 검증'],
     output: 'SVG 벡터 도면 · PNG 고해상도 · 품질 리포트', time: '30초–2분',
   },
   {
     num: '05', href: '/service/review',
-    tag: 'REVIEW', title: '심사 대응', summary: '거절이유 AI 분석 및 대응',
-    desc: '특허청 OA를 파싱하여 거절 유형(신규성·진보성·기재불비)을 분류하고 의견서·보정서 초안을 생성합니다.',
-    steps: ['OA 문서 파싱', '거절 유형 분류', '대응 전략 제안', '의견서 초안 생성'],
-    output: '의견서 초안 · 보정 전략 권고사항', time: '2–4분',
+    tag: 'EMBODIMENT', title: '발설 에이전트', summary: '발명의 설명·실시예 자동 생성',
+    desc: 'GPT-4o-mini가 도면 fig_json과 청구항을 결합하여 명세서의 발명의 설명·실시예 섹션을 자동 작성합니다.',
+    steps: ['도면 결과 + 청구항 입력', '도면부호 자동 참조', '실시예 2~5단락 생성', '최종 페이로드 통합'],
+    output: '발명의 설명 초안 · 실시예 · 도면 간단 설명', time: '2–3분',
   },
 ]
 

@@ -10,19 +10,19 @@ import { LANGS, t, tr } from '@/lib/i18n'
 function buildMenu(lang: import('@/lib/i18n').Lang) {
   const L = {
     ko: { agent:'에이전트', team:'구성원', news:'소식/자료', contact:'상담 신청', faq:'FAQ', about:'PatentAI 소개',
-          agentItems:['특허 상담 에이전트','선행기술 조사','명세서 작성','도면 자동 생성','심사 대응'],
+          agentItems:['특허 상담 에이전트','선행기술 조사 에이전트','명세서 작성 에이전트','도면 자동 생성 에이전트','발설 에이전트'],
           teamAll:'구성원 전체 보기', newsAll:'전체 소식 보기', gallery:'도면 갤러리 보기',
           newsItems:['AI 특허 동향','선행기술 자료','특허청 정책','IPC / CPC 분류'] },
     en: { agent:'Agents', team:'Team', news:'News', contact:'Contact', faq:'FAQ', about:'About',
-          agentItems:['Consultation Agent','Prior Art Search','Specification','Drawing Agent','Patent Review'],
+          agentItems:['Consultation Agent','Prior Art Agent','Specification Agent','Drawing Agent','Embodiment Agent'],
           teamAll:'View All Members', newsAll:'View All News', gallery:'Drawing Gallery',
           newsItems:['AI Patent Trends','Prior Art Resources','KIPO Policy','IPC / CPC'] },
     ja: { agent:'エージェント', team:'メンバー', news:'お知らせ', contact:'お問い合わせ', faq:'FAQ', about:'会社紹介',
-          agentItems:['特許相談エージェント','先行技術調査','明細書作成','図面自動生成','審査対応'],
+          agentItems:['特許相談エージェント','先行技術調査エージェント','明細書作成エージェント','図面自動生成エージェント','実施例エージェント'],
           teamAll:'全員を見る', newsAll:'全ニュースを見る', gallery:'図面ギャラリー',
           newsItems:['AI特許動向','先行技術資料','特許庁政策','IPC / CPC'] },
     zh: { agent:'智能体', team:'团队成员', news:'新闻资讯', contact:'联系我们', faq:'FAQ', about:'关于我们',
-          agentItems:['专利咨询智能体','现有技术检索','说明书撰写','附图自动生成','审查应对'],
+          agentItems:['专利咨询智能体','现有技术检索智能体','说明书撰写智能体','附图自动生成智能体','实施例智能体'],
           teamAll:'查看全部成员', newsAll:'查看全部新闻', gallery:'附图画廊',
           newsItems:['AI专利动态','现有技术资料','特许厅政策','IPC / CPC'] },
   }
