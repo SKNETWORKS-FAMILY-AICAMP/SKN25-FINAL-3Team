@@ -34,7 +34,7 @@ export default function Footer() {
           <div className="footer-logo">PATENT<em>AI</em></div>
           <div className="footer-desc">{tr(f.desc, lang)}</div>
           <div className="footer-contact">
-            <div>📍 서울특별시 강남구 테헤란로</div>
+            <div style={{ whiteSpace: 'pre-line' }}>📍 {tr(f.address, lang)}</div>
             <div>📞 <a href="tel:02-0000-0000">02-0000-0000</a></div>
             <div>✉️ <a href="mailto:contact@patentai.kr">contact@patentai.kr</a></div>
           </div>

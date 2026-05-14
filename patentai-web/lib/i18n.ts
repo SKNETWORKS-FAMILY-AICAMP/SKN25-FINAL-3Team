@@ -79,8 +79,9 @@ export const t = {
     successDesc:  { ko: '영업일 기준 1–2일 내 담당자가 연락드립니다.', en: 'Our team will contact you within 1–2 business days.', ja: '営業日基準1〜2日以内に担当者よりご連絡いたします。', zh: '工作日1-2天内，我们的专员将与您联系。' },
   },
   footer: {
-    desc:  { ko: 'AI 기반 지식재산 상담 시스템으로\n발명 상담부터 특허 명세서 작성, 도면 생성까지\n전 과정을 자동화합니다.', en: 'An AI-based IP consultation system\nautomating everything from invention consultation\nto patent specification and drawing generation.', ja: 'AI基盤の知的財産相談システムで\n発明相談から特許明細書作成、図面生成まで\n全工程を自動化します。', zh: 'AI驱动知识产权咨询系统，\n从发明咨询到专利说明书撰写、附图生成，\n全程自动化。' },
-    hours: { ko: '월–금 09:00 – 18:00\n토·일·공휴일 휴무', en: 'Mon–Fri 09:00 – 18:00\nClosed on weekends & holidays', ja: '月〜金 09:00 – 18:00\n土日祝休業', zh: '周一至周五 09:00–18:00\n周末及节假日休息' },
+    desc:    { ko: 'AI 기반 지식재산 상담 시스템으로\n발명 상담부터 특허 명세서 작성, 도면 생성까지\n전 과정을 자동화합니다.', en: 'An AI-based IP consultation system\nautomating everything from invention consultation\nto patent specification and drawing generation.', ja: 'AI基盤の知的財産相談システムで\n発明相談から特許明細書作成、図面生成まで\n全工程を自動化します。', zh: 'AI驱动知识产权咨询系统，\n从发明咨询到专利说明书撰写、附图生成，\n全程自动化。' },
+    address: { ko: '서울특별시 서초구 효령로 335\n플레이데이터 서초캠퍼스', en: '335 Hyoryeong-ro, Seocho-gu\nSeoul, Republic of Korea\n(Playdata Seocho Campus)', ja: '韓国ソウル特別市瑞草区孝領路335\nプレイデータ瑞草キャンパス', zh: '韩国首尔特别市瑞草区孝领路335号\nPlaydata瑞草校区' },
+    hours:   { ko: '월–금 09:00 – 18:00\n토·일·공휴일 휴무', en: 'Mon–Fri 09:00 – 18:00\nClosed on weekends & holidays', ja: '月〜金 09:00 – 18:00\n土日祝休業', zh: '周一至周五 09:00–18:00\n周末及节假日休息' },
     emergency: { ko: '긴급 문의는 이메일로 접수해 주세요.', en: 'For urgent inquiries, please contact us by email.', ja: '緊急のお問い合わせはメールにてお寄せください。', zh: '紧急咨询请通过电子邮件联系。' },
     copyright: { ko: '© 2026 PatentAI. All rights reserved. · 사업자등록번호 000-00-00000', en: '© 2026 PatentAI. All rights reserved.', ja: '© 2026 PatentAI. All rights reserved.', zh: '© 2026 PatentAI. 版权所有。' },
   },

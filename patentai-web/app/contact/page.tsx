@@ -50,7 +50,7 @@ export default function ContactPage() {
           <div className="contact-info-card">
             <div className="contact-info-title">{tr(c.h1, lang)}</div>
             <div className="contact-info-line" />
-            <div className="contact-info-item"><div><strong>ADDRESS</strong>서울특별시 강남구 테헤란로</div></div>
+            <div className="contact-info-item"><div><strong>ADDRESS</strong><span style={{ whiteSpace: 'pre-line' }}>{tr(t.footer.address, lang)}</span></div></div>
             <div className="contact-info-item"><div><strong>PHONE</strong>02-0000-0000</div></div>
             <div className="contact-info-item"><div><strong>EMAIL</strong>contact@patentai.kr</div></div>
             <div className="contact-info-item"><div><strong>KAKAO</strong>@PatentAI</div></div>
