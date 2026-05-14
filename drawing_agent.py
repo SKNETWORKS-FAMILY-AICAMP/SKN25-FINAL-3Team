@@ -107,7 +107,7 @@ def xe(s: str) -> str:
 
 def clamp(v, lo, hi): return max(lo, min(hi, v))
 
-def trunc(text: str, n: int = 14) -> str:
+def trunc(text: str, n: int = 20) -> str:
     text = ns(text)
     return text if len(text) <= n else text[:n-1] + "…"
 
@@ -258,6 +258,8 @@ step_type 규칙:
 - source_text 없는 구성요소 만들지 말것
 - 도면은 최소 2개: 전체구성도 + 처리흐름도
 - 흐름도는 반드시 시작(terminal) → 처리(process/decision/io) → 종료(terminal) 순서
+- 구성요소(components)는 명세서에 언급된 모든 핵심 구성요소를 빠짐없이 추출할 것 (최소 5개 이상)
+- 각 구성요소의 name은 원문 그대로 사용하고 축약하지 말 것
 - decision 단계는 branches에 예/아니오 또는 성공/실패 등 분기 명시
 """
 
