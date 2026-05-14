@@ -1,4 +1,4 @@
-# 도면 작성 에이전트 (Drawing Agent) v7
+# 도면 작성 에이전트 (Drawing Agent) v7.1
 
 특허 명세서를 분석하여 특허청 실무 수준의 도면을 자동 생성하는 AI 에이전트입니다.
 
@@ -44,6 +44,30 @@ pip install openai python-dotenv pillow cairosvg
 ```
 OPENAI_API_KEY=your_api_key_here
 ```
+
+---
+
+## Streamlit 웹 UI
+
+`patentai_ui.py` 메인 네비게이션에 **도면 에이전트** 메뉴가 추가되었습니다.
+
+```bash
+streamlit run patentai_ui.py
+```
+
+브라우저에서 상단 메뉴 **도면 에이전트** 클릭 또는 `/도면_에이전트` 직접 접근.
+
+| 기능 | 설명 |
+|---|---|
+| 발명 텍스트 입력 | 명세서 텍스트 붙여넣기 |
+| 출원번호 설정 | 결과 저장 폴더명으로 사용 |
+| SVG 인라인 표시 | 생성된 도면 즉시 확인 |
+| SVG / PNG 다운로드 | 버튼 클릭으로 파일 저장 |
+| 자동 품질 보정 | 품질 기준 미달 시 자동 재생성 |
+
+관련 파일:
+- `pages/2_도면_에이전트.py` — Streamlit 페이지
+- `patentai_ui.py` — 네비게이션 링크
 
 ---
 
@@ -166,6 +190,7 @@ for r in results:
 
 | 버전 | 변경 내용 |
 |---|---|
+| v7.1 | Streamlit 웹 UI 페이지 추가, patentai_ui.py 네비게이션 연동 |
 | v7 | 흐름도 타원/마름모 추가, 시퀀스 활성화 박스, 상태도 둥근 사각형, UI 디바이스 프레임 |
 | v6 | 시퀀스/상태도/UI 렌더러 추가 |
 | v5 | Mermaid 제거, SVG 직접 렌더링으로 전환 |
