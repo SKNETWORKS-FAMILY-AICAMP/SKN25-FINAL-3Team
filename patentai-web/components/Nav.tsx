@@ -19,7 +19,7 @@ const menuConfig = [
       { href: '/service/drawing',       num: '04', label: '도면 자동 생성',      sub: 'Drawing Agent' },
       { href: '/service/review',        num: '05', label: '심사 대응',           sub: 'Patent Review' },
     ],
-    footer: { href: '/service', label: '전체 서비스 보기' },
+    footer: { href: '/gallery', label: '도면 갤러리 보기' },
   },
   {
     href: '/team',
