@@ -146,24 +146,40 @@ export default function ChatWidget() {
     const text = input.trim()
     if (!text || loading) return
     setInput('')
-    setMessages(prev => [...prev, { role: 'user', text }])
+    const newMessages = [...messages, { role: 'user' as const, text }]
+    setMessages(newMessages)
     setLoading(true)
 
-    await new Promise(r => setTimeout(r, 600))
-
+    // 키워드 감지 우선 — 페이지 링크 안내
     const matched = detectKeywords(text)
     if (matched) {
+      await new Promise(r => setTimeout(r, 400))
       setMessages(prev => [...prev, {
         role: 'bot',
         text: matched.text,
         links: matched.links,
       }])
     } else {
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        text: '죄송합니다, 해당 내용은 전문 상담이 필요합니다.\n상담 신청 페이지에서 자세한 내용을 남겨주시면 담당자가 연락드립니다.',
-        links: [{ label: '상담 신청하기', href: '/contact' }],
-      }])
+      // 키워드 없으면 실제 GPT-4o-mini 호출
+      try {
+        const apiMessages = newMessages
+          .filter(m => m.role === 'user' || m.role === 'bot')
+          .map(m => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }))
+
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: apiMessages }),
+        })
+        const data = await res.json()
+        setMessages(prev => [...prev, { role: 'bot', text: data.text }])
+      } catch {
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          text: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+          links: [{ label: '상담 신청하기', href: '/contact' }],
+        }])
+      }
     }
     setLoading(false)
   }

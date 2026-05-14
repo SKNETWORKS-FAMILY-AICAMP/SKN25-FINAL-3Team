@@ -35,10 +35,10 @@ export default function Home() {
       </div>
 
       <div className="stats">
-        <div className="stat"><b>1,240+</b><p>{tr(h.stat1, lang)}</p></div>
-        <div className="stat"><b>98.2%</b><p>{tr(h.stat2, lang)}</p></div>
-        <div className="stat"><b>12</b><p>{tr(h.stat3, lang)}</p></div>
-        <div className="stat"><b>542+</b><p>{tr(h.stat4, lang)}</p></div>
+        <div className="stat"><b>6</b><p>{tr(h.stat1, lang)}</p></div>
+        <div className="stat"><b>5</b><p>{tr(h.stat3, lang)}</p></div>
+        <div className="stat"><b>114</b><p>FAQ 데이터베이스</p></div>
+        <div className="stat"><b>2026</b><p>SKN25 3팀</p></div>
       </div>
 
       <div className="section">
