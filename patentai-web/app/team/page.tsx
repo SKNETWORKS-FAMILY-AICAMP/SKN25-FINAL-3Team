@@ -38,8 +38,8 @@ export default function TeamPage() {
                 <div className="avatar">{m.num}</div>
                 <div className="name">{m.name}</div>
                 <div className="role">{m.role}</div>
-                <div className="desc">{m.desc}</div>
-                {m.slug && <div style={{ marginTop: '1rem', color: '#C9A84C', fontSize: '0.82rem', fontWeight: 600 }}>{tr(tm.profile, lang)}</div>}
+                <div className="desc" style={{ wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: 1.85 }}>{m.desc}</div>
+                {m.slug && <div style={{ marginTop: '1rem', color: '#C9A84C', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '.06em' }}>{tr(tm.profile, lang)}</div>}
               </div>
             )
             return m.slug
