@@ -17,7 +17,7 @@ from claim_agent import fetch_consultation_from_db, save_claims_to_db
 
 # 런팟 대시보드의 'Connect' -> 'HTTP Service (Port 8000)'에서 복사한 주소를 넣으세요.
 # 맨 뒤에 슬래시(/)는 빼고 입력합니다.
-BACKEND_URL = os.getenv("CLAIM_BACKEND_URL", "https://iu0c50cr6tlboh-8000.proxy.runpod.net")
+BACKEND_URL = os.getenv("CLAIM_BACKEND_URL", "https://2ceem2xadcs4cm-8000.proxy.runpod.net")
 # 백엔드 헬스 체크
 def is_backend_available():
     try:
@@ -535,11 +535,14 @@ if str(_REPO_ROOT) not in _sys.path:
     _sys.path.append(str(_REPO_ROOT))
 from drawing_agent import generate_all_drawings
 from drawing_db import save_drawings_to_db
+from specification_agent import fetch_data_for_specification, generate_specification, save_specification_to_db
 
 if "drawing_results" not in st.session_state:
     st.session_state.drawing_results = None
 if "drawing_save_msg" not in st.session_state:
     st.session_state.drawing_save_msg = None
+if "generated_specification" not in st.session_state:
+    st.session_state.generated_specification = None
 
 def _build_invention_text(state):
     parts = []
@@ -642,3 +645,45 @@ if st.session_state.get("drawing_results"):
             _c1.metric("품질 점수", f"{_r.quality_score}점")
             _c2.metric("등급", _r.quality_grade)
             _c3.metric("도면 유형", _r.diagram_type)
+
+# ─────────────────────────────────────────────
+# 발명의 설명 생성 섹션 (도면 생성 후 활성화)
+# ─────────────────────────────────────────────
+if st.session_state.agent and st.session_state.prior_art_result:
+    with st.sidebar:
+        st.divider()
+        st.subheader("📖 발명의 설명 생성")
+
+        _drawing_ok = bool(st.session_state.get("drawing_results"))
+
+        if not _drawing_ok:
+            st.warning("⚠️ 발명의 설명을 작성하려면 먼저 도면을 생성해 주세요.")
+        else:
+            if st.button("📖 발명의 설명 자동 작성", use_container_width=True, type="primary"):
+                with st.spinner("발명의 설명을 작성 중입니다... (30초~1분 소요)"):
+                    try:
+                        _u_id  = st.session_state.agent.user_id
+                        _c_idx = st.session_state.agent.consultation_idx
+                        _data  = fetch_data_for_specification(_u_id, _c_idx)
+                        _spec  = generate_specification(_data)
+                        save_specification_to_db(_u_id, _c_idx, _spec)
+                        st.session_state.generated_specification = _spec
+                        st.rerun()
+                    except Exception as _e:
+                        st.error(f"발명의 설명 생성 오류: {_e}")
+
+# 메인 화면: 발명의 설명 결과 표시
+if st.session_state.get("generated_specification"):
+    _spec = st.session_state.generated_specification
+    st.markdown("---")
+    st.markdown("## 📖 발명의 설명")
+    st.markdown("### 해결하고자 하는 과제")
+    st.write(_spec.get("problem_to_solve", ""))
+    st.markdown("### 과제의 해결수단")
+    st.write(_spec.get("solution_means", ""))
+    st.markdown("### 발명의 효과")
+    st.write(_spec.get("effects", ""))
+    st.markdown("### 도면의 간단한 설명")
+    st.write(_spec.get("drawing_desc", ""))
+    st.markdown("### 발명을 실시하기 위한 구체적인 내용")
+    st.write(_spec.get("embodiments", ""))
