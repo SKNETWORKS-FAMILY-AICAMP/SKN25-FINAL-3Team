@@ -56,3 +56,6 @@ data/tmp/**
 
 # Generated review artifacts
 *.html
+
+# 도면 에이전트 생성 결과물
+drawing_analysis/
