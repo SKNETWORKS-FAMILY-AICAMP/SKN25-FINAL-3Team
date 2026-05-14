@@ -50,7 +50,6 @@ const menuConfig = [
   { href: '/contact', key: 'contact', label: '상담 신청', items: null },
   { href: '/faq',     key: 'faq',     label: 'FAQ',       items: null },
   { href: '/about',   key: 'about',   label: 'PatentAI 소개', items: null },
-  { href: '/careers', key: 'careers', label: '인재채용',   items: null },
 ]
 
 // ── 로고 SVG ─────────────────────────────────────────────
