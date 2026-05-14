@@ -65,6 +65,43 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 고객 후기 섹션 */}
+      <div className="section">
+        <style>{`
+          .review-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem; }
+          .review-card { background: white; border: 1px solid #E8E4DC; padding: 2rem; box-shadow: 0 8px 24px rgba(0,0,0,.04); }
+          .review-stars { color: #C9A84C; font-size: 1rem; margin-bottom: 0.8rem; letter-spacing: 2px; }
+          .review-text { color: #444; font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.2rem; font-style: italic; }
+          .review-author { display: flex; align-items: center; gap: 0.75rem; }
+          .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#111128,#C9A84C); display: flex; align-items: center; justify-content: center; color: #F0EDE6; font-family: 'Noto Serif KR',serif; font-size: 0.95rem; flex-shrink: 0; }
+          .review-name { font-weight: 700; font-size: 0.88rem; color: #111128; }
+          .review-role { font-size: 0.78rem; color: #999; margin-top: 1px; }
+          @media(max-width:900px){ .review-grid { grid-template-columns: 1fr; } }
+        `}</style>
+        <div className="sec-line"></div>
+        <div className="sec-title">고객 후기</div>
+        <div className="sec-sub">PatentAI를 이용한 발명자·기업의 실제 경험입니다.</div>
+        <div className="review-grid">
+          {[
+            { initial:'K', name:'K 스타트업 대표', role:'AI 의료기기 분야', text:'"기술은 있었지만 특허 명세서 작성이 막막했는데, PatentAI로 3일 만에 초안을 완성했습니다. 변리사 검토 비용도 절반으로 줄었어요."' },
+            { initial:'박', name:'박○○ 연구원', role:'반도체 소재 분야', text:'"선행기술 조사에 2주씩 걸렸는데 PatentAI로 하루 만에 유사 특허 리포트를 받았습니다. 신규성 위험을 미리 파악해 출원 전략을 수정할 수 있었어요."' },
+            { initial:'L', name:'L 제조기업 IP팀', role:'기계/제조 분야', text:'"도면 에이전트로 블록도와 흐름도를 자동 생성하니 도면사 의뢰 비용이 없어졌습니다. 특허청 수준의 품질이 나와서 놀랐어요."' },
+          ].map(r => (
+            <div className="review-card" key={r.name}>
+              <div className="review-stars">★★★★★</div>
+              <div className="review-text">{r.text}</div>
+              <div className="review-author">
+                <div className="review-avatar">{r.initial}</div>
+                <div>
+                  <div className="review-name">{r.name}</div>
+                  <div className="review-role">{r.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <Footer />
     </div>
   )

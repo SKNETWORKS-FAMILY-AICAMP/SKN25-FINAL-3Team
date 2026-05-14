@@ -62,6 +62,7 @@ export default function Footer() {
             <Link href="/team">{tr(n.team, lang)}</Link>
             <Link href="/news">{tr(n.news, lang)}</Link>
             <Link href="/contact">{tr(n.contact, lang)}</Link>
+            <Link href="/faq">{tr(n.faq, lang)}</Link>
           </div>
         </div>
 

@@ -15,6 +15,7 @@ export const t = {
     team:        { ko: '구성원', en: 'Team', ja: 'メンバー', zh: '团队成员' },
     news:        { ko: '소식/자료', en: 'News', ja: 'お知らせ', zh: '新闻资讯' },
     contact:     { ko: '상담 신청', en: 'Contact', ja: 'お問い合わせ', zh: '联系我们' },
+    faq:         { ko: 'FAQ', en: 'FAQ', ja: 'FAQ', zh: 'FAQ' },
     clientLogin: { ko: '고객 로그인', en: 'Client Login', ja: '顧客ログイン', zh: '客户登录' },
     staffLogin:  { ko: '직원 로그인', en: 'Staff Login', ja: 'スタッフログイン', zh: '员工登录' },
   },

@@ -17,6 +17,7 @@ export default function Nav() {
     { href: '/team',    label: tr(t.nav.team, lang) },
     { href: '/news',    label: tr(t.nav.news, lang) },
     { href: '/contact', label: tr(t.nav.contact, lang) },
+    { href: '/faq',     label: tr(t.nav.faq, lang) },
   ]
 
   return (
