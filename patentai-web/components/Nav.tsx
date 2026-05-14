@@ -6,118 +6,178 @@ import { useState, useRef, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 import { LANGS, t, tr } from '@/lib/i18n'
 
-const serviceItems = [
-  { href: '/service', label: '특허 상담 에이전트',  sub: 'Consultation Agent',  num: '01' },
-  { href: '/service', label: '선행기술 조사',        sub: 'Prior Art Search',    num: '02' },
-  { href: '/service', label: '명세서 작성',          sub: 'Specification',       num: '03' },
-  { href: '/service', label: '도면 자동 생성',       sub: 'Drawing Agent',       num: '04' },
-  { href: '/service', label: '심사 대응',            sub: 'Patent Review',       num: '05' },
+const menuConfig = [
+  {
+    href: '/',
+    key: 'home',
+    items: null,
+  },
+  {
+    href: '/service',
+    key: 'service',
+    items: [
+      { href: '/service', num: '01', label: '특허 상담 에이전트',  sub: 'Consultation Agent' },
+      { href: '/service', num: '02', label: '선행기술 조사',        sub: 'Prior Art Search' },
+      { href: '/service', num: '03', label: '명세서 작성',          sub: 'Specification' },
+      { href: '/service', num: '04', label: '도면 자동 생성',       sub: 'Drawing Agent' },
+      { href: '/service', num: '05', label: '심사 대응',            sub: 'Patent Review' },
+    ],
+  },
+  {
+    href: '/team',
+    key: 'team',
+    items: [
+      { href: '/team/gayeongkwon',   num: '01', label: '권가영', sub: 'Prior Art Agent' },
+      { href: '/team/seohyunkim',    num: '02', label: '김서현', sub: 'Frontend / PatentAI UI' },
+      { href: '/team/hongikkim',     num: '03', label: '김홍익', sub: 'Consultation Agent' },
+      { href: '/team/beomsoopark',   num: '04', label: '박범수', sub: 'Specification / Claims' },
+      { href: '/team/eunseokjo',     num: '05', label: '조은석', sub: 'Drawing Agent' },
+      { href: '/team/hyeonwoochoi',  num: '06', label: '최현우', sub: 'Review / Integration' },
+    ],
+  },
+  {
+    href: '/news',
+    key: 'news',
+    items: [
+      { href: '/news', num: '01', label: 'AI 특허 동향',    sub: 'AI Patent Trends' },
+      { href: '/news', num: '02', label: '선행기술 자료',    sub: 'Prior Art Resources' },
+      { href: '/news', num: '03', label: '특허청 정책',      sub: 'KIPO Policy' },
+      { href: '/news', num: '04', label: 'IPC / CPC 분류',  sub: 'Classification' },
+    ],
+  },
+  {
+    href: '/contact',
+    key: 'contact',
+    items: [
+      { href: '/contact', num: '01', label: '상담 신청',      sub: 'Request Consultation' },
+      { href: '/contact', num: '02', label: '이메일 문의',    sub: 'contact@patentai.kr' },
+      { href: '/contact', num: '03', label: '전화 문의',      sub: '02-0000-0000' },
+    ],
+  },
+  {
+    href: '/faq',
+    key: 'faq',
+    items: [
+      { href: '/faq', num: '01', label: '특허 출원',         sub: 'Patent Filing' },
+      { href: '/faq', num: '02', label: 'PatentAI 서비스',   sub: 'Our Service' },
+      { href: '/faq', num: '03', label: '비용 · 기간',       sub: 'Cost & Timeline' },
+      { href: '/faq', num: '04', label: '이용 방법',         sub: 'How to Use' },
+    ],
+  },
 ]
 
 export default function Nav() {
-  const pathname   = usePathname()
+  const pathname = usePathname()
   const { lang, setLang } = useLang()
-  const [langOpen, setLangOpen]       = useState(false)
-  const [serviceOpen, setServiceOpen] = useState(false)
-  const serviceRef = useRef<HTMLDivElement>(null)
-  const langRef    = useRef<HTMLDivElement>(null)
+  const [activeMenu, setActiveMenu] = useState<string | null>(null)
+  const [langOpen, setLangOpen]     = useState(false)
+  const langRef  = useRef<HTMLDivElement>(null)
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     function handle(e: MouseEvent) {
-      if (serviceRef.current && !serviceRef.current.contains(e.target as Node)) setServiceOpen(false)
-      if (langRef.current    && !langRef.current.contains(e.target as Node))    setLangOpen(false)
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false)
     }
     document.addEventListener('mousedown', handle)
     return () => document.removeEventListener('mousedown', handle)
   }, [])
 
-  const menu = [
-    { href: '/',        label: tr(t.nav.home, lang),    dropdown: false },
-    { href: '/service', label: tr(t.nav.service, lang), dropdown: true },
-    { href: '/team',    label: tr(t.nav.team, lang),    dropdown: false },
-    { href: '/news',    label: tr(t.nav.news, lang),    dropdown: false },
-    { href: '/contact', label: tr(t.nav.contact, lang), dropdown: false },
-    { href: '/faq',     label: tr(t.nav.faq, lang),     dropdown: false },
-  ]
+  function onEnter(key: string) {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current)
+    setActiveMenu(key)
+  }
+
+  function onLeave() {
+    leaveTimer.current = setTimeout(() => setActiveMenu(null), 120)
+  }
+
+  const labels: Record<string, string> = {
+    home: tr(t.nav.home, lang),
+    service: tr(t.nav.service, lang),
+    team: tr(t.nav.team, lang),
+    news: tr(t.nav.news, lang),
+    contact: tr(t.nav.contact, lang),
+    faq: tr(t.nav.faq, lang),
+  }
 
   return (
     <>
       <style>{`
-        /* 서비스 드롭다운 */
-        .svc-dropdown { position: relative; display: inline-flex; align-items: center; }
-        .svc-trigger {
-          display: flex; align-items: center; gap: 4px;
+        .nav-item-wrap {
+          position: relative;
+          display: inline-flex; align-items: center;
+        }
+        .nav-link {
           color: #C8C8D8; font-size: .78rem; font-weight: 600;
-          background: none; border: none; cursor: pointer;
-          font-family: inherit; padding: 0; transition: color 0.15s;
+          text-decoration: none; transition: color 0.15s;
+          padding: 4px 0;
+          border-bottom: 2px solid transparent;
+          transition: color 0.15s, border-color 0.15s;
         }
-        .svc-trigger:hover { color: #C9A84C; }
-        .svc-trigger.active { color: #C9A84C; }
-        .svc-caret {
-          font-size: 0.55rem; opacity: 0.7;
-          transition: transform 0.2s;
-          display: inline-block;
-        }
-        .svc-caret.open { transform: rotate(180deg); }
+        .nav-link:hover, .nav-link.active { color: #C9A84C; }
+        .nav-link.active { border-bottom-color: #C9A84C; }
 
-        .svc-menu {
+        .nav-dropdown {
           position: absolute;
-          top: calc(100% + 16px);
+          top: calc(100% + 18px);
           left: 50%;
           transform: translateX(-50%);
           background: #0D0D20;
           border: 1px solid rgba(201,168,76,.2);
           border-top: 2px solid #C9A84C;
-          min-width: 280px;
-          box-shadow: 0 20px 48px rgba(0,0,0,.5);
+          min-width: 260px;
+          box-shadow: 0 20px 48px rgba(0,0,0,.55);
           z-index: 9000;
-          animation: dropDown 0.18s ease;
+          animation: dropFade 0.15s ease;
         }
-        .svc-menu::before {
+        .nav-dropdown::before {
           content: '';
-          position: absolute; top: -7px; left: 50%;
-          transform: translateX(-50%);
+          position: absolute;
+          top: -7px; left: 50%;
           width: 12px; height: 12px;
           background: #0D0D20;
           border-left: 1px solid rgba(201,168,76,.2);
           border-top: 1px solid rgba(201,168,76,.2);
           transform: translateX(-50%) rotate(45deg);
         }
-        @keyframes dropDown {
-          from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+        @keyframes dropFade {
+          from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
           to   { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        .svc-item {
+
+        .nav-drop-item {
           display: flex; align-items: center; gap: 1rem;
-          padding: .9rem 1.4rem; text-decoration: none;
-          transition: background 0.12s;
+          padding: .85rem 1.3rem; text-decoration: none;
           border-bottom: 1px solid rgba(255,255,255,.04);
+          transition: background 0.1s;
         }
-        .svc-item:last-child { border-bottom: none; }
-        .svc-item:hover { background: rgba(201,168,76,.08); }
-        .svc-item:hover .svc-item-num { color: #C9A84C; }
-        .svc-item:hover .svc-item-label { color: #F0EDE6; }
-        .svc-item-num {
+        .nav-drop-item:last-child { border-bottom: none; }
+        .nav-drop-item:hover { background: rgba(201,168,76,.07); }
+        .nav-drop-item:hover .dnum { color: #C9A84C; }
+        .nav-drop-item:hover .dlabel { color: #F0EDE6; }
+
+        .dnum {
           font-family: 'Noto Serif KR', serif;
-          font-size: .72rem; color: #555577;
-          font-weight: 300; flex-shrink: 0; width: 20px;
-          transition: color 0.12s;
+          font-size: .7rem; color: #444466;
+          font-weight: 300; flex-shrink: 0; width: 18px;
+          transition: color 0.1s;
         }
-        .svc-item-text { display: flex; flex-direction: column; gap: 2px; }
-        .svc-item-label {
-          color: #C8C8D8; font-size: .84rem; font-weight: 600;
-          transition: color 0.12s;
+        .dtext { display: flex; flex-direction: column; gap: 1px; }
+        .dlabel {
+          color: #C8C8D8; font-size: .82rem; font-weight: 600;
+          transition: color 0.1s;
         }
-        .svc-item-sub { color: #555577; font-size: .7rem; letter-spacing: .08em; }
-        .svc-view-all {
+        .dsub { color: #444466; font-size: .68rem; letter-spacing: .06em; }
+
+        .nav-drop-footer {
           display: flex; align-items: center; justify-content: space-between;
-          padding: .75rem 1.4rem; text-decoration: none;
-          background: rgba(201,168,76,.06);
-          border-top: 1px solid rgba(201,168,76,.15);
+          padding: .65rem 1.3rem; text-decoration: none;
+          background: rgba(201,168,76,.05);
+          border-top: 1px solid rgba(201,168,76,.12);
+          transition: background 0.1s;
         }
-        .svc-view-all span { color: #C9A84C; font-size: .76rem; font-weight: 700; letter-spacing: .1em; }
-        .svc-view-all:hover { background: rgba(201,168,76,.12); }
+        .nav-drop-footer:hover { background: rgba(201,168,76,.1); }
+        .nav-drop-footer span { color: #C9A84C; font-size: .72rem; font-weight: 700; letter-spacing: .1em; }
 
         /* 언어 드롭다운 */
         .lang-dropdown { position: relative; display: inline-block; }
@@ -133,9 +193,9 @@ export default function Nav() {
           position: absolute; top: calc(100% + 6px); right: 0;
           background: #111128; border: 1px solid rgba(201,168,76,.25);
           min-width: 140px; box-shadow: 0 12px 32px rgba(0,0,0,.4);
-          z-index: 9000; animation: fadeDown 0.15s ease;
+          z-index: 9000; animation: dropFade2 0.15s ease;
         }
-        @keyframes fadeDown {
+        @keyframes dropFade2 {
           from { opacity: 0; transform: translateY(-6px); }
           to   { opacity: 1; transform: translateY(0); }
         }
@@ -156,48 +216,48 @@ export default function Nav() {
           <span>{tr(t.nav.subtitle, lang)}</span>
         </Link>
 
-        <div className="menu">
-          {menu.map(m => {
-            if (m.dropdown) {
-              return (
-                <div className="svc-dropdown" key={m.href} ref={serviceRef}>
-                  <button
-                    className={`svc-trigger ${pathname.startsWith('/service') ? 'active' : ''}`}
-                    onClick={() => setServiceOpen(o => !o)}
-                  >
-                    {m.label}
-                    <span className={`svc-caret ${serviceOpen ? 'open' : ''}`}>▼</span>
-                  </button>
+        <div className="menu" style={{ gap: '1.8rem' }}>
+          {menuConfig.map(m => {
+            const isActive = pathname === m.href || (m.href !== '/' && pathname.startsWith(m.href))
+            const label = labels[m.key]
 
-                  {serviceOpen && (
-                    <div className="svc-menu">
-                      {serviceItems.map(s => (
-                        <Link
-                          key={s.num}
-                          className="svc-item"
-                          href={s.href}
-                          onClick={() => setServiceOpen(false)}
-                        >
-                          <span className="svc-item-num">{s.num}</span>
-                          <span className="svc-item-text">
-                            <span className="svc-item-label">{s.label}</span>
-                            <span className="svc-item-sub">{s.sub}</span>
-                          </span>
-                        </Link>
-                      ))}
-                      <Link className="svc-view-all" href="/service" onClick={() => setServiceOpen(false)}>
-                        <span>전체 서비스 보기</span>
-                        <span style={{ color: '#C9A84C', fontSize: '0.9rem' }}>→</span>
-                      </Link>
-                    </div>
-                  )}
-                </div>
+            if (!m.items) {
+              return (
+                <Link key={m.key} href={m.href} className={`nav-link ${isActive ? 'active' : ''}`}>
+                  {label}
+                </Link>
               )
             }
+
             return (
-              <Link key={m.href} href={m.href} style={{ color: pathname === m.href ? '#C9A84C' : undefined }}>
-                {m.label}
-              </Link>
+              <div
+                key={m.key}
+                className="nav-item-wrap"
+                onMouseEnter={() => onEnter(m.key)}
+                onMouseLeave={onLeave}
+              >
+                <Link href={m.href} className={`nav-link ${isActive ? 'active' : ''}`}>
+                  {label}
+                </Link>
+
+                {activeMenu === m.key && (
+                  <div className="nav-dropdown" onMouseEnter={() => onEnter(m.key)} onMouseLeave={onLeave}>
+                    {m.items.map(item => (
+                      <Link key={item.num} className="nav-drop-item" href={item.href}>
+                        <span className="dnum">{item.num}</span>
+                        <span className="dtext">
+                          <span className="dlabel">{item.label}</span>
+                          <span className="dsub">{item.sub}</span>
+                        </span>
+                      </Link>
+                    ))}
+                    <Link className="nav-drop-footer" href={m.href}>
+                      <span>전체 보기</span>
+                      <span style={{ color: '#C9A84C' }}>→</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
             )
           })}
         </div>
