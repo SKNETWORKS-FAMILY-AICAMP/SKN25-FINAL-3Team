@@ -524,5 +524,121 @@ if st.session_state.agent and st.session_state.phase >= 2:
                             st.rerun() 
                         else:
                             st.error(f"청구항 생성에 실패했습니다: {generated['error']}")
-            
-            
+
+
+# ─────────────────────────────────────────────
+# 7. 도면 에이전트 연결
+# ─────────────────────────────────────────────
+import sys as _sys
+_REPO_ROOT = _ENV_DIR.parents[1]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.append(str(_REPO_ROOT))
+from drawing_agent import generate_all_drawings
+from drawing_db import save_drawings_to_db
+
+if "drawing_results" not in st.session_state:
+    st.session_state.drawing_results = None
+if "drawing_save_msg" not in st.session_state:
+    st.session_state.drawing_save_msg = None
+
+def _build_invention_text(state):
+    parts = []
+    for key, label in [
+        ("problem",         "[기존 기술의 문제점]"),
+        ("solution",        "[해결 방법]"),
+        ("differentiation", "[차별성]"),
+        ("effect",          "[기대효과]"),
+    ]:
+        if state.get(key):
+            parts.append(f"{label}\n{state[key]}")
+    if state.get("algorithm_steps"):
+        steps = "\n".join(f"{i+1}. {s}" for i, s in enumerate(state["algorithm_steps"]))
+        parts.append(f"[작동 알고리즘]\n{steps}")
+    for key, label in [
+        ("implementations",  "[구현수단]"),
+        ("parameters",       "[파라미터/데이터]"),
+        ("algorithms",       "[핵심 알고리즘]"),
+        ("optional_features","[부가기능]"),
+        ("error_handling",   "[예외처리]"),
+    ]:
+        items = [x for x in state.get(key, []) if x]
+        if items:
+            parts.append(label + "\n" + "\n".join(f"- {x}" for x in items))
+    return "\n\n".join(parts)
+
+# 사이드바: 도면 생성 버튼 (청구항 이후)
+if st.session_state.agent and st.session_state.prior_art_result:
+    with st.sidebar:
+        st.divider()
+        st.subheader("🎨 특허 도면 생성")
+
+        _claim_ok = (
+            st.session_state.generated_claim
+            and isinstance(st.session_state.generated_claim, dict)
+            and "error" not in st.session_state.generated_claim
+        )
+
+        if not _claim_ok:
+            st.warning("⚠️ 도면을 생성하려면 먼저 위의 '청구항 생성' 버튼을 눌러주세요.")
+        else:
+            if st.button("🎨 특허 도면 자동 생성", use_container_width=True, type="primary"):
+                with st.spinner("특허 도면을 생성 중입니다... (1~2분 소요)"):
+                    _invention_text = _build_invention_text(st.session_state.agent.state)
+                    _app_num = f"{st.session_state.agent.user_id}_{st.session_state.agent.consultation_idx}"
+                    _output_dir = str(_REPO_ROOT / "drawing_analysis")
+                    try:
+                        _results = generate_all_drawings(
+                            invention_text=_invention_text,
+                            app_num=_app_num,
+                            output_dir=_output_dir,
+                            export_svg=True,
+                            export_png=True,
+                        )
+                        st.session_state.drawing_results = _results
+                        # DB 저장
+                        try:
+                            save_drawings_to_db(
+                                user_id=st.session_state.agent.user_id,
+                                consultation_idx=st.session_state.agent.consultation_idx,
+                                drawing_results=_results,
+                            )
+                            st.session_state.drawing_save_msg = ("success", f"도면 {len(_results)}개 생성 및 DB 저장 완료!")
+                        except Exception as _db_err:
+                            st.session_state.drawing_save_msg = ("warning", f"도면 {len(_results)}개 생성 완료! (DB 저장 실패: {_db_err})")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"도면 생성 오류: {e}")
+
+# 메인 화면: 도면 저장 메시지 표시 (rerun 후)
+if st.session_state.get("drawing_save_msg"):
+    _msg_type, _msg_text = st.session_state.drawing_save_msg
+    if _msg_type == "success":
+        st.success(_msg_text)
+    else:
+        st.warning(_msg_text)
+    st.session_state.drawing_save_msg = None
+
+# 메인 화면: 도면 결과 표시
+if st.session_state.get("drawing_results"):
+    st.markdown("---")
+    st.markdown("## 🎨 생성된 특허 도면")
+    for _r in st.session_state.drawing_results:
+        with st.expander(
+            f"📐 {_r.fig_number} — {_r.diagram_title}  (품질: {_r.quality_score}점 / {_r.quality_grade}등급)",
+            expanded=True
+        ):
+            if _r.png_path and Path(_r.png_path).exists():
+                st.image(_r.png_path, caption=f"{_r.fig_number}: {_r.diagram_title}")
+            elif _r.svg_path and Path(_r.svg_path).exists():
+                with open(_r.svg_path, "r", encoding="utf-8") as _f:
+                    _svg = _f.read()
+                st.markdown(
+                    f'<div style="background:white;padding:10px;border-radius:8px">{_svg}</div>',
+                    unsafe_allow_html=True
+                )
+            else:
+                st.warning("도면 파일을 찾을 수 없습니다.")
+            _c1, _c2, _c3 = st.columns(3)
+            _c1.metric("품질 점수", f"{_r.quality_score}점")
+            _c2.metric("등급", _r.quality_grade)
+            _c3.metric("도면 유형", _r.diagram_type)
