@@ -1,4 +1,7 @@
-# pip install fastapi uvicorn pydantic python-dotenv
+# pip install transformers==4.45.2 accelerate==0.34.2 bitsandbytes==0.43.3 peft==0.12.0 trl==0.11.1
+# pip install tiktoken einops flash-attn==2.6.3
+# pip install rich
+# pip install fastapi uvicorn pydantic python-dotenv openai
 # uvicorn main:app --host 0.0.0.0 --port 8000
 
 from fastapi import FastAPI, HTTPException
