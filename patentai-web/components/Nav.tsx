@@ -152,7 +152,7 @@ export default function Nav() {
     setActiveMenu(key)
   }
   function onLeave() {
-    leaveTimer.current = setTimeout(() => setActiveMenu(null), 120)
+    leaveTimer.current = setTimeout(() => setActiveMenu(null), 200)
   }
 
   return (
@@ -170,25 +170,22 @@ export default function Nav() {
         .nav-link:hover, .nav-link.active { color: #F0EDE6; }
         .nav-link.active { border-bottom-color: #C9A84C; }
 
+        /* 갭 브릿지 — 마우스가 메뉴→드롭다운 이동 시 닫힘 방지 */
+        .nav-item-wrap::after {
+          content: ''; position: absolute;
+          top: 100%; left: -20px; right: -20px;
+          height: 16px;
+        }
         .nav-dropdown {
-          position: absolute; top: calc(100% + 20px); left: 50%;
+          position: absolute; top: calc(100% + 14px); left: 50%;
           transform: translateX(-50%);
           background: #08081A;
           border: 1px solid rgba(201,168,76,.15);
-          border-top: 1px solid #C9A84C;
+          border-top: 2px solid #C9A84C;
           min-width: 260px;
           box-shadow: 0 24px 56px rgba(0,0,0,.6);
           z-index: 9000;
           animation: dropFade .15s ease;
-        }
-        .nav-dropdown::before {
-          content: ''; position: absolute;
-          top: -6px; left: 50%;
-          width: 10px; height: 10px;
-          background: #08081A;
-          border-left: 1px solid rgba(201,168,76,.15);
-          border-top: 1px solid #C9A84C;
-          transform: translateX(-50%) rotate(45deg);
         }
         @keyframes dropFade {
           from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
