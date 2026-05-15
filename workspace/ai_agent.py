@@ -100,9 +100,9 @@ class DjangoPatentConsultant:
                     self.state.collecting_steps = False
                     self.state.phase = 2
                     self.state.save()
-                    return f"훌륭합니다! 독립항 핵심 정보 수집이 완료되었습니다. ✅\n\n{PHASE2_QUESTION}"
+                    return f"훌륭합니다! 독립항 핵심 정보 수집이 완료되었습니다. \n\n{PHASE2_QUESTION}"
                 else:
-                    return f"⚠️ 특허 구성을 위해 최소 3단계 이상의 설명이 필요합니다.\n현재 **{step_count}단계**입니다. 다음 단계를 계속 말씀해 주세요."
+                    return f" 특허 구성을 위해 최소 3단계 이상의 설명이 필요합니다.\n현재 **{step_count}단계**입니다. 다음 단계를 계속 말씀해 주세요."
             else:
                 AlgorithmStep.objects.create(project=self.project, step_seq=step_count+1, content=user_input)
                 if step_count + 1>=10:
@@ -122,7 +122,9 @@ class DjangoPatentConsultant:
         )
         ext_resp = self.client.chat.completions.create(
             model="gpt-4o", 
-            messages=[{"role": "system", "content": PHASE1_SYSTEM}, {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
+            messages=[
+                {"role": "system", "content": PHASE1_SYSTEM},
+                {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
             response_format={"type": "json_object"}
         )
         ext_data = json.loads(ext_resp.choices[0].message.content)
@@ -139,7 +141,7 @@ class DjangoPatentConsultant:
         if all_filled and step_count < 3:
             self.state.collecting_steps = True
             self.state.save()
-            return "핵심 요소 파악이 순조롭습니다! 👏 이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
+            return "핵심 요소 파악이 순조롭습니다!  이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
 
         # 4대 요소가 부족하다면, 다음 질문 생성 (GPT-4o-mini)
         recent_chats = list(self.project.chat_messages.order_by('-created_at')[:6])
@@ -187,7 +189,7 @@ class DjangoPatentConsultant:
                 found_new = True
 
         if found_new:
-            return "상세 정보가 잘 기록되었습니다! 📝 추가로 덧붙일 내용이 있으신가요? 없으시면 '최종 리포트 발행'을 눌러주세요."
+            return "상세 정보가 잘 기록되었습니다!  추가로 덧붙일 내용이 있으신가요? 없으시면 '최종 리포트 발행'을 눌러주세요."
         else:
             return "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황에 대해 들려주실 말씀이 있을까요?"
         

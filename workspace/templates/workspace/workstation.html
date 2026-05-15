@@ -30,6 +30,20 @@
                 <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.expected_effect|default:"(입력되지 않음)"|linebreaksbr }}</p>
             </div>
         </div>
+        <div style="margin-top: 40px; border-top: 2px dashed #334155; padding-top: 20px;">
+            <h2 style="font-size: 20px; color: #10b981; margin-bottom: 20px;">🤖 AI 분석 요약 (실시간)</h2>
+            
+            <div id="ai-analysis-results" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 핵심 문제점</h4>
+                    <p id="ext-problem" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_problem|default:"분석 중..." }}</p>
+                </div>
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 해결 방법</h4>
+                    <p id="ext-solution" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_solution|default:"분석 중..." }}</p>
+                </div>
+                </div>
+        </div>
     </div>
 
     <div class="right-panel" style="flex: 1.5; display: flex; flex-direction: column; position: relative;">
@@ -110,7 +124,18 @@
             .then(data => {
                 if (data.status === 'success') {
                     addMessage('assistant', data.ai_message);
-                } else {
+                    if (data.extracted_data){
+                        if (data.extracted_data.problem) 
+                            document.getElementById('ext-problem').textContent = data.extracted_data.problem;
+                        if (data.extracted_data.solution) 
+                            document.getElementById('ext-solution').textContent = data.extracted_data.solution;
+                        if (data.extracted_data.differentiation)
+                            document.getElementById('ext-differentiation').textContent = data.extracted_data.differentiation;
+                        if (data.extracted_data.effect)
+                            document.getElementById('ext-effect').textContent = data.extracted_data.effect;
+                        }
+                    }
+                 else {
                     alert("AI 응답을 가져오는 중 서버 오류가 발생했습니다.");
                 }
             })

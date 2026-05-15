@@ -55,15 +55,20 @@ def workstation(request, project_id):
     
     # 2. 원본 발명 데이터 (좌측 패널용)
     invention_input = get_object_or_404(InventionInput, project=project)
+    # 2. 상담 상태 (추출된 4대 요소 포함)
+    consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
     
-    # 3. 상담 상태 및 채팅 내역 (우측 패널용)
-    consultation_state, created = ConsultationState.objects.get_or_create(project=project)
+    # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
+    algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
+    details = project.details.all()
+
     chat_messages = project.chat_messages.all().order_by('created_at')
-    
     context = {
         'project': project,
         'invention_input': invention_input,
         'consultation_state': consultation_state,
+        'algorithm_steps': algorithm_steps,
+        'details': details,
         'chat_messages': chat_messages,
     }
     
@@ -76,13 +81,19 @@ def chat_api(request, project_id):
         user_input = data.get('message')
         
         project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-        
-        # 리팩토링한 AI 에이전트 호출
         agent = DjangoPatentConsultant(project)
         ai_response = agent.interact(user_input)
+        state = project.consultation_state
         
         return JsonResponse({
             'status': 'success',
-            'ai_message': ai_response
+            'ai_message': ai_response,
+            'extracted_data': {
+                'problem': state.ext_problem,
+                'solution': state.ext_solution,
+                'differentiation': state.ext_differentiation,
+                'effect': state.ext_effect,
+                'phase': state.phase
+            }
         })
     return JsonResponse({'status': 'error'}, status=400)
