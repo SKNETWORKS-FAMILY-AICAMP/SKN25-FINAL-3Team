@@ -123,3 +123,15 @@ Changed files:
 - `docs/llm-wiki/concepts/team-collaboration-guide.md`
 - `docs/llm-wiki/concepts/developer-workflow-scenario.md`
 - `docs/llm-wiki/concepts/data-management-strategy.md`
+
+## [2026-05-15] create | claim loop workflow inventory
+
+- Created a compact inventory for the previous claim-loop work.
+- Recorded the verified branch context, code files, datasets, Markdown reports, JSON/JSONL outputs, and human-feedback/prompt-adjustment points.
+- Noted that the effective branch context is `hw`, while `origin/claim` exists as a related historical branch.
+
+Changed files:
+
+- `docs/llm-wiki/concepts/claim-loop-workflow-inventory.md`
+- `docs/llm-wiki/index.md`
+- `docs/llm-wiki/log.md`
