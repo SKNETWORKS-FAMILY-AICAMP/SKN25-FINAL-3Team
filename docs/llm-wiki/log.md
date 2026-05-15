@@ -109,7 +109,7 @@ Changed files:
 
 - Updated `BRANCH_RULES.md` so 은석, 가영, 범수, 서현, 홍익 each have a minimal one-line confirmation checklist.
 - Kept the PM checklist as the final confirmation checklist.
-- Synced the LLM Wiki with the new folder structure: `agents/claim/`, `agents/drawing/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, and `docs/llm-wiki/schemas/`.
+- Synced the LLM Wiki with the new folder structure: `agents/claim/`, `agents/drawing/`, `agents/specification/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, and `docs/llm-wiki/schemas/`.
 - Updated collaboration docs so folder-structure changes point back to `docs/PROJECT_STRUCTURE.md`.
 
 Changed files:

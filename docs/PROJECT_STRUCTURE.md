@@ -24,7 +24,10 @@ SKN25-FINAL-3Team/
       claim_agent.py
     drawing/                # 도면/참조부호/SVG 생성 에이전트
       drawing_agent.py
-    specification/          # 발명의 설명/명세서 에이전트, 추가 시 사용
+      drawing_db.py
+    specification/          # 발명의 설명/명세서/DOCX 에이전트
+      specification_agent.py
+      patent_docx.py
 
 
   backend/
@@ -72,7 +75,8 @@ SKN25-FINAL-3Team/
 | `agents/` | 상담, 선행기술, 청구항, 도면, 명세서 등 에이전트 | Python agent/module 코드 | PDF/TXT 원천 데이터, `.env` 커밋 |
 | `agents/consultation/` | 상담 상태, 상담 DB, 선행기술 연동 | `consultation_agent.py`, `prior_art_agent.py`, DB/문서 유틸 | 청구항 학습 노트북, 모델 checkpoint |
 | `agents/claim/` | 청구항 생성/저장 에이전트 | `claim_agent.py`, 청구항 생성 서비스 코드 | 학습 JSONL, 노트북, 모델 가중치 |
-| `agents/drawing/` | 도면/참조부호/SVG 생성 에이전트 | `drawing_agent.py` | 도면 산출물 대량 파일 |
+| `agents/drawing/` | 도면/참조부호/SVG 생성 에이전트 | `drawing_agent.py`, `drawing_db.py` | 도면 산출물 대량 파일 |
+| `agents/specification/` | 발명의 설명/명세서/DOCX 생성 에이전트 | `specification_agent.py`, `patent_docx.py` | 상담/청구항/도면 핵심 구현 중복 |
 | `backend/django/` | 로그인, JWT, 계정, 프로젝트 관리용 Django | Django app, settings, templates | LLM 프롬프트 실험 코드 |
 | `backend/fastapi/` | 향후 FastAPI + LangGraph API | API router, graph endpoint | 화면 코드 |
 | `frontend/` | 향후 React + TypeScript 화면 | React app, API client | Python agent 코드 |

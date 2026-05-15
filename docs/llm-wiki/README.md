@@ -37,6 +37,7 @@
 agents/consultation/          # 상담 상태, 상담 DB, 선행기술 연동
 agents/claim/                 # 청구항 생성/저장 코드
 agents/drawing/               # 도면 생성 코드
+agents/specification/         # 발명의 설명/명세서/DOCX 생성 코드
 apps/streamlit/               # Streamlit 데모 앱
 notebooks/claim/              # 청구항 실험 노트북
 models/claim/                 # 모델 설정/adapter 위치, 가중치는 Git 제외

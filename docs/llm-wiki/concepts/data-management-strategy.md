@@ -96,6 +96,7 @@ data/
 agents/consultation/          # 상담 상태, 상담 DB, 선행기술 연동
 agents/claim/                 # 청구항 생성/저장 코드
 agents/drawing/               # 도면 생성 코드
+agents/specification/         # 발명의 설명/명세서/DOCX 생성 코드
 apps/streamlit/               # Streamlit 데모 앱
 notebooks/claim/              # 청구항 실험 노트북
 models/claim/                 # 모델 설정/adapter 위치, 가중치는 Git 제외
@@ -133,7 +134,7 @@ manifest는 **데이터 파일 목록표**입니다.
 - Drive에는 PDF 779개와 TXT 1,219개가 있습니다.
 - 전체를 다운로드하지 않고 `data/manifests/drive_inventory_2026-05-12.*`로 먼저 관리합니다.
 - 기존 루트 PDF는 `data/raw/pdfs/legacy-root/`로 정리합니다.
-- 루트/한글 `청구항/`/`agents/consultation/`에 섞여 있던 청구항·도면·앱·스키마 파일은 `agents/claim/`, `agents/drawing/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, `docs/llm-wiki/schemas/`로 분리합니다.
+- 루트/한글 `청구항/`/`agents/consultation/`에 섞여 있던 청구항·도면·명세서·앱·스키마 파일은 `agents/claim/`, `agents/drawing/`, `agents/specification/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, `docs/llm-wiki/schemas/`로 분리합니다.
 - 실제 사용자 상담 데이터는 현재 확보하기 어렵기 때문에, 당장은 `simulated_consultation` 중심으로 개발합니다.
 
 ## 다음 작업
