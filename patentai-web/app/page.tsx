@@ -123,6 +123,126 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 기존 변리사 vs PatentAI 비교 */}
+      <ScrollReveal>
+      <div style={{ background: '#07071A', borderTop: '1px solid rgba(201,168,76,.12)', borderBottom: '1px solid rgba(201,168,76,.12)', padding: '5.5rem 6.5rem' }}>
+        <style>{`
+          .cmp-wrap { max-width: 1100px; margin: 0 auto; }
+          .cmp-tag { color: #C9A84C; font-size: .62rem; font-weight: 700; letter-spacing: .4em; margin-bottom: 1.2rem; }
+          .cmp-title { font-family: 'Noto Serif KR', serif; font-size: 2rem; font-weight: 200; color: #EDE8E0; margin-bottom: .6rem; line-height: 1.5; }
+          .cmp-sub { color: #55556A; font-size: .88rem; margin-bottom: 3.5rem; }
+          .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(201,168,76,.1); }
+          .cmp-col { padding: 0; }
+          .cmp-col-head { padding: 1.2rem 2rem; display: flex; align-items: center; gap: .8rem; }
+          .cmp-col-head-old { background: #0E0E22; }
+          .cmp-col-head-new { background: rgba(201,168,76,.1); }
+          .cmp-col-label { font-size: .72rem; font-weight: 700; letter-spacing: .12em; }
+          .cmp-col-label-old { color: #44445A; }
+          .cmp-col-label-new { color: #C9A84C; }
+          .cmp-col-dot { width: 8px; height: 8px; border-radius: 50%; }
+          .cmp-col-dot-old { background: #44445A; }
+          .cmp-col-dot-new { background: #C9A84C; }
+          .cmp-row { display: contents; }
+          .cmp-cell { padding: 1.1rem 2rem; border-top: 1px solid rgba(255,255,255,.04); display: flex; align-items: flex-start; gap: .8rem; }
+          .cmp-cell-old { background: #0A0A18; }
+          .cmp-cell-new { background: rgba(201,168,76,.04); }
+          .cmp-cell-icon { font-size: .9rem; flex-shrink: 0; margin-top: .1rem; }
+          .cmp-cell-text { font-size: .86rem; line-height: 1.65; word-break: keep-all; }
+          .cmp-cell-text-old { color: #44445A; }
+          .cmp-cell-text-new { color: #B8A87A; }
+          .cmp-cell-label { font-size: .6rem; font-weight: 700; letter-spacing: .12em; color: #333355; display: block; margin-bottom: .15rem; }
+          .cmp-cell-label-new { color: #7A6A3A; }
+          .cmp-bottom { margin-top: 2.5rem; display: flex; gap: 2.5rem; flex-wrap: wrap; }
+          .cmp-stat { border-left: 2px solid rgba(201,168,76,.3); padding-left: 1.2rem; }
+          .cmp-stat-num { font-family: 'Noto Serif KR', serif; font-size: 2rem; font-weight: 200; color: #C9A84C; letter-spacing: .04em; }
+          .cmp-stat-label { font-size: .72rem; color: #44445A; margin-top: .2rem; letter-spacing: .06em; }
+          @media(max-width:900px){ .cmp-grid { grid-template-columns: 1fr; } .cmp-wrap { padding: 0; } }
+          @media(max-width:480px){ div[style*="5.5rem 6.5rem"] { padding: 3.5rem 1.4rem !important; } }
+        `}</style>
+        <div className="cmp-wrap">
+          <div className="cmp-tag">WHY PATENTAI</div>
+          <div className="cmp-title">기존 변리사무소와 무엇이 다른가요?</div>
+          <div className="cmp-sub">PatentAI는 변리사를 대체하지 않습니다. 변리사가 더 잘할 수 있도록 AI가 초안의 전 과정을 자동화합니다.</div>
+
+          <div className="cmp-grid">
+            {/* 헤더 */}
+            <div className="cmp-col-head cmp-col-head-old">
+              <span className="cmp-col-dot cmp-col-dot-old" />
+              <span className="cmp-col-label cmp-col-label-old">기존 변리사무소</span>
+            </div>
+            <div className="cmp-col-head cmp-col-head-new">
+              <span className="cmp-col-dot cmp-col-dot-new" />
+              <span className="cmp-col-label cmp-col-label-new">PATENTAI</span>
+            </div>
+
+            {[
+              {
+                label: '비용',
+                old: '명세서 작성 단독 200–500만 원\n선행기술 조사 별도 50–100만 원',
+                neu: '초안 자동화로 변리사 검토 시간 60–80% 단축\n전체 비용 대폭 절감',
+              },
+              {
+                label: '처리 시간',
+                old: '명세서 초안 작성 2–4주\n선행기술 조사 1–2주',
+                neu: '명세서 초안 3–7분\n선행기술 조사 2–5분\n도면 자동 생성 30초',
+              },
+              {
+                label: '접근성',
+                old: '대면 미팅 또는 이메일·전화 필수\n영업시간(평일 9–18시)만 가능',
+                neu: '24시간 365일 온라인 접근\n언어 제한 없음 (한/영/일/중)',
+              },
+              {
+                label: '투명성',
+                old: '진행 상황을 알기 어려움\n결과물만 전달받는 구조',
+                neu: '단계별 AI 처리 결과 즉시 확인\n구조화 JSON·리포트 자동 생성',
+              },
+              {
+                label: '도면 품질',
+                old: '도면사 별도 의뢰 필요\n수작업으로 수정 반복',
+                neu: '특허청 실무 기준 SVG 자동 생성\n품질 점수 자동 검증 (A/B/C/D 등급)',
+              },
+              {
+                label: '선행기술 조사',
+                old: 'KIPRIS 수동 키워드 검색\n조사 범위·누락 위험',
+                neu: 'KIPRIS·USPTO·EPO 동시 벡터 검색\nRRF 하이브리드로 신규성 위험 사전 파악',
+              },
+            ].map((row, i) => (
+              <div key={i} className="cmp-row">
+                <div className="cmp-cell cmp-cell-old">
+                  <span className="cmp-cell-icon" style={{ color: '#333355' }}>✕</span>
+                  <div className="cmp-cell-text cmp-cell-text-old">
+                    <span className="cmp-cell-label">{row.label}</span>
+                    {row.old.split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
+                  </div>
+                </div>
+                <div className="cmp-cell cmp-cell-new">
+                  <span className="cmp-cell-icon" style={{ color: '#C9A84C' }}>✓</span>
+                  <div className="cmp-cell-text cmp-cell-text-new">
+                    <span className="cmp-cell-label cmp-cell-label-new">{row.label}</span>
+                    {row.neu.split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="cmp-bottom">
+            {[
+              { num: '60–80%', label: '변리사 초안 작업 시간 단축' },
+              { num: '30초', label: '특허 도면 자동 생성' },
+              { num: '3개국', label: '특허 DB 동시 조사 (KR·US·EU)' },
+              { num: '24 / 7', label: '언제나 접근 가능' },
+            ].map(s => (
+              <div key={s.label} className="cmp-stat">
+                <div className="cmp-stat-num">{s.num}</div>
+                <div className="cmp-stat-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      </ScrollReveal>
+
       {/* 워크플로 */}
       <div className="section dark">
         <ScrollReveal>
