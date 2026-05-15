@@ -3,8 +3,12 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function Page() {
+  const { lang } = useLang()
+  const sd = t.svcDetail.specification
   return (
     <div className="site">
       <style>{`
@@ -35,9 +39,9 @@ export default function Page() {
 
       <Nav />
       <div className="hero">
-        <div className="tag">03 — SPECIFICATION & CLAIMS</div>
-        <h1>명세서 · 청구항 에이전트</h1>
-        <p>EXAONE-3.0-7.8B LoRA 파인튜닝 sLLM이 RunPod GPU 서버에서 청구항을 자동 생성합니다.</p>
+        <div className="tag">{tr(sd.tag, lang)}</div>
+        <h1>{tr(sd.h1, lang)}</h1>
+        <p>{tr(sd.desc, lang)}</p>
       </div>
 
       <div className="det-wrap">

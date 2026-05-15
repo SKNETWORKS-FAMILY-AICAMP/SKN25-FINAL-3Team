@@ -3,8 +3,12 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function Page() {
+  const { lang } = useLang()
+  const sd = t.svcDetail.priorArt
   return (
     <div className="site">
       <style>{`
@@ -35,9 +39,9 @@ export default function Page() {
 
       <Nav />
       <div className="hero">
-        <div className="tag">02 — PRIOR ART SEARCH</div>
-        <h1>선행기술 조사 에이전트</h1>
-        <p>text-embedding-3-small + BM25 하이브리드 검색으로 KIPRIS 특허 코퍼스를 탐색합니다.</p>
+        <div className="tag">{tr(sd.tag, lang)}</div>
+        <h1>{tr(sd.h1, lang)}</h1>
+        <p>{tr(sd.desc, lang)}</p>
       </div>
 
       <div className="det-wrap">

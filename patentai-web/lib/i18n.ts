@@ -79,6 +79,56 @@ export const t = {
     successTitle: { ko: '상담 신청이 접수되었습니다.', en: 'Your request has been submitted.', ja: 'ご相談申込を受け付けました。', zh: '咨询申请已提交。' },
     successDesc:  { ko: '영업일 기준 1–2일 내 담당자가 연락드립니다.', en: 'Our team will contact you within 1–2 business days.', ja: '営業日基準1〜2日以内に担当者よりご連絡いたします。', zh: '工作日1-2天内，我们的专员将与您联系。' },
   },
+  faq: {
+    tag:    { ko: 'FREQUENTLY ASKED QUESTIONS', en: 'FREQUENTLY ASKED QUESTIONS', ja: 'よくあるご質問', zh: '常见问题' },
+    h1:     { ko: 'FAQ', en: 'FAQ', ja: 'FAQ', zh: 'FAQ' },
+    desc:   { ko: '특허 출원과 PatentAI 서비스에 관한 자주 묻는 질문을 확인하세요.', en: 'Find answers to frequently asked questions about patent filing and PatentAI services.', ja: '特許出願とPatentAIサービスに関するよくあるご質問をご確認ください。', zh: '查看有关专利申请和PatentAI服务的常见问题解答。' },
+    search: { ko: '질문 검색...', en: 'Search questions...', ja: '質問を検索...', zh: '搜索问题...' },
+    cats: {
+      all:      { ko: '전체', en: 'All', ja: '全て', zh: '全部' },
+      filing:   { ko: '특허 출원', en: 'Patent Filing', ja: '特許出願', zh: '专利申请' },
+      service:  { ko: 'PatentAI 서비스', en: 'PatentAI Service', ja: 'PatentAIサービス', zh: 'PatentAI服务' },
+      priorart: { ko: '선행기술 조사', en: 'Prior Art', ja: '先行技術調査', zh: '现有技术检索' },
+      spec:     { ko: '명세서 · 청구항', en: 'Specification', ja: '明細書・請求項', zh: '说明书·权利要求' },
+      drawing:  { ko: '도면 생성', en: 'Drawing', ja: '図面生成', zh: '附图生成' },
+      cost:     { ko: '비용 · 기간', en: 'Cost & Timeline', ja: '費用・期間', zh: '费用·周期' },
+      usage:    { ko: '이용 방법', en: 'How to Use', ja: '利用方法', zh: '使用方法' },
+    },
+    resultLabel: { ko: '개의 답변', en: 'answers', ja: '件の回答', zh: '条回答' },
+    noResult:    { ko: '검색 결과가 없습니다.', en: 'No results found.', ja: '検索結果がありません。', zh: '没有找到结果。' },
+  },
+  svcDetail: {
+    consultation: {
+      tag:  { ko: '01 — CONSULTATION AGENT', en: '01 — CONSULTATION AGENT', ja: '01 — 相談エージェント', zh: '01 — 咨询智能体' },
+      h1:   { ko: '특허 상담 에이전트', en: 'Patent Consultation Agent', ja: '特許相談エージェント', zh: '专利咨询智能体' },
+      desc: { ko: '발명 내용을 AI가 단계별로 구조화하여 상담 리포트와 DB 저장까지 자동화합니다.', en: 'AI structures your invention step by step, automating consultation reports and database storage.', ja: 'AIが発明内容を段階的に構造化し、相談レポートとDB保存まで自動化します。', zh: 'AI逐步结构化发明内容，自动生成咨询报告并保存到数据库。' },
+    },
+    priorArt: {
+      tag:  { ko: '02 — PRIOR ART AGENT', en: '02 — PRIOR ART AGENT', ja: '02 — 先行技術エージェント', zh: '02 — 现有技术智能体' },
+      h1:   { ko: '선행기술 조사 에이전트', en: 'Prior Art Search Agent', ja: '先行技術調査エージェント', zh: '现有技术检索智能体' },
+      desc: { ko: '전 세계 특허 DB를 벡터 유사도로 분석해 신규성·진보성 위험을 사전에 파악합니다.', en: 'Analyzes global patent databases by vector similarity to identify novelty and inventive-step risks.', ja: '世界中の特許DBをベクトル類似度で分析し、新規性・進歩性のリスクを事前に把握します。', zh: '通过向量相似度分析全球专利数据库，提前识别新颖性和创造性风险。' },
+    },
+    specification: {
+      tag:  { ko: '03 — SPECIFICATION AGENT', en: '03 — SPECIFICATION AGENT', ja: '03 — 明細書エージェント', zh: '03 — 说明书智能体' },
+      h1:   { ko: '명세서 작성 에이전트', en: 'Specification Writing Agent', ja: '明細書作成エージェント', zh: '说明书撰写智能体' },
+      desc: { ko: '특허 데이터로 파인튜닝된 EXAONE sLLM이 청구항과 발명의 설명을 자동 작성합니다.', en: 'EXAONE sLLM fine-tuned on patent data automatically drafts claims and invention descriptions.', ja: '特許データでファインチューニングされたEXAONE sLLMが請求項と発明の説明を自動作成します。', zh: '经专利数据微调的EXAONE sLLM自动起草权利要求书和发明说明书。' },
+    },
+    drawing: {
+      tag:  { ko: '04 — DRAWING AGENT', en: '04 — DRAWING AGENT', ja: '04 — 図面エージェント', zh: '04 — 附图智能体' },
+      h1:   { ko: '도면 자동 생성 에이전트', en: 'Auto Drawing Generation Agent', ja: '図面自動生成エージェント', zh: '附图自动生成智能体' },
+      desc: { ko: '명세서 텍스트만으로 블록도·흐름도 등 5종 도면을 SVG로 자동 생성합니다.', en: 'Automatically generates 5 types of drawings (block, flow, etc.) as SVG from specification text alone.', ja: '明細書テキストのみでブロック図・フローチャートなど5種の図面をSVGで自動生成します。', zh: '仅凭说明书文本即可自动生成块图、流程图等5种SVG附图。' },
+    },
+    review: {
+      tag:  { ko: '05 — REVIEW & INTEGRATION', en: '05 — REVIEW & INTEGRATION', ja: '05 — 統合パイプライン', zh: '05 — 综合流水线' },
+      h1:   { ko: '심사 대응 · 통합 파이프라인', en: 'OA Response & Integration Pipeline', ja: '審査対応・統合パイプライン', zh: '审查应对与综合流水线' },
+      desc: { ko: 'patent_generation_pipeline.py가 전체 에이전트를 하나의 흐름으로 연결하고 최종 특허 문서를 생성합니다.', en: 'patent_generation_pipeline.py connects all agents in one flow and generates the final patent document.', ja: 'patent_generation_pipeline.pyが全エージェントを一つの流れで連結し、最終特許文書を生成します。', zh: 'patent_generation_pipeline.py将所有智能体串联成一个流程，生成最终专利文件。' },
+    },
+  },
+  about: {
+    tag:   { ko: 'ABOUT PATENTAI', en: 'ABOUT PATENTAI', ja: 'PatentAIについて', zh: '关于PatentAI' },
+    h1:    { ko: 'PatentAI 소개', en: 'About PatentAI', ja: 'PatentAI紹介', zh: 'PatentAI简介' },
+    desc:  { ko: 'AI 기반 지식재산 상담 시스템으로 특허 출원의 전 과정을 자동화합니다.', en: 'An AI-based IP consultation system automating the entire patent filing process.', ja: 'AI基盤の知的財産相談システムで特許出願の全過程を自動化します。', zh: 'AI驱动的知识产权咨询系统，自动化专利申请全流程。' },
+  },
   footer: {
     desc:    { ko: 'AI 기반 지식재산 상담 시스템으로\n발명 상담부터 특허 명세서 작성, 도면 생성까지\n전 과정을 자동화합니다.', en: 'An AI-based IP consultation system\nautomating everything from invention consultation\nto patent specification and drawing generation.', ja: 'AI基盤の知的財産相談システムで\n発明相談から特許明細書作成、図面生成まで\n全工程を自動化します。', zh: 'AI驱动知识产权咨询系统，\n从发明咨询到专利说明书撰写、附图生成，\n全程自动化。' },
     address: { ko: '서울특별시 서초구 효령로 335\n플레이데이터 서초캠퍼스', en: '335 Hyoryeong-ro, Seocho-gu\nSeoul, Republic of Korea\n(Playdata Seocho Campus)', ja: '韓国ソウル特別市瑞草区孝領路335\nプレイデータ瑞草キャンパス', zh: '韩国首尔特别市瑞草区孝领路335号\nPlaydata瑞草校区' },

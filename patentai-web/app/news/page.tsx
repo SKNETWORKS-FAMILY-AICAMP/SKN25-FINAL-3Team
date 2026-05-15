@@ -39,21 +39,43 @@ export default function NewsPage() {
         <p>{tr(nm.desc, lang)}</p>
       </div>
       <div className="section">
+        <style>{`
+          .nc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+          .nc { background: white; border: 1px solid #E8E4DC; overflow: hidden; display: flex; flex-direction: column; transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s; }
+          .nc:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,.09); border-color: rgba(201,168,76,.35); }
+          .nc-img { width: 100%; height: 175px; object-fit: cover; display: block; filter: brightness(.85) saturate(.85); transition: filter .3s; }
+          .nc:hover .nc-img { filter: brightness(1) saturate(1); }
+          .nc-body { padding: 1.5rem 1.6rem 1.8rem; display: flex; flex-direction: column; flex: 1; }
+          .nc-top { display: flex; align-items: center; gap: .6rem; margin-bottom: .8rem; }
+          .nc-cat { background: #08081A; color: #C9A84C; font-size: .58rem; font-weight: 700; letter-spacing: .12em; padding: 2px 8px; }
+          .nc-date { color: #BBB; font-size: .74rem; }
+          .nc-title { font-size: .97rem; font-weight: 700; color: #111128; line-height: 1.45; margin-bottom: .6rem; }
+          .nc-desc { font-size: .83rem; color: #666; line-height: 1.78; word-break: keep-all; flex: 1; }
+          .nc-links { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid #F0EDE8; display: flex; flex-direction: column; gap: .4rem; }
+          .nc-link { color: #C9A84C; font-size: .78rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: .3rem; transition: color .15s; }
+          .nc-link:hover { color: #111128; }
+          @media(max-width:900px){ .nc-grid { grid-template-columns: 1fr 1fr; } }
+          @media(max-width:540px){ .nc-grid { grid-template-columns: 1fr; } }
+        `}</style>
         <div className="line"></div>
         <div className="title">{tr(nm.title, lang)}</div>
         <div className="sub">{tr(nm.sub, lang)}</div>
-        <div className="grid">
+        <div className="nc-grid">
           {news.map((item, i) => (
-            <div className="news-card" key={i}>
-              <img className="news-thumb" src={item.img} alt={item.category} />
-              <div className="news-body">
-                <div className="news-date">{item.date}</div>
-                <div className="category">{item.category}</div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-                <div className="news-links">
+            <div className="nc" key={i}>
+              <img className="nc-img" src={item.img} alt={item.title} />
+              <div className="nc-body">
+                <div className="nc-top">
+                  <span className="nc-cat">{item.category}</span>
+                  <span className="nc-date">{item.date}</span>
+                </div>
+                <div className="nc-title">{item.title}</div>
+                <div className="nc-desc">{item.desc}</div>
+                <div className="nc-links">
                   {item.links.map(link => (
-                    <a key={link.url} className="news-link" href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                    <a key={link.url} className="nc-link" href={link.url} target="_blank" rel="noopener noreferrer">
+                      → {link.label}
+                    </a>
                   ))}
                 </div>
               </div>

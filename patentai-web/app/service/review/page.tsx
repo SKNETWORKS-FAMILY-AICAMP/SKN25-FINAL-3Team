@@ -3,8 +3,12 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function Page() {
+  const { lang } = useLang()
+  const sd = t.svcDetail.review
   return (
     <div className="site">
       <style>{`
@@ -35,9 +39,9 @@ export default function Page() {
 
       <Nav />
       <div className="hero">
-        <div className="tag">05 — REVIEW & INTEGRATION</div>
-        <h1>심사 대응 · 통합 파이프라인</h1>
-        <p>patent_generation_pipeline.py가 전체 에이전트를 하나의 흐름으로 연결하고 최종 특허 문서를 생성합니다.</p>
+        <div className="tag">{tr(sd.tag, lang)}</div>
+        <h1>{tr(sd.h1, lang)}</h1>
+        <p>{tr(sd.desc, lang)}</p>
       </div>
 
       <div className="det-wrap">

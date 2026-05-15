@@ -53,16 +53,6 @@ export default function ServicePage() {
   return (
     <div className="site">
       <style>{`
-        .svc-tabs { display:flex; border-bottom:1px solid #E0DDD8; overflow-x:auto; padding:0 3rem; }
-        .svc-tab {
-          padding:1rem 1.5rem; border:none; background:none; cursor:pointer;
-          font-family:inherit; font-size:.78rem; font-weight:600; color:#888;
-          border-bottom:2px solid transparent; white-space:nowrap; transition:.15s;
-        }
-        .svc-tab:hover { color:#0A0A16; }
-        .svc-tab.active { color:#C9A84C; border-bottom-color:#C9A84C; }
-        .svc-tab-num { font-family:'Noto Serif KR',serif; font-size:.68rem; margin-right:.35rem; color:#C9A84C; }
-
         .svc-detail { display:grid; grid-template-columns:1fr 1fr; min-height:500px; }
         .svc-left { padding:3.5rem 3rem; border-right:1px solid #E0DDD8; }
         .svc-right { padding:3.5rem 3rem; background:#F7F6F3; }
@@ -126,17 +116,6 @@ export default function ServicePage() {
             <div className="pi-label">{svc.title}</div>
           </div>
         ))}
-      </div>
-
-      {/* 탭 */}
-      <div style={{ background:'white' }}>
-        <div className="svc-tabs">
-          {services.map((svc, i) => (
-            <button key={svc.num} className={`svc-tab ${active === i ? 'active' : ''}`} onClick={() => setActive(i)}>
-              <span className="svc-tab-num">{svc.num}</span>{svc.title}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* 상세 */}

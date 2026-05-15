@@ -27,14 +27,14 @@ export default function TeamPage() {
         <h1>{tr(tm.h1, lang)}</h1>
         <p>{tr(tm.desc, lang)}</p>
       </div>
-      <div className="section">
+      <div className="section" style={{ paddingBottom: 0, background: 'white' }}>
         <div className="line"></div>
         <div className="title">{tr(tm.title, lang)}</div>
         <div className="sub">{tr(tm.sub, lang)}</div>
-        <div className="grid">
+        <div className="grid" style={{ background: '#E8E4DC' }}>
           {members.map((m) => {
             const card = (
-              <div className="member" key={m.num} style={m.slug ? { cursor: 'pointer' } : {}}>
+              <div className="member" key={m.num} style={{ cursor: 'pointer', minHeight: 0, background: 'white', height: '100%', boxSizing: 'border-box' }}>
                 <div className="avatar">{m.num}</div>
                 <div className="name">{m.name}</div>
                 <div className="role">{m.role}</div>
@@ -43,7 +43,7 @@ export default function TeamPage() {
               </div>
             )
             return m.slug
-              ? <Link href={`/team/${m.slug}`} key={m.num} style={{ textDecoration: 'none' }}>{card}</Link>
+              ? <Link href={`/team/${m.slug}`} key={m.num} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>{card}</Link>
               : card
           })}
         </div>

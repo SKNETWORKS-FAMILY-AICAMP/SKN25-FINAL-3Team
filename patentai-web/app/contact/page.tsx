@@ -11,9 +11,37 @@ export default function ContactPage() {
   const c = t.contact
   const [form, setForm] = useState({ name: '', email: '', phone: '', category: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+    if (touched[name]) validate({ ...form, [name]: value })
+  }
+
+  function handleBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    setTouched(prev => ({ ...prev, [e.target.name]: true }))
+    validate(form)
+  }
+
+  function validate(f: typeof form) {
+    const errs: Record<string, string> = {}
+    const nameLabel = lang === 'en' ? 'Name' : lang === 'ja' ? 'お名前' : lang === 'zh' ? '姓名' : '성함'
+    const emailLabel = lang === 'en' ? 'Email' : lang === 'ja' ? 'メール' : lang === 'zh' ? '邮箱' : '이메일'
+    const msgLabel = lang === 'en' ? 'Message' : lang === 'ja' ? 'メッセージ' : lang === 'zh' ? '消息' : '내용'
+    if (!f.name.trim()) errs.name = `${nameLabel}${lang === 'ko' ? '을' : ''} 입력해 주세요`
+    if (!f.email.trim()) errs.email = `${emailLabel}${lang === 'ko' ? '을' : ''} 입력해 주세요`
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email = lang === 'en' ? 'Invalid email format' : lang === 'ja' ? 'メール形式が正しくありません' : lang === 'zh' ? '邮箱格式不正确' : '올바른 이메일 형식이 아닙니다'
+    if (!f.message.trim()) errs.message = `${msgLabel}${lang === 'ko' ? '을' : ''} 입력해 주세요`
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setTouched({ name: true, email: true, phone: true, message: true })
+    if (validate(form)) setSubmitted(true)
   }
 
   return (
@@ -34,6 +62,8 @@ export default function ContactPage() {
         .form-textarea { resize: vertical; min-height: 140px; }
         .form-submit { width: 100%; height: 52px; background: #111128; color: #C9A84C; border: 1px solid #111128; font-size: 0.92rem; font-weight: 700; cursor: pointer; letter-spacing: 0.08em; transition: 0.2s; margin-top: 0.5rem; }
         .form-submit:hover { background: #C9A84C; color: #111128; }
+        .form-error { color: #c0392b; font-size: 0.76rem; margin-top: 0.2rem; }
+        .form-input.err, .form-textarea.err { border-color: #c0392b; }
         .success-box { background: #f0fdf4; border: 1px solid #86efac; padding: 2rem; text-align: center; color: #166534; }
         @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } .form-row { grid-template-columns: 1fr; } }
       `}</style>
@@ -69,35 +99,38 @@ export default function ContactPage() {
                 <div style={{ fontSize: '0.9rem' }}>{tr(c.successDesc, lang)}</div>
               </div>
             ) : (
-              <form onSubmit={e => { e.preventDefault(); setSubmitted(true) }}>
+              <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">{tr(c.name, lang)} *</label>
-                    <input className="form-input" name="name" placeholder="홍길동" value={form.name} onChange={handleChange} required />
+                    <input className={`form-input${errors.name && touched.name ? ' err' : ''}`} name="name" placeholder="홍길동" value={form.name} onChange={handleChange} onBlur={handleBlur} />
+                    {errors.name && touched.name && <div className="form-error">{errors.name}</div>}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">{tr(c.phone, lang)} *</label>
-                    <input className="form-input" name="phone" placeholder="010-0000-0000" value={form.phone} onChange={handleChange} required />
+                    <label className="form-label">{tr(c.phone, lang)}</label>
+                    <input className="form-input" name="phone" placeholder="010-0000-0000" value={form.phone} onChange={handleChange} onBlur={handleBlur} />
                   </div>
                 </div>
                 <div className="form-group">
                   <label className="form-label">{tr(c.email, lang)} *</label>
-                  <input className="form-input" type="email" name="email" placeholder="example@email.com" value={form.email} onChange={handleChange} required />
+                  <input className={`form-input${errors.email && touched.email ? ' err' : ''}`} type="email" name="email" placeholder="example@email.com" value={form.email} onChange={handleChange} onBlur={handleBlur} />
+                  {errors.email && touched.email && <div className="form-error">{errors.email}</div>}
                 </div>
                 <div className="form-group">
                   <label className="form-label">{tr(c.type, lang)}</label>
                   <select className="form-select" name="category" value={form.category} onChange={handleChange}>
-                    <option value=""></option>
-                    <option>특허 상담</option>
-                    <option>선행기술 조사</option>
-                    <option>명세서 작성</option>
-                    <option>도면 생성</option>
-                    <option>기타</option>
+                    <option value="">{lang === 'en' ? 'Select...' : lang === 'ja' ? '選択...' : lang === 'zh' ? '请选择...' : '선택하세요'}</option>
+                    <option value="consultation">{lang === 'en' ? 'Patent Consultation' : lang === 'ja' ? '特許相談' : lang === 'zh' ? '专利咨询' : '특허 상담'}</option>
+                    <option value="priorart">{lang === 'en' ? 'Prior Art Search' : lang === 'ja' ? '先行技術調査' : lang === 'zh' ? '现有技术检索' : '선행기술 조사'}</option>
+                    <option value="spec">{lang === 'en' ? 'Specification Writing' : lang === 'ja' ? '明細書作成' : lang === 'zh' ? '说明书撰写' : '명세서 작성'}</option>
+                    <option value="drawing">{lang === 'en' ? 'Drawing Generation' : lang === 'ja' ? '図面生成' : lang === 'zh' ? '附图生成' : '도면 생성'}</option>
+                    <option value="other">{lang === 'en' ? 'Other' : lang === 'ja' ? 'その他' : lang === 'zh' ? '其他' : '기타'}</option>
                   </select>
                 </div>
                 <div className="form-group">
                   <label className="form-label">{tr(c.msg, lang)} *</label>
-                  <textarea className="form-textarea" name="message" value={form.message} onChange={handleChange} required />
+                  <textarea className={`form-textarea${errors.message && touched.message ? ' err' : ''}`} name="message" value={form.message} onChange={handleChange} onBlur={handleBlur} />
+                  {errors.message && touched.message && <div className="form-error">{errors.message}</div>}
                 </div>
                 <button className="form-submit" type="submit">{tr(c.submit, lang)}</button>
               </form>

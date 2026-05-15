@@ -5,16 +5,18 @@ import { useSearchParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 const categories = [
-  { id: 'all',      label: '전체',           sub: 'ALL' },
-  { id: 'filing',   label: '특허 출원',       sub: 'PATENT FILING' },
-  { id: 'service',  label: 'PatentAI 서비스', sub: 'OUR SERVICE' },
-  { id: 'priorart', label: '선행기술 조사',   sub: 'PRIOR ART' },
-  { id: 'spec',     label: '명세서 · 청구항', sub: 'SPECIFICATION' },
-  { id: 'drawing',  label: '도면 생성',       sub: 'DRAWING' },
-  { id: 'cost',     label: '비용 · 기간',     sub: 'COST & TIMELINE' },
-  { id: 'usage',    label: '이용 방법',       sub: 'HOW TO USE' },
+  { id: 'all',      sub: 'ALL' },
+  { id: 'filing',   sub: 'PATENT FILING' },
+  { id: 'service',  sub: 'OUR SERVICE' },
+  { id: 'priorart', sub: 'PRIOR ART' },
+  { id: 'spec',     sub: 'SPECIFICATION' },
+  { id: 'drawing',  sub: 'DRAWING' },
+  { id: 'cost',     sub: 'COST & TIMELINE' },
+  { id: 'usage',    sub: 'HOW TO USE' },
 ]
 
 const faqs: { cat: string; q: string; a: string; ref: string | null }[] = [
@@ -265,6 +267,8 @@ const faqs: { cat: string; q: string; a: string; ref: string | null }[] = [
 ]
 
 export default function FaqPage() {
+  const { lang } = useLang()
+  const fT = t.faq
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('all')
   const [openIdx, setOpenIdx]     = useState<number | null>(null)
@@ -282,6 +286,11 @@ export default function FaqPage() {
       return matchCat && matchSearch
     })
   }, [activeTab, search])
+
+  const catLabel = (id: string) => {
+    const key = id as keyof typeof fT.cats
+    return fT.cats[key] ? tr(fT.cats[key], lang) : id
+  }
 
   return (
     <div className="site">
@@ -355,22 +364,31 @@ export default function FaqPage() {
         .faq-tab {
           display: flex; align-items: center; justify-content: space-between;
           width: 100%; text-align: left; background: none; border: none;
-          padding: 0.75rem 1.8rem; cursor: pointer; font-family: inherit;
-          font-size: 0.85rem; color: #666; transition: 0.12s;
-          border-left: 3px solid transparent;
+          padding: 0.9rem 1.8rem; cursor: pointer; font-family: inherit;
+          transition: 0.12s; border-left: 3px solid transparent; gap: 0.8rem;
         }
-        .faq-tab:hover { color: #111128; background: rgba(0,0,0,0.03); }
+        .faq-tab:hover { background: rgba(0,0,0,0.03); }
         .faq-tab.active {
-          color: #111128; font-weight: 700;
           border-left-color: #C9A84C; background: white;
         }
-        .faq-tab-right { display: flex; align-items: center; gap: 0.5rem; }
-        .faq-tab-sub { font-size: 0.66rem; color: #C9A84C; letter-spacing: 0.08em; }
-        .faq-tab-count {
-          background: #E8E4DC; color: #888;
-          font-size: 0.68rem; padding: 1px 6px; border-radius: 8px; min-width: 22px; text-align: center;
+        .faq-tab-left { display: flex; flex-direction: column; gap: 0.18rem; }
+        .faq-tab-label {
+          font-size: 0.88rem; font-weight: 600; color: #333;
+          line-height: 1.2; white-space: nowrap;
         }
-        .faq-tab.active .faq-tab-count { background: #C9A84C; color: #111128; font-weight: 700; }
+        .faq-tab.active .faq-tab-label { color: #111128; }
+        .faq-tab:hover .faq-tab-label { color: #111128; }
+        .faq-tab-sub {
+          font-size: 0.62rem; color: #B8A87A; letter-spacing: 0.1em;
+          font-weight: 500; white-space: nowrap;
+        }
+        .faq-tab.active .faq-tab-sub { color: #C9A84C; }
+        .faq-tab-count {
+          background: #E8E4DC; color: #888; flex-shrink: 0;
+          font-size: 0.72rem; font-weight: 600;
+          padding: 2px 8px; border-radius: 10px; min-width: 28px; text-align: center;
+        }
+        .faq-tab.active .faq-tab-count { background: #C9A84C; color: #111128; }
 
         /* 콘텐츠 */
         .faq-content { padding: 2.5rem 3rem; }
@@ -498,9 +516,9 @@ export default function FaqPage() {
       <Nav />
 
       <div className="hero">
-        <div className="tag">FREQUENTLY ASKED QUESTIONS</div>
-        <h1>자주 묻는 질문</h1>
-        <p>특허 출원과 PatentAI 서비스에 관한 전문적인 답변을 제공합니다.</p>
+        <div className="tag">{tr(fT.tag, lang)}</div>
+        <h1>{tr(fT.h1, lang)}</h1>
+        <p>{tr(fT.desc, lang)}</p>
       </div>
 
       {/* 통계 바 */}
@@ -523,7 +541,7 @@ export default function FaqPage() {
         <div className="faq-search">
           <div className="faq-search-label">SEARCH</div>
           <input
-            placeholder="질문을 검색하세요. 예: 출원 비용, 해외 특허, 도면 형식"
+            placeholder={tr(fT.search, lang)}
             value={search}
             onChange={e => { setSearch(e.target.value); setOpenIdx(null) }}
           />
@@ -547,11 +565,11 @@ export default function FaqPage() {
                 className={`faq-tab ${activeTab === cat.id ? 'active' : ''}`}
                 onClick={() => { setActiveTab(cat.id); setOpenIdx(null) }}
               >
-                <span>{cat.label}</span>
-                <span className="faq-tab-right">
+                <span className="faq-tab-left">
+                  <span className="faq-tab-label">{catLabel(cat.id)}</span>
                   {cat.id !== 'all' && <span className="faq-tab-sub">{cat.sub}</span>}
-                  <span className="faq-tab-count">{cnt}</span>
                 </span>
+                <span className="faq-tab-count">{cnt}</span>
               </button>
             )
           })}
@@ -561,7 +579,7 @@ export default function FaqPage() {
         <div className="faq-content">
           <div className="faq-result-bar">
             <div className="faq-result-label">
-              <strong>{filtered.length}개</strong>의 답변
+              <strong>{filtered.length}</strong> {tr(fT.resultLabel, lang)}
             </div>
             <div className="faq-result-cat">
               {categories.find(c => c.id === activeTab)?.sub ?? 'ALL'}
@@ -569,7 +587,7 @@ export default function FaqPage() {
           </div>
 
           {filtered.length === 0 && (
-            <div className="faq-empty">검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</div>
+            <div className="faq-empty">{tr(fT.noResult, lang)}</div>
           )}
 
           {filtered.map((item, i) => {

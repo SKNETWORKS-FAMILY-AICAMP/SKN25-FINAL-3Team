@@ -3,6 +3,8 @@ import './globals.css'
 import ChatWidget from '@/components/ChatWidget'
 import CookieBanner from '@/components/CookieBanner'
 import MobileNav from '@/components/MobileNav'
+import ScrollProgress from '@/components/ScrollProgress'
+import BackToTop from '@/components/BackToTop'
 import { LangProvider } from '@/contexts/LangContext'
 
 export const viewport: Viewport = {
@@ -48,10 +50,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <LangProvider>
+          <ScrollProgress />
           {children}
           <ChatWidget />
           <CookieBanner />
           <MobileNav />
+          <BackToTop />
         </LangProvider>
       </body>
     </html>

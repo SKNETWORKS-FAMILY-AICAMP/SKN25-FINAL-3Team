@@ -79,7 +79,21 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <div>{tr(f.copyright, lang)}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
+          <div>{tr(f.copyright, lang)}</div>
+          <div style={{ display: 'flex', gap: '1.2rem' }}>
+            <Link href="/privacy" style={{ color: '#44445A', fontSize: '.72rem', transition: 'color .15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color='#C9A84C')}
+              onMouseLeave={e => (e.currentTarget.style.color='#44445A')}>
+              {lang === 'en' ? 'Privacy Policy' : lang === 'ja' ? 'プライバシーポリシー' : lang === 'zh' ? '隐私政策' : '개인정보처리방침'}
+            </Link>
+            <Link href="/terms" style={{ color: '#44445A', fontSize: '.72rem', transition: 'color .15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color='#C9A84C')}
+              onMouseLeave={e => (e.currentTarget.style.color='#44445A')}>
+              {lang === 'en' ? 'Terms of Service' : lang === 'ja' ? '利用規約' : lang === 'zh' ? '服务条款' : '이용약관'}
+            </Link>
+          </div>
+        </div>
         <div className="footer-badges">
           <span className="footer-badge">AI PATENT</span>
           <span className="footer-badge">SKN25</span>

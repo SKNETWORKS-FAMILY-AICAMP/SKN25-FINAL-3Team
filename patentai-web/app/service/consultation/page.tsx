@@ -3,8 +3,12 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function Page() {
+  const { lang } = useLang()
+  const sd = t.svcDetail.consultation
   return (
     <div className="site">
       <style>{`
@@ -36,9 +40,9 @@ export default function Page() {
 
       <Nav />
       <div className="hero">
-        <div className="tag">01 — CONSULTATION AGENT</div>
-        <h1>특허 상담 에이전트</h1>
-        <p>발명 내용을 자유롭게 설명하면 GPT-4o가 문제점·해결수단·차별성·효과를 구조화합니다.</p>
+        <div className="tag">{tr(sd.tag, lang)}</div>
+        <h1>{tr(sd.h1, lang)}</h1>
+        <p>{tr(sd.desc, lang)}</p>
       </div>
 
       <div className="det-wrap">

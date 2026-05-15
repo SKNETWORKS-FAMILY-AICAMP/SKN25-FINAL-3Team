@@ -4,6 +4,8 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 const drawings = [
   { file:'/drawings/sample_block.svg', type:'BLOCK DIAGRAM', title:'이미지 분류 시스템 구성도', grade:'A', score:100 },
@@ -95,9 +97,9 @@ export default function DrawingPage() {
 
       {/* 히어로 */}
       <div className="hero" style={{ borderLeft:'4px solid #C9A84C' }}>
-        <div className="tag">04 — DRAWING AGENT</div>
-        <h1>도면 자동 생성<br/>에이전트</h1>
-        <p>명세서 텍스트만으로 특허청 실무 수준의 SVG 도면을 30초 내 자동 생성합니다.</p>
+        <div className="tag">{tr(sd.tag, lang)}</div>
+        <h1>{tr(sd.h1, lang)}</h1>
+        <p>{tr(sd.desc, lang)}</p>
         <div style={{ display:'flex', gap:'1rem', marginTop:'2rem', flexWrap:'wrap' }}>
           <Link href="/gallery" style={{ display:'inline-block', padding:'.7rem 1.8rem', border:'1px solid #C9A84C', color:'#C9A84C', fontSize:'.78rem', fontWeight:700, letterSpacing:'.08em' }}>도면 갤러리 보기 →</Link>
           <Link href="/contact" style={{ display:'inline-block', padding:'.7rem 1.8rem', border:'1px solid rgba(201,168,76,.3)', color:'#9999B8', fontSize:'.78rem', letterSpacing:'.08em' }}>상담 신청</Link>
