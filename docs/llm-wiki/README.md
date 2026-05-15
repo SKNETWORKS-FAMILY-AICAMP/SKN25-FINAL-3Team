@@ -29,17 +29,24 @@
 - TXT: 1,219개
 - 상세: [`raw/sources/google-drive-final-folder-2026-05-12.md`](raw/sources/google-drive-final-folder-2026-05-12.md)
 
-## 현재 데이터 폴더
+## 현재 데이터/프로젝트 폴더
+
+자세한 전체 구조는 repo 루트의 [`docs/PROJECT_STRUCTURE.md`](../PROJECT_STRUCTURE.md)를 봅니다.
 
 ```text
+agents/consultation/          # 상담 상태, 상담 DB, 선행기술 연동
+agents/claim/                 # 청구항 생성/저장 코드
+agents/drawing/               # 도면 생성 코드
+apps/streamlit/               # Streamlit 데모 앱
+notebooks/claim/              # 청구항 실험 노트북
+models/claim/                 # 모델 설정/adapter 위치, 가중치는 Git 제외
+docs/llm-wiki/schemas/        # 스키마/추출 기준 문서
 data/
 ├─ manifests/                 # Drive 파일 목록, split manifest
-├─ raw/
-│  ├─ pdfs/                   # 원문 PDF 캐시, Git 제외
-│  └─ texts/                  # 원문/추출 TXT 캐시, Git 제외
-├─ processed/                 # 구조화 JSON, 가상 상담내역
-├─ reports/                   # 품질 리포트
-└─ tmp/                       # 임시 파일
+├─ raw/                       # 원문 PDF/TXT 캐시, Git 제외
+├─ processed/                 # 구조화 JSON, 가상 상담내역, claim_loop/training
+├─ reports/                   # 품질 리포트, Git 제외
+└─ tmp/                       # 임시 파일, Git 제외
 ```
 
 ## 다음 작업

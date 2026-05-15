@@ -16,8 +16,10 @@ PR을 올릴 때는 아래만 가볍게 확인해 주세요.
 - 작업 목적이 PR 설명에 적혀 있는지
 - 불필요한 대용량 파일, 임시 파일, `.env` 같은 비밀값이 포함되지 않았는지
 - 실행 또는 확인 방법이 간단히 적혀 있는지
+- 은석/가영/범수/서현/홍익 담당자는 본인 확인 체크리스트를 작성했는지
+- PM은 마지막에 PM 확인 체크리스트를 확인했는지
 
-자세한 브랜치/PR 규칙은 [BRANCH_RULES.md](BRANCH_RULES.md)에 정리되어 있습니다.
+자세한 브랜치/PR 규칙과 팀원별 체크리스트는 [BRANCH_RULES.md](BRANCH_RULES.md)에 정리되어 있습니다.
 
 ---
 
@@ -69,9 +71,14 @@ uv run python agents/consultation/load_corpus.py --dir data/raw/texts/patents_tx
 
 ```text
 agents/             AI 에이전트 코드
+  consultation/     상담 상태/DB/선행기술
+  claim/            청구항 생성/저장
+  drawing/          도면/참조부호/SVG
 backend/django/     Django 로그인/JWT 백엔드
 frontend/           향후 React + TypeScript 프론트엔드
 apps/streamlit/     빠른 검증용 Streamlit 앱
+notebooks/claim/    청구항 데이터셋/학습 실험 노트북
+models/claim/       청구항 모델 설정/adapter 외부 위치 기록
 data/               원천/가공 데이터, 리포트, 매니페스트
 docs/               팀 문서와 LLM Wiki
 scripts/            데이터/운영/개발 보조 스크립트

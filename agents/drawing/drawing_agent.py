@@ -1,4 +1,4 @@
-# drawing_agent.py - 특허청 실무 도면 품질 SVG 렌더러 v7
+# agents/drawing/drawing_agent.py - 특허청 실무 도면 품질 SVG 렌더러 v7
 # 변리사/도면사 수준의 도면 생성
 #
 # 흐름도: 타원(시작/종료) + 마름모(판단) + 사각형(처리) + 평행사변형(입출력)
@@ -8,9 +8,9 @@
 # UI도:  디바이스 프레임 + 타입별 UI 요소
 #
 # 실행:
-#   python drawing_agent.py test
-#   python drawing_agent.py real
-#   python drawing_agent.py run 10
+#   uv run python agents/drawing/drawing_agent.py test
+#   uv run python agents/drawing/drawing_agent.py real
+#   uv run python agents/drawing/drawing_agent.py run 10
 
 import os
 import io
@@ -46,13 +46,16 @@ try:
 except Exception:
     CAIROSVG_AVAILABLE = False
 
-load_dotenv()
+REPO_ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(REPO_ROOT / ".env")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 MODEL_TEXT  = "gpt-4o-mini"
 MODEL_VISION = "gpt-4o"
 
+PATENT_TEXT_ROOT       = REPO_ROOT / "data" / "raw" / "texts" / "patents_txt" / "extracted_texts"
 PATENT_DIRS            = ["G06F", "G06N", "G06Q", "G06V"]
+DEFAULT_OUTPUT_DIR     = REPO_ROOT / "data" / "reports" / "drawing_analysis"
 QUALITY_PASS_SCORE     = 75
 AUTO_REPAIR_ROUNDS     = 1
 DEFAULT_STYLE          = "patent_office"
@@ -1320,7 +1323,7 @@ def save_report(app_dir: Path, app_num: str, results: list):
 def generate_all_drawings(
     invention_text: str,
     app_num: str,
-    output_dir: str = "drawing_analysis",
+    output_dir: str | Path = DEFAULT_OUTPUT_DIR,
     export_svg: bool = True,
     export_png: bool = True,
     vision_review: bool = False,
@@ -1432,12 +1435,13 @@ def generate_all_drawings(
 def get_txt_files(limit=None):
     txt_files = []
     for d in PATENT_DIRS:
-        found = glob.glob(f"{d}/*.txt")
+        search_dir = PATENT_TEXT_ROOT / d
+        found = [str(p) for p in sorted(search_dir.glob("*.txt"))]
         txt_files += found
-        print(f"  {d}/: {len(found)}개")
+        print(f"  {search_dir}: {len(found)}개")
     print(f"  합계: {len(txt_files)}개")
-    if limit: txt_files = txt_files[:limit]; print(f"  처리 대상: {len(txt_files)}개")
-    return txt_files
+    return txt_files[:limit] if limit else txt_files
+
 
 def run(limit=None, export_svg=True, export_png=True, vision_review=False,
         auto_repair=True, max_repair_rounds=AUTO_REPAIR_ROUNDS, style_template=DEFAULT_STYLE):
@@ -1452,7 +1456,7 @@ def run(limit=None, export_svg=True, export_png=True, vision_review=False,
             parsed = parse_patent_txt(f)
             if not parsed["claims"] and not parsed["detail"]:
                 print("  [스킵] 내용 없음"); skip += 1; continue
-            results = generate_all_drawings(parsed["full"], parsed["app_num"], "drawing_analysis",
+            results = generate_all_drawings(parsed["full"], parsed["app_num"], DEFAULT_OUTPUT_DIR,
                 export_svg=export_svg, export_png=export_png, vision_review=vision_review,
                 auto_repair=auto_repair, max_repair_rounds=max_repair_rounds, style_template=style_template)
             if results:
@@ -1487,7 +1491,7 @@ def test_with_sample(**kwargs):
     140: 저장부
     150: 출력부
     """
-    results = generate_all_drawings(sample, "TEST-001", "drawing_analysis", **kwargs)
+    results = generate_all_drawings(sample, "TEST-001", DEFAULT_OUTPUT_DIR, **kwargs)
     print(f"\n✅ 생성된 도면: {len(results)}개")
     for r in results:
         print(f"  - {r.fig_number}: {r.quality_score}점/{r.quality_grade} | {r.svg_path}")
@@ -1498,7 +1502,7 @@ def test_with_real_file(**kwargs):
         print("[경고] txt 파일 없음 → 샘플 테스트")
         test_with_sample(**kwargs); return
     parsed = parse_patent_txt(txt_files[0])
-    results = generate_all_drawings(parsed["full"], parsed["app_num"], "drawing_analysis", **kwargs)
+    results = generate_all_drawings(parsed["full"], parsed["app_num"], DEFAULT_OUTPUT_DIR, **kwargs)
     print(f"\n✅ 생성된 도면: {len(results)}개")
     for r in results:
         print(f"  - {r.fig_number}: {r.quality_score}점/{r.quality_grade} | {r.svg_path}")
@@ -1512,11 +1516,11 @@ if __name__ == "__main__":
     import sys
     HELP = """
 사용법:
-  python drawing_agent.py test
-  python drawing_agent.py real
-  python drawing_agent.py run 10
-  python drawing_agent.py run 10 --vision
-  python drawing_agent.py analyze <이미지> [<특허_txt>]
+  uv run python agents/drawing/drawing_agent.py test
+  uv run python agents/drawing/drawing_agent.py real
+  uv run python agents/drawing/drawing_agent.py run 10
+  uv run python agents/drawing/drawing_agent.py run 10 --vision
+  uv run python agents/drawing/drawing_agent.py analyze <이미지> [<특허_txt>]
 
 옵션:
   --vision         Vision 검수

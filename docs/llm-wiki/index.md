@@ -1,13 +1,13 @@
 # Wiki Index
 
 > AI/소프트웨어 특허 상담 프로젝트 지식베이스입니다. 새 팀원은 이 파일부터 읽으면 됩니다.  
-> Last updated: 2026-05-12 | Total pages: 10
+> Last updated: 2026-05-15 | Total pages: 10
 
 ## Start Here
 
 - [[llm-wiki-beginner-guide]] — LLM Wiki가 처음인 팀원을 위한 초심자 설명.
 - [[developer-workflow-scenario]] — 팀원이 개발 전/중/후에 Wiki를 어떻게 확인하고 수정해야 하는지 시나리오.
-- [[team-collaboration-guide]] — Git/GitHub와 데이터 폴더를 처음 쓰는 팀원을 위한 최소 협업 규칙. 브랜치 기본 규칙은 repo 루트의 `BRANCH_RULES.md`를 따름.
+- [[team-collaboration-guide]] — Git/GitHub, 데이터 폴더, PR 확인 체크리스트를 처음 쓰는 팀원을 위한 최소 협업 규칙. 브랜치 기본 규칙은 repo 루트의 `BRANCH_RULES.md`를 따름.
 - [[data-management-strategy]] — 현재 개발 데이터, 가상 상담내역, manifest 관리 기준.
 
 ## Sources
