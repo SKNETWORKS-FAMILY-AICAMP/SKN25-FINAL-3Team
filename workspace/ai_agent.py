@@ -3,9 +3,13 @@ import json
 from openai import OpenAI
 from django.conf import settings
 from .models import PatentProject, ConsultationState, ChatMessage, AlgorithmStep, DetailElement
+import logging
 
 from dotenv import load_dotenv
 load_dotenv()
+
+#logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 PHASE1_SYSTEM = "당신은 정밀한 특허 분석가입니다. 지시한 JSON 외에 어떤 텍스트도 출력하지 마세요."
 
@@ -120,28 +124,43 @@ class DjangoPatentConsultant:
             differentiation=self.state.ext_differentiation or "미파악",
             effect=self.state.ext_effect or "미파악"
         )
-        ext_resp = self.client.chat.completions.create(
-            model="gpt-4o", 
-            messages=[
-                {"role": "system", "content": PHASE1_SYSTEM},
-                {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
-            response_format={"type": "json_object"}
-        )
-        ext_data = json.loads(ext_resp.choices[0].message.content)
+        try:
+            ext_resp = self.client.chat.completions.create(
+                model="gpt-4o", 
+                messages=[
+                    {"role": "system", "content": PHASE1_SYSTEM},
+                    {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
+                response_format={"type": "json_object"}
+            )
+            ext_data = json.loads(ext_resp.choices[0].message.content)
 
-        if ext_data.get('problem'): self.state.ext_problem = ext_data['problem']
-        if ext_data.get('solution'): self.state.ext_solution = ext_data['solution']
-        if ext_data.get('differentiation'): self.state.ext_differentiation = ext_data['differentiation']
-        if ext_data.get('effect'): self.state.ext_effect = ext_data['effect']
-        self.state.save()
+            if ext_data.get('problem'): self.state.ext_problem = ext_data['problem']
+            if ext_data.get('solution'): self.state.ext_solution = ext_data['solution']
+            if ext_data.get('differentiation'): self.state.ext_differentiation = ext_data['differentiation']
+            if ext_data.get('effect'): self.state.ext_effect = ext_data['effect']
+        except Exception as e:
+            logger.error(f"4대 요소 추출 실패: {e}")
+            pass
 
-        all_filled = all([self.state.ext_problem, self.state.ext_solution, self.state.ext_differentiation, self.state.ext_effect])
+        #self.state.save() 왜 상태 저장 안하지?
+
+        def is_valid(val):
+            return bool(val and val.strip() !="미파악")
+        
+        all_filled = all([
+        is_valid(self.state.ext_problem), 
+        is_valid(self.state.ext_solution), 
+        is_valid(self.state.ext_differentiation), 
+        is_valid(self.state.ext_effect)
+        ])
         
         # 4대 요소가 다 모였다면 알고리즘 수집 모드로 전환
         if all_filled and step_count < 3:
             self.state.collecting_steps = True
             self.state.save()
             return "핵심 요소 파악이 순조롭습니다!  이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
+
+        self.state.save()
 
         # 4대 요소가 부족하다면, 다음 질문 생성 (GPT-4o-mini)
         recent_chats = list(self.project.chat_messages.order_by('-created_at')[:6])
@@ -150,15 +169,20 @@ class DjangoPatentConsultant:
         
         target_label = "기존 문제점" if not self.state.ext_problem else "해결 방법" if not self.state.ext_solution else "차별성" if not self.state.ext_differentiation else "기대 효과"
 
-        chat_resp = self.client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
-                *history,
-                {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
-            ]
-        )
-        return chat_resp.choices[0].message.content.strip()
+        try:
+            chat_resp = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
+                    *history,
+                    {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
+                ]
+            )
+            return chat_resp.choices[0].message.content.strip()
+        except Exception as e:
+            logger.error(f"질문 생성 실패: {e}")
+            # Fallback 메시지
+            return f"말씀하신 내용을 잘 들었습니다. 그렇다면 '{target_label}'에 대해서는 어떻게 생각하시나요?"
     
     def _handle_phase_2(self, user_input: str) -> str:
         if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
