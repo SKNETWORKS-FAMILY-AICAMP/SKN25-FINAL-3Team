@@ -167,7 +167,17 @@ class DjangoPatentConsultant:
         history = [{"role": msg.role, "content": msg.content} for msg in reversed(recent_chats)]
         state_summary = f"- 문제점: {self.state.ext_problem or '미파악'}\n- 해결방법: {self.state.ext_solution or '미파악'}\n- 차별성: {self.state.ext_differentiation or '미파악'}\n- 기대효과: {self.state.ext_effect or '미파악'}"
         
-        target_label = "기존 문제점" if not self.state.ext_problem else "해결 방법" if not self.state.ext_solution else "차별성" if not self.state.ext_differentiation else "기대 효과"
+        missing_fields = [
+        ("기존 문제점", self.state.ext_problem),
+        ("해결 방법", self.state.ext_solution),
+        ("차별성", self.state.ext_differentiation),
+        ("기대 효과", self.state.ext_effect),
+        ]
+
+        target_label = next(
+            (label for label, value in missing_fields if not value),
+            "모두 완료"
+        )
 
         try:
             chat_resp = self.client.chat.completions.create(
