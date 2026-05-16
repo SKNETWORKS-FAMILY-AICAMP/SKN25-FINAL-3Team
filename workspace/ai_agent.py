@@ -80,8 +80,8 @@ class DjangoPatentConsultant:
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     def interact(self, user_input: str) -> str:
-        if user_input != "상담을 시작합니다.":
-            ChatMessage.objects.create(project=self.project, role='user', content=user_input)
+
+        ChatMessage.objects.create(project=self.project, role='user', content=user_input)
 
         response = ""
 
@@ -191,7 +191,6 @@ class DjangoPatentConsultant:
             return chat_resp.choices[0].message.content.strip()
         except Exception as e:
             logger.error(f"질문 생성 실패: {e}")
-            # Fallback 메시지
             return f"말씀하신 내용을 잘 들었습니다. 그렇다면 '{target_label}'에 대해서는 어떻게 생각하시나요?"
     
     def _handle_phase_2(self, user_input: str) -> str:
@@ -210,19 +209,27 @@ class DjangoPatentConsultant:
         )
         res = json.loads(resp.choices[0].message.content)
         
-        found_new = False
         type_map = {
             "implementations": "implementation", "parameters": "parameter", 
             "algorithms": "algorithm", "optional_features": "optional", "error_handling": "error_handling"
         }
+
+        detail_elements_to_create = []
+
         for json_key, db_choice in type_map.items():
             extracted = res.get(json_key, [])
             validated = [item for item in extracted if item and item.strip()]
             for item in validated:
-                DetailElement.objects.create(project=self.project, element_type=db_choice, content=item)
-                found_new = True
+                detail_elements_to_create.append(
+                    DetailElement(
+                        project=self.project,
+                        element_type=db_choice,
+                        content=item
+                    )
+                )
 
-        if found_new:
+        if detail_elements_to_create:
+            DetailElement.objects.bulk_create(detail_elements_to_create)
             return "상세 정보가 잘 기록되었습니다!  추가로 덧붙일 내용이 있으신가요? 없으시면 '최종 리포트 발행'을 눌러주세요."
         else:
             return "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황에 대해 들려주실 말씀이 있을까요?"
