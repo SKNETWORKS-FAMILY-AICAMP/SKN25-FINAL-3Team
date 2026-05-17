@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
@@ -5,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import PatentProject, InventionInput, ConsultationState, ChatMessage
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
-import json
+from django.contrib import messages
 
 @login_required(login_url='/accounts/login/')
 def dashboard(request):
@@ -47,7 +48,6 @@ def create_project(request):
         return redirect('dashboard')
         
     return render(request, 'workspace/create_project.html')
-
 
 @login_required(login_url='/accounts/login/')
 def workstation(request, project_id):
@@ -97,3 +97,38 @@ def chat_api(request, project_id):
             }
         })
     return JsonResponse({'status': 'error'}, status=400)
+
+@login_required(login_url='/accounts/login/')
+def my_page(request):
+    user = request.user
+    try:
+        user_role = user.userprofile.role
+    except:
+        user_role = 'inventor'
+
+    if request.method == 'POST':
+        user.first_name = request.POST.get('name', user.first_name)
+        user.email = request.POST.get('email', user.email)
+        user.save()
+        
+        messages.success(request, '회원 정보가 성공적으로 변경되었습니다.')
+        return redirect('my_page')
+    
+    user_projects = PatentProject.objects.filter(owner=user)
+    
+    project_stats = {
+        'draft': user_projects.filter(status='draft').count(),
+        'agent_processing': user_projects.filter(status='agent_processing').count(),
+        'review': user_projects.filter(status='review').count(),
+        'done': user_projects.filter(status='done').count(),
+        'total': user_projects.count()
+    }
+
+    context = {
+        'user': user,
+        'user_role': user_role,
+        'role_display': '전문 변리사 (Attorney)' if user_role == 'attorney' else '발명가 (Inventor)',
+        'project_stats': project_stats, # 템플릿으로 통계 데이터 전달
+    }
+    
+    return render(request, 'workspace/my_page.html', context)
