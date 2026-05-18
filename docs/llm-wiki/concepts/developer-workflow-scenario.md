@@ -1,7 +1,7 @@
 ---
 title: Developer Workflow Scenario
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-05-15
 type: guide
 tags: [collaboration, data]
 sources: []
@@ -82,7 +82,8 @@ AI에게 그냥 “코드 고쳐줘”라고 하지 말고, 관련 LLM Wiki 문�
 |---|---|
 | 코드가 Wiki와 다르게 구현됨 | 코드가 잘못된 건지 Wiki가 오래된 건지 확인 |
 | JSON 필드를 새로 추가함 | `patent-data-schemas.md`에 후보 필드로 기록 |
-| 데이터 폴더를 바꿈 | `data-management-strategy.md` 또는 `data/README.md` 수정 |
+| 데이터 폴더를 바꿈 | `data-management-strategy.md`, `data/README.md`, `docs/PROJECT_STRUCTURE.md` 수정 |
+| 코드 폴더를 바꿈 | `docs/PROJECT_STRUCTURE.md`와 관련 README 수정 |
 | LangGraph node를 추가함 | `agent-architecture-notes.md` 수정 |
 | 새 처리 순서가 생김 | `pipeline-and-evaluation.md` 수정 |
 | 아직 확정이 아님 | `TODO`, `초안`, `예정`이라고 적기 |
@@ -98,6 +99,7 @@ AI에게 그냥 “코드 고쳐줘”라고 하지 말고, 관련 LLM Wiki 문�
 - [ ] 바꿨다면 관련 Wiki 문서를 수정했는가?
 - [ ] 새 문서를 만들었다면 `index.md`에 추가했는가?
 - [ ] 중요한 변경이면 `log.md`에 남겼는가?
+- [ ] PR에 내 이름 확인 체크리스트 또는 PM 확인 체크리스트가 필요한지 확인했는가?
 - [ ] PDF/TXT/DB/.env가 Git에 들어가지 않았는가?
 
 확인 명령:
@@ -127,6 +129,7 @@ PR 설명에 코드 변경과 문서 변경을 같이 적습니다.
 ## 확인
 - smoke 데이터 10건 기준 실행 확인
 - 대량 PDF/TXT는 Git에 포함하지 않음
+- 담당자별 확인 체크리스트와 PM 확인 체크리스트는 BRANCH_RULES.md 기준으로 작성
 ```
 
 ## 가장 중요한 원칙

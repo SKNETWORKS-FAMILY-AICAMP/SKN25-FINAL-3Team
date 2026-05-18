@@ -4,7 +4,7 @@ import datetime
 def build_invention_payload(state, user_id, consultation_idx):
     """
     상담 에이전트의 현재 상태(state)를 바탕으로 마스터 invention_payload를 생성합니다.
-    (invention_extraction_guide.md 의 최종 JSON 구조를 따름)
+    (docs/llm-wiki/schemas/invention_extraction_guide.md 의 최종 JSON 구조를 따름)
     """
     payload_id = str(uuid.uuid4())
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()

@@ -47,6 +47,11 @@ data/tmp/**
 !data/processed/**/
 !data/processed/**/.gitkeep
 !data/processed/**/README.md
+!data/processed/examples/
+!data/processed/examples/**
+!data/processed/claim_loop/
+!data/processed/claim_loop/training/
+!data/processed/claim_loop/training/*.jsonl
 !data/reports/**/
 !data/reports/**/.gitkeep
 !data/reports/**/README.md
@@ -59,3 +64,19 @@ data/tmp/**
 
 # 도면 에이전트 생성 결과물
 drawing_analysis/
+
+# Jupyter
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Model/checkpoint artifacts: configs/README are okay, weights are not
+models/**/*.safetensors
+models/**/*.bin
+models/**/*.pt
+models/**/*.pth
+models/**/checkpoint-*/
+models/**/adapter_model.*
+models/**/optimizer.pt
+models/**/scheduler.pt
+models/**/runs/
+models/**/wandb/

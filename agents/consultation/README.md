@@ -1,18 +1,22 @@
 # Consultation / Prior-Art Agents
 
-상담 에이전트, 선행기술조사 에이전트, 청구항 백엔드 연동 코드가 있는 폴더입니다.
+상담 상태 관리, 상담 DB 저장, 선행기술조사 연동 코드가 있는 폴더입니다.
+
+청구항 생성 구현은 `agents/claim/`로 분리했습니다. 이 폴더의 `claim_agent.py`는 예전 import가 깨지지 않게 둔 호환용 shim입니다.
 
 ## 현재 파일
 
 ```text
 consultation_agent.py   상담 흐름, 발명 슬롯 추출, DB 저장
 prior_art_agent.py      선행기술 후보 검색/분석
-claim_agent.py          상담 DB → 청구항 생성 API 연동
+claim_agent.py          호환용 shim → agents/claim/claim_agent.py 재수출
 patent_db.py            특허 corpus DB 연결
 load_corpus.py          특허 TXT → DB 적재
 agent_payloads.py       downstream agent용 payload 변환
-app.py                  기존 Streamlit 통합 앱
+document_utils.py       PDF/DOCX/HWP 추출 유틸
 ```
+
+Streamlit 화면은 `apps/streamlit/main.py`에 둡니다.
 
 ## 데이터 위치
 
