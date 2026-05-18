@@ -54,23 +54,10 @@ export default function Home() {
   return (
     <div className="site">
       <style>{`
-        .review-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem; }
-        .review-card {
-          background: white; border: 1px solid #E8E4DC; padding: 2rem;
-          transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s;
-        }
-        .review-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.08); border-color: rgba(201,168,76,.4); }
-        .review-stars { color: #C9A84C; font-size: 1rem; margin-bottom: 0.8rem; letter-spacing: 2px; }
-        .review-text { color: #444; font-size: 0.9rem; line-height: 1.85; margin-bottom: 1.2rem; font-style: italic; word-break: keep-all; }
-        .review-author { display: flex; align-items: center; gap: 0.75rem; }
-        .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#111128,#252548); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-family: 'Noto Serif KR',serif; font-size: 0.9rem; flex-shrink: 0; border: 1px solid rgba(201,168,76,.25); }
-        .review-name { font-weight: 700; font-size: 0.88rem; color: #111128; }
-        .review-role { font-size: 0.75rem; color: #999; margin-top: 2px; letter-spacing: .04em; }
-        .card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s !important; }
+.card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s !important; }
         .card:hover { transform: translateY(-3px) !important; box-shadow: 0 12px 32px rgba(0,0,0,.07) !important; }
         .step { transition: background .2s, transform .25s cubic-bezier(.22,1,.36,1) !important; }
         .step:hover { transform: translateY(-2px) !important; }
-        @media(max-width:900px){ .review-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       <Nav />
@@ -259,35 +246,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 고객 후기 */}
-      <div className="section">
-        <ScrollReveal>
-          <div className="sec-line"></div>
-          <div className="sec-title">고객 후기</div>
-          <div className="sec-sub">PatentAI를 이용한 발명자·기업의 실제 경험입니다.</div>
-        </ScrollReveal>
-        <div className="review-grid">
-          {[
-            { initial:'K', name:'K 스타트업 대표', role:'AI 의료기기 분야', text:'"기술은 있었지만 특허 명세서 작성이 막막했는데, PatentAI로 3일 만에 초안을 완성했습니다. 변리사 검토 비용도 절반으로 줄었어요."' },
-            { initial:'박', name:'박○○ 연구원', role:'반도체 소재 분야', text:'"선행기술 조사에 2주씩 걸렸는데 PatentAI로 하루 만에 유사 특허 리포트를 받았습니다. 신규성 위험을 미리 파악해 출원 전략을 수정할 수 있었어요."' },
-            { initial:'L', name:'L 제조기업 IP팀', role:'기계/제조 분야', text:'"도면 에이전트로 블록도와 흐름도를 자동 생성하니 도면사 의뢰 비용이 없어졌습니다. 특허청 수준의 품질이 나와서 놀랐어요."' },
-          ].map((r, i) => (
-            <ScrollReveal key={r.name} delay={i * 100}>
-              <div className="review-card">
-                <div className="review-stars">★★★★★</div>
-                <div className="review-text">{r.text}</div>
-                <div className="review-author">
-                  <div className="review-avatar">{r.initial}</div>
-                  <div>
-                    <div className="review-name">{r.name}</div>
-                    <div className="review-role">{r.role}</div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
 
       <Footer />
     </div>
