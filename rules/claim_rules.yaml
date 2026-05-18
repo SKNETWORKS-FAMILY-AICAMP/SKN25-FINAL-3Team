@@ -1,0 +1,85 @@
+# Korean patent claim drafting rules.
+# Fixed rules live here; per-run options live in PatentAgentState.drafting_options.
+
+version: 0.1.0
+language: ko
+purpose: claim_drafting_and_validation
+
+claim_categories:
+  method:
+    required_ending: "방법"
+    element_unit: "step"
+    preferred_patterns:
+      - "~하는 단계"
+      - "~를 포함하는 방법"
+    element_separator: ";"
+    final_phrase_examples:
+      - "...를 포함하는 방법."
+    validation:
+      - "청구항 말미가 '방법' 계열 표현인지 확인한다."
+      - "각 핵심 동작은 단계 단위로 분리한다."
+      - "단계 순서가 invention_graph.data_flow_graph와 충돌하지 않아야 한다."
+
+  system:
+    required_ending: "시스템"
+    element_unit: "component"
+    preferred_patterns:
+      - "~부"
+      - "~모듈"
+      - "~를 포함하는 시스템"
+    element_separator: ";"
+    validation:
+      - "구성요소명이 document_links.term_registry와 일치하는지 확인한다."
+      - "필수 구성요소가 청구항 1에서 누락되지 않았는지 확인한다."
+
+  apparatus:
+    required_ending: "장치"
+    element_unit: "component"
+    preferred_patterns:
+      - "~부"
+      - "~모듈"
+      - "~를 포함하는 장치"
+    element_separator: ";"
+
+  storage_medium:
+    required_terms:
+      - "컴퓨터 판독가능 기록매체"
+    element_unit: "instruction"
+    preferred_patterns:
+      - "명령어가 프로세서에 의해 실행될 때"
+      - "상기 방법을 수행하도록 하는 프로그램을 기록한 컴퓨터 판독가능 기록매체"
+    validation:
+      - "기록매체항은 하드웨어 구성요소 나열식으로 쓰지 않는다."
+      - "부모 방법항의 단계와 대응되는 명령어/프로그램 표현을 사용한다."
+
+claim_dependency:
+  dependent_claim_cues:
+    - "제{n}항에 있어서"
+    - "제{a}항 또는 제{b}항에 있어서"
+    - "제{a}항 내지 제{b}항 중 어느 한 항에 있어서"
+    - "전술한 항 중 어느 한 항에 있어서"
+  validation:
+    - "depends_on에 적힌 부모 청구항 번호가 실제 존재해야 한다."
+    - "종속항의 category는 원칙적으로 부모항 category와 호환되어야 한다."
+    - "'상기 구성요소/단계'는 부모항 또는 현재항 앞부분에 정의되어 있어야 한다."
+
+style:
+  use_semicolon_between_elements: true
+  avoid_over_broad_phrases_when_reference_like:
+    - "적어도 하나"
+    - "둘 이상"
+    - "임의의"
+  preferred_terms:
+    comprising: "포함하는"
+    above: "상기"
+    described_above: "전술한"
+
+quality_checks:
+  - id: claim_number_sequence
+    description: "청구항 번호가 1부터 순차적인지 확인한다."
+  - id: independent_claim_core
+    description: "청구항 1에 발명의 필수 구성/단계/효과가 반영됐는지 확인한다."
+  - id: support_by_specification
+    description: "청구항 구성요소가 specification 또는 document_links.spec_support_links에 의해 뒷받침되는지 확인한다."
+  - id: drawing_reference_consistency
+    description: "청구항에 참조부호를 쓰는 경우 drawings.reference_numerals와 일치하는지 확인한다."
