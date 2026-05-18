@@ -29,7 +29,8 @@ PHASE1_EXTRACT_PROMPT = """
     "problem": "요약된 문자열 또는 null",
     "solution": "요약된 문자열 또는 null",
     "differentiation": "요약된 문자열 또는 null",
-    "effect": "요약된 문자열 또는 null"
+    "effect": "요약된 문자열 또는 null",
+    "empathy": "사용자 발언에 대한 공감 및 피드백 한 줄"
 }}
 """
 
@@ -124,6 +125,7 @@ class DjangoPatentConsultant:
             differentiation=self.state.ext_differentiation or "미파악",
             effect=self.state.ext_effect or "미파악"
         )
+        ai_empathy = "말씀해주신 내용을 잘 확인했습니다." # 기본값 (API 실패 시 대비)
         try:
             ext_resp = self.client.chat.completions.create(
                 model="gpt-4o", 
@@ -138,6 +140,7 @@ class DjangoPatentConsultant:
             if ext_data.get('solution'): self.state.ext_solution = ext_data['solution']
             if ext_data.get('differentiation'): self.state.ext_differentiation = ext_data['differentiation']
             if ext_data.get('effect'): self.state.ext_effect = ext_data['effect']
+            if ext_data.get('empathy'): ai_empathy = ext_data['empathy']
         except Exception as e:
             logger.error(f"4대 요소 추출 실패: {e}")
             pass
@@ -158,40 +161,53 @@ class DjangoPatentConsultant:
         if all_filled and step_count < 3:
             self.state.collecting_steps = True
             self.state.save()
-            return "핵심 요소 파악이 순조롭습니다!  이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
-
+            return f"{ai_empathy}\n\n핵심 요소 파악이 순조롭습니다! 👏 이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
+        
         self.state.save()
 
-        # 4대 요소가 부족하다면, 다음 질문 생성 (GPT-4o-mini)
-        recent_chats = list(self.project.chat_messages.order_by('-created_at')[:6])
-        history = [{"role": msg.role, "content": msg.content} for msg in reversed(recent_chats)]
-        state_summary = f"- 문제점: {self.state.ext_problem or '미파악'}\n- 해결방법: {self.state.ext_solution or '미파악'}\n- 차별성: {self.state.ext_differentiation or '미파악'}\n- 기대효과: {self.state.ext_effect or '미파악'}"
+        if not is_valid(self.state.ext_problem):
+            next_question = "해결하고자 하시는 **기존 기술이나 상황의 문제점**은 무엇인가요?"
+        elif not is_valid(self.state.ext_solution):
+            next_question = "그 문제를 해결하기 위한 발명가님만의 **핵심 해결 방법**은 무엇인가요?"
+        elif not is_valid(self.state.ext_differentiation):
+            next_question = "기존 기술들과 비교했을 때, 이 발명만의 특별한 **차별성**은 무엇인가요?"
+        elif not is_valid(self.state.ext_effect):
+            next_question = "이 발명이 적용되었을 때 사용자가 얻게 될 구체적인 **기대 효과나 편익**은 무엇일까요?"
+        else:
+            next_question = "추가로 덧붙이실 내용이 있나요?"
+
+        return f"{ai_empathy}\n\n그렇다면 {next_question}"
+
+        # # 4대 요소가 부족하다면, 다음 질문 생성 (GPT-4o-mini)
+        # recent_chats = list(self.project.chat_messages.order_by('-created_at')[:6])
+        # history = [{"role": msg.role, "content": msg.content} for msg in reversed(recent_chats)]
+        # state_summary = f"- 문제점: {self.state.ext_problem or '미파악'}\n- 해결방법: {self.state.ext_solution or '미파악'}\n- 차별성: {self.state.ext_differentiation or '미파악'}\n- 기대효과: {self.state.ext_effect or '미파악'}"
         
-        missing_fields = [
-        ("기존 문제점", self.state.ext_problem),
-        ("해결 방법", self.state.ext_solution),
-        ("차별성", self.state.ext_differentiation),
-        ("기대 효과", self.state.ext_effect),
-        ]
+        # missing_fields = [
+        # ("기존 문제점", self.state.ext_problem),
+        # ("해결 방법", self.state.ext_solution),
+        # ("차별성", self.state.ext_differentiation),
+        # ("기대 효과", self.state.ext_effect),
+        # ]
 
-        target_label = next(
-            (label for label, value in missing_fields if not value),
-            "모두 완료"
-        )
+        # target_label = next(
+        #     (label for label, value in missing_fields if not value),
+        #     "모두 완료"
+        # )
 
-        try:
-            chat_resp = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
-                    *history,
-                    {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
-                ]
-            )
-            return chat_resp.choices[0].message.content.strip()
-        except Exception as e:
-            logger.error(f"질문 생성 실패: {e}")
-            return f"말씀하신 내용을 잘 들었습니다. 그렇다면 '{target_label}'에 대해서는 어떻게 생각하시나요?"
+        # try:
+        #     chat_resp = self.client.chat.completions.create(
+        #         model="gpt-4o-mini",
+        #         messages=[
+        #             {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
+        #             *history,
+        #             {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
+        #         ]
+        #     )
+        #     return chat_resp.choices[0].message.content.strip()
+        # except Exception as e:
+        #     logger.error(f"질문 생성 실패: {e}")
+        #     return f"말씀하신 내용을 잘 들었습니다. 그렇다면 '{target_label}'에 대해서는 어떻게 생각하시나요?"
     
     def _handle_phase_2(self, user_input: str) -> str:
         if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
