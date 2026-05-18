@@ -1,7 +1,7 @@
 ---
 title: Data Management Strategy
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-05-15
 type: concept
 tags: [data, patent, consultation]
 sources: [raw/sources/google-drive-final-folder-2026-05-12.md]
@@ -69,19 +69,38 @@ confidence: medium
 
 ## 로컬 폴더 규칙
 
+전체 프로젝트 폴더 구조는 repo 루트의 `docs/PROJECT_STRUCTURE.md`를 기준으로 봅니다.
+
+데이터 쪽 현재 규칙:
+
 ```text
 data/
 ├─ manifests/                 # Drive/GCS 파일 목록, 샘플 split
 ├─ raw/
-│  ├─ pdfs/                   # 원문 PDF 캐시
-│  └─ texts/                  # 원문/추출 TXT 캐시
+│  ├─ pdfs/                   # 원문 PDF 캐시, Git 제외
+│  └─ texts/                  # 원문/추출 TXT 캐시, Git 제외
 ├─ processed/
 │  ├─ patent_structures/      # PDF/TXT → 구조화 JSON
 │  ├─ simulated_consultations/# 가상 상담내역 JSON
 │  ├─ invention_payloads/     # 상담 에이전트 출력
-│  └─ agent_payloads/         # 후속 에이전트별 입력
-├─ reports/                   # 사람이 보는 품질 리포트
-└─ tmp/                       # 임시 파일
+│  ├─ agent_payloads/         # 후속 에이전트별 입력
+│  ├─ claim_loop/training/    # 청구항 학습용 작은 JSONL
+│  └─ examples/               # 작은 예시 JSON
+├─ reports/                   # 사람이 보는 품질 리포트, Git 제외
+└─ tmp/                       # 임시 파일, Git 제외
+```
+
+청구항/도면/앱/모델 쪽 현재 규칙:
+
+```text
+agents/consultation/          # 상담 상태, 상담 DB, 선행기술 연동
+agents/claim/                 # 청구항 생성/저장 코드
+agents/drawing/               # 도면 생성 코드
+agents/specification/         # 발명의 설명/명세서/DOCX 생성 코드
+apps/streamlit/               # Streamlit 데모 앱
+notebooks/claim/              # 청구항 실험 노트북
+models/claim/                 # 모델 설정/adapter 위치, 가중치는 Git 제외
+docs/llm-wiki/schemas/        # 스키마/추출 기준 문서
 ```
 
 ## manifest란?
@@ -115,6 +134,7 @@ manifest는 **데이터 파일 목록표**입니다.
 - Drive에는 PDF 779개와 TXT 1,219개가 있습니다.
 - 전체를 다운로드하지 않고 `data/manifests/drive_inventory_2026-05-12.*`로 먼저 관리합니다.
 - 기존 루트 PDF는 `data/raw/pdfs/legacy-root/`로 정리합니다.
+- 루트/한글 `청구항/`/`agents/consultation/`에 섞여 있던 청구항·도면·명세서·앱·스키마 파일은 `agents/claim/`, `agents/drawing/`, `agents/specification/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, `docs/llm-wiki/schemas/`로 분리합니다.
 - 실제 사용자 상담 데이터는 현재 확보하기 어렵기 때문에, 당장은 `simulated_consultation` 중심으로 개발합니다.
 
 ## 다음 작업

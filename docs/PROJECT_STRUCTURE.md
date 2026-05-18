@@ -13,13 +13,22 @@ SKN25-FINAL-3Team/
   .env.example              # 환경변수 예시, 실제 값 없음
 
   agents/                   # LLM/AI 에이전트 코드
-    consultation/           # 상담 + 선행기술 + 청구항 연동 현재 코드
+    consultation/           # 상담 상태/DB/선행기술 연동 코드
       consultation_agent.py
       prior_art_agent.py
-      claim_agent.py
       patent_db.py
       document_utils.py
       load_corpus.py
+      agent_payloads.py
+    claim/                  # 청구항 생성/저장 에이전트
+      claim_agent.py
+    drawing/                # 도면/참조부호/SVG 생성 에이전트
+      drawing_agent.py
+      drawing_db.py
+    specification/          # 발명의 설명/명세서/DOCX 에이전트
+      specification_agent.py
+      patent_docx.py
+
 
   backend/
     django/                 # 기존 로그인/JWT Django 백엔드
@@ -39,10 +48,22 @@ SKN25-FINAL-3Team/
     manifests/              # Drive/GCS 목록, pilot dataset 목록
     raw/                    # PDF/TXT 원천 데이터. 대용량은 Git 제외
     processed/              # 추출 JSON, payload 등. 대용량은 Git 제외
+      claim_loop/           # 청구항 loop 학습/평가 JSONL
+        training/           # 청구항 fine-tuning train/val JSONL, 대량은 Git 제외
+      examples/             # 작은 샘플 JSON, 스키마 예시
     reports/                # HTML/MD/SQLite 리포트. Git 제외
+
+  notebooks/                # 실험용 Jupyter notebook
+    claim/                  # 청구항 데이터셋/학습 실험 노트북
+
+  models/                   # 모델 설정/외부 checkpoint 위치 기록
+    claim/
+      configs/              # 학습 설정 파일, Git 포함 가능
+      adapters/             # LoRA/checkpoint 캐시, 대용량은 Git 제외
 
   docs/
     llm-wiki/               # 팀 문서/아키텍처/스키마/평가 기준
+      schemas/              # canonical JSON, payload 추출 기준 문서
 
   scripts/                  # 데이터/운영/개발 보조 스크립트
 ```
@@ -52,12 +73,18 @@ SKN25-FINAL-3Team/
 | 폴더 | 역할 | 넣으면 좋은 것 | 넣지 않을 것 |
 |---|---|---|---|
 | `agents/` | 상담, 선행기술, 청구항, 도면, 명세서 등 에이전트 | Python agent/module 코드 | PDF/TXT 원천 데이터, `.env` 커밋 |
+| `agents/consultation/` | 상담 상태, 상담 DB, 선행기술 연동 | `consultation_agent.py`, `prior_art_agent.py`, DB/문서 유틸 | 청구항 학습 노트북, 모델 checkpoint |
+| `agents/claim/` | 청구항 생성/저장 에이전트 | `claim_agent.py`, 청구항 생성 서비스 코드 | 학습 JSONL, 노트북, 모델 가중치 |
+| `agents/drawing/` | 도면/참조부호/SVG 생성 에이전트 | `drawing_agent.py`, `drawing_db.py` | 도면 산출물 대량 파일 |
+| `agents/specification/` | 발명의 설명/명세서/DOCX 생성 에이전트 | `specification_agent.py`, `patent_docx.py` | 상담/청구항/도면 핵심 구현 중복 |
 | `backend/django/` | 로그인, JWT, 계정, 프로젝트 관리용 Django | Django app, settings, templates | LLM 프롬프트 실험 코드 |
 | `backend/fastapi/` | 향후 FastAPI + LangGraph API | API router, graph endpoint | 화면 코드 |
 | `frontend/` | 향후 React + TypeScript 화면 | React app, API client | Python agent 코드 |
 | `apps/streamlit/` | 빠른 데모/검증용 앱 | Streamlit wrapper | 핵심 비즈니스 로직 |
-| `data/` | 데이터/결과물 | manifest, `.gitkeep`, 작은 README | 대용량 PDF/TXT/SQLite/HTML 결과물 |
-| `docs/` | 팀 문서 | 아키텍처, 스키마, 평가 기준 | 실제 API key/DB 비밀번호 |
+| `notebooks/` | 실험 기록 | Jupyter notebook | 서비스 런타임 코드, 대용량 데이터 |
+| `models/` | 학습 설정/외부 모델 위치 기록 | config, README, `.gitkeep` | checkpoint, adapter, safetensors |
+| `data/` | 데이터/결과물 | manifest, `.gitkeep`, 작은 README, 샘플 JSON | 대용량 PDF/TXT/SQLite/HTML 결과물 |
+| `docs/` | 팀 문서 | 아키텍처, 스키마, 평가 기준, 추출 가이드 | 실제 API key/DB 비밀번호 |
 | `scripts/` | 일회성/배치/개발 보조 | 다운로드, inventory, smoke test | 서비스 런타임 코드 |
 
 ## 환경 세팅: uv 기준
@@ -95,6 +122,12 @@ SECRET_KEY=...
 uv run streamlit run apps/streamlit/main.py
 ```
 
+### 청구항 생성/DB 저장 모듈
+
+```bash
+uv run python -m agents.claim.claim_agent
+```
+
 ### 상담 에이전트 폴더에서 직접 실행/적재
 
 ```bash
@@ -114,7 +147,6 @@ uv run python backend/django/manage.py runserver 8000
 backend/fastapi/              # FastAPI API 서버
 backend/fastapi/graphs/       # LangGraph orchestration
 agents/claim/                 # 청구항 에이전트가 커지면 분리
-agents/drawing/               # 도면/참조부호 에이전트
 agents/specification/         # 발명의 설명/명세서 에이전트
 agents/review/                # 품질/근거/리스크 검토 에이전트
 frontend/                     # React + TypeScript

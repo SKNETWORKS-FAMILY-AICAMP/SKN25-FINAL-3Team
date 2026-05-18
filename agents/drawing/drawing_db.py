@@ -1,7 +1,7 @@
 import datetime
 from pathlib import Path
 from sqlalchemy import Column, String, Integer, Text, ForeignKeyConstraint, DateTime
-from consultation_agent import SessionLocal, Base, engine
+from agents.consultation.consultation_agent import SessionLocal, Base, engine
 
 # ─────────────────────────────────────────────
 # 1. DB 테이블: 도면 전용 (GeneratedDrawing)

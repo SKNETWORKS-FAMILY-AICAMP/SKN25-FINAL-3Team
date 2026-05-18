@@ -2,9 +2,9 @@ import datetime
 import os
 from openai import OpenAI
 from sqlalchemy import Column, String, Integer, Text, ForeignKeyConstraint, DateTime
-from consultation_agent import SessionLocal, Base, engine, Consulting, AlgorithmStep, DetailElement
-from claim_agent import GeneratedClaim
-from drawing_db import GeneratedDrawing
+from agents.consultation.consultation_agent import SessionLocal, Base, engine, Consulting, AlgorithmStep, DetailElement
+from agents.claim.claim_agent import GeneratedClaim
+from agents.drawing.drawing_db import GeneratedDrawing
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

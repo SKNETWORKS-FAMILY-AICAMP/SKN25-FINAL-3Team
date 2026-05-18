@@ -104,3 +104,34 @@ Changed files:
 Changed files:
 
 - `BRANCH_RULES.md`
+
+## [2026-05-15] update | project structure and PR checklist synced
+
+- Updated `BRANCH_RULES.md` so 은석, 가영, 범수, 서현, 홍익 each have a minimal one-line confirmation checklist.
+- Kept the PM checklist as the final confirmation checklist.
+- Synced the LLM Wiki with the new folder structure: `agents/claim/`, `agents/drawing/`, `agents/specification/`, `apps/streamlit/`, `notebooks/claim/`, `data/processed/claim_loop/training/`, `models/claim/`, and `docs/llm-wiki/schemas/`.
+- Updated collaboration docs so folder-structure changes point back to `docs/PROJECT_STRUCTURE.md`.
+
+Changed files:
+
+- `BRANCH_RULES.md`
+- `README.md`
+- `docs/PROJECT_STRUCTURE.md`
+- `docs/llm-wiki/README.md`
+- `docs/llm-wiki/index.md`
+- `docs/llm-wiki/log.md`
+- `docs/llm-wiki/concepts/team-collaboration-guide.md`
+- `docs/llm-wiki/concepts/developer-workflow-scenario.md`
+- `docs/llm-wiki/concepts/data-management-strategy.md`
+
+## [2026-05-15] create | claim loop workflow inventory
+
+- Created a compact inventory for the previous claim-loop work.
+- Recorded the verified branch context, code files, datasets, Markdown reports, JSON/JSONL outputs, and human-feedback/prompt-adjustment points.
+- Noted that the effective branch context is `hw`, while `origin/claim` exists as a related historical branch.
+
+Changed files:
+
+- `docs/llm-wiki/concepts/claim-loop-workflow-inventory.md`
+- `docs/llm-wiki/index.md`
+- `docs/llm-wiki/log.md`

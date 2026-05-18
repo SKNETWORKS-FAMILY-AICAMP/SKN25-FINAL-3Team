@@ -2,10 +2,10 @@ from docx import Document
 from docx.shared import Inches
 from io import BytesIO
 import os
-from consultation_agent import SessionLocal
-from specification_agent import GeneratedSpecification
-from claim_agent import GeneratedClaim
-from drawing_db import GeneratedDrawing
+from agents.consultation.consultation_agent import SessionLocal
+from agents.specification.specification_agent import GeneratedSpecification
+from agents.claim.claim_agent import GeneratedClaim
+from agents.drawing.drawing_db import GeneratedDrawing
 
 
 def get_patent_data(user_id, consultation_idx):
