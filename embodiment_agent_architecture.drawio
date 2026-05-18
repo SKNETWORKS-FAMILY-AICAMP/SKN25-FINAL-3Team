@@ -1,0 +1,104 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="EmbodimentAgent_Architecture" id="embodiment_arch_v1">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 제목 -->
+        <mxCell id="title" value="Embodiment Agent - 시스템 아키텍처" style="text;html=1;fontStyle=1;fontSize=18;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="600" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- ══ 입력 에이전트 3개 ══ -->
+        <mxCell id="lbl_input" value="입력 (다른 에이전트 결과)" style="text;html=1;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="75" width="220" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="spec_agent" value="발명의 설명 에이전트&#xa;SpecificationState&#xa;(tech_field / background_art&#xa;/ problem / effects 등)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="110" width="210" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="claim_agent" value="청구항 에이전트&#xa;ClaimState&#xa;(draft_claims&#xa;독립항 / 종속항)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="210" width="210" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="drawing_agent" value="도면 에이전트&#xa;DrawingState&#xa;(figures / reference_numerals&#xa;/ fig_json elements)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="310" width="210" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- ══ 변환 함수 (node) ══ -->
+        <mxCell id="lbl_convert" value="embodiment_node.py" style="text;html=1;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="310" y="75" width="200" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="spec_to_str" value="_spec_to_str()&#xa;SpecificationState → 문자열" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="125" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="claims_to_str" value="_claims_to_str()&#xa;ClaimState → 문자열" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="225" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="figures_from_state" value="_figures_from_state()&#xa;DrawingState → fig_json 형식" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="325" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ══ 핵심 함수 ══ -->
+        <mxCell id="lbl_core" value="embodiment_agent.py (핵심 로직)" style="text;html=1;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="580" y="75" width="260" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="core_fn" value="generate_drawing_description_and_embodiments()&#xa;&#xa;SYSTEM_PROMPT 적용&#xa;프롬프트 조립 (발명설명 + 청구항 + fig_json)&#xa;GPT-4o-mini 호출" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="200" width="260" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- ══ GPT ══ -->
+        <mxCell id="gpt" value="GPT-4o-mini&#xa;(OpenAI API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="390" width="260" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ══ 출력 ══ -->
+        <mxCell id="lbl_output" value="출력 → state[&quot;specification&quot;] 업데이트" style="text;html=1;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="920" y="75" width="310" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="out_brief" value="brief_description_of_drawings&#xa;&#xa;도 1은 ... 도시한 도면이다.&#xa;도 2는 ... 도시한 도면이다." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="160" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="out_embodiment" value="embodiment_notes (list)&#xa;&#xa;본 발명의 일 실시예에 따르면&#xa;입력부(110)는 이미지를...&#xa;CNN 모델부(130)는..." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="270" width="250" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="out_state" value="state[&quot;specification&quot;] 업데이트&#xa;→ review 에이전트로 전달" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="400" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ══ 에지 ══ -->
+
+        <!-- 입력 → 변환 -->
+        <mxCell id="e1" style="endArrow=classic;html=1;" edge="1" source="spec_agent" target="spec_to_str" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="endArrow=classic;html=1;" edge="1" source="claim_agent" target="claims_to_str" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="endArrow=classic;html=1;" edge="1" source="drawing_agent" target="figures_from_state" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- 변환 → 핵심 함수 -->
+        <mxCell id="e4" style="endArrow=classic;html=1;" edge="1" source="spec_to_str" target="core_fn" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="endArrow=classic;html=1;" edge="1" source="claims_to_str" target="core_fn" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="endArrow=classic;html=1;" edge="1" source="figures_from_state" target="core_fn" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- 핵심 함수 → GPT -->
+        <mxCell id="e7" style="endArrow=classic;html=1;" edge="1" source="core_fn" target="gpt" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- GPT → 출력 -->
+        <mxCell id="e8" style="endArrow=classic;html=1;" edge="1" source="gpt" target="out_brief" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" style="endArrow=classic;html=1;" edge="1" source="gpt" target="out_embodiment" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- 출력 → state 업데이트 -->
+        <mxCell id="e10" style="endArrow=classic;html=1;" edge="1" source="out_brief" target="out_state" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" style="endArrow=classic;html=1;" edge="1" source="out_embodiment" target="out_state" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
