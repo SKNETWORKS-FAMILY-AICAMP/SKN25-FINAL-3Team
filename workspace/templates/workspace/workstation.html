@@ -62,11 +62,6 @@
         </div>
 
         <div id="chat-box" style="flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
-            {% if not chat_messages %}
-                <div class="msg ai-msg" style="align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%;">
-                    <p style="margin: 0; line-height: 1.6;">안녕하세요! 전문 특허 상담 AI입니다. 좌측의 발명 내용을 바탕으로 명세서 작성을 위한 심층 분석을 시작하겠습니다. <br><br>준비되셨다면 채팅을 입력해주세요!</p>
-                </div>
-            {% else %}
                 {% for msg in chat_messages %}
                     {% if msg.role == 'assistant' %}
                         <div class="msg ai-msg" style="align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%;">
@@ -78,7 +73,6 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-            {% endif %}
         </div>
 
         <div style="padding: 20px; background: #111827; border-top: 1px solid #334155;">

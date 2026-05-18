@@ -52,17 +52,18 @@ def create_project(request):
 @login_required(login_url='/accounts/login/')
 def workstation(request, project_id):
     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-    
-    # 2. 원본 발명 데이터 (좌측 패널용)
     invention_input = get_object_or_404(InventionInput, project=project)
-    # 2. 상담 상태 (추출된 4대 요소 포함)
     consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
     
+    if not project.chat_messages.exists():
+        agent = DjangoPatentConsultant(project)
+        agent.generate_welcome_message()
+
     # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
     algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
     details = project.details.all()
-
     chat_messages = project.chat_messages.all().order_by('created_at')
+  
     context = {
         'project': project,
         'invention_input': invention_input,
