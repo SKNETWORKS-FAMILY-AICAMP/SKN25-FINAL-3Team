@@ -8,6 +8,9 @@ from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.core.files.storage import FileSystemStorage
+from .utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp
+import os
 
 @login_required(login_url='/accounts/login/')
 def dashboard(request):
@@ -56,9 +59,9 @@ def workstation(request, project_id):
     invention_input = get_object_or_404(InventionInput, project=project)
     consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
     
-    if not project.chat_messages.exists():
-        agent = DjangoPatentConsultant(project)
-        agent.generate_welcome_message()
+    #if not project.chat_messages.exists():
+    #    agent = DjangoPatentConsultant(project)
+    #    agent.generate_welcome_message()
 
     # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
     algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
@@ -75,6 +78,37 @@ def workstation(request, project_id):
     }
     
     return render(request, 'workspace/workstation.html', context)
+
+@login_required(login_url='/accounts/login/')
+@require_POST
+def welcome_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+
+    if project.chat_messages.filter(role='assistant').exists():
+            state = ConsultationState.objects.get(project=project)
+            return JsonResponse({
+                'status': 'already_exists',
+                'extracted_data': {
+                    'problem': state.ext_problem or '미파악',
+                    'solution': state.ext_solution or '미파악',
+                    'differentiation': state.ext_differentiation or '미파악',
+                    'effect': state.ext_effect or '미파악'
+                }
+            })
+    agent = DjangoPatentConsultant(project)
+    ai_response = agent.generate_welcome_message()
+    state = ConsultationState.objects.get(project=project)
+
+    return JsonResponse({
+        'status': 'success',
+        'ai_message': ai_response,
+        'extracted_data': {
+            'problem': state.ext_problem or '미파악',
+            'solution': state.ext_solution or '미파악',
+            'differentiation': state.ext_differentiation or '미파악',
+            'effect': state.ext_effect or '미파악'
+        }
+    })
 
 @login_required
 def chat_api(request, project_id):
@@ -145,3 +179,60 @@ def delete_project(request, project_id):
     
     messages.success(request, f"'{title}' 프로젝트가 삭제되었습니다.")
     return redirect('dashboard')
+
+@login_required(login_url='/accounts/login/')
+@require_POST
+def upload_file_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+
+    if 'file' not in request.FILES:
+        return JsonResponse({'status': 'error', 'message': '파일이 전달되지 않았습니다.'})
+    
+    uploaded_file = request.FILES['file']
+    fs = FileSystemStorage()
+
+    filename = fs.save(uploaded_file.name, uploaded_file)
+    file_path = fs.path(filename)
+
+    ext = os.path.splitext(filename)[1].lower()
+    extracted_text = ""
+
+    try:
+        if ext == '.pdf':
+            extracted_text = extract_text_from_pdf(file_path)
+        elif ext == '.docx':
+            extracted_text = extract_text_from_docx(file_path)
+        elif ext == '.hwp':
+            extracted_text = extract_text_from_hwp(file_path)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'PDF, DOCX, HWP 파일만 지원합니다.'})
+        
+        if not extracted_text:
+            return JsonResponse({'status': 'error', 'message': '파일에서 텍스트를 추출하지 못했습니다.'})
+        
+        safe_text = extracted_text[:4000] #token 제한 고려하여 최대 4000자까지만 전달
+        agent = DjangoPatentConsultant(project)
+        prompt_message = f"[사용자가 {uploaded_file.name} 파일을 업로드했습니다. 문서 내용은 다음과 같습니다.]\n\n{safe_text}"
+        ai_response = agent.interact(prompt_message)
+
+        state = ConsultationState.objects.get(project=project)
+        extracted_data = {
+            'problem': state.ext_problem or '미파악',
+            'solution': state.ext_solution or '미파악',
+            'differentiation': state.ext_differentiation or '미파악',
+            'effect': state.ext_effect or '미파악'
+        }
+        
+
+        return JsonResponse({
+            'status': 'success', 
+            'file_name': uploaded_file.name,
+            'ai_message': ai_response,
+            'extracted_data': extracted_data
+        })
+    
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)

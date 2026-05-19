@@ -9,4 +9,6 @@ urlpatterns = [
     path('workstation/<int:project_id>/chat_api/', views.chat_api, name='chat_api'),
     path('mypage/', views.my_page, name='my_page'),
     path('delete/<int:project_id>/', views.delete_project, name='delete_project'),
+    path('workstation/<int:project_id>/upload_api/', views.upload_file_api, name='upload_file_api'),
+    path('workstation/<int:project_id>/welcome_api/', views.welcome_api, name='welcome_api'),
 ]

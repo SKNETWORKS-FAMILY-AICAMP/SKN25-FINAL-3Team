@@ -31,7 +31,7 @@
             </div>
         </div>
         <div style="margin-top: 40px; border-top: 2px dashed #334155; padding-top: 20px;">
-            <h2 style="font-size: 20px; color: #10b981; margin-bottom: 20px;">🤖 AI 분석 요약 (실시간)</h2>
+            <h2 style="font-size: 20px; color: #10b981; margin-bottom: 20px;">AI 분석 요약</h2>
             
             <div id="ai-analysis-results" style="display: flex; flex-direction: column; gap: 15px;">
                 <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
@@ -76,8 +76,12 @@
         </div>
 
         <div style="padding: 20px; background: #111827; border-top: 1px solid #334155;">
-            <form id="chat-form" style="display: flex; gap: 10px;">
+            <input type="file" id="file-upload" style="display: none;" accept=".pdf,.docx,.hwp">
+            <form id="chat-form" style="display: flex; gap: 10px; margin-top: 15px;">
                 {% csrf_token %}
+                <button type="button" id="file-btn" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 0 15px; font-size: 20px; cursor: pointer; transition: 0.2s;" title="문서 업로드 (PDF, DOCX, HWP)">
+                    📎📎📎
+                </button>
                 <input type="text" id="chat-input" placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
                        style="flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; outline: none;">
                 <button type="submit" class="start-btn" style="padding: 0 30px; font-size: 16px;">전송</button>
@@ -86,14 +90,65 @@
 
     </div>
 </div>
+
+<style>
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: 10px;
+    }
+    .typing-indicator span {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+</style>
+
 <script>
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatBox = document.getElementById('chat-box');
+    const fileBtn = document.getElementById('file-btn');
+    const fileInput = document.getElementById('file-upload');
 
     // 화면 로드 시 스크롤 하단 이동
     if (chatBox) {
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showLoading() {
+        const div = document.createElement('div');
+        div.id = 'ai-loading';
+        div.className = 'msg ai-msg';
+        div.style = "align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%; margin-bottom: 15px;";
+        
+        div.innerHTML = `
+            <div style="display: flex; align-items: center;">
+                <span style="color: #94a3b8; font-size: 14px; font-weight: 500;">AI 변리사가 분석 중입니다</span>
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeLoading() {
+        const loadingDiv = document.getElementById('ai-loading');
+        if (loadingDiv) {
+            loadingDiv.remove();
+        }
     }
 
     if (chatForm) {
@@ -107,6 +162,8 @@
             // 내 메시지 즉시 추가
             addMessage('user', message);
             chatInput.value = '';
+
+            showLoading();
 
             // AI 에이전트 API 호출
             fetch("{% url 'chat_api' project.id %}", {
@@ -125,6 +182,7 @@
             })
             .then(data => {
                 if (data.status === 'success') {
+                    removeLoading();
                     addMessage('assistant', data.ai_message);
                     if (data.extracted_data){
                         if (data.extracted_data.problem) 
@@ -142,6 +200,7 @@
                 }
             })
             .catch(error => {
+                removeLoading();
                 console.error("Error:", error);
                 alert("통신 중 문제가 발생했습니다. 브라우저 콘솔(F12)을 확인해 보세요.");
             });
@@ -162,5 +221,98 @@
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+    if (fileBtn && fileInput) {
+        fileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            addMessage('user', `📎 [파일 업로드] ${file.name}`);
+            showLoading();
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch("{% url 'upload_file_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // 파일 업로드 시엔 Content-Type을 수동으로 지정하지 않아야 합니다 (브라우저가 자동 세팅)
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeLoading(); 
+
+                if (data.status === 'success') {
+                    addMessage('assistant', data.ai_message);
+                    if (data.extracted_data) {
+                        const elProblem = document.getElementById('ext-problem');
+                        const elSolution = document.getElementById('ext-solution');
+                        const elDiff = document.getElementById('ext-differentiation');
+                        const elEffect = document.getElementById('ext-effect');
+
+                        if (elProblem) elProblem.innerText = data.extracted_data.problem;
+                        if (elSolution) elSolution.innerText = data.extracted_data.solution;
+                        if (elDiff) elDiff.innerText = data.extracted_data.differentiation;
+                        if (elEffect) elEffect.innerText = data.extracted_data.effect;
+                        
+                        //elProblem.parentElement.style.animation = "flash 1s"; 
+                    }
+                } else {
+                    alert("파일 처리 실패: " + data.message);
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("Error:", error);
+                alert("파일 업로드 중 문제가 발생했습니다.");
+            });
+
+            // 인풋창 초기화 (같은 파일 다시 올릴 수 있게)
+            this.value = '';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // 장고 템플릿 변수를 활용해 현재 방의 기존 메시지 개수를 파악합니다.
+        const messageCount = parseInt("{{ chat_messages.count }}") || 0;
+    
+        // 만약 메시지가 하나도 없는 완전 새 프로젝트 방이라면
+        if (messageCount === 0) {
+            showLoading();
+            
+            // 2. 백엔드에 첫 원본 데이터 요약 및 질문 생성을 비동기로 요청
+            fetch("{% url 'welcome_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeLoading();
+                
+                if (data.status === 'success') {
+                    addMessage('assistant', data.ai_message);
+                    
+                    if (data.extracted_data) {
+                        if (document.getElementById('ext-problem')) document.getElementById('ext-problem').innerText = data.extracted_data.problem;
+                        if (document.getElementById('ext-solution')) document.getElementById('ext-solution').innerText = data.extracted_data.solution;
+                        if (document.getElementById('ext-differentiation')) document.getElementById('ext-differentiation').innerText = data.extracted_data.differentiation;
+                        if (document.getElementById('ext-effect')) document.getElementById('ext-effect').innerText = data.extracted_data.effect;
+                    }
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("초기 웰컴 메시지 로드 오류:", error);
+            });
+        }
+    });
 </script>
 {% endblock %}
