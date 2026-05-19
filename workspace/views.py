@@ -7,6 +7,7 @@ from .models import PatentProject, InventionInput, ConsultationState, ChatMessag
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='/accounts/login/')
 def dashboard(request):
@@ -133,3 +134,14 @@ def my_page(request):
     }
     
     return render(request, 'workspace/my_page.html', context)
+
+@login_required(login_url='/accounts/login/')
+@require_POST 
+def delete_project(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    
+    title = project.title
+    project.delete()  
+    
+    messages.success(request, f"'{title}' 프로젝트가 삭제되었습니다.")
+    return redirect('dashboard')
