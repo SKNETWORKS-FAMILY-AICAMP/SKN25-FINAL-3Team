@@ -52,6 +52,8 @@ function GalleryInline() {
 }
 
 export default function DrawingPage() {
+  const { lang } = useLang()
+  const sd = t.svcDetail.drawing
   return (
     <div className="site">
       <style>{`
