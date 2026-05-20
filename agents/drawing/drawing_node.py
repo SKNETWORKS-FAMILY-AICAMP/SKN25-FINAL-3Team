@@ -3,6 +3,9 @@
 drawing_agent.py는 건드리지 않는다.
 이 파일만 LangGraph 그래프 조립 시 import한다.
 
+출력 schema: agents/schemas/drawing.py DrawingAgentOutput
+저장 위치  : state["drawings"]
+
 사용 예:
     from agents.drawing.drawing_node import drawing_node
 
@@ -17,10 +20,12 @@ import re
 from pathlib import Path
 
 from agents.drawing.drawing_agent import generate_all_drawings
+from agents.schemas.drawing import DrawingAgentOutput, FigureDraft, ReferenceNumeral
+from agents.validation import safe_validate_output
 
 
-# drawing_agent diagram_type → state.py FigureType Literal 매핑
-_DTYPE_TO_FIGURE_TYPE = {
+# diagram_type → FigureType 매핑
+_DTYPE_MAP = {
     "flowchart":    "flowchart",
     "method":       "flowchart",
     "process":      "flowchart",
@@ -31,22 +36,20 @@ _DTYPE_TO_FIGURE_TYPE = {
     "data_flow":    "data_flow",
 }
 
-# 빈 DrawingState — 에러 시 반환하는 안전한 기본값
-_EMPTY_DRAWING_STATE: dict = {
-    "figures": [],
-    "reference_numerals": {},
-    "drawing_notes": [],
-}
+# hard fallback — 파이프라인이 죽지 않도록
+_FALLBACK = DrawingAgentOutput(
+    status="failed",
+    summary="도면 생성 실패 — hard fallback",
+    figures=[],
+    reference_numerals=[],
+    drawing_notes=[],
+)
 
 
 # ── 입력 변환 ──────────────────────────────────────────────────────────
 
 def _state_to_invention_text(consultation: dict) -> str:
-    """ConsultationState dict → drawing_agent가 받는 특허 텍스트 형식.
-
-    drawing_agent.py는 특허 txt 파일 형식의 텍스트를 기대한다.
-    consultation에 없는 필드는 조용히 건너뛴다.
-    """
+    """ConsultationState → drawing_agent가 받는 특허 텍스트."""
     parts: list[str] = []
 
     if consultation.get("invention_title"):
@@ -92,78 +95,64 @@ def _state_to_invention_text(consultation: dict) -> str:
 
 
 def _safe_app_num(consultation: dict) -> str:
-    """consultation에서 안전한 app_num을 생성한다. 비어있어도 'unknown'으로 처리."""
     raw = consultation.get("invention_title") or "unknown"
     return re.sub(r"[^A-Za-z0-9_-]", "_", raw)[:40] or "unknown"
 
 
-# ── 출력 변환 ──────────────────────────────────────────────────────────
+# ── 출력 변환 (DrawingAgentOutput 스키마 기준) ────────────────────────
 
-def _build_drawing_state(results: list, analysis: dict) -> dict:
-    """DrawingResult list + patent_analysis → DrawingState dict.
+def _build_raw_output(results: list, analysis: dict) -> dict:
+    """DrawingResult + analysis → DrawingAgentOutput 형식의 raw dict.
 
-    state.py 기준:
-        DrawingState.figures           : list[FigureSpec]
-        DrawingState.reference_numerals: dict[str, ReferenceNumeral]
-        DrawingState.drawing_notes     : list[str]
+    DrawingAgentOutput 스키마 기준:
+        figures           : list[FigureDraft]   fig_no=str
+        reference_numerals: list[ReferenceNumeral]  number/label/description/component_id
+        drawing_notes     : list[str]
+        status / summary  : 공통 AgentOutputBase 필드
     """
-    # 참조부호 — LLM이 추출한 구성요소 기준 (100단위)
-    ref_numerals: dict = {}
+    # 참조부호 — list[ReferenceNumeral] 형식 (dict 아님)
+    ref_numerals: list[dict] = []
     for i, comp in enumerate(analysis.get("components", [])):
         num = str(100 + i * 10)
-        ref_numerals[num] = {
+        ref_numerals.append({
             "number":       num,
-            "term":         comp.get("name", ""),
-            "figure":       "",
-            "component_id": str(comp.get("component_id", "")).strip() or num,
+            "label":        comp.get("name", ""),          # term → label
             "description":  comp.get("description", ""),
-        }
+            "component_id": str(comp.get("component_id", "")).strip() or num,
+        })
 
-    # 도면 목록 — DrawingResult → FigureSpec
-    figures: list = []
+    # 도면 목록 — list[FigureDraft] 형식 (fig_no=str)
+    figures: list[dict] = []
     for r in results:
-        nums   = re.findall(r"\d+", r.fig_number)
-        fig_no = int(nums[0]) if nums else 0
-        fig_comps: list[str] = []
-        fig_steps: list[str] = []
+        nums    = re.findall(r"\d+", r.fig_number)
+        fig_no  = nums[0] if nums else "1"               # int → str
+        comps: list[str] = []
 
         if r.fig_json_path and Path(r.fig_json_path).exists():
             try:
                 with open(r.fig_json_path, encoding="utf-8") as f:
                     fig_json = json.load(f)
                 elements = fig_json.get("elements", [])
-
-                if r.diagram_type in ("flowchart", "method", "process"):
-                    fig_steps = [e["name"] for e in elements if e.get("name")]
-                else:
-                    fig_comps = [e["name"] for e in elements if e.get("name")]
-
-                # 참조부호에 첫 등장 도면 번호 기록
-                for e in elements:
-                    rn = str(e.get("ref_no", "")).strip()
-                    if rn in ref_numerals and not ref_numerals[rn]["figure"]:
-                        ref_numerals[rn]["figure"] = r.fig_number
+                comps = [e["name"] for e in elements if e.get("name")]
             except Exception:
                 pass
 
         figures.append({
-            "fig_no":     fig_no,
-            "title":      r.diagram_title,
-            "type":       _DTYPE_TO_FIGURE_TYPE.get(r.diagram_type, "other"),
-            "purpose":    r.diagram_title,
-            "components": fig_comps,
-            "steps":      fig_steps,
+            "fig_no":      fig_no,
+            "title":       r.diagram_title,
+            "type":        _DTYPE_MAP.get(r.diagram_type, "other"),
+            "components":  comps,
             "description": r.diagram_title,
         })
 
-    avg_score = (
-        sum(r.quality_score for r in results) / len(results) if results else 0
-    )
+    avg_score = sum(r.quality_score for r in results) / max(1, len(results))
     return {
-        "figures": figures,
+        "status":            "ok",
+        "summary":           f"도면 {len(figures)}개 생성 완료 (평균 {avg_score:.0f}점)",
+        "figures":           figures,
         "reference_numerals": ref_numerals,
-        "drawing_notes": [
-            f"총 {len(results)}개 도면 생성",
+        "drawing_notes":     [
+            f"총 {len(figures)}개 도면 생성",
             f"평균 품질 점수: {avg_score:.1f}점",
             f"참조부호 {len(ref_numerals)}개",
         ],
@@ -171,10 +160,8 @@ def _build_drawing_state(results: list, analysis: dict) -> dict:
 
 
 def _load_analysis(output_dir: str, app_num: str) -> dict:
-    """generate_all_drawings가 저장한 patent_analysis.json을 읽는다."""
     try:
-        path = Path(output_dir) / app_num / "patent_analysis.json"
-        with open(path, encoding="utf-8") as f:
+        with open(Path(output_dir) / app_num / "patent_analysis.json", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return {}
@@ -183,28 +170,27 @@ def _load_analysis(output_dir: str, app_num: str) -> dict:
 # ── LangGraph 노드 ─────────────────────────────────────────────────────
 
 def drawing_node(state: dict) -> dict:
-    """LangGraph 노드 함수. PatentAgentState를 받아 drawings + document_links를 채운다.
+    """LangGraph 노드 함수.
 
-    입력: state["consultation"] (ConsultationState)
-    출력: state["drawings"]       (DrawingState)
-          state["document_links"]
+    입력: state["consultation"]
+    출력: state["drawings"] ← DrawingAgentOutput.model_dump()
           state["workflow"]
 
     어떤 state가 들어와도 예외를 바깥으로 던지지 않는다.
-    실패 시 빈 DrawingState + workflow.errors에 메시지를 기록한다.
+    실패 시 hard fallback DrawingAgentOutput 반환.
     """
     workflow     = state.get("workflow") or {}
     consultation = state.get("consultation") or {}
     errors: list[str] = list(workflow.get("errors") or [])
 
-    # consultation이 완전히 비었으면 빈 state 반환
     if not consultation:
         errors.append("drawing_node: consultation 데이터 없음")
+        fallback = _FALLBACK.model_copy()
+        fallback.warnings.append("consultation 데이터 없음")
         return {
-            "drawings":       _EMPTY_DRAWING_STATE,
-            "document_links": state.get("document_links") or {},
-            "workflow":       {**workflow, "errors": errors,
-                               "current_agent": "drawing", "next_agent": "specification"},
+            "drawings": fallback.model_dump(),
+            "workflow": {**workflow, "errors": errors,
+                         "current_agent": "drawing", "next_agent": "specification"},
         }
 
     output_dir = "drawing_analysis"
@@ -219,23 +205,22 @@ def drawing_node(state: dict) -> dict:
 
     analysis = _load_analysis(output_dir, app_num)
 
-    drawing_state = (
-        _build_drawing_state(results, analysis)
+    raw_output = (
+        _build_raw_output(results, analysis)
         if results
-        else {**_EMPTY_DRAWING_STATE,
-              "drawing_notes": ["도면 생성 결과 없음 — workflow.errors 확인"]}
+        else {"status": "failed", "summary": "도면 생성 결과 없음",
+              "figures": [], "reference_numerals": [], "drawing_notes": []}
     )
 
-    # document_links: reference_numeral_map 동기화
-    existing_links = state.get("document_links") or {}
-    doc_links = {
-        **existing_links,
-        "reference_numeral_map": drawing_state["reference_numerals"],
-    }
+    validated = safe_validate_output(
+        agent_name="drawing",
+        schema=DrawingAgentOutput,
+        raw_output=raw_output,
+        fallback=_FALLBACK,
+    )
 
     return {
-        "drawings":       drawing_state,
-        "document_links": doc_links,
+        "drawings": validated.model_dump(),
         "workflow": {
             **workflow,
             "errors":        errors,
