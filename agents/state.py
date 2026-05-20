@@ -5,6 +5,10 @@
 
 핵심 설계 의도:
 - 각 에이전트 산출물은 자유 텍스트만 두지 말고 구조화된 JSON으로 저장한다.
+- 지금 구조는 별도 `drafts` 층을 두지 않는 A안이다.
+  즉, 각 agent State 안에 "구조화 데이터 + 자기 영역 부분 초안"을 함께 둔다.
+  예: `claims.claim_plan`은 구조화 설계도이고, `claims.draft_claims`는 청구항 초안이다.
+  최종 제출용 문서는 `final_package`에만 저장한다.
 - `document_links`는 "상기", "전술한", "도 1", "(120)", "제1항"처럼
   특허 문서 내부에서 서로를 참조하는 관계를 저장한다.
 - `invention_graph`는 발명의 구성요소/데이터 흐름/관계를 저장한다.
@@ -32,7 +36,7 @@ AgentName = Literal[
     "claim",  # 청구항 생성 agent. 청구항 설계도와 독립항/종속항 초안 생성.
     "drawing",  # 도면 agent. 도면 구성, 도 번호, 참조부호 계획 생성.
     "specification",  # 발명의 설명 agent. 기술분야/배경기술/효과/상세설명 초안 생성.
-    "composer",  # 명세서 병합 agent. 상담/청구항/도면/설명 결과를 최종 패키지로 합침.
+    "composer",  # 명세서 병합 agent. State를 참조해 용어/참조/문체를 통일하고 최종 패키지 생성.
     "review",  # Review agent. 산출물 간 불일치, 참조 오류, 품질 문제를 검사.
 ]
 
@@ -272,7 +276,12 @@ class DrawingState(TypedDict, total=False):
 # -----------------------------------------------------------------------------
 
 class SpecificationState(TypedDict, total=False):
-    """명세서 본문 섹션 초안."""
+    """발명의 설명 agent가 만든 섹션별 초안.
+
+    여기 내용은 최종본이 아니라 composer가 재편집할 재료다.
+    composer는 이 초안을 그대로 붙이기보다 document_links/invention_graph/rules를 참조해
+    용어, 참조부호, "상기/전술한" 표현, 문체를 최종 통일한다.
+    """
 
     technical_field: str  # 기술분야.
     background_art: str  # 배경기술.
@@ -382,9 +391,32 @@ class DraftingOptionsState(TypedDict, total=False):
     use_anaphora_phrases: bool  # 상기/전술한 표현을 사용할지.
     target_claim_categories: list[ClaimCategory]  # 생성 목표 청구항 카테고리.
 
+# -----------------------------------------------------------------------------
+# 11. Composer agent State
+# -----------------------------------------------------------------------------
+
+class ComposerState(TypedDict, total=False):
+    """명세서 병합 agent가 최종 문서를 만들 때 사용하는 작업 상태.
+
+    현재 설계는 각 agent가 자기 영역의 구조화 JSON과 부분 초안을 만들고,
+    composer가 그 결과를 단순히 붙이는 것이 아니라 최종 문서로 재편집하는 방식이다.
+
+    composer의 우선순위:
+    1. structured JSON: consultation, prior_art, claims, drawings, specification
+    2. reference/relation: document_links, invention_graph
+    3. fixed rules: rules/*.yaml
+    4. 각 agent가 만든 초안 문장
+    """
+
+    source_priority: list[str]  # composer가 참고할 정보 우선순위.
+    merged_sections: dict[str, str]  # composer가 재작성/병합한 섹션별 본문.
+    composer_notes: list[str]  # 병합 중 판단한 내용 또는 주의점.
+    unresolved_links: list[str]  # 해소하지 못한 참조. 예: 대상 없는 "상기 분석부".
+    normalized_terms: dict[str, str]  # 용어 통일 결과. 예: 분석 엔진 -> AI 분석부.
+
 
 # -----------------------------------------------------------------------------
-# 11. Review agent State
+# 12. Review agent State
 # -----------------------------------------------------------------------------
 
 class ReviewIssue(TypedDict, total=False):
@@ -409,7 +441,7 @@ class ReviewState(TypedDict, total=False):
 
 
 # -----------------------------------------------------------------------------
-# 12. 최종 패키지 State
+# 13. 최종 패키지 State
 # -----------------------------------------------------------------------------
 
 class FinalPackageState(TypedDict, total=False):
@@ -428,11 +460,18 @@ class FinalPackageState(TypedDict, total=False):
 
 
 # -----------------------------------------------------------------------------
-# 13. 최상위 LangGraph 공유 State
+# 14. 최상위 LangGraph 공유 State
 # -----------------------------------------------------------------------------
 
 class PatentAgentState(TypedDict, total=False):
-    """LangGraph 전체에서 공유되는 최상위 State."""
+    """LangGraph 전체에서 공유되는 최상위 State.
+
+    A안 유지:
+    - `consultation`, `prior_art`, `claims`, `drawings`, `specification` 안에
+      각 agent의 구조화 데이터와 부분 초안을 함께 저장한다.
+    - `composer`는 각 초안을 단순 조립하지 않고, State 전체를 참조해 최종 문서로 재편집한다.
+    - `final_package`만 최종 산출물이다.
+    """
 
     workflow: WorkflowState  # 현재 진행 상태/다음 agent/trace/error.
     messages: list[dict[str, Any]]  # 대화 메시지 기록. LangGraph messages와 연결 가능.
@@ -447,12 +486,13 @@ class PatentAgentState(TypedDict, total=False):
     invention_graph: InventionGraphState  # 발명 구성요소/관계/데이터흐름 정보.
     drafting_options: DraftingOptionsState  # 이번 실행의 문체/작성 옵션.
 
+    composer: ComposerState  # 명세서 병합 agent의 병합/재편집 작업 상태.
     review: ReviewState  # Review agent 산출물.
     final_package: FinalPackageState  # 최종 명세서/보고서 산출물.
 
 
 # -----------------------------------------------------------------------------
-# 14. 초기 State 생성 함수
+# 15. 초기 State 생성 함수
 # -----------------------------------------------------------------------------
 
 def create_initial_state(user_input: str = "") -> PatentAgentState:
@@ -506,6 +546,22 @@ def create_initial_state(user_input: str = "") -> PatentAgentState:
             "use_semicolon": True,
             "use_anaphora_phrases": True,
             "target_claim_categories": ["method", "system", "storage_medium"],
+        },
+        "composer": {
+            "source_priority": [
+                "consultation",
+                "document_links",
+                "invention_graph",
+                "claims",
+                "drawings",
+                "specification",
+                "prior_art",
+                "rules",
+            ],
+            "merged_sections": {},
+            "composer_notes": [],
+            "unresolved_links": [],
+            "normalized_terms": {},
         },
         "review": {
             "review_results": [],
