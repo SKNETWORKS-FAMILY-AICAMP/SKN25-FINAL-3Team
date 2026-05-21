@@ -100,21 +100,25 @@ def _extract_invention_description(text: str) -> str:
     PDF 원문이 길고 복잡해도 drawing agent가 받을 수 있는
     깔끔한 발명 설명으로 변환한다.
     """
-    prompt = f"""아래는 특허 문서 또는 발명 설명 텍스트입니다.
-다음 형식으로 핵심 발명 정보를 추출하세요. 없는 항목은 빈칸으로 두세요.
-반드시 한국어로 답하고, 아래 형식 외 다른 텍스트는 출력하지 마세요.
+    prompt = f"""아래는 발명 아이디어 또는 특허 문서입니다.
+이 발명을 특허 명세서 형식으로 구조화하세요.
+반드시 한국어로 답하고, 아래 형식 그대로만 출력하세요.
 
-발명의 명칭: [발명 이름]
+발명의 명칭: [구체적인 발명 이름]
 기술분야: [기술 분야 1~2문장]
 해결 과제: [기존 문제점 1~2문장]
 구성요소:
-- [구성요소명](참조번호): [역할 설명]
-- [구성요소명](참조번호): [역할 설명]
-(구성요소는 최대 7개, 핵심만)
+- [구체적 구성요소명](100): [역할]
+- [구체적 구성요소명](110): [역할]
+- [구체적 구성요소명](120): [역할]
+- [구체적 구성요소명](130): [역할]
+- [구체적 구성요소명](140): [역할]
+(구성요소는 4~6개. 반드시 이 발명에 맞는 실제 이름 사용. "구성요소1" 같은 제너릭 이름 절대 사용 금지)
 처리 단계:
 1. [단계명]: [설명]
 2. [단계명]: [설명]
-(단계는 최대 6개)
+3. [단계명]: [설명]
+4. [단계명]: [설명]
 발명의 효과: [기대 효과 1~2문장]
 
 ---
@@ -146,7 +150,11 @@ def generate_drawings(request: DrawingRequest):
             fig_no = nums[0] if nums else str(len(figures) + 1)
             svg_url = None
             if r.svg_path and Path(r.svg_path).exists():
-                svg_url = f"/drawing-files/{app_num}/{Path(r.svg_path).name}"
+                # base64 data URI로 직접 포함 — 포트 크로스오리진 문제 없음
+                import base64
+                svg_bytes = Path(r.svg_path).read_bytes()
+                b64 = base64.b64encode(svg_bytes).decode()
+                svg_url = f"data:image/svg+xml;base64,{b64}"
             figures.append(FigureItem(fig_no=fig_no, title=r.diagram_title, type=r.diagram_type, svg_url=svg_url))
 
         ref_numerals = []
