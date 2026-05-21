@@ -23,6 +23,32 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await res.json()
+
+    // svg_url이 상대경로(/drawing-files/...)면 백엔드 절대 URL로 변환
+    if (data.figures) {
+      data.figures = data.figures.map((fig: { svg_url?: string }) => ({
+        ...fig,
+        svg_url: fig.svg_url?.startsWith('/')
+          ? `${BACKEND}${fig.svg_url}`
+          : fig.svg_url,
+      }))
+    }
+
+    // 참조부호 필터링 — IPC 코드, 날짜, 긴 문장 등 제거
+    if (data.reference_numerals) {
+      data.reference_numerals = data.reference_numerals.filter(
+        (r: { number: string; label: string }) => {
+          const label = r.label?.trim() || ''
+          if (!label) return false
+          if (label.length > 20) return false            // 너무 긴 텍스트
+          if (/G0[0-9][A-Z]/.test(label)) return false  // IPC 코드 (G06F 등)
+          if (/^\d{4}/.test(label)) return false         // 날짜로 시작
+          if (/[()[\]]/.test(label)) return false        // 괄호 포함
+          return true
+        }
+      )
+    }
+
     return NextResponse.json(data)
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : '알 수 없는 오류'
