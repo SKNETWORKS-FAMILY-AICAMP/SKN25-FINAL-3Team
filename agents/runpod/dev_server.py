@@ -1,6 +1,7 @@
 # 개발/테스트용 경량 서버 — EXAONE 모델 없이 도면 에이전트만 실행
 # uvicorn dev_server:app --host 0.0.0.0 --port 8000 --reload
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -9,12 +10,15 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from openai import OpenAI
 from pydantic import BaseModel
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from agents.drawing.drawing_agent import generate_all_drawings
+
+openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 DRAWING_DIR = Path(__file__).resolve().parents[2] / "drawing_analysis"
 DRAWING_DIR.mkdir(exist_ok=True)
@@ -90,12 +94,51 @@ def _clean_patent_text(text: str) -> str:
     return text[300:4300].strip()
 
 
+def _extract_invention_description(text: str) -> str:
+    """GPT로 발명 설명을 구조화된 형태로 추출한다.
+
+    PDF 원문이 길고 복잡해도 drawing agent가 받을 수 있는
+    깔끔한 발명 설명으로 변환한다.
+    """
+    prompt = f"""아래는 특허 문서 또는 발명 설명 텍스트입니다.
+다음 형식으로 핵심 발명 정보를 추출하세요. 없는 항목은 빈칸으로 두세요.
+반드시 한국어로 답하고, 아래 형식 외 다른 텍스트는 출력하지 마세요.
+
+발명의 명칭: [발명 이름]
+기술분야: [기술 분야 1~2문장]
+해결 과제: [기존 문제점 1~2문장]
+구성요소:
+- [구성요소명](참조번호): [역할 설명]
+- [구성요소명](참조번호): [역할 설명]
+(구성요소는 최대 7개, 핵심만)
+처리 단계:
+1. [단계명]: [설명]
+2. [단계명]: [설명]
+(단계는 최대 6개)
+발명의 효과: [기대 효과 1~2문장]
+
+---
+{text[:3000]}"""
+
+    try:
+        resp = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=600,
+        )
+        return resp.choices[0].message.content.strip()
+    except Exception:
+        return text  # GPT 실패 시 원문 사용
+
+
 @app.post("/generate-drawings")
 def generate_drawings(request: DrawingRequest):
     try:
         cleaned_text = _clean_patent_text(request.consultation_note)
-        app_num = re.sub(r"[^A-Za-z0-9_-]", "_", "_".join(cleaned_text.split()[:6]))[:40] or "unknown"
-        results = generate_all_drawings(cleaned_text, app_num, str(DRAWING_DIR))
+        structured_text = _extract_invention_description(cleaned_text)
+        app_num = re.sub(r"[^A-Za-z0-9_-]", "_", "_".join(structured_text.split()[:6]))[:40] or "unknown"
+        results = generate_all_drawings(structured_text, app_num, str(DRAWING_DIR))
 
         figures = []
         for r in results:
