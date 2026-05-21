@@ -19,6 +19,7 @@ interface DrawingResult {
 }
 
 export default function DemoPage() {
+  const [mode, setMode]         = useState<'text' | 'pdf'>('text')
   const [input, setInput]       = useState('')
   const [fileName, setFileName] = useState('')
   const [step, setStep]         = useState<Step>('idle')
@@ -192,31 +193,57 @@ export default function DemoPage() {
 
       <div className="demo-wrap">
 
-        {/* PDF 업로드 */}
-        <div className="demo-label">PDF / 논문 업로드</div>
-        <div
-          className={`upload-zone ${fileName ? 'has-file' : ''}`}
-          onClick={() => !isRunning && fileRef.current?.click()}
-        >
-          <div className="upload-icon">{fileName ? '✓' : '📄'}</div>
-          {fileName ? (
-            <>
-              <div className="upload-filename">{fileName}</div>
-              <div className="upload-sub">텍스트 추출 완료 — 클릭하여 다른 파일 선택</div>
-            </>
-          ) : (
-            <>
-              <div className="upload-text">클릭하여 PDF 파일 선택</div>
-              <div className="upload-sub">특허 문서, 논문, 기술 보고서 (.pdf)</div>
-            </>
-          )}
+        {/* 입력 탭 */}
+        <div className="tab-row">
+          <button className={`tab-btn ${mode === 'text' ? 'active' : ''}`}
+            onClick={() => { setMode('text'); reset() }}>텍스트 입력</button>
+          <button className={`tab-btn ${mode === 'pdf' ? 'active' : ''}`}
+            onClick={() => { setMode('pdf'); reset() }}>PDF / 논문 업로드</button>
         </div>
-        <input ref={fileRef} type="file" accept=".pdf" style={{ display: 'none' }} onChange={handlePdfUpload} />
-        {input && fileName && (
-          <div className="upload-preview">
-            <strong>추출된 텍스트 미리보기</strong><br />
-            {input.slice(0, 300)}...
-          </div>
+
+        {/* 텍스트 입력 */}
+        {mode === 'text' && (
+          <>
+            <div className="demo-label">발명 내용</div>
+            <textarea
+              className="demo-textarea"
+              placeholder="발명의 목적, 구성요소, 해결하려는 문제, 기대 효과를 자유롭게 입력하세요."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={isRunning}
+            />
+          </>
+        )}
+
+        {/* PDF 업로드 */}
+        {mode === 'pdf' && (
+          <>
+            <div className="demo-label">PDF / 논문 업로드</div>
+            <div
+              className={`upload-zone ${fileName ? 'has-file' : ''}`}
+              onClick={() => !isRunning && fileRef.current?.click()}
+            >
+              <div className="upload-icon">{fileName ? '✓' : '📄'}</div>
+              {fileName ? (
+                <>
+                  <div className="upload-filename">{fileName}</div>
+                  <div className="upload-sub">텍스트 추출 완료 — 클릭하여 다른 파일 선택</div>
+                </>
+              ) : (
+                <>
+                  <div className="upload-text">클릭하여 PDF 파일 선택</div>
+                  <div className="upload-sub">특허 문서, 논문, 기술 보고서 (.pdf)</div>
+                </>
+              )}
+            </div>
+            <input ref={fileRef} type="file" accept=".pdf" style={{ display: 'none' }} onChange={handlePdfUpload} />
+            {input && fileName && (
+              <div className="upload-preview">
+                <strong>추출된 텍스트 미리보기</strong><br />
+                {input.slice(0, 300)}...
+              </div>
+            )}
+          </>
         )}
 
         {/* 버튼 */}
