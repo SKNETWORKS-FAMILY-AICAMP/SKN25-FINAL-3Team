@@ -71,14 +71,14 @@ PHASE1_CHAT_PROMPT = """
 """
 
 PHASE2_QUESTION = """
-독립항 핵심 내용 확인이 완료되었습니다. 🎉
+독립항 핵심 내용 확인이 완료되었습니다. 
 이제 청구항을 더욱 탄탄하게 만들 심화 정보를 여쭤볼게요. 아시는 항목만 편하게 답해 주시면 됩니다.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔧 1. 구체적인 구현 수단 (예: YOLO v8, Python 등)
-📊 2. 데이터 파라미터 (예: 사용자 알레르기 정보 등)
-⚙️ 3. 핵심 로직 및 수식 (예: 스코어링 가중치 함수 등)
-➕ 4. 부가적/선택적 기능 (예: 자동 주문 연동 등)
-🛡️ 5. 예외 처리 (예: 인식 실패 시 수동 입력 UI 등)
+1. 구체적인 구현 수단 (예: YOLO v8, Python 등)
+2. 데이터 파라미터 (예: 사용자 알레르기 정보 등)
+3. 핵심 로직 및 수식 (예: 스코어링 가중치 함수 등)
+4. 부가적/선택적 기능 (예: 자동 주문 연동 등)
+5. 예외 처리 (예: 인식 실패 시 수동 입력 UI 등)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 모르시는 항목은 '없음' 또는 패스라고 하셔도 됩니다.
 """
@@ -145,7 +145,6 @@ class DjangoPatentConsultant:
             return fallback
 
     def interact(self, user_input: str) -> str:
-
         ChatMessage.objects.create(project=self.project, role='user', content=user_input)
 
         response = ""
@@ -159,28 +158,28 @@ class DjangoPatentConsultant:
         return response
     
     def _handle_phase_1(self, user_input: str) -> str:
-        step_count = self.project.algorithm_steps.count()
+        # step_count = self.project.algorithm_steps.count()
 
-        # [모드 A] 알고리즘 스텝 수집 중일 때
-        if self.state.collecting_steps:
-            cleaned_in = user_input.strip().lower()
-            if cleaned_in in ALGO_EXIT_KEYWORDS or not cleaned_in:
-                if step_count >= 3:
-                    self.state.collecting_steps = False
-                    self.state.phase = 2
-                    self.state.save()
-                    return f"훌륭합니다! 독립항 핵심 정보 수집이 완료되었습니다. \n\n{PHASE2_QUESTION}"
-                else:
-                    return f" 특허 구성을 위해 최소 3단계 이상의 설명이 필요합니다.\n현재 **{step_count}단계**입니다. 다음 단계를 계속 말씀해 주세요."
-            else:
-                AlgorithmStep.objects.create(project=self.project, step_seq=step_count+1, content=user_input)
-                if step_count + 1>=10:
-                    self.state.collecting_steps = False
-                    self.state.phase = 2
-                    self.state.save()
-                    return f"[알고리즘 10단계 수집 완료]\n\n{PHASE2_QUESTION}"
-                else:
-                    return f"**{step_count+2}단계**를 말씀해 주세요.\n(마치시려면 '완료' 또는 '끝'이라고 입력해 주세요.)"
+        # # [모드 A] 알고리즘 스텝 수집 중일 때
+        # if self.state.collecting_steps:
+        #     cleaned_in = user_input.strip().lower()
+        #     if cleaned_in in ALGO_EXIT_KEYWORDS or not cleaned_in:
+        #         if step_count >= 3:
+        #             self.state.collecting_steps = False
+        #             self.state.phase = 2
+        #             self.state.save()
+        #             return f"훌륭합니다! 독립항 핵심 정보 수집이 완료되었습니다. \n\n{PHASE2_QUESTION}"
+        #         else:
+        #             return f" 특허 구성을 위해 최소 3단계 이상의 설명이 필요합니다.\n현재 **{step_count}단계**입니다. 다음 단계를 계속 말씀해 주세요."
+        #     else:
+        #         AlgorithmStep.objects.create(project=self.project, step_seq=step_count+1, content=user_input)
+        #         if step_count + 1>=10:
+        #             self.state.collecting_steps = False
+        #             self.state.phase = 2
+        #             self.state.save()
+        #             return f"[알고리즘 10단계 수집 완료]\n\n{PHASE2_QUESTION}"
+        #         else:
+        #             return f"**{step_count+2}단계**를 말씀해 주세요.\n(마치시려면 '완료' 또는 '끝'이라고 입력해 주세요.)"
 
         # [모드 B] 일반 4대 요소 추출 모드 (GPT-4o)
         extract_prompt = PHASE1_EXTRACT_PROMPT.format(
@@ -190,6 +189,7 @@ class DjangoPatentConsultant:
             effect=self.state.ext_effect or "미파악"
         )
         ai_empathy = "말씀해주신 내용을 잘 확인했습니다." # 기본값 (API 실패 시 대비)
+
         try:
             ext_resp = self.client.chat.completions.create(
                 model="gpt-4o", 
@@ -209,7 +209,7 @@ class DjangoPatentConsultant:
             logger.error(f"4대 요소 추출 실패: {e}")
             pass
 
-        #self.state.save() 왜 상태 저장 안하지?
+        self.state.save() #왜 상태 저장 안하지?
 
         def is_valid(val):
             return bool(val and val.strip() !="미파악")
@@ -222,37 +222,37 @@ class DjangoPatentConsultant:
         ])
         
         # 4대 요소가 다 모였다면 알고리즘 수집 모드로 전환
-        if all_filled and step_count < 3:
-            self.state.collecting_steps = True
+        if all_filled:
+            self.state.phase = 2
             self.state.save()
-            return f"{ai_empathy}\n\n핵심 요소 파악이 순조롭습니다! 👏 이제 이 발명이 **어떤 순서로 작동하는지(알고리즘)** 단계별로 설명 부탁드립니다.\n\n먼저 **1단계**는 무엇인가요?"
-        
-        self.state.save()
+            return f"{ai_empathy}\n\n발명의 핵심 4대 요소 파악이 모두 완료되었습니다! 🎉\n\n{PHASE2_QUESTION}"    
+            
+        #self.state.save()
 
         if not is_valid(self.state.ext_problem):
-            next_question = "해결하고자 하시는 **기존 기술이나 상황의 문제점**은 무엇인가요?"
+            next_question = "현재 구상하신 발명이 해결하고자 하는 **기존 기술이나 상황의 문제점**은 무엇인지 편하게 말씀해 주시겠어요?"
         elif not is_valid(self.state.ext_solution):
-            next_question = "그 문제를 해결하기 위한 발명가님만의 **핵심 해결 방법**은 무엇인가요?"
+            next_question = "그 문제를 해결하기 위한 발명가님만의 **핵심 해결 방법**은 무엇인지 자세히 들려주세요."
         elif not is_valid(self.state.ext_differentiation):
-            next_question = "기존 기술들과 비교했을 때, 이 발명만의 특별한 **차별성**은 무엇인가요?"
+            next_question = "기존에 있던 비슷한 기술들과 비교했을 때, 이 발명만이 가지는 특별한 **차별성이나 장점**은 무엇일까요?"
         elif not is_valid(self.state.ext_effect):
-            next_question = "이 발명이 적용되었을 때 사용자가 얻게 될 구체적인 **기대 효과나 편익**은 무엇일까요?"
+            next_question = "이 발명이 실제로 적용되었을 때 사용자가 얻게 될 구체적인 **기대 효과나 편익**은 무엇일까요?"
         else:
             next_question = "추가로 덧붙이실 내용이 있나요?"
 
-        return f"{ai_empathy}\n\n그렇다면 {next_question}"
+        return f"{ai_empathy}\n\n{next_question}"
     
     def _handle_phase_2(self, user_input: str) -> str:
         if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
             return "건너뛰셨습니다. 다른 심화 정보를 추가하시거나 리포트를 발행해주세요."
 
         # 심화 정보 추출 로직 (GPT-4o)
-        algo_steps = [s.content for s in self.project.algorithm_steps.order_by('step_seq')]
+        #algo_steps = [s.content for s in self.project.algorithm_steps.order_by('step_seq')]
         resp = self.client.chat.completions.create(
             model="gpt-4o", 
             messages=[
                 {"role": "system", "content": PHASE1_SYSTEM}, 
-                {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps=algo_steps, user_input=user_input)}
+                {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps="사용자 설명 참조", user_input=user_input)}
             ], 
             response_format={"type": "json_object"}
         )
@@ -279,7 +279,7 @@ class DjangoPatentConsultant:
 
         if detail_elements_to_create:
             DetailElement.objects.bulk_create(detail_elements_to_create)
-            return "상세 정보가 잘 기록되었습니다!  추가로 덧붙일 내용이 있으신가요? 없으시면 '최종 리포트 발행'을 눌러주세요."
+            return "상세 정보가 잘 기록되었습니다! 📝 편하게 생각나시는 기능이나 예외 상황을 더 말씀해 주시거나, 내용이 충분하다면 '청구항 작성'을 눌러주세요."
         else:
-            return "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황에 대해 들려주실 말씀이 있을까요?"
+            return "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황(예: 인식 실패 시 어떻게 처리할지 등)에 대해 들려주실 말씀이 있을까요?"
         
