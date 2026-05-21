@@ -6,18 +6,31 @@
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+import json
 import os
+import re
+import sys
+from pathlib import Path
 from dotenv import load_dotenv
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 from openai import OpenAI
 
+# agents 패키지 경로 추가 (runpod/main.py → 프로젝트 루트)
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 # .env 파일 로드
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app = FastAPI(title="Patent Claim Generator API")
+
+# SVG 도면 파일 정적 서빙
+DRAWING_DIR = Path(__file__).resolve().parents[2] / "drawing_analysis"
+DRAWING_DIR.mkdir(exist_ok=True)
+app.mount("/drawing-files", StaticFiles(directory=str(DRAWING_DIR)), name="drawing_files")
 
 app.add_middleware(
     CORSMiddleware,
@@ -127,6 +140,71 @@ def generate_claims(request: ClaimRequest):
     except Exception as e:
         print(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"청구항 생성 중 에러가 발생했습니다: {str(e)}")
+
+# ── Drawing endpoint ──────────────────────────────────────────────────
+
+class DrawingRequest(BaseModel):
+    consultation_note: str
+
+class FigureItem(BaseModel):
+    fig_no: str
+    title: str
+    type: str
+    svg_url: str | None = None
+
+class ReferenceItem(BaseModel):
+    number: str
+    label: str
+
+class DrawingResponse(BaseModel):
+    status: str
+    figures: list[FigureItem]
+    reference_numerals: list[ReferenceItem]
+
+def _safe_app_num(text: str) -> str:
+    words = "_".join(text.strip().split()[:6])
+    return re.sub(r"[^A-Za-z0-9_-]", "_", words)[:40] or "unknown"
+
+@app.post("/generate-drawings", response_model=DrawingResponse)
+def generate_drawings(request: DrawingRequest):
+    try:
+        from agents.drawing.drawing_agent import generate_all_drawings
+
+        app_num = _safe_app_num(request.consultation_note)
+        output_dir = str(DRAWING_DIR.parent)  # drawing_analysis의 부모 = 프로젝트 루트
+        results = generate_all_drawings(request.consultation_note, app_num, "drawing_analysis")
+
+        figures: list[FigureItem] = []
+        for r in results:
+            nums = re.findall(r"\d+", r.fig_number)
+            fig_no = nums[0] if nums else str(len(figures) + 1)
+            svg_url = None
+            if r.svg_path and Path(r.svg_path).exists():
+                svg_url = f"/drawing-files/{app_num}/{Path(r.svg_path).name}"
+            figures.append(FigureItem(
+                fig_no=fig_no,
+                title=r.diagram_title,
+                type=r.diagram_type,
+                svg_url=svg_url,
+            ))
+
+        # 참조부호: patent_analysis.json에서 로드
+        ref_numerals: list[ReferenceItem] = []
+        analysis_path = DRAWING_DIR / app_num / "patent_analysis.json"
+        if analysis_path.exists():
+            analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
+            for i, comp in enumerate(analysis.get("components", [])):
+                ref_numerals.append(ReferenceItem(
+                    number=str(100 + i * 10),
+                    label=comp.get("name", ""),
+                ))
+
+        return DrawingResponse(status="ok", figures=figures, reference_numerals=ref_numerals)
+
+    except Exception as e:
+        print(f"Drawing error: {e}")
+        raise HTTPException(status_code=500, detail=f"도면 생성 중 에러: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn
