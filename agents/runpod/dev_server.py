@@ -58,16 +58,36 @@ def generate_claims_mock(request: ClaimRequest):
 
 
 def _clean_patent_text(text: str) -> str:
-    """특허 PDF 원문에서 헤더(IPC 코드, 날짜, 출원번호 등)를 제거하고
-    발명 설명 본문만 남긴다."""
-    # 본문 시작 키워드 찾기
-    markers = ["【기술분야】", "【발명의 설명】", "발명의 명칭", "기술분야", "배경기술", "【배경기술】"]
+    """특허 PDF에서 헤더를 제거하고 발명 설명 본문만 추출한다.
+
+    pdfjs-dist는 【】를 그대로 추출하거나 공백을 삽입하기도 하므로
+    다양한 패턴을 시도한다.
+    """
+    # 100자 이후에서 본문 시작 키워드 탐색
+    search_start = 100
+    markers = [
+        "기술분야", "배경기술", "발명의 설명",
+        "본 발명", "발명이 해결", "발명의 목적",
+        "과제의 해결", "해결하고자",
+    ]
+    best_idx = None
     for marker in markers:
-        idx = text.find(marker)
-        if idx != -1:
-            return text[idx:].strip()
-    # 키워드 없으면 전체 반환 (자유 텍스트 입력)
-    return text.strip()
+        idx = text.find(marker, search_start)
+        if idx != -1 and (best_idx is None or idx < best_idx):
+            best_idx = idx
+
+    if best_idx is not None:
+        # 본문만 최대 4000자
+        return text[best_idx:best_idx + 4000].strip()
+
+    # 마커 없으면 — (nn) 패턴 마지막 위치 이후 내용 사용
+    matches = list(re.finditer(r'\(\d{1,3}\)', text[:800]))
+    if matches:
+        skip_to = matches[-1].end()
+        return text[skip_to:skip_to + 4000].strip()
+
+    # 최후 폴백: 앞 300자 스킵 후 4000자
+    return text[300:4300].strip()
 
 
 @app.post("/generate-drawings")
@@ -90,8 +110,15 @@ def generate_drawings(request: DrawingRequest):
         analysis_path = DRAWING_DIR / app_num / "patent_analysis.json"
         if analysis_path.exists():
             analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
-            for i, comp in enumerate(analysis.get("components", [])):
-                ref_numerals.append(ReferenceItem(number=str(100 + i * 10), label=comp.get("name", "")))
+            for comp in analysis.get("components", []):
+                name = comp.get("name", "").strip()
+                num  = str(comp.get("component_id") or comp.get("ref_no") or "")
+                # 실제 구성요소만 — IPC코드·날짜·서술어·빈값 제외
+                if not name or len(name) < 2 or len(name) > 15:
+                    continue
+                if re.search(r'G0[0-9][A-Z]|\d{4}년|있다$|이다$|됩니다|수 있|[()[\]/]', name):
+                    continue
+                ref_numerals.append(ReferenceItem(number=num or str(100 + len(ref_numerals) * 10), label=name))
 
         return {"status": "ok", "figures": [f.model_dump() for f in figures], "reference_numerals": [r.model_dump() for r in ref_numerals]}
 
