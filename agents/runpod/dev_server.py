@@ -139,9 +139,12 @@ def _extract_invention_description(text: str) -> str:
 @app.post("/generate-drawings")
 def generate_drawings(request: DrawingRequest):
     try:
+        import hashlib
         cleaned_text = _clean_patent_text(request.consultation_note)
         structured_text = _extract_invention_description(cleaned_text)
-        app_num = re.sub(r"[^A-Za-z0-9_-]", "_", "_".join(structured_text.split()[:6]))[:40] or "unknown"
+        # 입력 텍스트 해시로 유니크한 app_num 생성 (캐시 충돌 방지)
+        h = hashlib.md5(request.consultation_note.encode()).hexdigest()[:8]
+        app_num = f"inv_{h}"
         results = generate_all_drawings(structured_text, app_num, str(DRAWING_DIR))
 
         figures = []
