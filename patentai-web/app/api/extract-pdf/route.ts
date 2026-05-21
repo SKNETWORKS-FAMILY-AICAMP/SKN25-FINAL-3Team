@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-// @ts-ignore
-import pdfParse from 'pdf-parse/lib/pdf-parse.js'
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,6 +7,9 @@ export async function POST(req: NextRequest) {
     if (!file) return NextResponse.json({ error: '파일이 없습니다.' }, { status: 400 })
 
     const buffer = Buffer.from(await file.arrayBuffer())
+
+    // dynamic import — Turbopack 호환
+    const pdfParse = (await import('pdf-parse')).default
     const result = await pdfParse(buffer)
     const text = result.text?.trim()
     if (!text) return NextResponse.json({ error: 'PDF에서 텍스트를 추출할 수 없습니다.' }, { status: 400 })
