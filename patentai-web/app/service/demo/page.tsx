@@ -35,17 +35,25 @@ export default function DemoPage() {
     setError('')
     setInput('')
 
-    const form = new FormData()
-    form.append('file', file)
     try {
-      const res = await fetch('/api/extract-pdf', { method: 'POST', body: form })
-      const data = await res.json()
-      if (!res.ok || data.error) {
-        setError(data.error || 'PDF 추출 실패')
+      const arrayBuffer = await file.arrayBuffer()
+      const { getDocument, GlobalWorkerOptions } = await import('pdfjs-dist')
+      GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${(await import('pdfjs-dist')).version}/build/pdf.worker.min.mjs`
+
+      const pdf = await getDocument({ data: arrayBuffer }).promise
+      const pages: string[] = []
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i)
+        const content = await page.getTextContent()
+        pages.push(content.items.map((item: any) => ('str' in item ? item.str : '')).join(' '))
+      }
+      const text = pages.join('\n').trim()
+      if (!text) {
+        setError('PDF에서 텍스트를 추출할 수 없습니다.')
         setStep('error')
         return
       }
-      setInput(data.text)
+      setInput(text)
       setStep('idle')
     } catch {
       setError('PDF 추출 중 오류가 발생했습니다.')
