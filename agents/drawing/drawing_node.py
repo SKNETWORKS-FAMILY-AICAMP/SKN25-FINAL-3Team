@@ -48,22 +48,34 @@ _FALLBACK = DrawingAgentOutput(
 
 # ── 입력 변환 ──────────────────────────────────────────────────────────
 
-def _state_to_invention_text(consultation: dict) -> str:
-    """ConsultationState → drawing_agent가 받는 특허 텍스트."""
+def _resolve_invention_source(state: dict) -> dict:
+    """summary.structured_invention 우선, 없으면 consultation 폴백."""
+    si = (state.get("summary") or {}).get("structured_invention") or {}
+    if si:
+        return si
+    return state.get("consultation") or {}
+
+
+def _state_to_invention_text(src: dict) -> str:
+    """ConsultationState 또는 structured_invention → drawing_agent가 받는 특허 텍스트."""
     parts: list[str] = []
 
-    if consultation.get("invention_title"):
-        parts.append(f"발명의 명칭: {consultation['invention_title']}")
-    if consultation.get("background"):
-        parts.append(f"배경기술: {consultation['background']}")
-    if consultation.get("problem"):
-        parts.append(f"해결하려는 과제: {consultation['problem']}")
-    if consultation.get("solution"):
-        parts.append(f"과제의 해결 수단: {consultation['solution']}")
-    if consultation.get("effect"):
-        parts.append(f"발명의 효과: {consultation['effect']}")
+    title = src.get("invention_title") or src.get("title")
+    if title:
+        parts.append(f"발명의 명칭: {title}")
+    if src.get("background"):
+        parts.append(f"배경기술: {src['background']}")
+    problem = src.get("problem") or src.get("problem_to_solve")
+    if problem:
+        parts.append(f"해결하려는 과제: {problem}")
+    solution = src.get("solution") or src.get("means_for_solving") or src.get("core_technology")
+    if solution:
+        parts.append(f"과제의 해결 수단: {solution}")
+    effect = src.get("effect") or src.get("expected_effects")
+    if effect:
+        parts.append(f"발명의 효과: {effect}")
 
-    comps = consultation.get("components") or []
+    comps = src.get("components") or []
     if comps:
         parts.append("\n발명의 상세한 설명")
         for c in comps:
@@ -72,7 +84,7 @@ def _state_to_invention_text(consultation: dict) -> str:
             if name:
                 parts.append(f"{name}은(는) {role}을(를) 수행한다." if role else f"{name}.")
 
-    steps = consultation.get("process_steps") or []
+    steps = src.get("process_steps") or []
     if steps:
         parts.append("\n처리 단계")
         for s in sorted(steps, key=lambda x: x.get("order", 0)):
@@ -94,8 +106,8 @@ def _state_to_invention_text(consultation: dict) -> str:
     return "\n".join(parts)
 
 
-def _safe_app_num(consultation: dict) -> str:
-    raw = consultation.get("invention_title") or "unknown"
+def _safe_app_num(src: dict) -> str:
+    raw = src.get("invention_title") or src.get("title") or "unknown"
     return re.sub(r"[^A-Za-z0-9_-]", "_", raw)[:40] or "unknown"
 
 
@@ -172,21 +184,21 @@ def _load_analysis(output_dir: str, app_num: str) -> dict:
 def drawing_node(state: dict) -> dict:
     """LangGraph 노드 함수.
 
-    입력: state["consultation"]
+    입력: state["summary"]["structured_invention"] 우선, 없으면 state["consultation"]
     출력: state["drawings"] ← DrawingAgentOutput.model_dump()
           state["workflow"]
 
     어떤 state가 들어와도 예외를 바깥으로 던지지 않는다.
     실패 시 hard fallback DrawingAgentOutput 반환.
     """
-    workflow     = state.get("workflow") or {}
-    consultation = state.get("consultation") or {}
+    workflow = state.get("workflow") or {}
     errors: list[str] = list(workflow.get("errors") or [])
 
-    if not consultation:
-        errors.append("drawing_node: consultation 데이터 없음")
+    src = _resolve_invention_source(state)
+    if not src:
+        errors.append("drawing_node: 발명 데이터 없음 (summary.structured_invention, consultation 모두 비어있음)")
         fallback = _FALLBACK.model_copy()
-        fallback.warnings.append("consultation 데이터 없음")
+        fallback.warnings.append("발명 데이터 없음")
         return {
             "drawings": fallback.model_dump(),
             "workflow": {**workflow, "errors": errors,
@@ -194,8 +206,8 @@ def drawing_node(state: dict) -> dict:
         }
 
     output_dir = "drawing_analysis"
-    app_num    = _safe_app_num(consultation)
-    text       = _state_to_invention_text(consultation)
+    app_num    = _safe_app_num(src)
+    text       = _state_to_invention_text(src)
 
     results: list = []
     try:
