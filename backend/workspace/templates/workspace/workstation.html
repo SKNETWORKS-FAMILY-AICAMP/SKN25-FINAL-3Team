@@ -56,8 +56,17 @@
 
     <div class="right-panel" style="flex: 1.5; display: flex; flex-direction: column; position: relative;">
         
+        
         <div style="padding: 20px 30px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
             <h2 style="font-size: 22px; margin: 0;">{{ project.title }}</h2>
+            <div class="chat-action-bar" style="padding: 0 30px; display: flex; justify-content: flex-end; margin-bottom: 5px;">
+                <button type="button" id="generate-claims-btn" 
+                        style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    청구항 작성
+                </button>
+            </div>
+            <form id="chat-form" style="display: flex; gap: 10px; padding: 20px 30px;">
+                </form>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
 
@@ -112,6 +121,15 @@
         0%, 80%, 100% { transform: scale(0); }
         40% { transform: scale(1); }
     }
+    
+    #generate-claims-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        filter: brightness(1.1);
+    }
+    #generate-claims-btn:active {
+        transform: translateY(1px);
+    }
 </style>
 
 <script>
@@ -120,6 +138,7 @@
     const chatBox = document.getElementById('chat-box');
     const fileBtn = document.getElementById('file-btn');
     const fileInput = document.getElementById('file-upload');
+    const generateClaimsBtn = document.getElementById('generate-claims-btn'); // HTML에 배치된 버튼 ID
 
     // 화면 로드 시 스크롤 하단 이동
     if (chatBox) {
@@ -277,6 +296,46 @@
         });
     }
 
+    if (generateClaimsBtn) {
+        generateClaimsBtn.addEventListener('click', function() {
+            // 기존에 구현한 'AI 변리사가 분석 중입니다' 로딩 인디케이터 활용 가능!
+            showLoading(); 
+            
+            fetch("{% url 'generate_claims_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeLoading(); // 로딩 제거
+                
+                if (data.status === 'success') {
+                    console.log("최종 청구항 데이터:", data.claims);
+                    let claimResultHtml = `📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과수: ${data.loop_count}회 루프)\n\n`;
+                    data.claims.forEach(c => {
+                        const typeBadge = c.is_dependent ? '[종속항]' : '[독립항]';
+                        claimResultHtml += `**청구항 ${c.claim_no} ${typeBadge}**\n${c.content}\n\n`;
+                    });
+                    addMessage('assistant', claimResultHtml);
+                    //alert(" 특허 청구범위 초안 작성이 성공적으로 완료되었습니다!");
+                    
+                } else if(data.status ==='warning') {
+                    //alert("요건미달: " + data.message);
+                    addMessage('assistant', "아직 발명의 요건이 충분히 수집되지 않아 청구항 작성을 시작할 수 없습니다.  좌측 패널을 확인하시고, 저와 대화하며 남은 항목을 먼저 채워주세요!");
+                } else {
+                    alert("에러 발생: " + data.message);
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("Error:", error);
+                alert("청구항 작성 요청 중 통신 오류가 발생했습니다.");
+            });
+        });
+    }
     document.addEventListener('DOMContentLoaded', function() {
     // 장고 템플릿 변수를 활용해 현재 방의 기존 메시지 개수를 파악합니다.
         const messageCount = parseInt("{{ chat_messages.count }}") || 0;

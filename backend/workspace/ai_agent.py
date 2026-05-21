@@ -90,11 +90,20 @@ PHASE2_EXTRACT_PROMPT = """
 - 작동단계: {algorithm_steps}
 사용자 입력: {user_input}
 [추출 규칙]
-- 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목이 있으면 리스트로 추출하세요.
-- 절대로 추측하지 마세요. 언급된 내용만 추출하세요.
+1. 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목을 추출하세요.
+2. 절대로 추측하지 말고 언급된 내용만 문장 형태로 정리하여 아래 JSON 배열(List)에 담아주세요.
+3. 해당되는 내용이 없으면 빈 배열 [] 을 반환하세요.
+반드시 아래 JSON 형식으로만 응답하세요:
+{{
+    "implementations": ["문장형태의 구현 수단", ...],
+    "parameters": ["문장형태의 데이터 파라미터", ...],
+    "algorithms": ["문장형태의 로직", ...],
+    "optional_features": ["문장형태의 부가기능", ...],
+    "error_handling": ["문장형태의 예외처리", ...]
+}}
 """
 
-ALGO_EXIT_KEYWORDS = ["완료", "끝", "종료", "save", "done", "complete"]
+#ALGO_EXIT_KEYWORDS = ["완료", "끝", "종료", "save", "done", "complete"]
 PHASE2_SKIP_KEYWORDS = ["모르", "없어", "없음", "나중에", "패스", "skip", "생략"]
 
 class DjangoPatentConsultant:

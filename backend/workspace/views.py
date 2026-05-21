@@ -11,6 +11,10 @@ from django.views.decorators.http import require_POST
 from django.core.files.storage import FileSystemStorage
 from .utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp
 import os
+import logging
+from agents.core.graph import build_patent_graph
+
+logger = logging.getLogger(__name__)
 
 @login_required(login_url='/accounts/login/')
 def dashboard(request):
@@ -236,3 +240,76 @@ def upload_file_api(request, project_id):
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
+
+@login_required(login_url='/accounts/login/')
+@require_POST
+def generate_claims_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    state = get_object_or_404(ConsultationState, project=project)
+
+    def is_valid(val):
+        return bool(val and val.strip() != "미파악")
+    
+    if not all([
+        is_valid(state.ext_problem), 
+        is_valid(state.ext_solution), 
+        is_valid(state.ext_differentiation), 
+        is_valid(state.ext_effect)
+    ]):
+        return JsonResponse({
+            'status': 'warning',
+            'message': '아직 발명의 핵심 4대 요소가 모두 파악되지 않았습니다.\nAI 변리사와의 대화를 통해 좌측 패널의 빈칸을 모두 채운 후 다시 시도해 주세요!'
+        })
+    
+    try:
+        db_details = project.details.all()
+
+        graph_elements = []
+        # 최상위 메인 해결수단(독립항용) 배치
+        graph_elements.append({
+            "element_id": 1,
+            "description": state.ext_solution or "본 발명의 핵심 제어 시스템",
+            "parent_id": None
+        })
+
+        # 유저가 채팅과 파일로 추가한 심화 정보들(종속항용)을 하위 엘리먼트로 주입
+        for idx, detail in enumerate(db_details, start=2):
+            graph_elements.append({
+                "element_id": idx,
+                "description": detail.content,
+                "parent_id": 1 # 1번 메인 기술 구성을 부모로 인용하도록 계층 구조 강제 맵핑
+            })
+
+        # 랭그래프 초기 데이터셋 구성
+        initial_patent_state = {
+            "summary_data": {
+                "problems": [state.ext_problem or "기존 기술의 명세서 기재 부족 문제"],
+                "elements": graph_elements,
+                "effects": [state.ext_effect or "특허 권리범위 확보 효율 증대 효과"],
+                "user_confirmed": True
+            }
+        }
+
+        # 2. 🧠 LangGraph 멀티 에이전트 엔진 구동!
+        logger.info(f"[{project.title}] 랭그래프 멀티에이전트 가동...")
+        graph = build_patent_graph()
+        
+        # 앙상블 체인이 스스로 수정을 거쳐 최종 통과한 결과물이 리턴됩니다.
+        final_output = graph.invoke(initial_patent_state)
+        
+        # 3. 결과 파싱 및 응답 데이터 정제
+        claims_data = final_output.get("claims_data", {}).get("claims", [])
+        examiner_data = final_output.get("examiner_data", {})
+
+        # 프론트엔드가 이쁘게 노출할 수 있도록 가공해서 JSON으로 리턴
+        return JsonResponse({
+            'status': 'success',
+            'is_approved_by_ai': examiner_data.get('is_approved', False),
+            'loop_count': examiner_data.get('revision_count', 0),
+            'claims': claims_data, # 청구항 번호와 전문 내용 리스트
+        })
+
+    except Exception as e:
+        logger.error(f"랭그래프 청구항 생성 에러: {e}")
+        return JsonResponse({'status': 'error', 'message': f"청구항 생성 중 AI 엔진 오류가 발생했습니다: {str(e)}"})
+    
