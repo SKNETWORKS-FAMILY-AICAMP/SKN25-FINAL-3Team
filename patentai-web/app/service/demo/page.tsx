@@ -51,7 +51,7 @@ export default function DemoPage() {
       setDrawings(data)
       setStep('done')
     } catch {
-      setError('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.')
+      setError('백엔드 서버에 연결할 수 없습니다.')
       setStep('error')
     }
   }
@@ -113,7 +113,7 @@ export default function DemoPage() {
 
         .demo-error { padding: 1.2rem 1.4rem; border: 1px solid rgba(231,76,60,.25); background: rgba(231,76,60,.04); margin-top: 1.5rem; }
         .demo-error-title { font-size: .8rem; font-weight: 700; color: #e74c3c; margin-bottom: .4rem; }
-        .demo-error-msg   { font-size: .82rem; color: #555; line-height: 1.7; }
+        .demo-error-msg { font-size: .82rem; color: #555; line-height: 1.7; }
 
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
         .modal { background: white; max-width: 900px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; }
@@ -139,7 +139,6 @@ export default function DemoPage() {
 
       <div className="demo-wrap">
 
-        {/* 입력 */}
         <div className="demo-label">발명 내용</div>
         <textarea
           className="demo-textarea"
@@ -149,28 +148,17 @@ export default function DemoPage() {
           disabled={step === 'loading'}
         />
         <div className="demo-btn-row">
-          <button
-            className="demo-btn"
-            onClick={handleGenerate}
-            disabled={step === 'loading' || !input.trim()}
-          >
+          <button className="demo-btn" onClick={handleGenerate} disabled={step === 'loading' || !input.trim()}>
             {step === 'loading' ? '생성 중...' : '도면 생성 →'}
           </button>
-          <button
-            className="demo-btn outline"
-            onClick={() => setInput(SAMPLE_INPUT)}
-            disabled={step === 'loading'}
-          >
+          <button className="demo-btn outline" onClick={() => setInput(SAMPLE_INPUT)} disabled={step === 'loading'}>
             샘플 입력
           </button>
-          {step !== 'idle' && (
-            <button className="demo-btn outline" onClick={reset} disabled={step === 'loading'}>
-              초기화
-            </button>
+          {(step !== 'idle') && (
+            <button className="demo-btn outline" onClick={reset} disabled={step === 'loading'}>초기화</button>
           )}
         </div>
 
-        {/* 로딩 */}
         {step === 'loading' && (
           <div className="demo-loading">
             <div className="demo-spinner" />
@@ -181,15 +169,13 @@ export default function DemoPage() {
           </div>
         )}
 
-        {/* 에러 */}
         {step === 'error' && (
           <div className="demo-error">
-            <div className="demo-error-title">생성 실패</div>
+            <div className="demo-error-title">오류 발생</div>
             <div className="demo-error-msg">{error}</div>
           </div>
         )}
 
-        {/* 결과 */}
         {step === 'done' && drawings && (
           <div className="demo-result">
             <div className="demo-result-hd">
@@ -199,16 +185,13 @@ export default function DemoPage() {
               </span>
             </div>
             <div className="demo-result-body">
-
-              {/* 도면 그리드 */}
               <div className="demo-drawings">
                 {drawings.figures.map((fig, i) => (
                   <div key={i} className="demo-drawing-card" onClick={() => setSelectedFig(fig)}>
-                    {fig.svg_url ? (
-                      <img className="demo-drawing-img" src={fig.svg_url} alt={fig.title} />
-                    ) : (
-                      <div className="demo-drawing-placeholder">도 {fig.fig_no}</div>
-                    )}
+                    {fig.svg_url
+                      ? <img className="demo-drawing-img" src={fig.svg_url} alt={fig.title} />
+                      : <div className="demo-drawing-placeholder">도 {fig.fig_no}</div>
+                    }
                     <div className="demo-drawing-meta">
                       <div className="demo-drawing-type">{String(fig.type).toUpperCase()}</div>
                       <div className="demo-drawing-title">{fig.title || `도 ${fig.fig_no}`}</div>
@@ -217,14 +200,11 @@ export default function DemoPage() {
                 ))}
               </div>
 
-              {/* 참조부호 */}
               {drawings.reference_numerals?.length > 0 && (
                 <>
                   <div className="demo-label" style={{ marginTop: '2rem' }}>참조부호</div>
                   <table className="ref-table">
-                    <thead>
-                      <tr><th>부호</th><th>명칭</th></tr>
-                    </thead>
+                    <thead><tr><th>부호</th><th>명칭</th></tr></thead>
                     <tbody>
                       {drawings.reference_numerals.map((r, i) => (
                         <tr key={i}>
@@ -236,13 +216,11 @@ export default function DemoPage() {
                   </table>
                 </>
               )}
-
             </div>
           </div>
         )}
       </div>
 
-      {/* 도면 모달 */}
       {selectedFig && (
         <div className="modal-bg" onClick={() => setSelectedFig(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
