@@ -1,7 +1,6 @@
 import json
 import logging
 from typing import Dict, List, Any
-
 from langchain_openai import ChatOpenAI
 from agents.core.state import PatentState, ConsultationData, ClaimResult, ClaimItem, Element
 
@@ -22,14 +21,22 @@ def generate_claims_structure(consultation: ConsultationData) -> ClaimResult:
     problems = consultation.get("problems", [])
     effects = consultation.get("effects", [])
 
-    element_map: Dict[int, Element] = {el["element_id"]: el for el in elements}
+    #element_map: Dict[int, Element] = {el["element_id"]: el for el in elements}
+    element_map = {}
+    for el in elements:
+        key = el["element_id"]
+        element_map[key] = el
     el_to_claim_map: Dict[int, int] = {}
     
     claims_list: List[ClaimItem] = []
     current_claim_no = 1
 
     # [STEP 1] 독립항 생성 (parent_id가 없는 최상위 요소)
-    top_elements = [el for el in elements if el.get("parent_id") is None]
+    #top_elements = [el for el in elements if el.get("parent_id") is None]
+    top_elements = []
+    for el in elements:
+        if el.get("parent_id") is None:
+            top_elements.append(el)
     
     for el in top_elements:
         el_id = el["element_id"]
@@ -54,8 +61,12 @@ def generate_claims_structure(consultation: ConsultationData) -> ClaimResult:
         current_claim_no += 1
 
     # [STEP 2] 종속항 생성 (parent_id가 존재하는 세부 요소)
-    sub_elements = [el for el in elements if el.get("parent_id") is not None]
-    
+    #sub_elements = [el for el in elements if el.get("parent_id") is not None]
+    sub_elements = []
+    for el in elements:
+        if el.get("parent_id") is not None:
+            sub_elements.append(el)
+
     for el in sub_elements:
         el_id = el["element_id"]
         parent_id = el["parent_id"]

@@ -241,37 +241,6 @@ class DjangoPatentConsultant:
             next_question = "추가로 덧붙이실 내용이 있나요?"
 
         return f"{ai_empathy}\n\n그렇다면 {next_question}"
-
-        # # 4대 요소가 부족하다면, 다음 질문 생성 (GPT-4o-mini)
-        # recent_chats = list(self.project.chat_messages.order_by('-created_at')[:6])
-        # history = [{"role": msg.role, "content": msg.content} for msg in reversed(recent_chats)]
-        # state_summary = f"- 문제점: {self.state.ext_problem or '미파악'}\n- 해결방법: {self.state.ext_solution or '미파악'}\n- 차별성: {self.state.ext_differentiation or '미파악'}\n- 기대효과: {self.state.ext_effect or '미파악'}"
-        
-        # missing_fields = [
-        # ("기존 문제점", self.state.ext_problem),
-        # ("해결 방법", self.state.ext_solution),
-        # ("차별성", self.state.ext_differentiation),
-        # ("기대 효과", self.state.ext_effect),
-        # ]
-
-        # target_label = next(
-        #     (label for label, value in missing_fields if not value),
-        #     "모두 완료"
-        # )
-
-        # try:
-        #     chat_resp = self.client.chat.completions.create(
-        #         model="gpt-4o-mini",
-        #         messages=[
-        #             {"role": "system", "content": PHASE1_CHAT_PROMPT.format(state_summary=state_summary, target_label=target_label)},
-        #             *history,
-        #             {"role": "user", "content": f"사용자의 최근 발언: {user_input}\n\n위 발언에 공감하고, 다음 단계인 '{target_label}'에 대해 질문해줘."}
-        #         ]
-        #     )
-        #     return chat_resp.choices[0].message.content.strip()
-        # except Exception as e:
-        #     logger.error(f"질문 생성 실패: {e}")
-        #     return f"말씀하신 내용을 잘 들었습니다. 그렇다면 '{target_label}'에 대해서는 어떻게 생각하시나요?"
     
     def _handle_phase_2(self, user_input: str) -> str:
         if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
