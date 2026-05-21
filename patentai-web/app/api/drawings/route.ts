@@ -34,16 +34,19 @@ export async function POST(req: NextRequest) {
       }))
     }
 
-    // 참조부호 필터링 — IPC 코드, 날짜, 긴 문장 등 제거
+    // 참조부호 필터링
     if (data.reference_numerals) {
       data.reference_numerals = data.reference_numerals.filter(
         (r: { number: string; label: string }) => {
           const label = r.label?.trim() || ''
-          if (!label) return false
-          if (label.length > 20) return false            // 너무 긴 텍스트
-          if (/G0[0-9][A-Z]/.test(label)) return false  // IPC 코드 (G06F 등)
-          if (/^\d{4}/.test(label)) return false         // 날짜로 시작
-          if (/[()[\]]/.test(label)) return false        // 괄호 포함
+          if (!label || label.length < 2) return false          // 빈값·한글자
+          if (label.length > 15) return false                   // 너무 긴 텍스트
+          if (/G0[0-9][A-Z]/.test(label)) return false          // IPC 코드
+          if (/\d{4}년/.test(label)) return false               // 날짜 (2026년 등)
+          if (/[()[\]/]/.test(label)) return false              // 괄호·슬래시
+          if (/있다$|이다$|됩니다$|합니다$|수 있/.test(label)) return false  // 서술어
+          if (/^\d+$/.test(label)) return false                 // 숫자만
+          if (/^[a-zA-Z0-9\s]+$/.test(label) && label.length > 6) return false // 영숫자 긴 것
           return true
         }
       )

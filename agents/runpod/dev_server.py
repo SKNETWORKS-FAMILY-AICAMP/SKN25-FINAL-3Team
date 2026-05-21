@@ -57,11 +57,25 @@ def generate_claims_mock(request: ClaimRequest):
     }
 
 
+def _clean_patent_text(text: str) -> str:
+    """특허 PDF 원문에서 헤더(IPC 코드, 날짜, 출원번호 등)를 제거하고
+    발명 설명 본문만 남긴다."""
+    # 본문 시작 키워드 찾기
+    markers = ["【기술분야】", "【발명의 설명】", "발명의 명칭", "기술분야", "배경기술", "【배경기술】"]
+    for marker in markers:
+        idx = text.find(marker)
+        if idx != -1:
+            return text[idx:].strip()
+    # 키워드 없으면 전체 반환 (자유 텍스트 입력)
+    return text.strip()
+
+
 @app.post("/generate-drawings")
 def generate_drawings(request: DrawingRequest):
     try:
-        app_num = re.sub(r"[^A-Za-z0-9_-]", "_", "_".join(request.consultation_note.split()[:6]))[:40] or "unknown"
-        results = generate_all_drawings(request.consultation_note, app_num, str(DRAWING_DIR))
+        cleaned_text = _clean_patent_text(request.consultation_note)
+        app_num = re.sub(r"[^A-Za-z0-9_-]", "_", "_".join(cleaned_text.split()[:6]))[:40] or "unknown"
+        results = generate_all_drawings(cleaned_text, app_num, str(DRAWING_DIR))
 
         figures = []
         for r in results:
