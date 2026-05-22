@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement, PatentClaim
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
@@ -315,10 +315,44 @@ def generate_claims_api(request, project_id):
 
         return JsonResponse({
             'status': 'success',
-            'message_content': claim_result_text
+            'message_content': claim_result_text,
+            'claims': claims_data
         })
 
     except Exception as e:
         logger.error(f"랭그래프 청구항 생성 에러: {e}")
         return JsonResponse({'status': 'error', 'message': f"청구항 생성 중 AI 엔진 오류가 발생했습니다: {str(e)}"})
     
+@login_required(login_url='/accounts/login/')
+@require_POST
+def save_claims_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+
+    try:
+        data = json.loads(request.body)
+        claims_list = data.get('claims', [])
+
+        if not claims_list:
+            return JsonResponse({'status': 'error', 'message': '저장할 청구항 데이터가 없습니다.'})
+        
+        project.claims.all().delete()
+
+        claims_to_create = []
+        for c in claims_list:
+            claims_to_create.append(
+                PatentClaim(
+                    project=project,
+                    claim_no=c.get('claim_no'),
+                    is_dependent=c.get('is_dependent', False),
+                    cited_claim_no=c.get('cited_claim_no', []),
+                    category=c.get('category', ''),
+                    content=c.get('content', '')
+                )
+            )
+
+        PatentClaim.objects.bulk_create(claims_to_create)
+
+        return JsonResponse({'status': 'success'})
+    
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})

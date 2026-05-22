@@ -308,11 +308,48 @@
             })
             .then(response => response.json())
             .then(data => {
-                removeLoading(); // 로딩 제거
+                removeLoading(); 
                 
                 if (data.status === 'success') {
                     addMessage('assistant', data.message_content);
-                    //alert("🎉 특허 청구범위 초안 작성이 완료되었으며, 대화 기록에 안전하게 저장되었습니다!");
+                    const saveBtnId = 'save-claim-btn-' + Date.now();
+                    const btnHtml = `
+                    <div style="text-align: right; margin-top: -5px; margin-bottom: 20px; max-width: 80%;">
+                        <button id="${saveBtnId}" style="background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+                            이 청구항 맘에 들면 저장해랏
+                        </button>
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', btnHtml);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                document.getElementById(saveBtnId).addEventListener('click', function() {
+                    const btn = this;
+                    btn.innerText = "저장 중...";
+                    btn.disabled = true;
+
+                    fetch("{% url 'save_claims_api' project.id %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ claims: data.claims })
+                    })
+                    .then(res => res.json())
+                    .then(saveData => {
+                        if (saveData.status === 'success') {
+                            btn.innerText = "저장 완료!";
+                            btn.style.background = "#10b981"; 
+                            btn.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.3)";
+                        } else {
+                            alert("저장 실패: " + saveData.message);
+                            btn.innerText = "다시 시도";
+                            btn.disabled = false;
+                        }
+                    });
+                });
+
+
                 } else if(data.status ==='warning') {
                     //alert("요건미달: " + data.message);
                     addMessage('assistant', "아직 발명의 요건이 충분히 수집되지 않아 청구항 작성을 시작할 수 없습니다.  좌측 패널을 확인하시고, 저와 대화하며 남은 항목을 먼저 채워주세요!");
