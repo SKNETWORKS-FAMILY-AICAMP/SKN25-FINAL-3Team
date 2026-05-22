@@ -81,10 +81,6 @@ def parse_patent_txt(txt_file: str) -> dict:
 def classify_type(title: str) -> str:
     t = title or ""
     if any(k in t for k in ["순서도","흐름도","플로우","과정","절차","방법","단계"]): return "flowchart"
-    if any(k in t for k in ["구성도","시스템","장치","블록도","구조도","모듈"]):     return "block_diagram"
-    if any(k in t for k in ["화면","UI","인터페이스","표시"]):                        return "ui_screen"
-    if any(k in t for k in ["시퀀스","상호작용","통신","메시지"]):                   return "sequence"
-    if any(k in t for k in ["상태"]):                                                 return "stateDiagram"
     return "block_diagram"
 
 def extract_figure_list(text: str) -> list:
@@ -119,12 +115,15 @@ SYSTEM_PROMPT = """당신은 특허 명세서를 분석하여 도면 설계 JSON
 {
   "invention_type": "hardware|software|method|system|hybrid",
   "main_concept": "발명의 핵심 개념", "technical_problem": "기술적 과제", "solution_summary": "해결 수단",
-  "recommended_diagrams": [{"fig_number":"도 1","diagram_type":"flowchart|block_diagram|sequence|ui_screen|stateDiagram","title":"","purpose":"","source_text":""}],
+  "recommended_diagrams": [{"fig_number":"도 1","diagram_type":"block_diagram|flowchart","title":"","purpose":"","source_text":""}],
   "components": [{"component_id":"100","name":"구성요소명","component_type":"device|process|data|actor|module|database|container|external","description":"","source_text":"","relationships":[{"target":"200","label":"","direction":"->","source_text":""}]}],
   "process_flow": [{"step_id":"S100","step_type":"terminal|process|decision|io","name":"","description":"","source_text":"","branches":[{"label":"예","target":"S200"},{"label":"아니오","target":"S300"}]}],
   "key_actors": ["사용자","서버"]
 }
-규칙: 도면 최소 2개(구성도+흐름도) / 흐름도: terminal→process→terminal / 구성요소 5개 이상 원문 그대로 / decision은 branches 필수"""
+도면 타입 선택 기준:
+- block_diagram: 시스템/장치 구성요소 관계 (도 1, 항상 포함)
+- flowchart: 처리 단계·방법 순서 (도 2, 항상 포함)
+규칙: 도면 2개 생성 / 흐름도: terminal→process→terminal / 구성요소 5개 이상 원문 그대로 / decision은 branches 필수"""
 
 def extract_components(text: str, app_num: str, local_figs: list, local_refs: list) -> dict:
     prompt = f"특허 출원번호: {app_num}\n\n[도면 목록]\n{json.dumps(local_figs,ensure_ascii=False,indent=2)}\n\n[부호 설명]\n{json.dumps(local_refs,ensure_ascii=False,indent=2)}\n\n[특허 명세서]\n{text[:15000]}"
@@ -163,32 +162,6 @@ def build_fig_design(analysis: dict, diagram_info: dict) -> dict:
                              "shape_type":stype,"description":step.get("description",""),
                              "source_text":step.get("source_text",""),"branches":step.get("branches",[])})
         relations = [{"from":elements[i]["id"],"to":elements[i+1]["id"],"label":""} for i in range(len(elements)-1)]
-
-    elif dtype == "sequence":
-        actors = analysis.get("key_actors",[]) or ["클라이언트","서버"]
-        for idx, a in enumerate(actors[:6]):
-            elements.append({"id":f"A{idx}","ref_no":f"A{idx}","name":a,"type":"actor","description":"","source_text":""})
-        for idx, step in enumerate(flow[:12], 1):
-            relations.append({"from":f"A{(idx-1)%max(1,len(actors)-1)}","to":f"A{idx%len(actors)}",
-                              "label":step.get("name",f"메시지 {idx}"),"msg_type":"sync" if idx%3!=0 else "async",
-                              "source_text":step.get("source_text","")})
-
-    elif dtype in ["stateDiagram","ui_screen"]:
-        prefix = "ST" if dtype == "stateDiagram" else "UI"
-        sorted_c = sorted(comps, key=comp_priority)[:8 if dtype=="stateDiagram" else 10]
-        for idx, c in enumerate(sorted_c, 1):
-            cid = str(c.get("component_id","")).strip() or f"{idx*100}"
-            elements.append({"id":f"{prefix}{cid}","ref_no":cid,"name":c.get("name",""),
-                             "type":"state" if dtype=="stateDiagram" else c.get("component_type","module"),
-                             "description":c.get("description",""),"source_text":c.get("source_text","")})
-        if dtype == "stateDiagram":
-            id_map = {str(e["ref_no"]): e["id"] for e in elements}
-            for c in sorted_c:
-                src = id_map.get(str(c.get("component_id","")).strip())
-                if src:
-                    for rel in c.get("relationships",[]):
-                        tgt = id_map.get(str(rel.get("target","")).strip())
-                        if tgt: relations.append({"from":src,"to":tgt,"label":rel.get("label",""),"source_text":rel.get("source_text","")})
 
     else:  # block_diagram
         sorted_c = sorted(comps, key=comp_priority)[:MAX_BLOCK_ELEMENTS]
@@ -416,116 +389,9 @@ def render_block_diagram(fig_json: dict) -> Tuple[str, dict]:
                         "internal_count":len(internal),"external_count":len(external)}
 
 
-def render_sequence(fig_json: dict) -> Tuple[str, dict]:
-    elements, relations = fig_json.get("elements",[]), fig_json.get("relations",[])
-    actors = [e for e in elements if e.get("type") in ["actor","external","module"]] or [{"id":"A0","name":"클라이언트"},{"id":"A1","name":"서버"}]
-    AW,AH,CG,TOP,MG,ABW = 140,58,185,80,68,12
-    n_actors, n_msgs = len(actors), len(relations)
-    width = max(900, n_actors*(AW+CG)+100); height = TOP+AH+n_msgs*MG+100
-    c = SvgCanvas(width, height)
-    c.text(width/2, 36, f"{fig_json.get('fig_number','')}  {fig_json.get('title','')}", size=22, weight="bold")
-    total_w = n_actors*AW+(n_actors-1)*CG; start_x=(width-total_w)/2
-    actor_cx: Dict[str,float] = {}
-    for i, actor in enumerate(actors):
-        ax = start_x+i*(AW+CG); cx = ax+AW/2; actor_cx[actor["id"]] = cx
-        c.rect(ax,TOP,AW,AH,sw=2.2,rx=3); c.mtext(cx,TOP+AH/2,trunc(actor.get("name",""),10),size=16,weight="bold",max_ch=8)
-        c.line(cx,TOP+AH,cx,height-55,sw=1.1,dash="6 4",arrow=False)
-        c.rect(ax,height-55,AW,AH,sw=2.2,rx=3); c.mtext(cx,height-55+AH/2,trunc(actor.get("name",""),10),size=16,weight="bold",max_ch=8)
-
-    msg_y0 = TOP+AH+MG; active_boxes: List[Tuple] = []
-    for i, rel in enumerate(relations):
-        fcx,tcx = actor_cx.get(rel.get("from","")), actor_cx.get(rel.get("to",""))
-        if fcx is None or tcx is None: continue
-        y, mtype, label = msg_y0+i*MG, rel.get("msg_type","sync"), rel.get("label","")
-        if rel.get("from") == rel.get("to"):
-            lx=fcx+ABW/2; c.path(f"M {lx:.1f},{y:.1f} L {lx+45:.1f},{y:.1f} L {lx+45:.1f},{y+30:.1f} L {lx:.1f},{y+30:.1f}",sw=1.7,arrow=True)
-            c.text(lx+48,y+15,trunc(label,16),size=13,anchor="start"); continue
-        is_ret = tcx < fcx
-        c.line(fcx,y,tcx,y,sw=1.7,dash="5 3" if (is_ret or mtype=="async") else None,arrow=True,marker="arr-open" if mtype=="async" else "arr")
-        mid_x=(fcx+tcx)/2; c.text(mid_x,y-13,trunc(label,20),size=13,anchor="middle"); c.text(mid_x,y+13,str(i+1),size=12,anchor="middle",fill="#999")
-        for cx in [fcx,tcx]: active_boxes.append((cx,y-4,y+4,ABW))
-    for (cx,ay,by,bw) in active_boxes: c.rect(cx-bw/2,ay,bw,by-ay+10,sw=1.2,fill="#f0f0f0")
-    return c.to_svg(), {"layout_type":"patent_sequence_pro","canvas":{"width":width,"height":height},"actor_count":n_actors,"message_count":n_msgs}
-
-
-def render_state_diagram(fig_json: dict) -> Tuple[str, dict]:
-    elements = fig_json.get("elements",[]) or [{"id":"ST0","ref_no":"S0","name":"초기 상태"},{"id":"ST1","ref_no":"S1","name":"처리 중"},{"id":"ST2","ref_no":"S2","name":"완료"}]
-    relations = fig_json.get("relations",[])
-    n, NW, NH, width, height = len(elements), 160, 60, 1050, 820
-    c = SvgCanvas(width, height)
-    c.text(width/2, 40, f"{fig_json.get('fig_number','')}  {fig_json.get('title','')}", size=22, weight="bold")
-    c.rect(48, 68, width-96, height-100, sw=1.5, dash="8 5")
-    cols = min(3,n); rows = math.ceil(n/cols)
-    col_step=(width-150)/max(cols,1); row_step=(height-200)/max(rows,1)
-    positions: Dict[str,Tuple[float,float]] = {}
-    for i, e in enumerate(elements):
-        r,col = i//cols,i%cols
-        positions[e["id"]] = (75+col_step/2+col*col_step, 140+r*row_step)
-    if elements:
-        fpx,fpy=positions[elements[0]["id"]]; c.circle(fpx,fpy-NH/2-35,11,fill="#111"); c.line(fpx,fpy-NH/2-24,fpx,fpy-NH/2,sw=2.0)
-    for i, e in enumerate(elements):
-        px,py = positions[e["id"]]; name,ref,is_last = trunc(e.get("name",""),12),e.get("ref_no",""),i==len(elements)-1
-        if is_last and n>1:
-            c.rect(px-NW/2-5,py-NH/2-5,NW+10,NH+10,sw=2.5,rx=26); c.rect(px-NW/2,py-NH/2,NW,NH,sw=2.0,rx=22,fill="#f8f8f8")
-        else: c.rect(px-NW/2,py-NH/2,NW,NH,sw=2.2,rx=22)
-        c.mtext(px,py,name,size=16,weight="bold",max_ch=8,gap=18)
-        if ref: c.text(px+NW/2+28,py-NH/2+8,ref,size=15,weight="bold",anchor="start")
-    if elements and n>1:
-        lpx,lpy=positions[elements[-1]["id"]]; ey=lpy+NH/2+38
-        c.line(lpx,lpy+NH/2,lpx,ey-14,sw=2.0); c.circle(lpx,ey,13,fill="#fff",sw=3); c.circle(lpx,ey,8,fill="#111")
-    drawn_pairs: set = set()
-    for rel in relations:
-        fid,tid = rel.get("from",""),rel.get("to","")
-        fp,tp = positions.get(fid),positions.get(tid)
-        if not fp or not tp: continue
-        pair,rev=(fid,tid),(tid,fid); is_rev=rev in drawn_pairs; drawn_pairs.add(pair)
-        fx,fy=fp; tx,ty=tp; dist=math.sqrt((tx-fx)**2+(ty-fy)**2) or 1
-        ux,uy=(tx-fx)/dist,(ty-fy)/dist
-        sx,sy=fx+ux*NW/2,fy+uy*NH/2; ex2,ey2=tx-ux*NW/2,ty-uy*NH/2; label=rel.get("label","")
-        if is_rev:
-            off=40; mx,my=(sx+ex2)/2+(-uy*off),(sy+ey2)/2+(ux*off)
-            c.path(f"M {sx:.1f},{sy:.1f} Q {mx:.1f},{my:.1f} {ex2:.1f},{ey2:.1f}",sw=1.8,arrow=True)
-            if label: c.text(mx,my-13,trunc(label,14),size=13,anchor="middle",fill="#333")
-        else:
-            c.line(sx,sy,ex2,ey2,sw=1.8)
-            if label: c.text((sx+ex2)/2+(-uy*24),(sy+ey2)/2+(ux*24)-8,trunc(label,14),size=13,anchor="middle",fill="#333")
-    return c.to_svg(), {"layout_type":"patent_state_pro","canvas":{"width":width,"height":height},"state_count":n,"transition_count":len(relations)}
-
-
-def render_ui_screen(fig_json: dict) -> Tuple[str, dict]:
-    elements = fig_json.get("elements",[]) or [{"id":"UI100","ref_no":"100","name":"메인 화면","type":"module"}]
-    FX,FY,FW,EH,EG = 130,100,700,65,16
-    frame_h = max(480, len(elements)*(EH+EG)+80); width,height = 960,frame_h+FY+90
-    c = SvgCanvas(width, height)
-    c.text(width/2, 44, f"{fig_json.get('fig_number','')}  {fig_json.get('title','')}", size=22, weight="bold")
-    c.rect(FX-22,FY-32,FW+44,frame_h+64,sw=2.8,rx=16); c.rect(FX-22,FY-32,FW+44,26,sw=0,fill="#e2e2e2",rx=6)
-    c.circle(width/2-8,FY-19,4,fill="#aaa",sw=0); c.text(width/2,FY-19,"●",size=9,fill="#888")
-    c.rect(FX,FY,FW,frame_h,sw=1.0,fill="#fafafa")
-    EX,EW,SY = FX+18,FW-36,FY+18
-    for i, e in enumerate(elements):
-        ey,ref,name,t = SY+i*(EH+EG),e.get("ref_no",""),trunc(e.get("name",""),16),str(e.get("type","module")).lower()
-        if t in ["actor","container"] or i==0:
-            c.rect(EX,ey,EW,EH,sw=1.5,fill="#e8e8e8",rx=4); c.line(EX,ey+EH,EX+EW,ey+EH,sw=2.0,arrow=False)
-            c.text(EX+EW/2,ey+EH/2,name,size=17,weight="bold",anchor="middle")
-        elif t in ["data","database"]:
-            c.rect(EX,ey,EW,EH,sw=1.3,dash="4 3",rx=2); c.line(EX+28,ey+8,EX+28,ey+EH-8,sw=1.0,arrow=False)
-            c.text(EX+14,ey+EH/2,"≡",size=20,anchor="middle",fill="#888"); c.text(EX+50,ey+EH/2,name,size=16,anchor="start")
-        elif t=="process":
-            bw=min(260,EW*0.5); bx=EX+(EW-bw)/2; c.rect(bx,ey+8,bw,EH-16,sw=2.0,rx=10,fill="#f0f0f0")
-            c.text(EX+EW/2,ey+EH/2,name,size=16,weight="bold")
-        else:
-            c.rect(EX,ey,EW,EH,sw=1.8,rx=5); c.text(EX+14,ey+EH/2,name,size=16,anchor="start",fill="#444")
-            c.line(EX+10,ey+EH-10,EX+EW-10,ey+EH-10,sw=1.0,dash="3 2",arrow=False)
-        if ref: c.leader(EX+EW+65,ey+14,EX+EW,ey+EH/2,ref)
-    return c.to_svg(), {"layout_type":"patent_ui_pro","canvas":{"width":width,"height":height},"element_count":len(elements)}
-
-
 def render_patent_svg(fig_json: dict, style_template: str = DEFAULT_STYLE) -> Tuple[str, dict]:
     dtype = fig_json.get("diagram_type","block_diagram")
     if dtype in ["flowchart","method","process"]: return render_flowchart(fig_json)
-    if dtype == "sequence":     return render_sequence(fig_json)
-    if dtype == "stateDiagram": return render_state_diagram(fig_json)
-    if dtype == "ui_screen":    return render_ui_screen(fig_json)
     return render_block_diagram(fig_json)
 
 
@@ -545,8 +411,8 @@ def validate_fig(fig: dict) -> dict:
 def score_quality(fig: dict, val: dict, layout: dict) -> dict:
     score,issues,strengths = 100,[],[]
     elements=fig.get("elements",[]); dtype=fig.get("diagram_type","")
-    PRO={"patent_flow_pro","patent_block_pro","patent_sequence_pro","patent_state_pro","patent_ui_pro"}
-    VALID={"flowchart","block_diagram","sequence","ui_screen","stateDiagram","concept_diagram"}
+    PRO={"patent_flow_pro","patent_block_pro"}
+    VALID={"flowchart","block_diagram"}
     no_ref=[e for e in elements if not e.get("ref_no")]
     if len(elements)>=3: strengths.append("구성요소 수 충분")
     else: score-=15; issues.append("구성요소 3개 미만")
@@ -660,10 +526,19 @@ def generate_all_drawings(invention_text: str, app_num: str, output_dir: str = "
     analysis = merge_refs(extract_components(invention_text, app_num, local_figs, local_refs), local_refs)
     save_json(app_dir/"patent_analysis.json", analysis)
     print(f"  → 발명 유형: {analysis.get('invention_type')} / 핵심 개념: {analysis.get('main_concept')}")
-    recommended = (analysis.get("recommended_diagrams",[]) or local_figs or [
+    recommended = analysis.get("recommended_diagrams", []) or local_figs or [
         {"fig_number":"도 1","diagram_type":"block_diagram","title":"전체 구성도","purpose":"전체 구성","source_text":"자동 생성"},
         {"fig_number":"도 2","diagram_type":"flowchart","title":"처리 흐름도","purpose":"처리 흐름","source_text":"자동 생성"},
-    ])[:2]
+    ]
+
+    # block_diagram, flowchart 2종만 생성
+    recommended = [d for d in recommended if d.get("diagram_type") in {"block_diagram","flowchart"}]
+    if not any(d.get("diagram_type")=="block_diagram" for d in recommended):
+        recommended.insert(0, {"fig_number":"도 1","diagram_type":"block_diagram","title":"전체 구성도","purpose":"전체 구성","source_text":"자동 생성"})
+    if not any(d.get("diagram_type")=="flowchart" for d in recommended):
+        n = len(recommended) + 1
+        recommended.append({"fig_number":f"도 {n}","diagram_type":"flowchart","title":"처리 흐름도","purpose":"처리 흐름","source_text":"자동 생성"})
+
     save_json(app_dir/"figures.json", {"figures":recommended})
 
     for diagram_info in recommended:
