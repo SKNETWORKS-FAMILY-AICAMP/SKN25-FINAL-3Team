@@ -9,14 +9,14 @@ import { useLang } from '@/contexts/LangContext'
 import { t, tr } from '@/lib/i18n'
 
 const categories = [
-  { id: 'all',      sub: 'ALL' },
-  { id: 'filing',   sub: 'PATENT FILING' },
-  { id: 'service',  sub: 'OUR SERVICE' },
-  { id: 'priorart', sub: 'PRIOR ART' },
-  { id: 'spec',     sub: 'SPECIFICATION' },
-  { id: 'drawing',  sub: 'DRAWING' },
-  { id: 'cost',     sub: 'COST & TIMELINE' },
-  { id: 'usage',    sub: 'HOW TO USE' },
+  { id: 'all' },
+  { id: 'filing' },
+  { id: 'service' },
+  { id: 'priorart' },
+  { id: 'spec' },
+  { id: 'drawing' },
+  { id: 'cost' },
+  { id: 'usage' },
 ]
 
 const faqs: { cat: string; q: string; a: string; ref: string | null }[] = [
@@ -568,11 +568,6 @@ export default function FaqPage() {
         }
         .faq-tab.active .faq-tab-label { color: #111128; }
         .faq-tab:hover .faq-tab-label { color: #111128; }
-        .faq-tab-sub {
-          font-size: 0.62rem; color: #B8A87A; letter-spacing: 0.1em;
-          font-weight: 500; white-space: nowrap;
-        }
-        .faq-tab.active .faq-tab-sub { color: #C9A84C; }
         .faq-tab-count {
           background: #E8E4DC; color: #888; flex-shrink: 0;
           font-size: 0.72rem; font-weight: 600;
@@ -694,7 +689,7 @@ export default function FaqPage() {
           .faq-sidebar-heading { width: 100%; border-bottom: none; padding: 0; margin-bottom: 0; }
           .faq-tab { width: auto; border-left: none; border: 1px solid #E8E4DC; padding: 0.4rem 0.9rem; }
           .faq-tab.active { border-color: #C9A84C; background: #F5F4F1; }
-          .faq-tab-sub { display: none; }
+
           .faq-content { padding: 1.5rem; }
           .faq-search-wrap, .faq-cta { padding: 1.5rem; }
           .faq-stats { flex-wrap: wrap; }
@@ -757,7 +752,6 @@ export default function FaqPage() {
               >
                 <span className="faq-tab-left">
                   <span className="faq-tab-label">{catLabel(cat.id)}</span>
-                  {cat.id !== 'all' && <span className="faq-tab-sub">{cat.sub}</span>}
                 </span>
                 <span className="faq-tab-count">{cnt}</span>
               </button>
@@ -772,7 +766,7 @@ export default function FaqPage() {
               <strong>{filtered.length}</strong> {tr(fT.resultLabel, lang)}
             </div>
             <div className="faq-result-cat">
-              {categories.find(c => c.id === activeTab)?.sub ?? 'ALL'}
+              {catLabel(activeTab)}
             </div>
           </div>
 
