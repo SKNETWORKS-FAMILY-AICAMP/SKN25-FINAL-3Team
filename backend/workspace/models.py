@@ -46,3 +46,19 @@ class DetailElement(models.Model):
     project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='details')
     element_type = models.CharField(max_length=50)
     content = models.TextField()
+
+
+class PatentClaim(models.Model):
+    project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='claims')
+    claim_no = models.IntegerField(verbose_name="청구항 번호")
+    is_dependent = models.BooleanField(default=False, verbose_name="종속항 여부")
+    cited_claim_no = models.JSONField(default=list, blank=True, verbose_name="인용항 번호 목록")
+    category = models.CharField(max_length=50, verbose_name="카테고리(방법/시스템 등)")
+    content = models.TextField(verbose_name="청구항 내용")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['claim_no'] # 항상 청구항 번호 순서대로 정렬되도록 설정
+
+    def __str__(self):
+        return f"[{self.project.title}] 청구항 {self.claim_no}"
