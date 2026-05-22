@@ -356,3 +356,36 @@ def save_claims_api(request, project_id):
     
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
+@login_required(login_url='/accounts/login/')
+def manage_claims_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+
+    if request.method == 'GET':
+        claims = project.claims.all() # 아까 Meta에 ordering을 해둬서 번호순으로 나옴
+        if not claims.exists():
+            return JsonResponse({'status': 'empty', 'message': '저장된 청구항이 없습니다. 먼저 우측 상단의 "AI 청구항 작성 시작"을 통해 초안을 생성하고 저장해 주세요.'})
+            
+        claims_data = [{
+            'id': c.id,
+            'claim_no': c.claim_no,
+            'is_dependent': c.is_dependent,
+            'content': c.content
+        } for c in claims]
+        
+        return JsonResponse({'status': 'success', 'claims': claims_data})
+
+    elif request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            updated_claims = data.get('claims', [])
+
+            # 각 청구항의 id를 찾아 content만 갈아끼움
+            for item in updated_claims:
+                claim = PatentClaim.objects.get(id=item['id'], project=project)
+                claim.content = item['content']
+                claim.save()
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})

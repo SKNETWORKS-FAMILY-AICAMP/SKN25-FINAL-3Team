@@ -64,6 +64,10 @@
                         style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
                     청구항 작성
                 </button>
+                <button type="button" id="edit-claims-btn" 
+                        style="background: #334155; color: white; border: 1px solid #475569; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    청구항 수정
+                </button>
             </div>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
@@ -402,4 +406,109 @@
         }
     });
 </script>
+<div id="claim-edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
+    
+    <div style="background: #1e293b; width: 60%; max-height: 85vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid #334155;">
+        
+        <div style="padding: 20px 30px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; color: #f8fafc; font-size: 18px;">✏️ 특허 청구범위 직접 수정</h3>
+            <button id="close-modal-btn" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; transition: 0.2s;">&times;</button>
+        </div>
+        
+        <div id="modal-claims-container" style="padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: #0f172a;">
+            <p style="color: #94a3b8; text-align: center;">데이터를 불러오는 중입니다...</p>
+        </div>
+        
+        <div style="padding: 20px 30px; border-top: 1px solid #334155; text-align: right; background: #1e293b;">
+            <button id="modal-save-btn" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+                수정된 내용 저장
+            </button>
+        </div>
+        
+    </div>
+</div>
+<script>
+const editClaimsBtn = document.getElementById('edit-claims-btn');
+const modal = document.getElementById('claim-edit-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const modalContainer = document.getElementById('modal-claims-container');
+const modalSaveBtn = document.getElementById('modal-save-btn');
+
+if (editClaimsBtn) {
+    editClaimsBtn.addEventListener('click', () => {
+        // 모달창 띄우기 (Flex로 중앙 정렬)
+        modal.style.display = 'flex';
+        modalContainer.innerHTML = '<p style="color: #94a3b8; text-align: center;">데이터를 불러오는 중입니다...</p>';
+
+        // 백엔드(GET)에서 저장된 청구항 불러오기
+        fetch("{% url 'manage_claims_api' project.id %}")
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'empty') {
+                modalContainer.innerHTML = `<p style="color: #ef4444; text-align: center;">${data.message}</p>`;
+                modalSaveBtn.style.display = 'none'; // 저장 버튼 숨김
+            } else if (data.status === 'success') {
+                modalSaveBtn.style.display = 'inline-block';
+                modalContainer.innerHTML = ''; // 로딩 텍스트 지우기
+                
+                // 입력 폼 동적 생성
+                data.claims.forEach(c => {
+                    const badge = c.is_dependent ? '[종속항]' : '[독립항]';
+                    const boxHtml = `
+                        <div class="claim-edit-box" data-id="${c.id}" style="background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155;">
+                            <h4 style="margin: 0 0 10px 0; color: #38bdf8; font-size: 15px;">청구항 ${c.claim_no} <span style="color: #94a3b8; font-size: 13px;">${badge}</span></h4>
+                            <textarea class="claim-content-input" style="width: 100%; height: 100px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 10px; color: #f8fafc; font-size: 14px; outline: none; resize: vertical; line-height: 1.5; box-sizing: border-box;">${c.content}</textarea>
+                        </div>
+                    `;
+                    modalContainer.insertAdjacentHTML('beforeend', boxHtml);
+                });
+            }
+        });
+    });
+}
+
+// 2. 모달 닫기 버튼(X 표 또는 바깥 배경 클릭)
+closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+});
+
+// 3. 모달 안에서 [💾 수정된 내용 저장] 클릭 (POST 통신)
+modalSaveBtn.addEventListener('click', () => {
+    const originalText = modalSaveBtn.innerText;
+    modalSaveBtn.innerText = '⏳ 저장 중...';
+    modalSaveBtn.disabled = true;
+
+    // 화면의 textarea들을 순회하며 데이터 수집
+    const updatedClaims = [];
+    document.querySelectorAll('.claim-edit-box').forEach(box => {
+        const claimId = box.getAttribute('data-id');
+        const content = box.querySelector('.claim-content-input').value;
+        updatedClaims.push({ id: claimId, content: content });
+    });
+
+    fetch("{% url 'manage_claims_api' project.id %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ claims: updatedClaims })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('수정된 청구항이 성공적으로 저장되었습니다!');
+            modal.style.display = 'none'; // 성공 시 모달 닫기
+        } else {
+            alert('저장 실패: ' + data.message);
+        }
+    })
+    .finally(() => {
+        modalSaveBtn.innerText = originalText;
+        modalSaveBtn.disabled = false;
+    });
+});    
+</script>
+
 {% endblock %}
