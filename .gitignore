@@ -83,3 +83,6 @@ models/**/optimizer.pt
 models/**/scheduler.pt
 models/**/runs/
 models/**/wandb/
+
+# IDE
+.vscode/
