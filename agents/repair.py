@@ -12,10 +12,11 @@ from typing import Any
 DEFAULT_REPAIR_MODEL = os.getenv("AGENT_REPAIR_MODEL") or os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
 MAX_RAW_OUTPUT_CHARS = int(os.getenv("AGENT_REPAIR_MAX_RAW_CHARS", "12000"))
 
-PIPELINE_CONTEXT = "입력 → 상담 → 청구항 → 도면/선행기술/명세서 → Composer → 최종 출력"
+PIPELINE_CONTEXT = "입력 → 요약본작성 → 청구항 → 도면/선행기술/명세서 → Composer → 최종 출력"
 
 AGENT_REPAIR_HINTS: dict[str, str] = {
-    "consultation": "문제, 해결수단, 구성요소, 입력 데이터, 출력 결과, 효과, 부족정보, 추가질문을 raw_output에서 보존한다.",
+    "master": "현재 단계, 다음 action, current_agent, next_agent, pipeline_index, 요약본 승인 여부를 보존한다.",
+    "summary": "5개 입력 필드, readable_summary, structured_invention, feedback_applied, warnings를 raw_output에서 보존한다.",
     "claim": "청구항 번호, 독립/종속, method/system/storage_medium 분류, depends_on, 청구항 문장, 구성요소를 보존한다. 새 청구항을 작성하지 않는다.",
     "drawing": "도면 번호, 도면 제목/유형, 구성요소, 설명, 참조부호를 보존한다. 새 도면을 만들지 않는다.",
     "prior_art": "검색 query, 후보 patent_id/title/score, 겹치는 점, 차이점, 근거, PDF 경로를 보존한다. 후보 특허를 상상하지 않는다.",

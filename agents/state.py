@@ -26,12 +26,12 @@ from typing import Any, Literal, TypedDict
 # 1. 공통 분류값
 # -----------------------------------------------------------------------------
 # Literal은 "이 값들 중 하나만 허용한다"는 뜻이다.
-# 예: AgentName은 "master", "consultation" 등 정해진 agent 이름만 가질 수 있다.
+# 예: AgentName은 "master", "summary" 등 정해진 agent 이름만 가질 수 있다.
 
 # 그래프에 참여하는 에이전트 이름 목록.
 AgentName = Literal[
     "master",  # 전체 흐름을 제어하는 Orchestrator. 직접 문서 작성보다는 다음 agent 선택 담당.
-    "consultation",  # 상담 agent. 사용자 설명을 발명 구조 JSON으로 정리하고 부족 정보를 질문.
+    "summary",  # 요약본작성 agent. 5개 입력을 readable_summary와 structured_invention으로 정리.
     "prior_art",  # 선행기술조사 agent. 유사 특허 검색, 차이점, 신규성/진보성 리스크 분석.
     "claim",  # 청구항 생성 agent. 청구항 설계도와 독립항/종속항 초안 생성.
     "drawing",  # 도면 agent. 도면 구성, 도 번호, 참조부호 계획 생성.
@@ -112,18 +112,8 @@ class WorkflowState(TypedDict, total=False):
 
 
 # -----------------------------------------------------------------------------
-# 3. 상담 agent State
+# 3. 요약본작성 Summary agent State
 # -----------------------------------------------------------------------------
-
-class FollowupQuestion(TypedDict, total=False):
-    """상담 agent가 사용자에게 물어볼 추가 질문."""
-
-    target_slot: str  # 어떤 발명 정보 슬롯을 채우기 위한 질문인지. 예: differentiation.
-    question: str  # 실제 질문 문장.
-    why_needed: str  # 왜 이 정보가 필요한지.
-    based_on: str  # 어떤 사용자 입력/상태를 근거로 질문했는지.
-    expected_answer_type: str  # 기대 답변 형태. 예: 구성요소 설명, 효과 설명.
-
 
 class Component(TypedDict, total=False):
     """발명을 이루는 구성요소 하나. 예: 데이터 수집부, AI 분석부."""
@@ -150,26 +140,26 @@ class ProcessStep(TypedDict, total=False):
     mandatory: bool  # 필수 단계인지 여부.
 
 
-class ConsultationState(TypedDict, total=False):
-    """상담 agent가 사용자 입력을 발명 정보로 구조화한 결과."""
+class SummaryState(TypedDict, total=False):
+    """요약본작성 agent가 5개 입력을 정리한 결과.
 
-    user_input: str  # 사용자의 원래 발명 설명.
-    invention_title: str  # 발명 명칭 후보.
-    problem: str  # 해결하려는 문제.
-    background: str  # 배경 상황/기존 문제.
-    solution: str  # 해결 수단.
-    components: list[Component]  # 구성요소 목록.
-    process_steps: list[ProcessStep]  # 처리 단계 목록.
-    input_data: list[str]  # 입력 데이터.
-    output_result: str  # 출력 결과.
-    ai_usage: str  # AI가 실제로 하는 역할.
-    application_domain: str  # 적용 분야. 예: 제조, 의료, 교육.
-    effect: str  # 기술적 효과.
-    differentiation: str  # 기존기술 대비 차이점.
-    claim_like_features: list[str]  # 청구항에 들어갈 만한 핵심 특징.
-    missing_slots: list[str]  # 아직 부족한 정보 필드.
-    followup_questions: list[FollowupQuestion]  # 추가 질문 목록.
-    completeness_score: float  # 발명 정보 완성도 점수.
+    중간발표 MVP에서는 재질문/slot filling을 하지 않는다.
+    사용자가 입력한 5개 필드를 사람이 읽는 요약본과 후속 agent용 구조화 발명 정보로 정리한다.
+    """
+
+    project_name: str  # 프로젝트명 또는 발명 명칭 후보.
+    problem_to_solve: str  # 해결하고자 하는 문제/과제.
+    prior_art_problem: str  # 기존 기술의 문제점.
+    core_technology: str  # 핵심 기술 구성/해결 수단.
+    expected_effect: str  # 발명의 효과.
+
+    readable_summary: str  # 사용자가 확인할 사람이 읽기 쉬운 요약본.
+    structured_invention: dict[str, Any]  # 후속 agent가 공통으로 읽을 발명 구조.
+
+    feedback_history: list[str]  # 사용자가 남긴 요약본 수정 피드백 이력.
+    feedback_applied: list[str]  # 반영된 피드백.
+    warnings: list[str]  # 입력만으로 확정하기 어려운 부분.
+    accepted: bool  # 사용자가 요약본을 승인했는지 여부.
 
 
 # -----------------------------------------------------------------------------
@@ -306,7 +296,7 @@ class TermEntry(TypedDict, total=False):
     reference_no: str  # 참조부호. 예: 120.
     first_defined_in: str  # 처음 정의된 위치. 예: drawings.figures[0].
     used_in: list[str]  # 사용된 위치 목록.
-    source_component_id: str  # 상담 state의 Component.id와 연결.
+    source_component_id: str  # summary.structured_invention의 component id/name과 연결.
 
 
 class LinkEntry(TypedDict, total=False):
@@ -402,7 +392,7 @@ class ComposerState(TypedDict, total=False):
     composer가 그 결과를 단순히 붙이는 것이 아니라 최종 문서로 재편집하는 방식이다.
 
     composer의 우선순위:
-    1. structured JSON: consultation, prior_art, claims, drawings, specification
+    1. structured JSON: summary, prior_art, claims, drawings, specification
     2. reference/relation: document_links, invention_graph
     3. fixed rules: rules/*.yaml
     4. 각 agent가 만든 초안 문장
@@ -467,7 +457,7 @@ class PatentAgentState(TypedDict, total=False):
     """LangGraph 전체에서 공유되는 최상위 State.
 
     A안 유지:
-    - `consultation`, `prior_art`, `claims`, `drawings`, `specification` 안에
+    - `summary`, `prior_art`, `claims`, `drawings`, `specification` 안에
       각 agent의 구조화 데이터와 부분 초안을 함께 저장한다.
     - `composer`는 각 초안을 단순 조립하지 않고, State 전체를 참조해 최종 문서로 재편집한다.
     - `final_package`만 최종 산출물이다.
@@ -476,7 +466,7 @@ class PatentAgentState(TypedDict, total=False):
     workflow: WorkflowState  # 현재 진행 상태/다음 agent/trace/error.
     messages: list[dict[str, Any]]  # 대화 메시지 기록. LangGraph messages와 연결 가능.
 
-    consultation: ConsultationState  # 상담 agent 산출물.
+    summary: SummaryState  # 요약본작성 agent 산출물.
     prior_art: PriorArtState  # 선행기술조사 agent 산출물.
     claims: ClaimState  # 청구항 agent 산출물.
     drawings: DrawingState  # 도면 agent 산출물.
@@ -502,21 +492,25 @@ def create_initial_state(user_input: str = "") -> PatentAgentState:
         "workflow": {
             "status": "idle",
             "current_agent": "master",
-            "next_agent": "consultation",
+            "next_agent": "summary",
             "iteration_count": 0,
             "max_iterations": 8,
             "trace": [],
             "errors": [],
         },
         "messages": [],
-        "consultation": {
-            "user_input": user_input,
-            "components": [],
-            "process_steps": [],
-            "input_data": [],
-            "claim_like_features": [],
-            "missing_slots": [],
-            "followup_questions": [],
+        "summary": {
+            "project_name": "",
+            "problem_to_solve": user_input,
+            "prior_art_problem": "",
+            "core_technology": "",
+            "expected_effect": "",
+            "readable_summary": "",
+            "structured_invention": {},
+            "feedback_history": [],
+            "feedback_applied": [],
+            "warnings": [],
+            "accepted": False,
         },
         "prior_art": {"candidates": [], "limitations": []},
         "claims": {"draft_claims": [], "claim_strategy_notes": []},
@@ -549,7 +543,7 @@ def create_initial_state(user_input: str = "") -> PatentAgentState:
         },
         "composer": {
             "source_priority": [
-                "consultation",
+                "summary",
                 "document_links",
                 "invention_graph",
                 "claims",
