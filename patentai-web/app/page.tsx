@@ -50,6 +50,7 @@ function StatItem({ target, label, suffix = '' }: { target: number; label: strin
 export default function Home() {
   const { lang } = useLang()
   const h = t.home
+  const c = t.compare
 
   return (
     <div className="site">
@@ -147,66 +148,42 @@ export default function Home() {
           @media(max-width:480px){ div[style*="5.5rem 6.5rem"] { padding: 3.5rem 1.4rem !important; } }
         `}</style>
         <div className="cmp-wrap">
-          <div className="cmp-tag">WHY PATENTAI</div>
-          <div className="cmp-title">기존 변리사무소와 무엇이 다른가요?</div>
-          <div className="cmp-sub">PatentAI는 변리사를 대체하지 않습니다. 변리사가 더 잘할 수 있도록 AI가 초안의 전 과정을 자동화합니다.</div>
+          <div className="cmp-tag">{tr(c.tag, lang)}</div>
+          <div className="cmp-title">{tr(c.title, lang)}</div>
+          <div className="cmp-sub">{tr(c.sub, lang)}</div>
 
           <div className="cmp-grid">
             {/* 헤더 */}
             <div className="cmp-col-head cmp-col-head-old">
               <span className="cmp-col-dot cmp-col-dot-old" />
-              <span className="cmp-col-label cmp-col-label-old">기존 변리사무소</span>
+              <span className="cmp-col-label cmp-col-label-old">{tr(c.colOld, lang)}</span>
             </div>
             <div className="cmp-col-head cmp-col-head-new">
               <span className="cmp-col-dot cmp-col-dot-new" />
-              <span className="cmp-col-label cmp-col-label-new">PATENTAI</span>
+              <span className="cmp-col-label cmp-col-label-new">{tr(c.colNew, lang)}</span>
             </div>
 
-            {[
-              {
-                label: '비용',
-                old: '명세서 작성 단독 200–500만 원\n선행기술 조사 별도 50–100만 원',
-                neu: '초안 자동화로 변리사 검토 시간 60–80% 단축\n전체 비용 대폭 절감',
-              },
-              {
-                label: '처리 시간',
-                old: '명세서 초안 작성 2–4주\n선행기술 조사 1–2주',
-                neu: '명세서 초안 3–7분\n선행기술 조사 2–5분\n도면 자동 생성 30초',
-              },
-              {
-                label: '접근성',
-                old: '대면 미팅 또는 이메일·전화 필수\n영업시간(평일 9–18시)만 가능',
-                neu: '24시간 365일 온라인 접근\n언어 제한 없음 (한/영/일/중)',
-              },
-              {
-                label: '투명성',
-                old: '진행 상황을 알기 어려움\n결과물만 전달받는 구조',
-                neu: '단계별 AI 처리 결과 즉시 확인\n구조화 JSON·리포트 자동 생성',
-              },
-              {
-                label: '도면 품질',
-                old: '도면사 별도 의뢰 필요\n수작업으로 수정 반복',
-                neu: '특허청 실무 기준 SVG 자동 생성\n품질 점수 자동 검증 (A/B/C/D 등급)',
-              },
-              {
-                label: '선행기술 조사',
-                old: 'KIPRIS 수동 키워드 검색\n조사 범위·누락 위험',
-                neu: 'KIPRIS·USPTO·EPO 동시 벡터 검색\nRRF 하이브리드로 신규성 위험 사전 파악',
-              },
-            ].map((row, i) => (
+            {([
+              { label: c.row1l, old: c.row1old, neu: c.row1new },
+              { label: c.row2l, old: c.row2old, neu: c.row2new },
+              { label: c.row3l, old: c.row3old, neu: c.row3new },
+              { label: c.row4l, old: c.row4old, neu: c.row4new },
+              { label: c.row5l, old: c.row5old, neu: c.row5new },
+              { label: c.row6l, old: c.row6old, neu: c.row6new },
+            ] as const).map((row, i) => (
               <div key={i} className="cmp-row">
                 <div className="cmp-cell cmp-cell-old">
                   <span className="cmp-cell-icon" style={{ color: '#333355' }}>✕</span>
                   <div className="cmp-cell-text cmp-cell-text-old">
-                    <span className="cmp-cell-label">{row.label}</span>
-                    {row.old.split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
+                    <span className="cmp-cell-label">{tr(row.label, lang)}</span>
+                    {tr(row.old, lang).split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
                   </div>
                 </div>
                 <div className="cmp-cell cmp-cell-new">
                   <span className="cmp-cell-icon" style={{ color: '#C9A84C' }}>✓</span>
                   <div className="cmp-cell-text cmp-cell-text-new">
-                    <span className="cmp-cell-label cmp-cell-label-new">{row.label}</span>
-                    {row.neu.split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
+                    <span className="cmp-cell-label cmp-cell-label-new">{tr(row.label, lang)}</span>
+                    {tr(row.neu, lang).split('\n').map((l, j) => <span key={j} style={{ display: 'block' }}>{l}</span>)}
                   </div>
                 </div>
               </div>
@@ -215,10 +192,10 @@ export default function Home() {
 
           <div className="cmp-bottom">
             {[
-              { num: '60–80%', label: '변리사 초안 작업 시간 단축' },
-              { num: '30초', label: '특허 도면 자동 생성' },
-              { num: '3개국', label: '특허 DB 동시 조사 (KR·US·EU)' },
-              { num: '24 / 7', label: '언제나 접근 가능' },
+              { num: '60–80%', label: tr(c.stat1l, lang) },
+              { num: '30초',   label: tr(c.stat2l, lang) },
+              { num: '3',      label: tr(c.stat3l, lang) },
+              { num: '24 / 7', label: tr(c.stat4l, lang) },
             ].map(s => (
               <div key={s.label} className="cmp-stat">
                 <div className="cmp-stat-num">{s.num}</div>
