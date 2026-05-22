@@ -6,6 +6,21 @@ import Footer from '@/components/Footer'
 
 type Step = 'idle' | 'extracting' | 'loading' | 'done' | 'error'
 
+const TYPE_META: Record<string, { label: string; color: string }> = {
+  block_diagram: { label: '블록도',          color: '#1a6fb5' },
+  flowchart:     { label: '흐름도',          color: '#27ae60' },
+  sequence:      { label: '시퀀스 다이어그램', color: '#8e44ad' },
+  ui_screen:     { label: '화면 예시도',      color: '#e67e22' },
+  circuit:       { label: '회로도',          color: '#c0392b' },
+}
+
+function typeLabel(type: string) {
+  return TYPE_META[type]?.label ?? type.toUpperCase()
+}
+function typeColor(type: string) {
+  return TYPE_META[type]?.color ?? '#C9A84C'
+}
+
 interface FigureItem {
   fig_no: string | number
   title: string
@@ -297,7 +312,9 @@ export default function DemoPage() {
                       : <div className="demo-drawing-placeholder">도 {fig.fig_no}</div>
                     }
                     <div className="demo-drawing-meta">
-                      <div className="demo-drawing-type">{String(fig.type).toUpperCase()}</div>
+                      <div className="demo-drawing-type" style={{ color: typeColor(fig.type) }}>
+                        {typeLabel(fig.type)}
+                      </div>
                       <div className="demo-drawing-title">{fig.title || `도 ${fig.fig_no}`}</div>
                     </div>
                   </div>
@@ -331,8 +348,8 @@ export default function DemoPage() {
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div className="modal-hd">
               <div>
-                <div style={{ fontSize: '.65rem', fontWeight: 700, letterSpacing: '.15em', color: '#C9A84C', marginBottom: '3px' }}>
-                  {String(selectedFig.type).toUpperCase()}
+                <div style={{ fontSize: '.65rem', fontWeight: 700, letterSpacing: '.15em', color: typeColor(selectedFig.type), marginBottom: '3px' }}>
+                  {typeLabel(selectedFig.type)}
                 </div>
                 <div style={{ fontWeight: 700, color: '#0A0A16' }}>{selectedFig.title || `도 ${selectedFig.fig_no}`}</div>
               </div>
