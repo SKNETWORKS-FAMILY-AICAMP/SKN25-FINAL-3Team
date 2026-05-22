@@ -14,6 +14,10 @@ __pycache__/
 # Streamlit (Next.js로 교체됨)
 .streamlit/
 
+# 임시 폴더
+temp_imgs/
+temp_uploads/
+
 # OS
 .DS_Store
 Thumbs.db
