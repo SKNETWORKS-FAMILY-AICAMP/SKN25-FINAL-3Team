@@ -70,56 +70,40 @@ if validated.status == "ok":
     }
     # 이후 details["document_links_patch"]를 state["document_links"]에 병합...
 ```
+### 3.2. 파일 기반 저장소 사용 예시 (신규 마크다운 저장소 기능)
 
-### 3.2. 기존 DB 연동이 필요한 경우 (Legacy 호환)
-
-DB 관련 함수들은 `specification_legacy_db.py`로 완전히 격리되어 있습니다. 필요한 경우에만 추가로 명시적 import하여 사용합니다.
+MVP 목표인 파일 기반 명세서 확인 및 다운로드를 위해 `specification_storage.py` 모듈을 제공합니다. 이 모듈을 사용하여 명세서 데이터를 마크다운 파일로 저장하거나 이전에 저장된 파일을 로드할 수 있습니다.
 
 ```python
-# Legacy DB 모듈은 필요할 때 별도로 임포트합니다.
-from agents.specification.specification_legacy_db import (
-    init_specification_tables,
-    fetch_data_for_specification,
-    build_state_from_legacy_spec_data,
-    save_specification_to_db
+from agents.specification import (
+    save_specification,
+    load_specification_markdown,
+    get_specification_markdown_path
 )
-from agents.specification import run_specification_agent
-from agents.schemas.specification import SpecificationAgentOutput
 
-# 1. DB 초기화 (앱 시작 시 1회)
-init_specification_tables()
+# 1. 명세서 데이터를 마크다운 파일로 로컬 디스크에 저장
+# 저장 경로: data/specifications/{user_id}/{consultation_idx}/specification.md
+# save_json=True일 경우 디버그용 JSON 파일도 함께 생성됩니다.
+paths = save_specification(
+    user_id="user1",
+    consultation_idx=1,
+    spec_data=state["specification"],
+    save_json=True
+)
+print("마크다운 저장 완료:", paths["markdown_path"])
 
-# 2. 기존 DB에서 데이터 가져오기 및 State 변환
-legacy_data = fetch_data_for_specification(user_id="user1", consultation_idx=1)
-state = build_state_from_legacy_spec_data(legacy_data)
-
-# 3. 명세서 에이전트 실행
-raw_output = run_specification_agent(state)
-validated = SpecificationAgentOutput.model_validate(raw_output)
-
-# 4. 검증 후 state 병합
-state["specification"] = {
-    "technical_field": validated.technical_field,
-    "background_art": validated.background_art,
-    "problem_to_solve": validated.problem_to_solve,
-    "means_for_solving": validated.means_for_solving,
-    "effects": validated.effects,
-    "brief_description_of_drawings": validated.brief_description_of_drawings,
-    "detailed_description": validated.detailed_description,
-    "embodiment_notes": validated.details.get("embodiment_notes", []),
-}
-
-# 5. DB 저장 (Graph/Master에서 최종 state 구성 후 명시적 호출)
-save_specification_to_db(
-    user_id="user1", 
-    consultation_idx=1, 
-    spec=state["specification"]
+# 2. 저장된 명세서 마크다운 파일 로드
+markdown_content = load_specification_markdown(
+    user_id="user1",
+    consultation_idx=1
 )
 ```
 
 ## 4. 파일 구성
 
-- `specification_agent.py`: 발명의 설명 섹션 생성을 담당하는 메인 파이프라인. DB 의존성이 없으며 output dict만 생성합니다.
+- `specification_agent.py`: 발명의 설명 섹션 생성을 담당하는 메인 파이프라인. DB 의존성 없이 순수 state만 다루며 output dict만 생성합니다.
+- `specification_storage.py`: 생성된 명세서를 특허 형식에 맞게 마크다운 포맷으로 변환하고 파일로 저장/조회하는 마크다운 파일 전용 저장소 유틸리티.
 - `spec_helpers.py`: 프롬프트 구성, JSON 파싱, 문단 분리, 환각 검증, 용어 정규화 레코드 생성, patch 및 support_matrix를 생성하는 헬퍼 유틸리티 모음.
-- `specification_legacy_db.py`: `GeneratedSpecification` 테이블 및 이전 시스템과 호환성을 제공하는 DB 전용 레거시 유틸리티 코드.
-- `patent_docx.py`: 생성된 데이터를 기반으로 DOCX 파일을 조립하는 레거시 유틸리티.
+- `spec_test_app.py`: 명세서 생성, 마크다운/JSON 로컬 저장 및 실시간 브라우저 다운로드, 과거 생성 이력 로드 및 조회 기능을 제공하는 초프리미엄 사이버 다크 테마 Streamlit 테스트 앱.
+- `__init__.py`: 에이전트 실행 및 파일 저장 레이어의 모든 핵심 API를 외부로 노출(export)하는 패키지 진입 파일.
+
