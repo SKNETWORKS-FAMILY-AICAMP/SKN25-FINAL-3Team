@@ -1,9 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false)
+  const { lang } = useLang()
+  const c = t.cookie
 
   useEffect(() => {
     if (!localStorage.getItem('cookie-consent')) setVisible(true)
@@ -33,11 +37,10 @@ export default function CookieBanner() {
     }}>
       <div style={{ flex: 1, minWidth: 260 }}>
         <div style={{ color: '#F0EDE6', fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.3rem' }}>
-          🍪 쿠키 사용 안내
+          🍪 {tr(c.title, lang)}
         </div>
         <div style={{ color: '#9999B8', fontSize: '0.8rem', lineHeight: 1.6 }}>
-          PatentAI는 서비스 품질 향상을 위해 쿠키를 사용합니다.
-          자세한 내용은 개인정보처리방침을 확인해 주세요.
+          {tr(c.desc, lang)}
         </div>
       </div>
       <div style={{ display: 'flex', gap: '0.6rem', flexShrink: 0 }}>
@@ -47,7 +50,7 @@ export default function CookieBanner() {
           color: '#9999B8', fontSize: '0.82rem', cursor: 'pointer',
           transition: '0.15s',
         }}>
-          거부
+          {tr(c.decline, lang)}
         </button>
         <button onClick={accept} style={{
           height: 38, padding: '0 1.5rem',
@@ -55,7 +58,7 @@ export default function CookieBanner() {
           color: '#111128', fontSize: '0.82rem', fontWeight: 700,
           cursor: 'pointer', transition: '0.15s',
         }}>
-          동의
+          {tr(c.accept, lang)}
         </button>
       </div>
     </div>

@@ -7,47 +7,64 @@ import { useLang } from '@/contexts/LangContext'
 import { t, tr } from '@/lib/i18n'
 import { useState } from 'react'
 
-const services = [
-  {
-    num: '01', href: '/service/consultation',
-    tag: 'CONSULTATION', title: '특허 상담 에이전트', summary: '발명 내용을 AI가 구조화',
-    desc: '문제점·해결수단·효과·구성요소를 단계별로 수집하는 대화형 AI 에이전트. PDF·HWP 파일 업로드도 지원합니다.',
-    steps: ['발명 내용 자유 입력', 'AI 자동 구조화', '알고리즘 단계 수집', '발명 요약 저장'],
-    output: '발명 구조화 JSON · 상담 리포트 · Supabase DB 저장', time: '5–10분',
-  },
-  {
-    num: '02', href: '/service/prior-art',
-    tag: 'PRIOR ART', title: '선행기술 조사 에이전트', summary: '전 세계 특허 DB 자동 분석',
-    desc: 'KIPRIS·USPTO·EPO를 벡터 유사도 검색으로 탐색하여 신규성·진보성 위험을 사전에 파악합니다.',
-    steps: ['키워드·IPC 자동 추출', 'DB 대량 수집', '벡터 유사도 분석', '위험도 리포트 생성'],
-    output: '유사 특허 TOP-N · 유사도 점수 · 위험도 등급', time: '2–5분',
-  },
-  {
-    num: '03', href: '/service/specification',
-    tag: 'SPECIFICATION', title: '명세서 작성 에이전트', summary: 'sLLM으로 청구항 자동 초안',
-    desc: '특허 데이터로 파인튜닝한 EXAONE sLLM이 독립항·종속항·발명의 설명·실시예를 자동 작성합니다.',
-    steps: ['상담 데이터 분석', '청구항 자동 생성 (sLLM)', '발명의 설명 초안화', '특허청 형식 출력'],
-    output: '청구항 · 발명의 설명 · 실시예 초안', time: '3–7분',
-  },
-  {
-    num: '04', href: '/service/drawing',
-    tag: 'DRAWING AGENT', title: '도면 자동 생성 에이전트', summary: '특허청 기준 SVG 도면 생성',
-    desc: '명세서 텍스트만으로 블록도·흐름도·시퀀스·상태도 등 5종 도면을 자동 생성. 품질 점수 A등급 달성.',
-    steps: ['구성요소 자동 추출', '도면 유형 자동 분류', 'SVG 직접 렌더링', '품질 자동 검증'],
-    output: 'SVG 벡터 도면 · PNG 고해상도 · 품질 리포트', time: '30초–2분',
-  },
-  {
-    num: '05', href: '/service/review',
-    tag: 'EMBODIMENT', title: '발설 에이전트', summary: '발명의 설명·실시예 자동 생성',
-    desc: 'GPT-4o-mini가 도면 fig_json과 청구항을 결합하여 명세서의 발명의 설명·실시예 섹션을 자동 작성합니다.',
-    steps: ['도면 결과 + 청구항 입력', '도면부호 자동 참조', '실시예 2~5단락 생성', '최종 페이로드 통합'],
-    output: '발명의 설명 초안 · 실시예 · 도면 간단 설명', time: '2–3분',
-  },
-]
-
 export default function ServicePage() {
   const { lang } = useLang()
   const [active, setActive] = useState(0)
+  const sp = t.svcPage
+
+  const services = [
+    {
+      num: '01', href: '/service/consultation',
+      tag: 'CONSULTATION',
+      title:   tr(sp.s1title, lang),
+      summary: tr(sp.s1summary, lang),
+      desc:    tr(sp.s1desc, lang),
+      steps:   [tr(sp.s1step1, lang), tr(sp.s1step2, lang), tr(sp.s1step3, lang), tr(sp.s1step4, lang)],
+      output:  tr(sp.s1output, lang),
+      time: '5–10분',
+    },
+    {
+      num: '02', href: '/service/prior-art',
+      tag: 'PRIOR ART',
+      title:   tr(sp.s2title, lang),
+      summary: tr(sp.s2summary, lang),
+      desc:    tr(sp.s2desc, lang),
+      steps:   [tr(sp.s2step1, lang), tr(sp.s2step2, lang), tr(sp.s2step3, lang), tr(sp.s2step4, lang)],
+      output:  tr(sp.s2output, lang),
+      time: '2–5분',
+    },
+    {
+      num: '03', href: '/service/specification',
+      tag: 'SPECIFICATION',
+      title:   tr(sp.s3title, lang),
+      summary: tr(sp.s3summary, lang),
+      desc:    tr(sp.s3desc, lang),
+      steps:   [tr(sp.s3step1, lang), tr(sp.s3step2, lang), tr(sp.s3step3, lang), tr(sp.s3step4, lang)],
+      output:  tr(sp.s3output, lang),
+      time: '3–7분',
+    },
+    {
+      num: '04', href: '/service/drawing',
+      tag: 'DRAWING AGENT',
+      title:   tr(sp.s4title, lang),
+      summary: tr(sp.s4summary, lang),
+      desc:    tr(sp.s4desc, lang),
+      steps:   [tr(sp.s4step1, lang), tr(sp.s4step2, lang), tr(sp.s4step3, lang), tr(sp.s4step4, lang)],
+      output:  tr(sp.s4output, lang),
+      time: '30초–2분',
+    },
+    {
+      num: '05', href: '/service/review',
+      tag: 'EMBODIMENT',
+      title:   tr(sp.s5title, lang),
+      summary: tr(sp.s5summary, lang),
+      desc:    tr(sp.s5desc, lang),
+      steps:   [tr(sp.s5step1, lang), tr(sp.s5step2, lang), tr(sp.s5step3, lang), tr(sp.s5step4, lang)],
+      output:  tr(sp.s5output, lang),
+      time: '2–3분',
+    },
+  ]
+
   const s = services[active]
 
   return (
@@ -105,10 +122,9 @@ export default function ServicePage() {
       <div className="hero">
         <div className="tag">{tr(t.service.tag, lang)}</div>
         <h1>{tr(t.service.h1, lang).split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}</h1>
-        <p>5개 AI 에이전트가 특허 출원의 전 과정을 자동화합니다</p>
+        <p>{tr(sp.heroDesc, lang)}</p>
       </div>
 
-      {/* 파이프라인 바 */}
       <div className="pipeline-bar">
         {services.map((svc, i) => (
           <div key={svc.num} className={`pipeline-item ${active === i ? 'active' : ''}`} onClick={() => setActive(i)}>
@@ -118,7 +134,6 @@ export default function ServicePage() {
         ))}
       </div>
 
-      {/* 상세 */}
       <div className="svc-detail" style={{ background:'white' }}>
         <div className="svc-left">
           <div className="svc-tag">{s.tag}</div>
@@ -126,7 +141,7 @@ export default function ServicePage() {
           <div className="svc-summary">{s.summary}</div>
           <div className="svc-desc">{s.desc}</div>
 
-          <div className="svc-section-label">처리 단계</div>
+          <div className="svc-section-label">{tr(sp.stepsLabel, lang)}</div>
           <div className="svc-steps">
             {s.steps.map((step, i) => (
               <div key={i} className="svc-step">
@@ -138,31 +153,31 @@ export default function ServicePage() {
           </div>
 
           <div className="svc-meta-row">
-            <div><div className="svc-meta-label">처리 시간</div><div className="svc-meta-value">{s.time}</div></div>
-            <div><div className="svc-meta-label">유형</div><div className="svc-meta-value">{s.tag}</div></div>
+            <div><div className="svc-meta-label">{tr(sp.timeLabel, lang)}</div><div className="svc-meta-value">{s.time}</div></div>
+            <div><div className="svc-meta-label">{tr(sp.typeLabel, lang)}</div><div className="svc-meta-value">{s.tag}</div></div>
           </div>
         </div>
 
         <div className="svc-right">
-          <div className="svc-section-label">Output</div>
+          <div className="svc-section-label">{tr(sp.outputLabel, lang)}</div>
           <div className="svc-output-box">{s.output}</div>
 
           {s.num === '04' && (
             <>
-              <div className="svc-section-label">도면 샘플</div>
+              <div className="svc-section-label">{tr(sp.drawingSample, lang)}</div>
               <div className="img-preview">
-                <img src="/drawings/sample_block.svg" alt="블록도 샘플" />
+                <img src="/drawings/sample_block.svg" alt="block diagram" />
               </div>
               <div className="img-preview">
-                <img src="/drawings/sample_flow.svg" alt="흐름도 샘플" />
+                <img src="/drawings/sample_flow.svg" alt="flowchart" />
               </div>
             </>
           )}
 
           <div className="svc-actions">
-            <Link href={s.href} className="svc-btn svc-btn-primary">상세 보기 →</Link>
-            {s.num === '04' && <Link href="/gallery" className="svc-btn svc-btn-outline">도면 갤러리</Link>}
-            <Link href="/contact" className="svc-btn svc-btn-outline">상담 신청</Link>
+            <Link href={s.href} className="svc-btn svc-btn-primary">{tr(sp.detailBtn, lang)}</Link>
+            {s.num === '04' && <Link href="/gallery" className="svc-btn svc-btn-outline">{tr(sp.galleryBtn, lang)}</Link>}
+            <Link href="/contact" className="svc-btn svc-btn-outline">{tr(sp.consultBtn, lang)}</Link>
           </div>
         </div>
       </div>
