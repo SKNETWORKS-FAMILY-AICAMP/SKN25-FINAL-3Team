@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement, PatentClaim
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement, PatentClaim, PatentClaim
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages

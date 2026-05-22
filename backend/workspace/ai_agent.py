@@ -87,14 +87,14 @@ PHASE2_EXTRACT_PROMPT = """
 당신은 특허 전문 변리사입니다. 발명가의 답변에서 심화 정보를 추출하세요. (JSON 응답)
 [발명 맥락]
 - 해결방법: {solution}
-- 작동단계: {algorithm_steps}
 사용자 입력: {user_input}
 [추출 규칙]
-1. 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목을 추출하세요.
-2. 절대로 추측하지 말고 언급된 내용만 문장 형태로 정리하여 아래 JSON 배열(List)에 담아주세요.
-3. 해당되는 내용이 없으면 빈 배열 [] 을 반환하세요.
+1. 사용자가 청구항에 대해 질문하거나 검수를 요청하면, 전문가로서 피드백을 작성하여 'ai_reply'에 담아주세요. 단순 기술 설명일 경우 자연스러운 호응 멘트를 담아주세요.
+2. 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목이 있다면 추출하세요. (없으면 빈 배열)
+3. 절대로 추측하지 말고 언급된 내용만 문장 형태로 정리하여 아래 JSON 구조에 담아주세요.
 반드시 아래 JSON 형식으로만 응답하세요:
 {{
+    "ai_reply": "사용자 질문에 대한 자연스러운 변리사 답변 또는 청구항 검수 피드백 (마크다운 사용 가능)",
     "implementations": ["문장형태의 구현 수단", ...],
     "parameters": ["문장형태의 데이터 파라미터", ...],
     "algorithms": ["문장형태의 로직", ...],
@@ -112,6 +112,25 @@ class DjangoPatentConsultant:
         self.state, _ = ConsultationState.objects.get_or_create(project=project)
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+    def _get_dynamic_system_prompt(self) -> str:
+        base_prompt = PHASE1_SYSTEM
+
+        saved_claims = self.project.claims.all().order_by('claim_no')
+        
+        if saved_claims.exists():
+            claims_text = "\n".join([f"제{c.claim_no}항: {c.content}" for c in saved_claims])
+            
+            injection = (
+                "\n\n================================\n"
+                "[🚨 중요: 현재 발명가가 확정/수정한 특허 청구범위 내역]\n"
+                f"{claims_text}\n\n"
+                "사용자가 청구항에 대해 질문하거나 검수를 요청하면, 반드시 위 확정된 청구항 내용을 기준으로 피드백과 답변을 제공하세요."
+                "\n================================"
+            )
+            base_prompt += injection
+            
+        return base_prompt
+    
     def generate_welcome_message(self) -> str:
         if self.project.chat_messages.filter(role='assistant').exists():
             return ""
@@ -128,7 +147,7 @@ class DjangoPatentConsultant:
             ext_resp = self.client.chat.completions.create(
                 model="gpt-4o", 
                 messages=[
-                    {"role": "system", "content": PHASE1_SYSTEM},
+                    {"role": "system", "content": self._get_dynamic_system_prompt()},
                     {"role": "user", "content": initial_prompt}
                 ],
                 response_format={"type": "json_object"}
@@ -203,7 +222,7 @@ class DjangoPatentConsultant:
             ext_resp = self.client.chat.completions.create(
                 model="gpt-4o", 
                 messages=[
-                    {"role": "system", "content": PHASE1_SYSTEM},
+                    {"role": "system", "content": self._get_dynamic_system_prompt()},
                     {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
                 response_format={"type": "json_object"}
             )
@@ -260,12 +279,14 @@ class DjangoPatentConsultant:
         resp = self.client.chat.completions.create(
             model="gpt-4o", 
             messages=[
-                {"role": "system", "content": PHASE1_SYSTEM}, 
+                {"role": "system", "content": self._get_dynamic_system_prompt()}, 
                 {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps="사용자 설명 참조", user_input=user_input)}
             ], 
             response_format={"type": "json_object"}
         )
         res = json.loads(resp.choices[0].message.content)
+
+        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다.")
         
         type_map = {
             "implementations": "implementation", "parameters": "parameter", 
@@ -288,7 +309,7 @@ class DjangoPatentConsultant:
 
         if detail_elements_to_create:
             DetailElement.objects.bulk_create(detail_elements_to_create)
-            return "상세 정보가 잘 기록되었습니다! 📝 편하게 생각나시는 기능이나 예외 상황을 더 말씀해 주시거나, 내용이 충분하다면 '청구항 작성'을 눌러주세요."
+            return f"{ai_reply}\n\n*(덧붙여 주신 상세 기술 정보가 기록되었습니다. 내용이 충분하다면 우측 상단의 'AI 청구항 작성 시작'을 눌러주세요.)*"
         else:
-            return "말씀하신 내용을 검토했습니다. 더 구체적인 기술적 특징이나 예외 상황(예: 인식 실패 시 어떻게 처리할지 등)에 대해 들려주실 말씀이 있을까요?"
+            return ai_reply
         
