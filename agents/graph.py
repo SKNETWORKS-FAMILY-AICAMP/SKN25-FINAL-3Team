@@ -3,6 +3,7 @@
 실제 LangGraph(StateGraph) 연결 전에도 같은 계약을 테스트할 수 있도록 단순 순차 실행기로 둔다.
 각 node는 PatentAgentState를 입력으로 받고, raw output을 반환한다.
 Master/Graph는 raw output을 Pydantic 검증/repair/fallback 후 state에 병합한다.
+Master는 중간발표 MVP에서 지능형 라우터가 아니라 고정 DEFAULT_PIPELINE 실행 관리자다.
 """
 from __future__ import annotations
 
@@ -12,7 +13,8 @@ from typing import Any
 from agents.schemas import (
     ClaimAgentOutput,
     ComposerAgentOutput,
-    ConsultationAgentOutput,
+    MasterAgentOutput,
+    SummaryAgentOutput,
     DrawingAgentOutput,
     PriorArtAgentOutput,
     SpecificationAgentOutput,
@@ -25,7 +27,8 @@ AgentRunner = Callable[[PatentAgentState], Any]
 
 def _fallbacks() -> dict[str, Any]:
     return {
-        "consultation": ConsultationAgentOutput(status="failed", summary="상담 agent output 검증 실패"),
+        "master": MasterAgentOutput(status="failed", summary="Master agent output 검증 실패", stage="failed", action="fail"),
+        "summary": SummaryAgentOutput(status="failed", summary="요약본작성 agent output 검증 실패"),
         "claim": ClaimAgentOutput(status="failed", summary="청구항 agent output 검증 실패"),
         "drawing": DrawingAgentOutput(status="failed", summary="도면 agent output 검증 실패"),
         "prior_art": PriorArtAgentOutput(status="failed", summary="선행기술 agent output 검증 실패"),
@@ -40,7 +43,8 @@ def _fallbacks() -> dict[str, Any]:
     }
 
 SCHEMAS = {
-    "consultation": ConsultationAgentOutput,
+    "master": MasterAgentOutput,
+    "summary": SummaryAgentOutput,
     "claim": ClaimAgentOutput,
     "drawing": DrawingAgentOutput,
     "prior_art": PriorArtAgentOutput,
@@ -49,7 +53,7 @@ SCHEMAS = {
 }
 
 STATE_KEYS = {
-    "consultation": "consultation",
+    "summary": "summary",
     "claim": "claims",
     "drawing": "drawings",
     "prior_art": "prior_art",
@@ -57,7 +61,7 @@ STATE_KEYS = {
     "composer": "final_package",
 }
 
-DEFAULT_PIPELINE = ("consultation", "claim", "drawing", "prior_art", "specification", "composer")
+DEFAULT_PIPELINE = ("summary", "claim", "drawing", "prior_art", "specification", "composer")
 
 
 def run_mvp_pipeline(
