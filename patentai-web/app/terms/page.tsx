@@ -4,6 +4,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 const content = {
   ko: {
@@ -100,8 +101,8 @@ export default function TermsPage() {
           </div>
         ))}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-          <Link href="/privacy" style={{ fontSize: '.82rem', color: '#C9A84C', textDecoration: 'underline' }}>개인정보처리방침 →</Link>
-          <Link href="/contact" style={{ fontSize: '.82rem', color: '#888' }}>문의하기</Link>
+          <Link href="/privacy" style={{ fontSize: '.82rem', color: '#C9A84C', textDecoration: 'underline' }}>{tr(t.privacy.toPrivacy, lang)}</Link>
+          <Link href="/contact" style={{ fontSize: '.82rem', color: '#888' }}>{tr(t.privacy.toContact, lang)}</Link>
         </div>
       </div>
       <Footer />

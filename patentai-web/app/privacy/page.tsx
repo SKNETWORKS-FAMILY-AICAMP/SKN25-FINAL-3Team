@@ -3,8 +3,12 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function PrivacyPage() {
+  const { lang } = useLang()
+  const p = t.privacy
   const sections = [
     {
       title: '제1조 (개인정보의 수집 항목 및 수집 방법)',
@@ -87,9 +91,9 @@ export default function PrivacyPage() {
       `}</style>
       <Nav />
       <div className="hero">
-        <div className="tag">LEGAL</div>
-        <h1>개인정보처리방침</h1>
-        <p>PatentAI는 개인정보 보호를 최우선으로 합니다.</p>
+        <div className="tag">{tr(p.tag, lang)}</div>
+        <h1>{tr(p.h1, lang)}</h1>
+        <p>{tr(p.desc, lang)}</p>
       </div>
 
       <div className="legal-wrap">
@@ -107,8 +111,8 @@ export default function PrivacyPage() {
         ))}
 
         <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-          <Link href="/terms" style={{ fontSize: '.82rem', color: '#C9A84C', textDecoration: 'underline' }}>이용약관 →</Link>
-          <Link href="/contact" style={{ fontSize: '.82rem', color: '#888' }}>문의하기</Link>
+          <Link href="/terms" style={{ fontSize: '.82rem', color: '#C9A84C', textDecoration: 'underline' }}>{tr(p.toTerms, lang)}</Link>
+          <Link href="/contact" style={{ fontSize: '.82rem', color: '#888' }}>{tr(p.toContact, lang)}</Link>
         </div>
       </div>
 

@@ -1,4 +1,6 @@
 'use client'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -10,18 +12,20 @@ const items = [
 ]
 
 export default function Page() {
+  const { lang } = useLang()
+  const n = t.newsArticle
   return (
     <div className="site">
       <Nav />
       <div className="hero">
-        <div className="tag">PRIOR ART RESOURCES</div>
-        <h1>선행기술 자료</h1>
-        <p>특허 선행기술 조사에 활용할 수 있는 최신 자료와 도구를 제공합니다.</p>
+        <div className="tag">{tr(n.priorArtTag, lang)}</div>
+        <h1>{tr(n.priorArtH1, lang)}</h1>
+        <p>{tr(n.priorArtDesc, lang)}</p>
       </div>
       <div className="section">
         <div className="line"></div>
-        <div className="title">선행기술 자료</div>
-        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>← 전체 소식 보기</Link>
+        <div className="title">{tr(n.priorArtH1, lang)}</div>
+        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>{tr(n.backLink, lang)}</Link>
         <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
           {items.map((item, i) => (
             <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration:'none' }}>

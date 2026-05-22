@@ -2,8 +2,22 @@
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function AboutPage() {
+  const { lang } = useLang()
+  const a = t.about
+
+  const values = [
+    { num:'01', title: tr(a.v1t, lang), desc: tr(a.v1d, lang) },
+    { num:'02', title: tr(a.v2t, lang), desc: tr(a.v2d, lang) },
+    { num:'03', title: tr(a.v3t, lang), desc: tr(a.v3d, lang) },
+    { num:'04', title: tr(a.v4t, lang), desc: tr(a.v4d, lang) },
+  ]
+
+  const pipeline = [tr(a.ps1,lang), tr(a.ps2,lang), tr(a.ps3,lang), tr(a.ps4,lang), tr(a.ps5,lang)]
+
   return (
     <div className="site">
       <style>{`
@@ -21,18 +35,18 @@ export default function AboutPage() {
       <Nav />
 
       <div className="hero">
-        <div className="tag">ABOUT PATENTAI</div>
-        <h1>PatentAI 소개</h1>
-        <p>AI 기술로 특허 출원의 문턱을 낮추고,<br />모든 발명자가 권리를 보호받을 수 있는 세상을 만듭니다.</p>
+        <div className="tag">{tr(a.tag, lang)}</div>
+        <h1>{tr(a.h1, lang)}</h1>
+        <p>{tr(a.desc, lang).split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}</p>
       </div>
 
       <div className="section">
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'1px', background:'#E0DDD8', marginBottom:'4rem' }}>
           {[
-            { num:'6', label:'AI 에이전트' },
-            { num:'5', label:'핵심 서비스' },
-            { num:'114+', label:'FAQ 데이터베이스' },
-            { num:'2026', label:'설립 연도' },
+            { num:'6',    label: tr(a.stat1, lang) },
+            { num:'5',    label: tr(a.stat2, lang) },
+            { num:'301+', label: tr(a.stat3, lang) },
+            { num:'2026', label: tr(a.stat4, lang) },
           ].map(s => (
             <div key={s.label} className="about-stat">
               <div className="about-stat-num">{s.num}</div>
@@ -42,16 +56,11 @@ export default function AboutPage() {
         </div>
 
         <div className="line"></div>
-        <div className="title">미션 & 비전</div>
-        <div className="sub">발명의 가치를 권리로 만드는 AI 기반 지식재산 상담 플랫폼</div>
+        <div className="title">{tr(a.missionTitle, lang)}</div>
+        <div className="sub">{tr(a.missionSub, lang)}</div>
 
         <div className="about-grid">
-          {[
-            { num:'01', title:'접근성', desc:'복잡한 특허 절차를 AI로 간소화하여 누구나 쉽게 발명을 권리로 보호받을 수 있도록 합니다.' },
-            { num:'02', title:'전문성', desc:'특허 데이터 기반의 AI 모델과 변리사 워크플로우를 결합하여 전문가 수준의 서비스를 제공합니다.' },
-            { num:'03', title:'혁신성', desc:'GPT-4o, sLLM, 벡터 검색 등 최신 AI 기술을 특허 실무에 적용하여 업계 표준을 선도합니다.' },
-            { num:'04', title:'신뢰성', desc:'모든 상담 데이터는 암호화되어 보관되며, 발명자의 기밀은 철저히 보호됩니다.' },
-          ].map(v => (
+          {values.map(v => (
             <div key={v.num} className="about-value">
               <div className="about-value-num">{v.num}</div>
               <div className="about-value-title">{v.title}</div>
@@ -63,10 +72,10 @@ export default function AboutPage() {
 
       <div className="section dark">
         <div className="line"></div>
-        <div className="title">PatentAI 파이프라인</div>
-        <div className="sub">발명 상담부터 도면 생성까지 하나의 AI 흐름으로 연결합니다.</div>
+        <div className="title">{tr(a.pipelineTitle, lang)}</div>
+        <div className="sub">{tr(a.pipelineSub, lang)}</div>
         <div className="workflow">
-          {['발명 상담','선행기술 조사','명세서 작성','도면 생성','심사 대응'].map((s,i) => (
+          {pipeline.map((s, i) => (
             <div key={s} className="step">
               <b>0{i+1}</b>
               <p>{s}</p>
@@ -76,13 +85,13 @@ export default function AboutPage() {
       </div>
 
       <div className="section" style={{ textAlign:'center' }}>
-        <div className="title">함께 시작하세요</div>
-        <div className="sub">PatentAI와 함께 발명의 가치를 권리로 만들어 보세요.</div>
+        <div className="title">{tr(a.ctaTitle, lang)}</div>
+        <div className="sub">{tr(a.ctaSub, lang)}</div>
         <Link href="/contact" style={{
           display:'inline-block', padding:'1rem 3rem',
           border:'1px solid #C9A84C', color:'#C9A84C',
           fontSize:'.82rem', fontWeight:700, letterSpacing:'.1em',
-        }}>상담 신청하기 →</Link>
+        }}>{tr(a.ctaBtn, lang)}</Link>
       </div>
 
       <Footer />

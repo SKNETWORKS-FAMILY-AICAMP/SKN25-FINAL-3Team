@@ -3,22 +3,17 @@
 import { useRef, useState } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 type Step = 'idle' | 'extracting' | 'loading' | 'done' | 'error'
 
-const TYPE_META: Record<string, { label: string; color: string }> = {
-  block_diagram: { label: '블록도',          color: '#1a6fb5' },
-  flowchart:     { label: '흐름도',          color: '#27ae60' },
-  sequence:      { label: '시퀀스 다이어그램', color: '#8e44ad' },
-  ui_screen:     { label: '화면 예시도',      color: '#e67e22' },
-  circuit:       { label: '회로도',          color: '#c0392b' },
-}
-
-function typeLabel(type: string) {
-  return TYPE_META[type]?.label ?? type.toUpperCase()
-}
-function typeColor(type: string) {
-  return TYPE_META[type]?.color ?? '#C9A84C'
+const TYPE_COLOR: Record<string, string> = {
+  block_diagram: '#1a6fb5',
+  flowchart:     '#27ae60',
+  sequence:      '#8e44ad',
+  ui_screen:     '#e67e22',
+  circuit:       '#c0392b',
 }
 
 interface FigureItem {
@@ -34,6 +29,20 @@ interface DrawingResult {
 }
 
 export default function DemoPage() {
+  const { lang } = useLang()
+  const d = t.demo
+
+  const TYPE_LABEL: Record<string, string> = {
+    block_diagram: tr(d.typeBlock, lang),
+    flowchart:     tr(d.typeFlow, lang),
+    sequence:      tr(d.typeSeq, lang),
+    ui_screen:     tr(d.typeUi, lang),
+    circuit:       tr(d.typeCircuit, lang),
+  }
+
+  function typeLabel(type: string) { return TYPE_LABEL[type] ?? type.toUpperCase() }
+  function typeColor(type: string) { return TYPE_COLOR[type] ?? '#C9A84C' }
+
   const [mode, setMode]         = useState<'text' | 'pdf'>('text')
   const [input, setInput]       = useState('')
   const [fileName, setFileName] = useState('')
@@ -65,14 +74,14 @@ export default function DemoPage() {
       }
       const text = pages.join('\n').trim()
       if (!text) {
-        setError('PDF에서 텍스트를 추출할 수 없습니다.')
+        setError(tr(d.errExtract, lang))
         setStep('error')
         return
       }
       setInput(text)
       setStep('idle')
     } catch {
-      setError('PDF 추출 중 오류가 발생했습니다.')
+      setError(tr(d.errExtractFail, lang))
       setStep('error')
     }
   }
@@ -91,14 +100,14 @@ export default function DemoPage() {
       })
       const data = await res.json()
       if (!res.ok || data.error) {
-        setError(data.error || '도면 생성 중 오류가 발생했습니다.')
+        setError(data.error || tr(d.errGenerate, lang))
         setStep('error')
         return
       }
       setDrawings(data)
       setStep('done')
     } catch {
-      setError('백엔드 서버에 연결할 수 없습니다.')
+      setError(tr(d.errGenerate, lang))
       setStep('error')
     }
   }
@@ -201,28 +210,26 @@ export default function DemoPage() {
       <Nav />
 
       <div className="hero" style={{ borderLeft: '4px solid #C9A84C' }}>
-        <div className="tag">LIVE DEMO</div>
-        <h1>특허 도면 자동 생성</h1>
-        <p>발명 내용 또는 논문 PDF를 입력하면 AI가 특허 도면을 자동으로 생성합니다.</p>
+        <div className="tag">{tr(d.tag, lang)}</div>
+        <h1>{tr(d.h1, lang)}</h1>
+        <p>{tr(d.desc, lang)}</p>
       </div>
 
       <div className="demo-wrap">
 
-        {/* 입력 탭 */}
         <div className="tab-row">
           <button className={`tab-btn ${mode === 'text' ? 'active' : ''}`}
-            onClick={() => { setMode('text'); reset() }}>텍스트 입력</button>
+            onClick={() => { setMode('text'); reset() }}>{tr(d.tabText, lang)}</button>
           <button className={`tab-btn ${mode === 'pdf' ? 'active' : ''}`}
-            onClick={() => { setMode('pdf'); reset() }}>PDF / 논문 업로드</button>
+            onClick={() => { setMode('pdf'); reset() }}>{tr(d.tabPdf, lang)}</button>
         </div>
 
-        {/* 텍스트 입력 */}
         {mode === 'text' && (
           <>
-            <div className="demo-label">발명 내용</div>
+            <div className="demo-label">{tr(d.labelText, lang)}</div>
             <textarea
               className="demo-textarea"
-              placeholder="발명의 목적, 구성요소, 해결하려는 문제, 기대 효과를 자유롭게 입력하세요."
+              placeholder={tr(d.placeholder, lang)}
               value={input}
               onChange={e => setInput(e.target.value)}
               disabled={isRunning}
@@ -230,10 +237,9 @@ export default function DemoPage() {
           </>
         )}
 
-        {/* PDF 업로드 */}
         {mode === 'pdf' && (
           <>
-            <div className="demo-label">PDF / 논문 업로드</div>
+            <div className="demo-label">{tr(d.labelPdf, lang)}</div>
             <div
               className={`upload-zone ${fileName ? 'has-file' : ''}`}
               onClick={() => !isRunning && fileRef.current?.click()}
@@ -242,65 +248,61 @@ export default function DemoPage() {
               {fileName ? (
                 <>
                   <div className="upload-filename">{fileName}</div>
-                  <div className="upload-sub">텍스트 추출 완료 — 클릭하여 다른 파일 선택</div>
+                  <div className="upload-sub">{tr(d.uploadDone, lang)}</div>
                 </>
               ) : (
                 <>
-                  <div className="upload-text">클릭하여 PDF 파일 선택</div>
-                  <div className="upload-sub">특허 문서, 논문, 기술 보고서 (.pdf)</div>
+                  <div className="upload-text">{tr(d.uploadClick, lang)}</div>
+                  <div className="upload-sub">{tr(d.uploadSub, lang)}</div>
                 </>
               )}
             </div>
             <input ref={fileRef} type="file" accept=".pdf" style={{ display: 'none' }} onChange={handlePdfUpload} />
             {input && fileName && (
               <div className="upload-preview">
-                <strong>추출된 텍스트 미리보기</strong><br />
+                <strong>{tr(d.previewTitle, lang)}</strong><br />
                 {input.slice(0, 300)}...
               </div>
             )}
           </>
         )}
 
-        {/* 버튼 */}
         <div className="demo-btn-row">
           <button className="demo-btn" onClick={handleGenerate} disabled={isRunning || !input.trim()}>
-            {step === 'loading' ? '도면 생성 중...' : '도면 생성 →'}
+            {step === 'loading' ? tr(d.btnGenerating, lang) : tr(d.btnGenerate, lang)}
           </button>
           {(step !== 'idle' || input) && (
-            <button className="demo-btn outline" onClick={reset} disabled={isRunning}>초기화</button>
+            <button className="demo-btn outline" onClick={reset} disabled={isRunning}>{tr(d.btnReset, lang)}</button>
           )}
         </div>
 
-        {/* 로딩 */}
         {isRunning && (
           <div className="demo-loading">
             <div className="demo-spinner" />
             <div>
               <div className="demo-loading-text">
-                {step === 'extracting' ? 'PDF에서 텍스트를 추출하고 있습니다...' : 'AI가 특허 도면을 생성하고 있습니다...'}
+                {step === 'extracting' ? tr(d.loadExtract, lang) : tr(d.loadGenerate, lang)}
               </div>
               {step === 'loading' && (
-                <div className="demo-loading-sub">발명 구조 분석 → 도면 설계 → SVG 렌더링 (1~2분 소요)</div>
+                <div className="demo-loading-sub">{tr(d.loadSub, lang)}</div>
               )}
             </div>
           </div>
         )}
 
-        {/* 에러 */}
         {step === 'error' && (
           <div className="demo-error">
-            <div className="demo-error-title">오류 발생</div>
+            <div className="demo-error-title">{tr(d.errTitle, lang)}</div>
             <div className="demo-error-msg">{error}</div>
           </div>
         )}
 
-        {/* 결과 */}
         {step === 'done' && drawings && (
           <div className="demo-result">
             <div className="demo-result-hd">
-              <div className="demo-result-tag">GENERATED DRAWINGS</div>
+              <div className="demo-result-tag">{tr(d.resultTag, lang)}</div>
               <span style={{ fontSize: '.72rem', color: '#27ae60', fontWeight: 700 }}>
-                ✓ 도면 {drawings.figures.length}개 생성 완료
+                ✓ {drawings.figures.length} {tr(d.refTitle, lang)}
               </span>
             </div>
             <div className="demo-result-body">
@@ -309,13 +311,13 @@ export default function DemoPage() {
                   <div key={i} className="demo-drawing-card" onClick={() => setSelectedFig(fig)}>
                     {fig.svg_url
                       ? <img className="demo-drawing-img" src={fig.svg_url} alt={fig.title} />
-                      : <div className="demo-drawing-placeholder">도 {fig.fig_no}</div>
+                      : <div className="demo-drawing-placeholder">Fig. {fig.fig_no}</div>
                     }
                     <div className="demo-drawing-meta">
                       <div className="demo-drawing-type" style={{ color: typeColor(fig.type) }}>
                         {typeLabel(fig.type)}
                       </div>
-                      <div className="demo-drawing-title">{fig.title || `도 ${fig.fig_no}`}</div>
+                      <div className="demo-drawing-title">{fig.title || `Fig. ${fig.fig_no}`}</div>
                     </div>
                   </div>
                 ))}
@@ -323,9 +325,9 @@ export default function DemoPage() {
 
               {drawings.reference_numerals?.length > 0 && (
                 <>
-                  <div className="demo-label" style={{ marginTop: '2rem' }}>참조부호</div>
+                  <div className="demo-label" style={{ marginTop: '2rem' }}>{tr(d.refTitle, lang)}</div>
                   <table className="ref-table">
-                    <thead><tr><th>부호</th><th>명칭</th></tr></thead>
+                    <thead><tr><th>{tr(d.refCode, lang)}</th><th>{tr(d.refName, lang)}</th></tr></thead>
                     <tbody>
                       {drawings.reference_numerals.map((r, i) => (
                         <tr key={i}>
@@ -342,7 +344,6 @@ export default function DemoPage() {
         )}
       </div>
 
-      {/* 모달 */}
       {selectedFig && (
         <div className="modal-bg" onClick={() => setSelectedFig(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
@@ -351,14 +352,14 @@ export default function DemoPage() {
                 <div style={{ fontSize: '.65rem', fontWeight: 700, letterSpacing: '.15em', color: typeColor(selectedFig.type), marginBottom: '3px' }}>
                   {typeLabel(selectedFig.type)}
                 </div>
-                <div style={{ fontWeight: 700, color: '#0A0A16' }}>{selectedFig.title || `도 ${selectedFig.fig_no}`}</div>
+                <div style={{ fontWeight: 700, color: '#0A0A16' }}>{selectedFig.title || `Fig. ${selectedFig.fig_no}`}</div>
               </div>
               <button className="modal-close" onClick={() => setSelectedFig(null)}>×</button>
             </div>
             <div className="modal-body">
               {selectedFig.svg_url
                 ? <img src={selectedFig.svg_url} alt={selectedFig.title} />
-                : <p style={{ color: '#999' }}>미리보기 없음</p>
+                : <p style={{ color: '#999' }}>{tr(d.noPreview, lang)}</p>
               }
             </div>
           </div>

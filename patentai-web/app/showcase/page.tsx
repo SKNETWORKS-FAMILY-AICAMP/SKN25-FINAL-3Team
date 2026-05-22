@@ -2,60 +2,22 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-
-const slides = [
-  {
-    tag: 'AI-POWERED PATENT SYSTEM',
-    title: '발명의 가치를\n권리로 만듭니다',
-    sub: 'AI가 특허 출원의 전 과정을 자동화합니다',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #050510 0%, #0A0A20 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg',
-  },
-  {
-    tag: '01 — 특허 상담 에이전트',
-    title: '발명 내용을\nAI가 구조화합니다',
-    sub: '문제점·해결수단·효과·구성요소를 단계적으로 정리',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #08081A 0%, #101025 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/N_Seoul_Tower_%2813952097192%29.jpg',
-  },
-  {
-    tag: '02 — 선행기술 조사',
-    title: 'KIPRIS · USPTO · EPO\n전 세계 특허 DB 탐색',
-    sub: '벡터 유사도 + 키워드 하이브리드 검색으로 정확도 극대화',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #050510 0%, #0D0D22 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg',
-  },
-  {
-    tag: '03 — 도면 자동 생성',
-    title: '특허청 실무 수준\nSVG 도면을 자동 생성',
-    sub: '블록도·흐름도·시퀀스·상태도 — 품질 점수 A등급',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #08081A 0%, #0A0A1E 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg',
-  },
-  {
-    tag: '04 — 명세서 작성',
-    title: 'sLLM 파인튜닝으로\n청구항을 자동 작성',
-    sub: 'EXAONE 기반 특허 특화 모델 — 변리사 비용 40% 절감',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #050510 0%, #0D0820 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/N_Seoul_Tower_%2813952097192%29.jpg',
-  },
-  {
-    tag: 'PATENTAI — SKN25 3팀',
-    title: '6인의 AI 전문가\n팀이 만들었습니다',
-    sub: '권가영 · 김서현 · 김홍익 · 박범수 · 조은석 · 최현우',
-    accent: '#C9A84C',
-    bg: 'linear-gradient(135deg, #08081A 0%, #101020 100%)',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg',
-  },
-]
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 export default function ShowcasePage() {
+  const { lang } = useLang()
+  const sc = t.showcase
   const [current, setCurrent] = useState(0)
+
+  const slides = [
+    { tag: tr(sc.slide0tag,lang), title: tr(sc.slide0title,lang), sub: tr(sc.slide0sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#050510 0%,#0A0A20 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg' },
+    { tag: tr(sc.slide1tag,lang), title: tr(sc.slide1title,lang), sub: tr(sc.slide1sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#08081A 0%,#101025 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/c/cc/N_Seoul_Tower_%2813952097192%29.jpg' },
+    { tag: tr(sc.slide2tag,lang), title: tr(sc.slide2title,lang), sub: tr(sc.slide2sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#050510 0%,#0D0D22 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg' },
+    { tag: tr(sc.slide3tag,lang), title: tr(sc.slide3title,lang), sub: tr(sc.slide3sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#08081A 0%,#0A0A1E 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/6/6c/Nightview_of_the_Gwanghwamun_Square_2024.jpg' },
+    { tag: tr(sc.slide4tag,lang), title: tr(sc.slide4title,lang), sub: tr(sc.slide4sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#050510 0%,#0D0820 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/c/cc/N_Seoul_Tower_%2813952097192%29.jpg' },
+    { tag: tr(sc.slide5tag,lang), title: tr(sc.slide5title,lang), sub: tr(sc.slide5sub,lang), accent:'#C9A84C', bg:'linear-gradient(135deg,#08081A 0%,#101020 100%)', img:'https://upload.wikimedia.org/wikipedia/commons/1/14/Seoul_Skyline_Night_2018.jpg' },
+  ]
   const [progress, setProgress] = useState(0)
   const DURATION = 5000
 

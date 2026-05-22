@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 
 const drawings = [
   { id: '3d_print_block', file: '/drawings/3d_print_block.svg', title: '3D 프린팅 최적화 블록도', type: 'block_diagram', typeLabel: 'BLOCK DIAGRAM', desc: '3D 프린팅 최적화 특허 도면 — 블록도.', grade: 'A', score: 100 },
@@ -353,14 +355,6 @@ const drawings = [
 ]
 
 const PAGE_SIZE = 12
-const typeFilters = [
-  { id: 'all',          label: '전체' },
-  { id: 'block_diagram',label: '블록도' },
-  { id: 'flowchart',    label: '흐름도' },
-  { id: 'sequence',     label: '시퀀스' },
-  { id: 'ui_screen',    label: '화면예시도' },
-  { id: 'circuit',      label: '회로도' },
-]
 
 const TYPE_COLOR: Record<string, string> = {
   block_diagram: '#1a6fb5',
@@ -371,9 +365,20 @@ const TYPE_COLOR: Record<string, string> = {
 }
 
 export default function GalleryPage() {
+  const { lang } = useLang()
+  const g = t.gallery
   const [filter, setFilter]   = useState('all')
   const [page, setPage]       = useState(1)
   const [selected, setSelected] = useState<typeof drawings[0] | null>(null)
+
+  const typeFilters = [
+    { id: 'all',           label: tr(g.all, lang) },
+    { id: 'block_diagram', label: tr(g.block, lang) },
+    { id: 'flowchart',     label: tr(g.flow, lang) },
+    { id: 'sequence',      label: tr(g.seq, lang) },
+    { id: 'ui_screen',     label: tr(g.ui, lang) },
+    { id: 'circuit',       label: tr(g.circuit, lang) },
+  ]
 
   const filtered = filter === 'all' ? drawings : drawings.filter(d => d.type === filter)
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
@@ -432,19 +437,19 @@ export default function GalleryPage() {
       <Nav />
 
       <div className="hero">
-        <div className="tag">DRAWING GALLERY</div>
-        <h1>특허 도면 갤러리</h1>
-        <p>PatentAI가 자동 생성한 실제 특허 도면 샘플입니다.<br />다양한 기술 분야의 SVG 도면을 확인하세요.</p>
+        <div className="tag">{tr(g.tag, lang)}</div>
+        <h1>{tr(g.h1, lang)}</h1>
+        <p>{tr(g.desc, lang).split('\n').map((l,i)=><span key={i}>{l}{i===0&&<br/>}</span>)}</p>
       </div>
 
       <div className="section">
         {/* 통계 */}
         <div style={{ display:'flex', gap:'3rem', marginBottom:'3rem', paddingBottom:'2rem', borderBottom:'1px solid #E8E4DC', flexWrap:'wrap' }}>
           {[
-            { num: drawings.length, label: '총 도면 수' },
-            { num: drawings.filter(d => d.type === 'block_diagram').length, label: '블록도' },
-            { num: drawings.filter(d => d.type === 'flowchart').length, label: '흐름도' },
-            { num: drawings.filter(d => d.grade === 'A').length, label: 'A등급' },
+            { num: drawings.length, label: tr(g.total, lang) },
+            { num: drawings.filter(d => d.type === 'block_diagram').length, label: tr(g.block, lang) },
+            { num: drawings.filter(d => d.type === 'flowchart').length, label: tr(g.flow, lang) },
+            { num: drawings.filter(d => d.grade === 'A').length, label: `A ${tr(g.grade, lang)}` },
           ].map(s => (
             <div key={s.label}>
               <div style={{ fontFamily:"'Noto Serif KR',serif", fontSize:'1.8rem', fontWeight:200, color:'#0A0A16' }}>{s.num}</div>
@@ -496,12 +501,12 @@ export default function GalleryPage() {
         {/* CTA */}
         <div style={{ marginTop:'3rem', background:'#08081A', padding:'3rem', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'1.5rem' }}>
           <div>
-            <div style={{ color:'#C9A84C', fontSize:'.7rem', fontWeight:700, letterSpacing:'.2em', marginBottom:'.5rem' }}>DRAWING AGENT</div>
-            <div style={{ fontFamily:"'Noto Serif KR',serif", fontSize:'1.4rem', fontWeight:300, color:'#F0EDE6', marginBottom:'.3rem' }}>내 발명의 도면을 자동 생성해보세요</div>
-            <div style={{ color:'#555577', fontSize:'.86rem' }}>발명 내용이나 PDF를 입력하면 바로 생성됩니다.</div>
+            <div style={{ color:'#C9A84C', fontSize:'.7rem', fontWeight:700, letterSpacing:'.2em', marginBottom:'.5rem' }}>{tr(g.ctaKicker, lang)}</div>
+            <div style={{ fontFamily:"'Noto Serif KR',serif", fontSize:'1.4rem', fontWeight:300, color:'#F0EDE6', marginBottom:'.3rem' }}>{tr(g.ctaTitle, lang)}</div>
+            <div style={{ color:'#555577', fontSize:'.86rem' }}>{tr(g.ctaSub, lang)}</div>
           </div>
           <Link href="/service/demo" style={{ display:'inline-block', padding:'.9rem 2.5rem', border:'1px solid #C9A84C', color:'#C9A84C', fontSize:'.82rem', fontWeight:700, letterSpacing:'.1em', textDecoration:'none', whiteSpace:'nowrap' }}>
-            도면 생성 데모 →
+            {tr(g.ctaBtn, lang)}
           </Link>
         </div>
       </div>
@@ -521,11 +526,11 @@ export default function GalleryPage() {
               <img src={selected.file} alt={selected.title} />
             </div>
             <div className="gallery-modal-footer">
-              <a className="gallery-dl-btn" href={selected.file} download={`${selected.id}.svg`}>SVG 다운로드</a>
-              <button className="gallery-dl-btn outline" onClick={() => setSelected(null)}>닫기</button>
+              <a className="gallery-dl-btn" href={selected.file} download={`${selected.id}.svg`}>{tr(g.download, lang)}</a>
+              <button className="gallery-dl-btn outline" onClick={() => setSelected(null)}>{tr(g.close, lang)}</button>
               <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:'.5rem' }}>
-                <span className={`gallery-grade grade-${selected.grade}`}>{selected.grade}등급</span>
-                <span style={{ color:'#999', fontSize:'.78rem' }}>{selected.score}점 / 100점</span>
+                <span className={`gallery-grade grade-${selected.grade}`}>{selected.grade} {tr(g.grade, lang)}</span>
+                <span style={{ color:'#999', fontSize:'.78rem' }}>{selected.score} / 100</span>
               </div>
             </div>
           </div>

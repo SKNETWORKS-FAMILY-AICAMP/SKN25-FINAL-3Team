@@ -6,18 +6,18 @@ import Footer from '@/components/Footer'
 import { useLang } from '@/contexts/LangContext'
 import { t, tr } from '@/lib/i18n'
 
-const members = [
-  { num: '01', name: '권가영',  role: 'Prior Art Agent',            desc: '선행기술 조사, 특허 데이터 검색, 유사도 분석 기능을 담당합니다.', slug: 'gayeongkwon' },
-  { num: '02', name: '김서현',  role: 'Frontend / PatentAI UI',     desc: '홈페이지 UI, Next.js 화면 구성, 도면 에이전트 연동을 담당합니다.', slug: 'seohyunkim' },
-  { num: '03', name: '김홍익',  role: 'Consultation Agent',         desc: '발명 상담 흐름, 상담 로그 구조화, 발명 요약 기능을 담당합니다.', slug: 'hongikkim' },
-  { num: '04', name: '박범수',  role: 'Specification / Claims',     desc: '청구항, 명세서 초안, 발명의 효과 및 구성요소 정리 기능을 담당합니다.', slug: 'beomsoopark' },
-  { num: '05', name: '조은석',  role: 'Drawing Agent',              desc: '특허 도면 자동 생성, SVG/PNG 렌더링, 품질 검증 기능을 담당합니다.', slug: 'eunseokjo' },
-  { num: '06', name: '최현우',  role: 'Review / Integration',       desc: '검토 에이전트, 전체 서비스 통합, 배포 및 발표 자료 정리를 담당합니다.', slug: 'hyeonwoochoi' },
-]
-
 export default function TeamPage() {
   const { lang } = useLang()
   const tm = t.team
+
+  const members = [
+    { num: '01', name: '권가영',  role: 'Prior Art Agent',            desc: tr(tm.m1desc, lang), slug: 'gayeongkwon' },
+    { num: '02', name: '김서현',  role: 'Frontend / PatentAI UI',     desc: tr(tm.m2desc, lang), slug: 'seohyunkim' },
+    { num: '03', name: '김홍익',  role: 'Consultation Agent',         desc: tr(tm.m3desc, lang), slug: 'hongikkim' },
+    { num: '04', name: '박범수',  role: 'Specification / Claims',     desc: tr(tm.m4desc, lang), slug: 'beomsoopark' },
+    { num: '05', name: '조은석',  role: 'Drawing Agent',              desc: tr(tm.m5desc, lang), slug: 'eunseokjo' },
+    { num: '06', name: '최현우',  role: 'Review / Integration',       desc: tr(tm.m6desc, lang), slug: 'hyeonwoochoi' },
+  ]
 
   return (
     <div className="site">

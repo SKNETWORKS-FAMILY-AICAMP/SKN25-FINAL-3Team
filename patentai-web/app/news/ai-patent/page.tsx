@@ -1,4 +1,6 @@
 'use client'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -11,18 +13,20 @@ const items = [
 ]
 
 export default function Page() {
+  const { lang } = useLang()
+  const n = t.newsArticle
   return (
     <div className="site">
       <Nav />
       <div className="hero">
-        <div className="tag">AI PATENT TRENDS</div>
-        <h1>AI 특허 동향</h1>
-        <p>생성형 AI와 특허 자동화 관련 최신 동향을 제공합니다.</p>
+        <div className="tag">{tr(n.aiPatentTag, lang)}</div>
+        <h1>{tr(n.aiPatentH1, lang)}</h1>
+        <p>{tr(n.aiPatentDesc, lang)}</p>
       </div>
       <div className="section">
         <div className="line"></div>
-        <div className="title">AI 특허 동향</div>
-        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>← 전체 소식 보기</Link>
+        <div className="title">{tr(n.aiPatentH1, lang)}</div>
+        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>{tr(n.backLink, lang)}</Link>
         <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
           {items.map((item, i) => (
             <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration:'none' }}>

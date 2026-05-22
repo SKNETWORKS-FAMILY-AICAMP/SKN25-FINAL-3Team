@@ -1,4 +1,6 @@
 'use client'
+import { useLang } from '@/contexts/LangContext'
+import { t, tr } from '@/lib/i18n'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
@@ -10,18 +12,20 @@ const items = [
 ]
 
 export default function Page() {
+  const { lang } = useLang()
+  const n = t.newsArticle
   return (
     <div className="site">
       <Nav />
       <div className="hero">
-        <div className="tag">KIPO POLICY</div>
-        <h1>특허청 정책</h1>
-        <p>특허청 정책 변경과 제도 개선 사항을 안내합니다.</p>
+        <div className="tag">{tr(n.policyTag, lang)}</div>
+        <h1>{tr(n.policyH1, lang)}</h1>
+        <p>{tr(n.policyDesc, lang)}</p>
       </div>
       <div className="section">
         <div className="line"></div>
-        <div className="title">특허청 정책</div>
-        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>← 전체 소식 보기</Link>
+        <div className="title">{tr(n.policyH1, lang)}</div>
+        <Link href="/news" style={{ color:'#C9A84C', fontSize:'.82rem', textDecoration:'none', display:'inline-block', marginBottom:'2rem' }}>{tr(n.backLink, lang)}</Link>
         <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
           {items.map((item, i) => (
             <a key={i} href={item.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration:'none' }}>
