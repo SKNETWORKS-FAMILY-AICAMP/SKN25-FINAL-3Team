@@ -11,6 +11,9 @@ __pycache__/
 .env
 .env.local
 
+# Streamlit (Next.js로 교체됨)
+.streamlit/
+
 # OS
 .DS_Store
 Thumbs.db
