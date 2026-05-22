@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
@@ -290,7 +290,6 @@ def generate_claims_api(request, project_id):
             }
         }
 
-        # 2. 🧠 LangGraph 멀티 에이전트 엔진 구동!
         logger.info(f"[{project.title}] 랭그래프 멀티에이전트 가동...")
         graph = build_patent_graph()
         
@@ -300,13 +299,23 @@ def generate_claims_api(request, project_id):
         # 3. 결과 파싱 및 응답 데이터 정제
         claims_data = final_output.get("claims_data", {}).get("claims", [])
         examiner_data = final_output.get("examiner_data", {})
+        loop_count = examiner_data.get('revision_count', 0)
 
-        # 프론트엔드가 이쁘게 노출할 수 있도록 가공해서 JSON으로 리턴
+        claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
+
+        for c in claims_data:
+            type_badge = '[종속항]' if c.get('is_dependent') else '[독립항]'
+            claim_result_text += f"**청구항 {c.get('claim_no')} {type_badge}**\n{c.get('content')}\n\n"
+
+        ChatMessage.objects.create(
+            project=project,
+            role='assistant',
+            content=claim_result_text
+        )
+
         return JsonResponse({
             'status': 'success',
-            'is_approved_by_ai': examiner_data.get('is_approved', False),
-            'loop_count': examiner_data.get('revision_count', 0),
-            'claims': claims_data, # 청구항 번호와 전문 내용 리스트
+            'message_content': claim_result_text
         })
 
     except Exception as e:

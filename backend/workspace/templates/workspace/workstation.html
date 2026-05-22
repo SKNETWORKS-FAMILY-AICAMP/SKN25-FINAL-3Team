@@ -65,8 +65,6 @@
                     청구항 작성
                 </button>
             </div>
-            <form id="chat-form" style="display: flex; gap: 10px; padding: 20px 30px;">
-                </form>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
 
@@ -313,15 +311,8 @@
                 removeLoading(); // 로딩 제거
                 
                 if (data.status === 'success') {
-                    console.log("최종 청구항 데이터:", data.claims);
-                    let claimResultHtml = `📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과수: ${data.loop_count}회 루프)\n\n`;
-                    data.claims.forEach(c => {
-                        const typeBadge = c.is_dependent ? '[종속항]' : '[독립항]';
-                        claimResultHtml += `**청구항 ${c.claim_no} ${typeBadge}**\n${c.content}\n\n`;
-                    });
-                    addMessage('assistant', claimResultHtml);
-                    //alert(" 특허 청구범위 초안 작성이 성공적으로 완료되었습니다!");
-                    
+                    addMessage('assistant', data.message_content);
+                    //alert("🎉 특허 청구범위 초안 작성이 완료되었으며, 대화 기록에 안전하게 저장되었습니다!");
                 } else if(data.status ==='warning') {
                     //alert("요건미달: " + data.message);
                     addMessage('assistant', "아직 발명의 요건이 충분히 수집되지 않아 청구항 작성을 시작할 수 없습니다.  좌측 패널을 확인하시고, 저와 대화하며 남은 항목을 먼저 채워주세요!");
