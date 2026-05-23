@@ -6,7 +6,12 @@
     <div class="left-panel" style="flex: 1; border-right: 1px solid #334155; padding: 30px; overflow-y: auto; background: #111827;">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px;">
             <h2 style="font-size: 20px; color: #38bdf8; margin: 0;">📋 원본 발명 데이터</h2>
-            <span style="font-size: 12px; background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #94a3b8;">무결성 검증됨 (Origin)</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 12px; background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #94a3b8;">무결성 검증됨 (Origin)</span>
+                <button id="view-process-btn" style="background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
+                    현재 단계 보기
+                </button>
+            </div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 20px;">
@@ -509,6 +514,179 @@ modalSaveBtn.addEventListener('click', () => {
         modalSaveBtn.disabled = false;
     });
 });    
+</script>
+<style>
+    /* 노드 그래프 전용 CSS */
+    .process-graph-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 40px 20px;
+        position: relative;
+    }
+    .graph-node-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+    .graph-node {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        transition: all 0.4s ease;
+        border: 3px solid #334155;
+        background: #1e293b;
+        color: #64748b;
+    }
+    .graph-label {
+        margin-top: 12px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #64748b;
+        text-align: center;
+        transition: all 0.4s ease;
+    }
+    .graph-edge {
+        flex: 1;
+        height: 4px;
+        background: #334155;
+        margin: 0 -10px;
+        position: relative;
+        top: -15px; /* 노드 높이의 절반 즈음으로 선 맞추기 */
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+
+    /* 🔥 활성화(Active) 상태 디자인 */
+    .graph-node.active {
+        background: #0f172a;
+        border-color: #10b981; /* 에메랄드 빛 */
+        color: #10b981;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), inset 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+    .graph-label.active {
+        color: #10b981;
+    }
+    .graph-edge.active {
+        background: #10b981;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* 현재 진행 중인 펄스(Pulse) 애니메이션 */
+    @keyframes pulse-glow {
+        0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); border-color: #38bdf8; color: #38bdf8; }
+        50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.8); border-color: #7dd3fc; color: #7dd3fc; }
+        100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); border-color: #38bdf8; color: #38bdf8; }
+    }
+    .graph-node.current {
+        animation: pulse-glow 2s infinite;
+        background: #0f172a;
+    }
+    .graph-label.current {
+        color: #38bdf8;
+    }
+</style>
+
+<div id="process-map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: #0f172a; width: 800px; max-width: 90%; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); border: 1px solid #334155;">
+        
+        <div style="padding: 20px 30px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; background: #1e293b;">
+            <h3 style="margin: 0; color: #f8fafc; font-size: 18px;">특허 출원 파이프라인 진행도</h3>
+            <button id="close-process-modal" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="process-graph-container" id="dag-container">
+            </div>
+
+        <div style="padding: 20px; background: #1e293b; border-top: 1px solid #334155; text-align: center;">
+            <p id="process-message" style="margin: 0; color: #cbd5e1; font-size: 14px;">현재 <strong style="color:#38bdf8;">청구항 작성</strong> 단계를 진행 중입니다.</p>
+        </div>
+    </div>
+</div>
+<script>
+    const processModal = document.getElementById('process-map-modal');
+    const viewProcessBtn = document.getElementById('view-process-btn');
+    const closeProcessBtn = document.getElementById('close-process-modal');
+    const dagContainer = document.getElementById('dag-container');
+    const processMessage = document.getElementById('process-message');
+
+    // 파이프라인 단계 정의
+    const pipelineSteps = [
+        { id: 1, name: 'AI 상담', icon: '💬' },
+        { id: 2, name: '청구항 작성', icon: '📜' },
+        { id: 3, name: '도면 작성', icon: '📐' },
+        { id: 4, name: '발명의 설명', icon: '📝' },
+        { id: 5, name: '최종 명세서', icon: '✨' }
+    ];
+
+    // 그래프를 렌더링하는 함수 (currentStep: 현재 진행 중인 단계 번호 1~5)
+    function renderGraph(currentStep) {
+        dagContainer.innerHTML = ''; // 초기화
+        
+        pipelineSteps.forEach((step, index) => {
+            let nodeClass = '';
+            let labelClass = '';
+            
+            if (step.id < currentStep) {
+                // 지나온 단계 (완료)
+                nodeClass = 'active';
+                labelClass = 'active';
+            } else if (step.id === currentStep) {
+                // 현재 진행 중인 단계 (반짝임)
+                nodeClass = 'current';
+                labelClass = 'current';
+                processMessage.innerHTML = `현재 <strong style="color:#38bdf8;">${step.name}</strong> 단계를 진행 중입니다.`;
+            }
+            
+            // 1. 노드(Node) 생성
+            const nodeHtml = `
+                <div class="graph-node-wrapper">
+                    <div class="graph-node ${nodeClass}">${step.icon}</div>
+                    <div class="graph-label ${labelClass}">${step.name}</div>
+                </div>
+            `;
+            dagContainer.insertAdjacentHTML('beforeend', nodeHtml);
+            
+            // 2. 엣지(Edge - 선) 생성 (마지막 노드가 아닐 때만)
+            if (index < pipelineSteps.length - 1) {
+                // 현재 단계보다 이전에 있는 선들만 불을 켭니다.
+                const edgeClass = (step.id < currentStep) ? 'active' : '';
+                const edgeHtml = `<div class="graph-edge ${edgeClass}"></div>`;
+                dagContainer.insertAdjacentHTML('beforeend', edgeHtml);
+            }
+        });
+    }
+
+    // 모달 열기 이벤트
+    if (viewProcessBtn) {
+        viewProcessBtn.addEventListener('click', () => {
+            // 💡 [중요] 백엔드 데이터를 기반으로 현재 단계를 계산하는 로직입니다.
+            // 임시로 하드코딩 해두었으나, 장고 템플릿 변수를 조합하여 동적으로 변경할 수 있습니다.
+            // 예시: 
+            // let currentStep = 1;
+            // if ("{{ project.has_claims }}" === "True") currentStep = 3;
+            
+            let currentStep = 2; // 현재 청구항 작성 단계라고 가정
+
+            renderGraph(currentStep);
+            processModal.style.display = 'flex';
+        });
+    }
+
+    // 모달 닫기 이벤트
+    if (closeProcessBtn) {
+        closeProcessBtn.addEventListener('click', () => processModal.style.display = 'none');
+    }
+    window.addEventListener('click', (e) => {
+        if (e.target === processModal) processModal.style.display = 'none';
+    });
 </script>
 
 {% endblock %}

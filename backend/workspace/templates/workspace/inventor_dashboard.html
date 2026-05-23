@@ -7,11 +7,11 @@
         <h1 style="margin: 0; font-size: 32px;">내 특허 프로젝트</h1>
         <a href="{% url 'create_project' %}" id="create-project-btn" class="start-btn" style="text-decoration: none; display: inline-block;">새 특허 프로젝트 시작하기</a>
         <button id="toggle-delete-mode-btn" style="background: #334155; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
-            🗑️ 여러 개 삭제
+            🗑️ 선택 삭제
         </button>
         
         <button id="confirm-delete-btn" style="display: none; background: #ef4444; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-            🚨 선택 삭제 (0개)
+            삭제 (0개)
         </button>
         <button id="cancel-delete-btn" style="display: none; background: #64748b; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
             취소
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2. 버튼 카운트 업데이트
     function updateConfirmButton() {
         const checkedCount = document.querySelectorAll('.project-checkbox:checked').length;
-        confirmBtn.innerText = `🚨 선택 삭제 (${checkedCount}개)`;
+        confirmBtn.innerText = `삭제 (${checkedCount}개)`;
         confirmBtn.disabled = checkedCount === 0;
         confirmBtn.style.opacity = checkedCount === 0 ? '0.5' : '1';
     }
