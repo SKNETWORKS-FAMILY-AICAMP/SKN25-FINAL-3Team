@@ -1,3 +1,13 @@
+---
+title: 도면 작성 에이전트 (Drawing Agent)
+created: 2026-05-12
+updated: 2026-05-22
+type: reference
+tags: [patent, architecture]
+sources: []
+confidence: high
+---
+
 # 도면 작성 에이전트 (Drawing Agent) v8
 
 특허 명세서를 분석하여 특허청 실무 수준의 SVG 도면을 자동 생성하는 AI 에이전트입니다.
@@ -156,3 +166,11 @@ for r in results:
 | v7 | 흐름도 타원/마름모, 시퀀스 활성화 박스, 상태도 둥근 사각형, UI 디바이스 프레임 |
 | v6 | 시퀀스/상태도/UI 렌더러 추가 |
 | v5 | Mermaid 제거, SVG 직접 렌더링으로 전환 |
+
+---
+
+## 관련 문서
+
+- [[patent-data-schemas]]
+- [[pipeline-and-evaluation]]
+- [[data-management-strategy]]
