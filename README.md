@@ -51,6 +51,15 @@ uv run python backend/django/manage.py runserver 8000
 
 # 특허 TXT 적재
 uv run python agents/consultation/load_corpus.py --dir data/raw/texts/patents_txt
+
+# 도면 에이전트 — 샘플 텍스트로 SVG 도면 생성 테스트
+uv run python agents/drawing/drawing_agent.py test
+
+# 도면 에이전트 — 실제 특허 TXT로 실행 (data/raw/texts/patents_txt 필요)
+uv run python agents/drawing/drawing_agent.py real
+
+# 도면 에이전트 — 배치 처리 N건
+uv run python agents/drawing/drawing_agent.py run 10
 ```
 
 ## 먼저 읽을 문서
