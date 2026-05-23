@@ -1,6 +1,5 @@
 import logging
 from typing import Dict, Any
-
 from langchain_openai import ChatOpenAI
 from agents.core.state import PatentState, ClaimResult, ExaminerResult
 

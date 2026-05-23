@@ -389,3 +389,23 @@ def manage_claims_api(request, project_id):
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
+        
+@login_required(login_url='/accounts/login/')
+@require_POST
+def bulk_delete_projects_api(request):
+    try:
+        data = json.loads(request.body)
+        project_ids = data.get('project_ids', [])
+
+        if not project_ids:
+            return JsonResponse({'status': 'error', 'message': '삭제할 프로젝트가 선택되지 않았습니다.'})
+
+        deleted_count, _ = PatentProject.objects.filter(
+            id__in=project_ids, 
+            owner=request.user
+        ).delete()
+
+        return JsonResponse({'status': 'success', 'deleted_count': deleted_count})
+        
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})

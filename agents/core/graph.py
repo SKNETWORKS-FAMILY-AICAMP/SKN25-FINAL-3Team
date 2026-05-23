@@ -11,11 +11,9 @@ def should_continue(state: PatentState):
     is_approved = examiner_data.get("is_approved", False)
     revision_count = examiner_data.get("revision_count", 0)
     
-    # 심사관이 승인했거나, 2번 이상 팅겼으면 무한루프 방지를 위해 종료
     if is_approved or revision_count >= 2:
         return END
     
-    # 거절되었고 수정 횟수가 남아있다면 다시 청구항 생성 노드로 보냄 (수정 지시)
     return "claim_node"
 
 def build_patent_graph():
