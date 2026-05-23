@@ -409,3 +409,19 @@ def bulk_delete_projects_api(request):
         
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
+@login_required(login_url='/accounts/login/')
+def patent_report_view(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    
+    invention_input = getattr(project, 'inventioninput', None)
+    consultation_state = getattr(project, 'consultationstate', None)
+    claims = project.claims.all().order_by('claim_no')
+
+    context = {
+        'project': project,
+        'invention_input': invention_input,
+        'consultation_state': consultation_state,
+        'claims': claims
+    }
+    return render(request, 'workspace/report.html', context)

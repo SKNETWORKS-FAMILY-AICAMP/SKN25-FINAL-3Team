@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>[특허 리포트] {{ project.title }}</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; color: #1e293b; line-height: 1.7; padding: 40px; background: #f8fafc; }
+        .report-wrapper { max-width: 900px; margin: 0 auto; background: white; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        h1 { font-size: 28px; color: #0f172a; border-bottom: 3px solid #3b82f6; padding-bottom: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        h2 { font-size: 18px; color: #1e3a8a; border-left: 5px solid #3b82f6; padding-left: 12px; margin-top: 35px; margin-bottom: 15px; }
+        .section-box { background: #f1f5f9; padding: 20px; border-radius: 8px; font-size: 15px; white-space: pre-wrap; color: #334155; border: 1px solid #e2e8f0; }
+        .claim-card { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .claim-title { font-weight: bold; color: #2563eb; margin-bottom: 8px; font-size: 15px; }
+        .print-btn { background: #0f172a; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        @media print {
+            body { background: white; padding: 0; }
+            .report-wrapper { border: none; box-shadow: none; padding: 0; }
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-wrapper">
+    <h1>
+        <span>특허 명세서 초안 요약 리포트</span>
+        <button class="print-btn" onclick="window.print()">🖨️ PDF 인쇄 / 저장</button>
+    </h1>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;">
+        <tr>
+            <td style="padding: 8px; font-weight: bold; color: #64748b; width: 15%;">발명 명칭</td>
+            <td style="padding: 8px; font-weight: bold; color: #0f172a;">{{ project.title }}</td>
+            <td style="padding: 8px; font-weight: bold; color: #64748b; width: 15%;">출력 일자</td>
+            <td style="padding: 8px; color: #334155; width: 20%;">{% now "Y-m-d" %}</td>
+        </tr>
+    </table>
+
+    <h2>1. 발명의 배경 및 해결과제</h2>
+    <div class="section-box"><strong>[종래 기술의 문제점]</strong>\n{{ consultation_state.ext_problem|default:"- " }}\n\n<strong>[해결하고자 하는 과제]</strong>\n{{ invention_input.problem_to_solve|default:"- " }}</div>
+
+    <h2>2. 핵심 기술 구성 및 해결수단</h2>
+    <div class="section-box">{{ consultation_state.ext_solution|default:"- " }}</div>
+
+    <h2>3. 발명의 기대 효과</h2>
+    <div class="section-box">{{ consultation_state.ext_effect|default:"- " }}</div>
+
+    <h2>4. 특허 청구범위 (Claims)</h2>
+    {% for claim in claims %}
+        <div class="claim-card">
+            <div class="claim-title">청구항 { { claim.claim_no } } {% if claim.is_dependent %}[종속항]{% else %}[독립항]{% endif %}</div>
+            <div style="font-size: 14.5px; color: #334155; line-height: 1.6;">{{ claim.content }}</div>
+        </div>
+    {% empty %}
+        <p style="color: #94a3b8; font-style: italic;">아직 확정 및 저장된 청구범위 내역이 없습니다.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

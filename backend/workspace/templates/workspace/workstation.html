@@ -8,6 +8,9 @@
             <h2 style="font-size: 20px; color: #38bdf8; margin: 0;">📋 원본 발명 데이터</h2>
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 12px; background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #94a3b8;">무결성 검증됨 (Origin)</span>
+                <a href="{% url 'patent_report' project.id %}" target="_blank" style="text-decoration: none; background: #10b981; color: white; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: 0.2s; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">
+                    📄 요약 리포트
+                </a>
                 <button id="view-process-btn" style="background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
                     현재 단계 보기
                 </button>
