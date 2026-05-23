@@ -1,6 +1,13 @@
 """Agent output schemas for the patent MVP pipeline."""
 from agents.schemas.common import AgentOutputBase, AgentOutputStatus, EvidenceItem
-from agents.schemas.consultation import ConsultationAgentOutput, FollowupQuestion, InventionComponent
+from agents.schemas.master import MasterAction, MasterAgentOutput, MasterStage
+from agents.schemas.summary import (
+    InventorInput,
+    StructuredInvention,
+    SummaryAgentOutput,
+    SummaryComponent,
+    SummaryProcessStep,
+)
 from agents.schemas.claim import ClaimAgentOutput, ClaimDraft
 from agents.schemas.drawing import DrawingAgentOutput, FigureDraft, ReferenceNumeral
 from agents.schemas.prior_art import PriorArtAgentOutput, PriorArtCandidate
@@ -11,9 +18,14 @@ __all__ = [
     "AgentOutputBase",
     "AgentOutputStatus",
     "EvidenceItem",
-    "ConsultationAgentOutput",
-    "FollowupQuestion",
-    "InventionComponent",
+    "MasterAction",
+    "MasterAgentOutput",
+    "MasterStage",
+    "InventorInput",
+    "StructuredInvention",
+    "SummaryAgentOutput",
+    "SummaryComponent",
+    "SummaryProcessStep",
     "ClaimAgentOutput",
     "ClaimDraft",
     "DrawingAgentOutput",
