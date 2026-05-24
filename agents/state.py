@@ -180,13 +180,16 @@ class PriorArtCandidate(TypedDict, total=False):
     """검색된 선행문헌/특허 후보 하나."""
 
     patent_id: str  # 내부 특허 ID.
-    title: str  # 특허 제목.
     publication_no: str  # 공개번호/등록번호.
+    title: str  # 특허 제목.
+    summary: str  # 후보 문헌의 핵심 내용 요약.
     ipc_codes: list[str]  # IPC/CPC 코드.
     score: float  # 검색 점수. 법적 확신도가 아님.
     score_note: str  # 점수 의미 설명.
+    matched_points: list[str]  # 우리 발명과 매칭되는 핵심 포인트.
     overlap_points: list[str]  # 우리 발명과 겹치는 점.
     difference_points: list[str]  # 차이점.
+    limitations: list[str]  # 후보 선행기술/종래기술 자체의 한계.
     evidence: list[dict[str, Any]]  # 근거 문장/청구항/요약 조각.
     pdf_path: str  # 원문 PDF 경로.
     url: str  # 외부 링크가 있으면 저장.
@@ -195,6 +198,7 @@ class PriorArtCandidate(TypedDict, total=False):
 class PriorArtState(TypedDict, total=False):
     """선행기술 검색/분석 결과."""
 
+    query: str  # 검색에 사용한 대표 쿼리. PriorArtAgentOutput과 같은 이름.
     search_query: str  # 검색에 사용한 대표 쿼리.
     expanded_queries: list[str]  # 확장 검색어.
     ipc_focus: list[str]  # 집중 IPC. 예: G06F, G06N, G06V.
@@ -206,7 +210,7 @@ class PriorArtState(TypedDict, total=False):
     novelty_risk: RiskLevel  # 신규성 리스크.
     inventive_step_risk: RiskLevel  # 진보성 리스크.
     analysis_summary: str  # 분석 요약.
-    limitations: list[str]  # 한계/불확실성.
+    limitations: list[str]  # 종래기술의 공통 한계.
 
 
 # -----------------------------------------------------------------------------
