@@ -1,0 +1,59 @@
+# Claim Critic Agent (FastAPI + EXAONE LoRA) 이미지
+# 프로파일: --profile llm
+#
+# CPU 모드 (기본, 로컬 테스트용):
+#   docker compose --profile llm up claim-api
+#
+# GPU 모드 (RunPod / CUDA 환경):
+#   FROM 줄을 아래로 교체하고 빌드
+#   FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
+#
+# ⚠️  venv 위치: /opt/venv  (Dockerfile.app 과 동일하게 맞춤)
+#    claim-api 는 볼륨 마운트가 없어 /app/.venv 도 동작하지만,
+#    Dockerfile.app 과 경로를 통일해 혼란을 방지합니다.
+
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_PROJECT_ENVIRONMENT=/opt/venv
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv==0.7.*
+
+WORKDIR /app
+
+# 공통 의존성 (openai, pydantic, sqlalchemy 등) → /opt/venv 에 설치
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+
+# ML 의존성 — pyproject.toml 외부 (RunPod 전용), /opt/venv 에 추가 설치
+# CPU 모드: torch CPU wheel 사용 (이미지 크기 ~400MB 절약)
+RUN /opt/venv/bin/pip install --no-cache-dir \
+        torch==2.3.0 --index-url https://download.pytorch.org/whl/cpu && \
+    /opt/venv/bin/pip install --no-cache-dir \
+        transformers==4.45.2 \
+        accelerate==0.34.2 \
+        bitsandbytes==0.43.3 \
+        peft==0.12.0 \
+        trl==0.11.1 \
+        tiktoken \
+        einops \
+        rich
+
+# GPU 모드에서는 위 pip 블록 대신 아래 사용:
+# RUN /opt/venv/bin/pip install --no-cache-dir \
+#         transformers==4.45.2 accelerate==0.34.2 \
+#         bitsandbytes==0.43.3 peft==0.12.0 trl==0.11.1 \
+#         tiktoken einops rich \
+#         flash-attn==2.6.3 --no-build-isolation
+
+COPY . .
+
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH=/app \
+    HF_HOME=/root/.cache/huggingface

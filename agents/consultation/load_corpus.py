@@ -9,8 +9,14 @@
 
 import argparse
 from pathlib import Path
-from prior_art_agent import _parse_patent_txt, _embed_texts, PATENTS_DIR
-from patent_db import PatentCorpus, SessionLocal, init_db
+
+# 패키지(agents.consultation)로 import될 때와 스크립트로 직접 실행될 때를 모두 지원
+try:
+    from agents.consultation.prior_art_agent import _parse_patent_txt, _embed_texts, PATENTS_DIR
+    from agents.consultation.patent_db import PatentCorpus, SessionLocal, init_db
+except ImportError:
+    from prior_art_agent import _parse_patent_txt, _embed_texts, PATENTS_DIR  # type: ignore[no-redef]
+    from patent_db import PatentCorpus, SessionLocal, init_db  # type: ignore[no-redef]
 
 
 def _get_ipc_class(file_path: str) -> str:

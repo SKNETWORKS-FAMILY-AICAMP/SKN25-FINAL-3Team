@@ -1,0 +1,320 @@
+# =============================================================================
+# Patent AI — Docker Compose
+# =============================================================================
+#
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                      목표 아키텍처 (Target Architecture)                 │
+# │                                                                         │
+# │  [Browser]                                                              │
+# │    └── :3000 ──► frontend  (React SPA)                                  │
+# │                   ├── /api/*  → proxy → fastapi:8080                   │
+# │                   └── /auth/* → proxy → django:8000                    │
+# │                                                                         │
+# │  [django :8000]   JWT 인증 전용 (회원가입·로그인·토큰 갱신)               │
+# │    └── ──► postgres:5432  (accounts 테이블)                             │
+# │                                                                         │
+# │  [fastapi :8080]  멀티에이전트 파이프라인 + 비즈니스 로직 전담            │
+# │    ├── POST /api/v1/consultation/*  — 상담 에이전트                      │
+# │    ├── POST /api/v1/pipeline/run    — 특허 파이프라인 실행               │
+# │    │         ↓ DEFAULT_PIPELINE                                         │
+# │    │    summary → claim 생성(*) → critic → drawing                      │
+# │    │         → prior_art → specification → composer                    │
+# │    │         (*) claim 생성은 fastapi 내부에서 LLM 호출로 처리           │
+# │    ├── ──► postgres:5432   (에이전트 state · 결과 저장)                  │
+# │    └── ──► claim-api:8001  (생성된 claim → critic 평가 요청)             │
+# │                                                                         │
+# │  [claim-api :8010]  GPU 전용 Critic Agent  ← --profile llm             │
+# │    ├── POST /critique                                                   │
+# │    │    input : { claim_text, structured_invention }                    │
+# │    │    output: { verdict, rejection_probability,                       │
+# │    │              novelty_score, inventive_step_score,                  │
+# │    │              issues, suggestions }                                 │
+# │    └── GET  /health                                                     │
+# │    모델: EXAONE-3.0-7.8B + LoRA (silverstone1004/claim)                 │
+# │    DB 연결 없음 — 텍스트 in → 판단 결과 out (순수 추론)                   │
+# │                                                                         │
+# │  [postgres :5432]  단일 DB (patent_ai) — MVP 기간 공유, 추후 분리 검토   │
+# │    ├── Django auth 테이블  (accounts_user, django_*, token_blacklist)    │
+# │    ├── patent_corpus      (선행기술 벡터, 1536-dim embedding)            │
+# │    ├── consulting / algorithm_steps / detail_elements                   │
+# │    └── generated_claims                                                 │
+# └─────────────────────────────────────────────────────────────────────────┘
+#
+# -----------------------------------------------------------------------------
+# 현재 구현 상태 vs 목표 (Current State vs Target)
+# -----------------------------------------------------------------------------
+#
+# [fastapi]
+#   현재: 엔드포인트 스텁 (501 Not Implemented)
+#   목표: consultation_agent · prior_art_agent · agents/graph.py 연동,
+#         claim 생성 로직을 runpod/main.py 에서 이전
+#
+# [claim-api]
+#   현재: runpod/main.py 가 /generate-claims 로 독립항 생성 구현
+#   목표: /critique 엔드포인트로 전환
+#         — fastapi 가 생성한 claim 을 받아 거절가능성·신규성·진보성 평가
+#         — verdict: "pass" → 파이프라인 계속 / "revise" → fastapi 재생성 루프
+#
+# [frontend]
+#   현재: React + Vite 골격 (페이지 라우팅만 존재)
+#   목표: 상담 UI, 파이프라인 진행 상태, 최종 특허 문서 뷰어
+#
+# [streamlit]
+#   현재: 기존 데모 (--profile legacy 로만 시작)
+#   목표: frontend 완성 후 제거
+#
+# -----------------------------------------------------------------------------
+# 실행 방법
+# -----------------------------------------------------------------------------
+#
+#   기본 (postgres + django + fastapi + frontend):
+#     cp .env.example .env        # OPENAI_API_KEY 필수
+#     docker compose up --build
+#
+#   Critic Agent 포함 (EXAONE GPU 필요):
+#     docker compose --profile llm up --build
+#
+#   기존 Streamlit 데모 병행:
+#     docker compose --profile legacy up --build
+#
+#   특허 코퍼스 DB 적재 (최초 1회):
+#     docker compose run --rm fastapi \
+#       python agents/consultation/load_corpus.py --dir data/raw/texts/patents_txt
+#
+# -----------------------------------------------------------------------------
+# 필수 환경변수 (.env)
+# -----------------------------------------------------------------------------
+#   OPENAI_API_KEY        필수 (fastapi, claim-api, streamlit)
+#   DB_USER               기본값: patent
+#   DB_PASSWORD           기본값: patent_pw   ← 프로덕션에서 반드시 변경
+#   DB_NAME               기본값: patent_ai
+#   SECRET_KEY            기본값: dev용 키    ← 프로덕션에서 반드시 변경
+#   HUGGINGFACE_TOKEN     --profile llm 시 필수
+#   CLAIM_BACKEND_URL     외부 RunPod URL 직접 지정 시 사용 (비우면 내부 claim-api)
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL + pgvector — 공유 데이터베이스 (MVP)
+  # ---------------------------------------------------------------------------
+  # pgvector: patent_corpus 의 1536-dim 임베딩을 Vector 타입으로 저장하고
+  #           HNSW 인덱스 기반 ANN 검색을 DB 엔진에서 직접 처리
+  #           (기존: Python 메모리로 전체 벡터 로드 후 numpy 코사인 계산)
+  # 추후: auth DB와 patent DB 분리를 검토 (patent_corpus 임베딩이 커질 경우)
+  postgres:
+    image: pgvector/pgvector:pg15   # pgvector 확장 내장 (벡터 인덱스 지원)
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-patent_ai}
+      POSTGRES_USER:     ${DB_USER:-patent}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-patent_pw}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-patent} -d ${DB_NAME:-patent_ai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Django — JWT 인증 전용 백엔드
+  # ---------------------------------------------------------------------------
+  # 역할: 회원가입 · 로그인 · 토큰 갱신 · 토큰 블랙리스트
+  # 비즈니스 로직(에이전트, 파이프라인)은 fastapi 가 전담
+  django:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    restart: unless-stopped
+    command: >
+      sh -c "python backend/django/manage.py migrate --noinput &&
+             python backend/django/manage.py runserver 0.0.0.0:8000"
+    environment:
+      SECRET_KEY:         ${SECRET_KEY:-django-insecure-change-this-in-production-key-12345}
+      DEBUG:              ${DEBUG:-True}
+      DJANGO_DB_ENGINE:   django.db.backends.postgresql
+      DJANGO_DB_NAME:     ${DB_NAME:-patent_ai}
+      DJANGO_DB_USER:     ${DB_USER:-patent}
+      DJANGO_DB_PASSWORD: ${DB_PASSWORD:-patent_pw}
+      DJANGO_DB_HOST:     postgres
+      DJANGO_DB_PORT:     "5432"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # FastAPI — 멀티에이전트 파이프라인 API (핵심 서비스)
+  # ---------------------------------------------------------------------------
+  # 현재: 엔드포인트 스텁 (501). agents/ 연동 작업 진행 중
+  #
+  # 목표 엔드포인트:
+  #   POST /api/v1/consultation/start          상담 세션 시작 (Phase 1)
+  #   POST /api/v1/consultation/{id}/message   상담 메시지 처리
+  #   POST /api/v1/consultation/{id}/finalize  상담 종료 + DB 저장
+  #   POST /api/v1/pipeline/run                파이프라인 실행 (비동기)
+  #   GET  /api/v1/pipeline/{job_id}/status    단계별 진행 상태
+  #   GET  /api/v1/pipeline/{job_id}/result    최종 문서 (ComposerAgentOutput)
+  #
+  # 파이프라인 내부 흐름:
+  #   summary → claim 생성(LLM) → POST claim-api/critique
+  #     → verdict==pass  : drawing → prior_art → specification → composer
+  #     → verdict==revise: claim 재생성 후 재평가 (최대 N회)
+  #
+  # claim 생성은 runpod/main.py 에서 이전 예정 (GPU 불필요, gpt-4o 계열로 처리)
+  fastapi:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - |
+        python -c 'from agents.consultation.patent_db import init_db; init_db()' &&
+        uvicorn backend.fastapi.main:app --host 0.0.0.0 --port 8080 --reload
+        # ↑ --reload: 파일 변경 감지 자동 재시작 (개발 전용)
+        #   프로덕션 배포 시 --reload 제거 및 --workers 수 조정 필요
+    environment:
+      OPENAI_API_KEY:    ${OPENAI_API_KEY:?OPENAI_API_KEY 를 .env 에 설정하세요}
+      OPENAI_MODEL:      ${OPENAI_MODEL:-gpt-4o}
+      OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
+      DATABASE_URL:      postgresql://${DB_USER:-patent}:${DB_PASSWORD:-patent_pw}@postgres:5432/${DB_NAME:-patent_ai}
+      # claim-api 주소: 비우면 내부 컨테이너 사용, 외부 RunPod URL 지정도 가능
+      CLAIM_BACKEND_URL: ${CLAIM_BACKEND_URL:-http://claim-api:8001}
+      CORS_ORIGINS:      ${CORS_ORIGINS:-http://localhost:3000}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - uploads:/app/data/tmp
+
+  # ---------------------------------------------------------------------------
+  # React Frontend — SPA (개발 서버)
+  # ---------------------------------------------------------------------------
+  # 현재: 라우팅 골격만 존재 (/, /consult, /pipeline)
+  # 목표: 상담 UI, 파이프라인 실시간 진행 상태, 최종 특허 문서 뷰어
+  #
+  # 프록시 (vite.config.ts):
+  #   /api/*  → fastapi:8080  (파이프라인 · 상담)
+  #   /auth/* → django:8000   (로그인 · 토큰)
+  #
+  # 프로덕션 배포 시:
+  #   target: prod 으로 변경 → nginx 가 빌드 결과물 정적 서빙
+  #   docker/nginx.conf 의 location /api, /auth 프록시 블록 활성화
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      target: dev       # 프로덕션: prod 으로 변경
+    restart: unless-stopped
+    environment:
+      FASTAPI_URL: http://fastapi:8080
+      DJANGO_URL:  http://django:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - fastapi
+      - django
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   # node_modules 는 컨테이너 내부 것을 유지
+
+  # ---------------------------------------------------------------------------
+  # Critic Agent — GPU 전용 claim 품질 판단 서비스
+  # ---------------------------------------------------------------------------
+  # 역할: fastapi 가 생성한 청구항을 받아 특허청 관점의 품질을 평가
+  #   input : { claim_text: str, structured_invention: dict }
+  #   output: { verdict: "pass"|"revise"|"reject",
+  #             rejection_probability: float,
+  #             novelty_score: float,
+  #             inventive_step_score: float,
+  #             issues: list[str],
+  #             suggestions: list[str] }
+  #
+  # 모델: EXAONE-3.0-7.8B-Instruct + LoRA (silverstone1004/claim)
+  # DB 연결 없음 — 텍스트 in / 판단 결과 out (순수 추론 서비스)
+  #
+  # 현재 구현 상태:
+  #   runpod/main.py 가 /generate-claims (생성) 로 구현되어 있음
+  #   → /critique (판단) 엔드포인트로 전환 필요
+  #   → ClaimResponse → CritiqueResponse schema 교체 필요
+  #
+  # 시작: docker compose --profile llm up
+  # 주의: 첫 시작 시 EXAONE 모델 다운로드 (~16GB). HF_CACHE 볼륨으로 재사용.
+  #
+  # GPU 지원 (nvidia-container-toolkit 설치 후 아래 deploy 블록 주석 해제):
+  # deploy:
+  #   resources:
+  #     reservations:
+  #       devices:
+  #         - driver: nvidia
+  #           count: 1
+  #           capabilities: [gpu]
+  claim-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.claim
+    restart: unless-stopped
+    command: uvicorn agents.runpod.main:app --host 0.0.0.0 --port 8001 --workers 1
+    environment:
+      OPENAI_API_KEY:    ${OPENAI_API_KEY:?OPENAI_API_KEY 를 .env 에 설정하세요}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN:?HUGGINGFACE_TOKEN 을 .env 에 설정하세요}
+      LORA_HF_REPO:      ${LORA_HF_REPO:-silverstone1004/claim}
+    ports:
+      - "8010:8001"
+    profiles:
+      - llm
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+
+  # ---------------------------------------------------------------------------
+  # Streamlit — 기존 데모 (점진적 폐기 예정)
+  # ---------------------------------------------------------------------------
+  # frontend + fastapi 완성 후 제거 예정
+  # 시작: docker compose --profile legacy up
+  streamlit:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - |
+        streamlit run apps/streamlit/main.py \
+          --server.port=8501 \
+          --server.address=0.0.0.0 \
+          --server.headless=true \
+          --server.enableCORS=false \
+          --server.enableXsrfProtection=false
+    environment:
+      OPENAI_API_KEY:    ${OPENAI_API_KEY:?OPENAI_API_KEY 를 .env 에 설정하세요}
+      OPENAI_MODEL:      ${OPENAI_MODEL:-gpt-4o}
+      OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
+      DATABASE_URL:      postgresql://${DB_USER:-patent}:${DB_PASSWORD:-patent_pw}@postgres:5432/${DB_NAME:-patent_ai}
+      CLAIM_BACKEND_URL: ${CLAIM_BACKEND_URL:-http://claim-api:8001}
+    ports:
+      - "8501:8501"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - legacy
+    volumes:
+      - uploads:/app/data/tmp
+
+volumes:
+  postgres_data:
+  uploads:
+  hf_cache:
+
+networks:
+  default:
+    name: patent-net

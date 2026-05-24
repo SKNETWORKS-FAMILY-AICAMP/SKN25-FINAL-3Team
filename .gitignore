@@ -69,6 +69,7 @@ data/specifications/**
 
 # Generated review artifacts
 *.html
+!frontend/index.html
 
 # 도면 에이전트 생성 결과물
 drawing_analysis/
@@ -91,3 +92,8 @@ models/**/wandb/
 
 # IDE
 .vscode/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/

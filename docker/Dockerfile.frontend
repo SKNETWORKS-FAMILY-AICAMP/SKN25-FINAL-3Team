@@ -1,0 +1,27 @@
+# ── Stage 1: dev (Vite 개발 서버, hot reload) ─────────────────────────
+FROM node:20-alpine AS dev
+
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ .
+
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
+
+# ── Stage 2: build ────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ .
+RUN npm run build
+
+# ── Stage 3: prod (nginx 정적 서빙) ──────────────────────────────────
+FROM nginx:alpine AS prod
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80

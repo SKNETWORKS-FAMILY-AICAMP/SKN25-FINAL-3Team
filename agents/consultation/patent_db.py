@@ -1,15 +1,18 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, String, Integer, Text, JSON
+from sqlalchemy import create_engine, Column, String, Integer, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from pgvector.sqlalchemy import Vector
 
 _ENV_DIR = Path(__file__).resolve().parent
 load_dotenv(_ENV_DIR.parents[1] / ".env")
 load_dotenv(_ENV_DIR / ".env", override=True)
 
 Base = declarative_base()
+
+EMBEDDING_DIM = 1536  # text-embedding-3-small
 
 
 class PatentCorpus(Base):
@@ -26,7 +29,7 @@ class PatentCorpus(Base):
     ipc_class     = Column(String(20))   # G06F, G06N, G06Q, G06V 등
     file_name     = Column(String(200))
     file_path_key = Column(String(500), unique=True)  # 폴더 포함 상대 경로 (중복 방지)
-    embedding     = Column(JSON)          # list[float] — text-embedding-3-small (1536-dim)
+    embedding     = Column(Vector(EMBEDDING_DIM))     # pgvector — DB 엔진이 직접 ANN 검색
 
 
 def _build_db_url() -> str:
@@ -51,5 +54,20 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db():
-    """patent_corpus 테이블이 없으면 생성합니다."""
+    """pgvector 확장 활성화 → patent_corpus 테이블 생성 → HNSW 인덱스 생성"""
+    with engine.connect() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        conn.commit()
+
     Base.metadata.create_all(bind=engine)
+
+    # HNSW 인덱스 (코사인 거리) — 대용량 ANN 검색 가속
+    # ef_construction=64: 인덱스 품질 (높을수록 정확, 느림)
+    # m=16: 그래프 연결 수 (높을수록 정확, 메모리 증가)
+    with engine.connect() as conn:
+        conn.execute(text(
+            "CREATE INDEX IF NOT EXISTS patent_corpus_embedding_hnsw "
+            "ON patent_corpus USING hnsw (embedding vector_cosine_ops) "
+            "WITH (m = 16, ef_construction = 64)"
+        ))
+        conn.commit()

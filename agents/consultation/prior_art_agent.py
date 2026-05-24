@@ -134,36 +134,17 @@ def _embed_texts(texts: list[str]) -> np.ndarray:
 
 
 # ─────────────────────────────────────────────────────────────
-# 3. DB에서 코퍼스 + 임베딩 로드
+# 3. pgvector 기반 유사 특허 검색 (SQL ANN)
 # ─────────────────────────────────────────────────────────────
 
-def load_corpus_from_db() -> tuple[np.ndarray, list[dict]]:
-    """Supabase DB에서 특허 코퍼스와 임베딩을 로드합니다."""
-    from patent_db import PatentCorpus, SessionLocal
-
+def _get_corpus_size() -> int:
+    try:
+        from agents.consultation.patent_db import PatentCorpus, SessionLocal
+    except ImportError:
+        from patent_db import PatentCorpus, SessionLocal  # type: ignore[no-redef]
     db = SessionLocal()
     try:
-        patents = db.query(PatentCorpus).all()
-        if not patents:
-            print("[선행기술조사] DB에 특허 데이터가 없습니다. load_corpus.py를 먼저 실행하세요.")
-            return np.array([]), []
-
-        corpus, vectors = [], []
-        for p in patents:
-            corpus.append({
-                "file_name":     p.file_name or "",
-                "patent_number": p.patent_number or "",
-                "title":         p.title or "",
-                "applicant":     p.applicant or "",
-                "abstract":      p.abstract or "",
-                "claims":        p.claims or "",
-                "description":   p.description or "",
-                "raw_text":      p.raw_text or "",
-            })
-            vectors.append(p.embedding)
-
-        print(f"[선행기술조사] DB에서 특허 {len(corpus)}건 로드 완료")
-        return np.array(vectors, dtype=np.float32), corpus
+        return db.query(PatentCorpus).count()
     finally:
         db.close()
 
@@ -199,35 +180,50 @@ def _build_query_text(invention_payload: dict) -> str:
 
 
 # ─────────────────────────────────────────────────────────────
-# 4. 코사인 유사도 기반 Top-N 검색
+# 4. pgvector HNSW 인덱스 기반 Top-N 검색
 # ─────────────────────────────────────────────────────────────
-
-def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    a_norm = a / (np.linalg.norm(a) + 1e-10)
-    b_norm = b / (np.linalg.norm(b, axis=1, keepdims=True) + 1e-10)
-    return b_norm @ a_norm
-
 
 def search_similar_patents(
     query_text: str,
-    vectors: np.ndarray,
-    corpus: list[dict],
     top_n: int = 5,
 ) -> list[dict]:
-    """쿼리 텍스트와 코퍼스를 임베딩 비교하여 Top-N 특허를 반환합니다."""
-    query_vec = _embed_texts([query_text])[0]
-    scores = _cosine_similarity(query_vec, vectors)
+    """쿼리 텍스트를 임베딩하여 pgvector 코사인 거리 검색으로 Top-N 특허를 반환합니다.
+    전체 벡터를 메모리에 올리지 않고 DB 엔진(HNSW 인덱스)이 직접 처리합니다.
+    """
+    try:
+        from agents.consultation.patent_db import PatentCorpus, SessionLocal
+    except ImportError:
+        from patent_db import PatentCorpus, SessionLocal  # type: ignore[no-redef]
 
-    top_idx = np.argsort(scores)[::-1][:top_n]
-    results = []
-    for idx in top_idx:
-        patent = dict(corpus[idx])
-        patent["similarity_score"] = round(float(scores[idx]), 4)
-        # raw_text는 LLM 분석에서 사용하므로 2000자로 제한
-        patent["_search_text"] = patent["raw_text"][:2000]
-        del patent["raw_text"]  # 응답 크기 절약
-        results.append(patent)
-    return results
+    query_vec = _embed_texts([query_text])[0].tolist()
+
+    db = SessionLocal()
+    try:
+        # 1 - cosine_distance = cosine_similarity
+        similarity = (1 - PatentCorpus.embedding.cosine_distance(query_vec)).label("similarity_score")
+        rows = (
+            db.query(PatentCorpus, similarity)
+            .filter(PatentCorpus.embedding.isnot(None))
+            .order_by(PatentCorpus.embedding.cosine_distance(query_vec))
+            .limit(top_n)
+            .all()
+        )
+        results = []
+        for p, score in rows:
+            results.append({
+                "file_name":        p.file_name or "",
+                "patent_number":    p.patent_number or "",
+                "title":            p.title or "",
+                "applicant":        p.applicant or "",
+                "abstract":         p.abstract or "",
+                "claims":           p.claims or "",
+                "description":      p.description or "",
+                "_search_text":     (p.raw_text or "")[:2000],
+                "similarity_score": round(float(score), 4),
+            })
+        return results
+    finally:
+        db.close()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -342,21 +338,18 @@ def run_prior_art_agent(
             "corpus_size": N,              # 검색 대상 특허 수
         }
     """
-    # 1. DB에서 코퍼스 + 임베딩 로드
-    vectors, corpus = load_corpus_from_db()
-    if not corpus:
+    # 1. 검색 쿼리 텍스트 구성
+    query_text = _build_query_text(invention_payload)
+    print(f"[선행기술조사] 검색 쿼리:\n  {query_text[:200]}...")
+
+    # 2. pgvector HNSW 검색 (전체 벡터 메모리 로드 없음)
+    top_patents = search_similar_patents(query_text, top_n=top_n)
+    if not top_patents:
         return {
             "error": "DB에 특허 데이터가 없습니다. load_corpus.py를 먼저 실행하세요.",
             "prior_art_results": [],
             "overall_risk": {"level": "unknown", "summary": "코퍼스 없음"},
         }
-
-    # 3. 검색 쿼리 텍스트 구성
-    query_text = _build_query_text(invention_payload)
-    print(f"[선행기술조사] 검색 쿼리:\n  {query_text[:200]}...")
-
-    # 4. 유사도 검색
-    top_patents = search_similar_patents(query_text, vectors, corpus, top_n=top_n)
     print(f"[선행기술조사] 유사 특허 Top-{top_n} 선정 완료")
 
     # 5. 근거 문장 + 리스크 분석 (특허별 LLM 호출)
@@ -394,7 +387,7 @@ def run_prior_art_agent(
         "prior_art_results": prior_art_results,
         "overall_risk": overall_risk,
         "query_text": query_text,
-        "corpus_size": len(corpus),
+        "corpus_size": _get_corpus_size(),
     }
 
 

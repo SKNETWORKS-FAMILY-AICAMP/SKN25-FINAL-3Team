@@ -1,0 +1,39 @@
+.git
+.gitignore
+.venv
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# 실제 환경변수 (절대 이미지에 포함하지 않음)
+.env
+.env.local
+.env.*.local
+
+# 대용량 데이터 (볼륨으로 마운트)
+data/raw/
+data/processed/
+data/reports/
+data/tmp/
+
+# DB 파일
+*.sqlite3
+backend/django/db.sqlite3
+backend/django/staticfiles/
+backend/django/media/
+
+# 프론트엔드 빌드 산출물 (frontend 서비스 이미지에서만 npm ci 로 재설치)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# 개발/분석 전용
+notebooks/
+.claude/
+상담에이전트/__pycache__/
