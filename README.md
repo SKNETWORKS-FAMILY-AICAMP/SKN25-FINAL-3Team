@@ -74,7 +74,7 @@ agents/             AI 에이전트 코드
   consultation/     상담 상태/DB/선행기술
   claim/            청구항 생성/저장
   drawing/          도면/참조부호/SVG
-  specification/    발명의 설명/명세서/DOCX
+  specification/    발명의 설명/명세서 마크다운 저장소
 backend/django/     Django 로그인/JWT 백엔드
 frontend/           향후 React + TypeScript 프론트엔드
 apps/streamlit/     빠른 검증용 Streamlit 앱
