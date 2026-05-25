@@ -82,8 +82,9 @@ def classify_type(title: str) -> str:
     t = title or ""
     if any(k in t for k in ["순서도","흐름도","플로우","과정","절차","방법","단계"]): return "flowchart"
     if any(k in t for k in ["구성도","시스템","장치","블록도","구조도","모듈"]):     return "block_diagram"
-    if any(k in t for k in ["화면","UI","인터페이스","표시"]):                        return "ui_screen"
-    if any(k in t for k in ["시퀀스","상호작용","통신","메시지"]):                   return "sequence"
+    if any(k in t for k in ["화면","UI","인터페이스","표시","스크린","앱"]):          return "ui_screen"
+    if any(k in t for k in ["시퀀스","상호작용","통신","메시지","프로토콜"]):         return "sequence"
+    if any(k in t for k in ["회로","배선","전기","전자","센서","MCU","칩","반도체"]): return "circuit"
     if any(k in t for k in ["상태"]):                                                 return "stateDiagram"
     return "block_diagram"
 
@@ -119,12 +120,18 @@ SYSTEM_PROMPT = """당신은 특허 명세서를 분석하여 도면 설계 JSON
 {
   "invention_type": "hardware|software|method|system|hybrid",
   "main_concept": "발명의 핵심 개념", "technical_problem": "기술적 과제", "solution_summary": "해결 수단",
-  "recommended_diagrams": [{"fig_number":"도 1","diagram_type":"flowchart|block_diagram|sequence|ui_screen|stateDiagram","title":"","purpose":"","source_text":""}],
+  "recommended_diagrams": [{"fig_number":"도 1","diagram_type":"block_diagram|flowchart|sequence|ui_screen|circuit","title":"","purpose":"","source_text":""}],
   "components": [{"component_id":"100","name":"구성요소명","component_type":"device|process|data|actor|module|database|container|external","description":"","source_text":"","relationships":[{"target":"200","label":"","direction":"->","source_text":""}]}],
   "process_flow": [{"step_id":"S100","step_type":"terminal|process|decision|io","name":"","description":"","source_text":"","branches":[{"label":"예","target":"S200"},{"label":"아니오","target":"S300"}]}],
   "key_actors": ["사용자","서버"]
 }
-규칙: 도면 최소 2개(구성도+흐름도) / 흐름도: terminal→process→terminal / 구성요소 5개 이상 원문 그대로 / decision은 branches 필수"""
+도면 타입 선택 기준:
+- block_diagram: 시스템/장치 구성요소 관계 (항상 포함)
+- flowchart: 처리 단계·방법 순서 (항상 포함)
+- sequence: 복수 주체 간 통신·메시지 흐름 (네트워크·API·프로토콜 발명)
+- ui_screen: 사용자 인터페이스 화면 (앱·서비스·소프트웨어 발명)
+- circuit: 전자 회로·하드웨어 배선 (센서·MCU·임베디드·반도체 발명)
+규칙: 도면 최소 2개, 발명 특성에 맞는 추가 도면 적극 포함 / 흐름도: terminal→process→terminal / 구성요소 5개 이상 원문 그대로 / decision은 branches 필수"""
 
 def extract_components(text: str, app_num: str, local_figs: list, local_refs: list) -> dict:
     prompt = f"특허 출원번호: {app_num}\n\n[도면 목록]\n{json.dumps(local_figs,ensure_ascii=False,indent=2)}\n\n[부호 설명]\n{json.dumps(local_refs,ensure_ascii=False,indent=2)}\n\n[특허 명세서]\n{text[:15000]}"
@@ -520,12 +527,59 @@ def render_ui_screen(fig_json: dict) -> Tuple[str, dict]:
     return c.to_svg(), {"layout_type":"patent_ui_pro","canvas":{"width":width,"height":height},"element_count":len(elements)}
 
 
+def render_circuit_diagram(fig_json: dict) -> Tuple[str, dict]:
+    """특허 회로/하드웨어 구성 다이어그램. 전자 부품을 블록으로 표현하고 연결선으로 배선을 나타낸다."""
+    elements = fig_json.get("elements", []) or [
+        {"id":"C100","ref_no":"100","name":"MCU","type":"device"},
+        {"id":"C110","ref_no":"110","name":"센서부","type":"device"},
+        {"id":"C120","ref_no":"120","name":"전원부","type":"device"},
+    ]
+    relations = fig_json.get("relations", [])
+    n = len(elements)
+    COLS = min(3, n); ROWS = (n + COLS - 1) // COLS
+    BW, BH, PX, PY, GAP_X, GAP_Y = 190, 70, 80, 120, 60, 60
+    width = COLS * BW + (COLS - 1) * GAP_X + PX * 2
+    height = ROWS * BH + (ROWS - 1) * GAP_Y + PY + 100
+    c = SvgCanvas(width, height)
+    c.text(width / 2, 44, f"{fig_json.get('fig_number', '')}  {fig_json.get('title', '')}", size=22, weight="bold")
+
+    pos = {}
+    for i, e in enumerate(elements):
+        col, row = i % COLS, i // COLS
+        x = PX + col * (BW + GAP_X)
+        y = PY + row * (BH + GAP_Y)
+        pos[e.get("id", str(i))] = (x + BW / 2, y + BH / 2)
+        ref, name = e.get("ref_no", ""), trunc(e.get("name", ""), 14)
+        etype = str(e.get("type", "device")).lower()
+        if etype in ["database", "memory"]:
+            c.rect(x, y, BW, BH, sw=1.8, rx=4, fill="#f5f5f5", dash="5 3")
+        elif etype in ["external", "actor"]:
+            c.rect(x, y, BW, BH, sw=2.2, rx=12, fill="#e8f0e8")
+        else:
+            c.rect(x, y, BW, BH, sw=2.0, rx=4)
+        c.text(x + BW / 2, y + BH / 2, name, size=16, weight="bold", anchor="middle")
+        if ref:
+            c.leader(x + BW + 45, y + 14, x + BW, y + BH / 2, ref)
+
+    for rel in relations:
+        src, tgt = rel.get("from", ""), rel.get("to", "")
+        if src in pos and tgt in pos:
+            sx, sy = pos[src]; tx, ty = pos[tgt]
+            label = trunc(rel.get("label", ""), 12)
+            c.line(sx, sy, tx, ty, sw=1.8, arrow=True)
+            if label:
+                c.text((sx + tx) / 2, (sy + ty) / 2 - 10, label, size=12, anchor="middle", fill="#555")
+
+    return c.to_svg(), {"layout_type": "patent_circuit_pro", "canvas": {"width": width, "height": height}, "element_count": n}
+
+
 def render_patent_svg(fig_json: dict, style_template: str = DEFAULT_STYLE) -> Tuple[str, dict]:
     dtype = fig_json.get("diagram_type","block_diagram")
     if dtype in ["flowchart","method","process"]: return render_flowchart(fig_json)
     if dtype == "sequence":     return render_sequence(fig_json)
     if dtype == "stateDiagram": return render_state_diagram(fig_json)
     if dtype == "ui_screen":    return render_ui_screen(fig_json)
+    if dtype == "circuit":      return render_circuit_diagram(fig_json)
     return render_block_diagram(fig_json)
 
 
@@ -546,7 +600,7 @@ def score_quality(fig: dict, val: dict, layout: dict) -> dict:
     score,issues,strengths = 100,[],[]
     elements=fig.get("elements",[]); dtype=fig.get("diagram_type","")
     PRO={"patent_flow_pro","patent_block_pro","patent_sequence_pro","patent_state_pro","patent_ui_pro"}
-    VALID={"flowchart","block_diagram","sequence","ui_screen","stateDiagram","concept_diagram"}
+    VALID={"flowchart","block_diagram","sequence","ui_screen","stateDiagram","circuit","concept_diagram"}
     no_ref=[e for e in elements if not e.get("ref_no")]
     if len(elements)>=3: strengths.append("구성요소 수 충분")
     else: score-=15; issues.append("구성요소 3개 미만")
@@ -660,10 +714,25 @@ def generate_all_drawings(invention_text: str, app_num: str, output_dir: str = "
     analysis = merge_refs(extract_components(invention_text, app_num, local_figs, local_refs), local_refs)
     save_json(app_dir/"patent_analysis.json", analysis)
     print(f"  → 발명 유형: {analysis.get('invention_type')} / 핵심 개념: {analysis.get('main_concept')}")
-    recommended = (analysis.get("recommended_diagrams",[]) or local_figs or [
+    recommended = analysis.get("recommended_diagrams", []) or local_figs or [
         {"fig_number":"도 1","diagram_type":"block_diagram","title":"전체 구성도","purpose":"전체 구성","source_text":"자동 생성"},
         {"fig_number":"도 2","diagram_type":"flowchart","title":"처리 흐름도","purpose":"처리 흐름","source_text":"자동 생성"},
-    ])[:2]
+    ]
+
+    # 발명 특성에 따라 누락된 도면 자동 주입
+    existing_types = {d.get("diagram_type","") for d in recommended}
+    text_lower = invention_text.lower()
+
+    if "sequence" not in existing_types and any(k in text_lower for k in ["api","프로토콜","통신","메시지","서버","클라이언트","네트워크"]):
+        n = len(recommended) + 1
+        recommended.append({"fig_number":f"도 {n}","diagram_type":"sequence","title":"시스템 간 통신 시퀀스","purpose":"통신 흐름","source_text":"자동 추가"})
+    if "ui_screen" not in existing_types and any(k in text_lower for k in ["화면","ui","인터페이스","앱","사용자 인터페이스","표시부"]):
+        n = len(recommended) + 1
+        recommended.append({"fig_number":f"도 {n}","diagram_type":"ui_screen","title":"사용자 인터페이스 화면 예시","purpose":"UI 구성","source_text":"자동 추가"})
+    if "circuit" not in existing_types and any(k in text_lower for k in ["회로","mcu","센서","배선","전자","반도체","임베디드","마이크로"]):
+        n = len(recommended) + 1
+        recommended.append({"fig_number":f"도 {n}","diagram_type":"circuit","title":"하드웨어 회로 구성도","purpose":"회로 구성","source_text":"자동 추가"})
+
     save_json(app_dir/"figures.json", {"figures":recommended})
 
     for diagram_info in recommended:
