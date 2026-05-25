@@ -36,6 +36,7 @@ data/raw/**
 data/processed/**
 data/reports/**
 data/tmp/**
+data/specifications/**
 
 !data/
 !data/README.md
