@@ -10,9 +10,15 @@ class ComposerAgentOutput(AgentOutputBase):
     title: str = ""
     abstract: str = ""
     sections: dict[str, str] = Field(default_factory=dict)
+    claims: list[object] = Field(default_factory=list)
+    drawings: dict[str, object] = Field(default_factory=dict)
+    specification: dict[str, object] = Field(default_factory=dict)
+    prior_art_report: dict[str, object] = Field(default_factory=dict)
     rendered_markdown: str = ""
+    rendered_docx_path: str = ""
     rendered_html_path: str | None = None
     unresolved_items: list[str] = Field(default_factory=list)
+    composer_notes: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def ensure_renderable_output(self) -> "ComposerAgentOutput":
