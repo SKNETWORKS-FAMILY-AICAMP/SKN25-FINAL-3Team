@@ -3,6 +3,29 @@
 > Chronological record of wiki actions. Append-only.
 > Format: `## [YYYY-MM-DD] action | subject`
 
+## [2026-05-22] update | drawing_agent.md v8 + patentai-web.md 현행화
+
+- `docs/llm-wiki/references/drawing_agent.md` v7.2 → v8 업데이트
+  - circuit 렌더러 추가 (5종 지원)
+  - 발명 특성 기반 자동 도면 선택 로직 추가
+  - LangGraph drawing_node 연동 내용 추가
+  - 특허 txt 위치: G06F/ 폴더 → Google Drive 공유 폴더로 변경
+  - DrawingAgentOutput Pydantic schema 적용 내용 추가
+- `docs/patentai-web.md` 전면 업데이트
+  - 페이지 4개 → 17개 현행화
+  - 다국어(i18n) 구조 (lib/i18n.ts, LangContext) 추가
+  - 도면 생성 데모 연동 (/service/demo) 추가
+  - 폴더 구조 현행화
+- `data/manifests/` 복원 (team-collaboration-guide 규칙 준수: Drive inventory는 Git에 포함)
+
+Changed files:
+- `docs/llm-wiki/references/drawing_agent.md`
+- `docs/patentai-web.md`
+- `data/manifests/drive_inventory_2026-05-12.csv`
+- `data/manifests/drive_inventory_2026-05-12.jsonl`
+- `data/manifests/drive_inventory_2026-05-12.summary.json`
+- `data/manifests/pilot_600_v1_smoke_g06f_latest10.jsonl`
+
 ## [2026-05-12] create | LLM Wiki initialized
 
 - Created LLM Wiki root under `docs/llm-wiki/`.
