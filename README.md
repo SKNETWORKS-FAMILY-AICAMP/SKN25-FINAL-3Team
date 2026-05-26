@@ -43,18 +43,15 @@ https://drive.google.com/drive/folders/1TcCVG8lnVapn9Fm40DdxhmhyquaMja2L
 - 발표 자료
 - 멘토링/미팅 기록
 
-### 데이터 관리 Google Drive
-
-https://drive.google.com/drive/folders/1V-KJTNLjYpxqp_VAgIxKYQO6pm8-zMa2
+### 데이터 관리 S3
 
 포함 내용:
-- IPC별 특허 PDF/TXT 데이터
+- IPC별 특허 PDF/XML 데이터
 - G06F/G06N/G06Q/G06V 데이터
-- extracted_texts
-- 학습/평가용 데이터셋
+- OA 데이터
 
 ## 데이터 관리 안내
 
-대량 특허 PDF/TXT 원천 데이터는 Google Drive에서 관리하며, GitHub에는 소스 코드, 문서, 데이터 매니페스트, 샘플 데이터 중심으로 정리합니다.
+대량 특허 PDF/XML 원천 데이터는 AWS S3에서 관리하며, GitHub에는 소스 코드, 문서, 데이터 매니페스트, 샘플 데이터 중심으로 정리합니다.
 
 API Key, AWS 인증 정보, `.env` 파일 등 민감 정보는 GitHub에 포함하지 않습니다.
