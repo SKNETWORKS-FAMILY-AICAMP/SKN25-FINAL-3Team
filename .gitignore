@@ -11,6 +11,13 @@ __pycache__/
 .env
 .env.local
 
+# Streamlit (Next.js로 교체됨)
+.streamlit/
+
+# 임시 폴더
+temp_imgs/
+temp_uploads/
+
 # OS
 .DS_Store
 Thumbs.db
@@ -36,6 +43,7 @@ data/raw/**
 data/processed/**
 data/reports/**
 data/tmp/**
+data/specifications/**
 
 !data/
 !data/README.md
@@ -62,6 +70,9 @@ data/tmp/**
 # Generated review artifacts
 *.html
 
+# 도면 에이전트 생성 결과물
+drawing_analysis/
+
 # Jupyter
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
@@ -77,3 +88,6 @@ models/**/optimizer.pt
 models/**/scheduler.pt
 models/**/runs/
 models/**/wandb/
+
+# IDE
+.vscode/

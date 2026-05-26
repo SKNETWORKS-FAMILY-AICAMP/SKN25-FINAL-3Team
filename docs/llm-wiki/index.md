@@ -1,7 +1,7 @@
 # Wiki Index
 
 > AI/소프트웨어 특허 상담 프로젝트 지식베이스입니다. 새 팀원은 이 파일부터 읽으면 됩니다.  
-> Last updated: 2026-05-15 | Total pages: 11
+> Last updated: 2026-05-22 | Total pages: 12
 
 ## Start Here
 
@@ -28,6 +28,10 @@
 
 - [[pipeline-and-evaluation]] — 아직 구현 확정 전인 예정 파이프라인과 smoke set 기반 다음 작업.
 - [[claim-loop-workflow-inventory]] — 전날 청구항 loop의 브랜치, 코드 파일, 데이터셋, Markdown/JSON 결과물, human feedback 반영 지점을 정리한 inventory.
+
+## References
+
+- [[drawing_agent]] — 도면 에이전트 v8: 5종 SVG 렌더러, LangGraph 연동, DrawingAgentOutput schema.
 
 ## Decisions
 
