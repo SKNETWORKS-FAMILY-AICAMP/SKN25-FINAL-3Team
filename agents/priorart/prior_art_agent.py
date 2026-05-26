@@ -4,8 +4,10 @@
 - invention_payload JSON → 쿼리 추출 → pgvector Top-N 검색 → 근거문장 + 리스크 분석
 """
 
+import time
 import os
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import numpy as np
 from openai import OpenAI
@@ -20,6 +22,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 EMBED_MODEL   = "text-embedding-3-small"
 ANALYZE_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+ANALYZE_MAX_WORKERS = int(os.getenv("PRIOR_ART_ANALYZE_MAX_WORKERS", "5"))
 
 
 # ─────────────────────────────────────────────────────────────
@@ -69,10 +72,13 @@ def search_similar_patents(
     top_n: int = 5,
     ipc_prefix: str = None,
 ) -> list[dict]:
+    embed_started_at = time.perf_counter()
     query_vec = embed_texts([query_text])[0].tolist()
+    print(f"[선행기술조사] 쿼리 임베딩 소요: {time.perf_counter() - embed_started_at:.2f}초")
 
     db = SessionLocal()
     try:
+        search_started_at = time.perf_counter()
         # 거리값을 결과와 함께 가져오기 위해 label로 추가
         # 이렇게 해야 각 결과별 similarity_score를 정확히 계산 가능
         distance_col = PatentCorpus.embedding.cosine_distance(query_vec).label("distance")
@@ -86,6 +92,7 @@ def search_similar_patents(
             )
 
         rows = q.order_by(distance_col).limit(top_n).all()
+        print(f"[선행기술조사] DB 유사도 검색 소요: {time.perf_counter() - search_started_at:.2f}초")
 
         return [
             {
@@ -214,10 +221,13 @@ def run_prior_art_agent(
     invention_payload: dict,
     top_n: int = 5,
 ) -> dict:
+    total_started_at = time.perf_counter()
     query_text = _build_query_text(invention_payload)
     print(f"[선행기술조사] 검색 쿼리:\n  {query_text[:200]}...")
 
+    search_total_started_at = time.perf_counter()
     top_patents = search_similar_patents(query_text, top_n=top_n)
+    print(f"[선행기술조사] 검색 전체 소요: {time.perf_counter() - search_total_started_at:.2f}초")
 
     if not top_patents:
         return {
@@ -228,10 +238,9 @@ def run_prior_art_agent(
 
     print(f"[선행기술조사] 유사 특허 Top-{top_n} 선정 완료")
 
-    candidates = []
-    prior_art_results = []
-    for i, patent in enumerate(top_patents):
-        print(f"[선행기술조사] 분석 중 {i+1}/{len(top_patents)}: {patent.get('title', '')[:50]}")
+    def _analyze_one(index: int, patent: dict) -> tuple[int, dict, dict]:
+        print(f"[선행기술조사] 분석 시작 {index+1}/{len(top_patents)}: {patent.get('title', '')[:50]}")
+        analyze_started_at = time.perf_counter()
         try:
             analysis = _analyze_patent(invention_payload, patent)
         except Exception as e:
@@ -245,6 +254,26 @@ def run_prior_art_agent(
                 "risk_reasons": [f"분석 실패: {str(e)}"],
                 "recommendation": "",
             }
+        print(f"[선행기술조사] 분석 {index+1}/{len(top_patents)} 소요: {time.perf_counter() - analyze_started_at:.2f}초")
+        return index, patent, analysis
+
+    max_workers = max(1, min(ANALYZE_MAX_WORKERS, len(top_patents)))
+    print(f"[선행기술조사] 후보 분석 병렬 실행: workers={max_workers}")
+
+    analysis_items = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [
+            executor.submit(_analyze_one, i, patent)
+            for i, patent in enumerate(top_patents)
+        ]
+        for future in as_completed(futures):
+            analysis_items.append(future.result())
+
+    analysis_items.sort(key=lambda item: item[0])
+
+    candidates = []
+    prior_art_results = []
+    for i, patent, analysis in analysis_items:
 
         overlap_points    = analysis.get("overlap_points", [])
         difference_points = analysis.get("difference_points", [])
@@ -257,7 +286,6 @@ def run_prior_art_agent(
             "title":            patent.get("title", ""),
             "summary":          analysis.get("summary", ""),
             "score":            patent.get("similarity_score", 0.0),
-            "matched_points":   overlap_points,
             "overlap_points":   overlap_points,
             "difference_points": difference_points,
             "limitations":      limitations,
@@ -281,6 +309,7 @@ def run_prior_art_agent(
 
     overall_risk = _summarize_overall_risk(prior_art_results)
     print(f"\n[선행기술조사] 완료 — 전체 리스크: {overall_risk['level'].upper()}")
+    print(f"[선행기술조사] 전체 실행 소요: {time.perf_counter() - total_started_at:.2f}초")
 
     overlap_points    = _merge_unique([c["overlap_points"] for c in candidates])
     difference_points = _merge_unique([c["difference_points"] for c in candidates])
@@ -295,6 +324,8 @@ def run_prior_art_agent(
     return {
         "status":             "ok",
         "summary":            overall_risk["summary"],
+        "warnings":           [],
+        "notes":              [],
         "query":              query_text,
         "ipc_focus":          [],
         "candidates":         candidates,
