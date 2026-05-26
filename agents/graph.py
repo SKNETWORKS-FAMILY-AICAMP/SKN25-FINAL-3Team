@@ -87,6 +87,8 @@ def run_mvp_pipeline(
             continue
 
         raw_output = runner(state)
+        state_key = STATE_KEYS[agent_name]
+
         validated = safe_validate_output(
             agent_name=agent_name,
             schema=SCHEMAS[agent_name],
@@ -94,7 +96,6 @@ def run_mvp_pipeline(
             fallback=fallbacks[agent_name],
             enable_llm_repair=enable_llm_repair,
         )
-        state_key = STATE_KEYS[agent_name]
         state[state_key] = validated.model_dump()  # type: ignore[literal-required]
 
     state["workflow"]["status"] = "completed"

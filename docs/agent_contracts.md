@@ -333,8 +333,10 @@ state["summary"] = {
 - 입력: `PatentAgentState`
 - 출력: `ComposerAgentOutput`
 - 저장 위치: `state["final_package"]`
-- 최소 필드: `title`, `abstract`, `sections`, `rendered_markdown`, `rendered_html_path`, `unresolved_items`
+- 최소 필드: `status`, `summary`, `warnings`, `notes`, `evidence`, `details`, `title`, `abstract`, `sections`, `claims`, `drawings`, `specification`, `prior_art_report`, `rendered_markdown`, `rendered_docx_path`, `rendered_html_path`, `unresolved_items`, `composer_notes`
 - Composer는 부족한 내용을 발명하지 않고, 각 agent 결과를 최종 문서 형태로 정리한다.
+- `run_composer_agent(state)`는 실제 `.docx`를 생성하고, `final_package` 형태의 dict를 반환한다.
+- `graph.py`는 `safe_validate_output()`를 통해 Composer raw output을 검증한 뒤 `state["final_package"]`에 저장한다.
 
 ## 구현 파일 역할
 
