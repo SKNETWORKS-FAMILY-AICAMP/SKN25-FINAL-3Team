@@ -12,7 +12,6 @@ class PriorArtCandidate(BaseModel):
     title: str = ""
     summary: str = ""
     score: float = 0.0
-    matched_points: list[str] = Field(default_factory=list)
     overlap_points: list[str] = Field(default_factory=list)
     difference_points: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
