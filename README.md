@@ -1,3 +1,7 @@
+## 📅 프로젝트 진행 상황
+
+- **중간 발표 자료:** [Canva PPT 링크](https://canva.link/ht639zufailry5n)
+- 
 # SKN25-FINAL-3Team
 
 ## AI 기반 특허 작성 보조 Agent Pipeline
