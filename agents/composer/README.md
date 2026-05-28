@@ -1,3 +1,9 @@
+# 구조 메모
+
+이 폴더는 각 에이전트 산출물을 최종 검토 패키지로 병합하는 Composer Agent 영역이다. 표준 진입점은 `agent.py`, graph 연결은 `adapter.py`, 출력 계약은 `agents/schemas/composer.py`를 따른다.
+
+---
+
 # Composer Agent
 
 ## 목적

@@ -1,3 +1,9 @@
+# 구조 메모
+
+이 폴더는 입력 부족 시 추가 질문을 생성하는 Consultation Agent 영역이다. 표준 진입점은 `agent.py`, graph 연결은 `adapter.py`, 출력 계약은 `agents/schemas/consultation.py`를 따른다.
+
+---
+
 # Consultation / Prior-Art Agents
 
 상담 상태 관리, 상담 DB 저장, 선행기술조사 연동 코드가 있는 폴더입니다.

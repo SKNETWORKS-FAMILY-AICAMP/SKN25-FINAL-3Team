@@ -7,21 +7,24 @@ from agents.schemas.common import AgentOutputBase
 
 
 class FigureDraft(BaseModel):
-    fig_no: str
+    fig_no: int | str
     title: str = ""
     type: str = ""
+    purpose: str = ""
     components: list[str] = Field(default_factory=list)
+    steps: list[str] = Field(default_factory=list)
     description: str = ""
 
 
 class ReferenceNumeral(BaseModel):
     number: str
-    label: str
+    term: str
+    figure: str = ""
+    component_id: str = ""
     description: str = ""
-    component_id: str | None = None
 
 
 class DrawingAgentOutput(AgentOutputBase):
     figures: list[FigureDraft] = Field(default_factory=list)
-    reference_numerals: list[ReferenceNumeral] = Field(default_factory=list)
+    reference_numerals: dict[str, ReferenceNumeral] = Field(default_factory=dict)
     drawing_notes: list[str] = Field(default_factory=list)

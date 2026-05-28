@@ -13,8 +13,8 @@ ClaimCategory = Literal["method", "system", "storage_medium", "unknown"]
 
 class ClaimDraft(BaseModel):
     claim_no: int
-    type: ClaimType
-    category: ClaimCategory = "unknown"
+    type: ClaimType = "independent"
+    category: ClaimCategory = "method"
     depends_on: list[int] = Field(default_factory=list)
     elements: list[str] = Field(default_factory=list)
     text: str

@@ -7,8 +7,9 @@ Master는 중간발표 MVP에서 지능형 라우터가 아니라 고정 DEFAULT
 """
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Any
+from collections.abc import Callable, Sequence
+from datetime import datetime, timezone
+from typing import Any, Protocol
 
 from agents.schemas import (
     ClaimAgentOutput,
@@ -23,6 +24,29 @@ from agents.state import PatentAgentState, create_initial_state
 from agents.validation import safe_validate_output
 
 AgentRunner = Callable[[PatentAgentState], Any]
+
+
+class ServiceAdapter(Protocol):
+    """graph.py가 의존하는 최소 adapter protocol.
+
+    실제 agent.py 구현은 이 protocol 뒤에 숨긴다. graph는 agent 함수/API를 직접 알지 않는다.
+    """
+
+    agent_name: str
+    state_key: str
+
+    def run(self, state: PatentAgentState) -> dict[str, Any]: ...
+
+
+def _trace_event(agent_name: str, state_key: str, output: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "agent": agent_name,
+        "node": f"{agent_name}_adapter",
+        "action": "run_adapter",
+        "summary": str(output.get("summary") or output.get("status") or "adapter completed")[:240],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "outputs": {"state_key": state_key, "status": output.get("status")},
+    }
 
 
 def _fallbacks() -> dict[str, Any]:
@@ -61,7 +85,7 @@ STATE_KEYS = {
     "composer": "final_package",
 }
 
-DEFAULT_PIPELINE = ("summary", "claim", "drawing", "prior_art", "specification", "composer")
+DEFAULT_PIPELINE = ("summary", "prior_art", "claim", "drawing", "specification", "composer")
 
 
 def run_mvp_pipeline(
@@ -97,6 +121,39 @@ def run_mvp_pipeline(
             enable_llm_repair=enable_llm_repair,
         )
         state[state_key] = validated.model_dump()  # type: ignore[literal-required]
+
+    state["workflow"]["status"] = "completed"
+    state["workflow"]["current_agent"] = "master"
+    state["workflow"]["next_agent"] = "review"
+    return state
+
+
+def run_service_pipeline(
+    user_input: str,
+    adapters: dict[str, ServiceAdapter],
+    *,
+    route: Sequence[str] = DEFAULT_PIPELINE,
+) -> PatentAgentState:
+    """서비스 기준 graph 실행기.
+
+    graph.py는 agent.py를 직접 호출하지 않고 adapter만 실행한다.
+    adapter는 입력 변환, agent 실행, Pydantic 검증, state 저장용 normalize를 책임진다.
+    """
+
+    state = create_initial_state(user_input)
+    state["workflow"]["status"] = "running"
+
+    for agent_name in route:
+        adapter = adapters.get(agent_name)
+        state["workflow"]["current_agent"] = agent_name  # type: ignore[typeddict-item]
+        if adapter is None:
+            state["workflow"]["errors"].append(f"adapter not registered: {agent_name}")
+            continue
+
+        output = adapter.run(state)
+        state_key = getattr(adapter, "state_key", STATE_KEYS.get(agent_name, agent_name))
+        state[state_key] = output  # type: ignore[literal-required]
+        state["workflow"]["trace"].append(_trace_event(agent_name, state_key, output))
 
     state["workflow"]["status"] = "completed"
     state["workflow"]["current_agent"] = "master"

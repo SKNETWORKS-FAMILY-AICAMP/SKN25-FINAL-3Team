@@ -1,3 +1,9 @@
+# 구조 메모
+
+이 폴더는 청구항 초안을 작성하는 Claim Agent 영역이다. 표준 진입점은 `agent.py`, graph 연결은 `adapter.py`, 출력 계약은 `agents/schemas/claim.py`를 따른다.
+
+---
+
 # Claim Agent
 
 청구항 생성/저장 관련 에이전트 코드 위치입니다.

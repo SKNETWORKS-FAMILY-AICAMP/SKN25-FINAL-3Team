@@ -20,7 +20,7 @@ import re
 from pathlib import Path
 
 from agents.drawing.drawing_agent import generate_all_drawings
-from agents.schemas.drawing import DrawingAgentOutput, FigureDraft, ReferenceNumeral
+from agents.schemas.drawing import DrawingAgentOutput
 from agents.validation import safe_validate_output
 
 
@@ -41,7 +41,7 @@ _FALLBACK = DrawingAgentOutput(
     status="failed",
     summary="도면 생성 실패 — hard fallback",
     figures=[],
-    reference_numerals=[],
+    reference_numerals={},
     drawing_notes=[],
 )
 
@@ -116,22 +116,22 @@ def _safe_app_num(src: dict) -> str:
 def _build_raw_output(results: list, analysis: dict) -> dict:
     """DrawingResult + analysis → DrawingAgentOutput 형식의 raw dict.
 
-    DrawingAgentOutput 스키마 기준:
-        figures           : list[FigureDraft]   fig_no=str
-        reference_numerals: list[ReferenceNumeral]  number/label/description/component_id
+    최종 기준:
+        figures           : list[FigureDraft]
+        reference_numerals: dict[str, ReferenceNumeral]  number/term/figure/component_id/description
         drawing_notes     : list[str]
         status / summary  : 공통 AgentOutputBase 필드
     """
-    # 참조부호 — list[ReferenceNumeral] 형식 (dict 아님)
-    ref_numerals: list[dict] = []
+    ref_numerals: dict[str, dict] = {}
     for i, comp in enumerate(analysis.get("components", [])):
         num = str(100 + i * 10)
-        ref_numerals.append({
-            "number":       num,
-            "label":        comp.get("name", ""),          # term → label
-            "description":  comp.get("description", ""),
+        ref_numerals[num] = {
+            "number": num,
+            "term": comp.get("name", ""),
+            "figure": "도 1",
+            "description": comp.get("description", ""),
             "component_id": str(comp.get("component_id", "")).strip() or num,
-        })
+        }
 
     # 도면 목록 — list[FigureDraft] 형식 (fig_no=str)
     figures: list[dict] = []
@@ -221,7 +221,7 @@ def drawing_node(state: dict) -> dict:
         _build_raw_output(results, analysis)
         if results
         else {"status": "failed", "summary": "도면 생성 결과 없음",
-              "figures": [], "reference_numerals": [], "drawing_notes": []}
+              "figures": [], "reference_numerals": {}, "drawing_notes": []}
     )
 
     validated = safe_validate_output(

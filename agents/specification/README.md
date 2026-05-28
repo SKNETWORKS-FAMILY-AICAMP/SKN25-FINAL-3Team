@@ -1,3 +1,9 @@
+# 구조 메모
+
+이 폴더는 명세서 본문을 작성하는 Specification Agent 영역이다. 표준 진입점은 `agent.py`, graph 연결은 `adapter.py`, 출력 계약은 `agents/schemas/specification.py`를 따른다.
+
+---
+
 # Specification Agent
 
 이 패키지는 LangGraph 멀티 에이전트 시스템에서 **Composer가 최종 특허 문서에 포함할 발명의 설명 파트 생성**을 담당합니다.
@@ -106,4 +112,3 @@ markdown_content = load_specification_markdown(
 - `spec_helpers.py`: 프롬프트 구성, JSON 파싱, 문단 분리, 환각 검증, 용어 정규화 레코드 생성, patch 및 support_matrix를 생성하는 헬퍼 유틸리티 모음.
 - `spec_test_app.py`: 명세서 생성, 마크다운/JSON 로컬 저장 및 실시간 브라우저 다운로드, 과거 생성 이력 로드 및 조회 기능을 제공하는 초프리미엄 사이버 다크 테마 Streamlit 테스트 앱.
 - `__init__.py`: 에이전트 실행 및 파일 저장 레이어의 모든 핵심 API를 외부로 노출(export)하는 패키지 진입 파일.
-
