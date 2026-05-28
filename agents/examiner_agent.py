@@ -1,22 +1,23 @@
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from langchain_openai import ChatOpenAI
 from agents.core.state import PatentState, ClaimResult, ExaminerResult
 
-# 실무 환경을 위한 로깅 설정
 logger = logging.getLogger(__name__)
 
 class ExaminerAgent:
-    def __init__(self, model_name: str = "gpt-4o"):
-        # 💡 [핵심] 심사관은 창의성보다는 깐깐하고 일관된 '법적 판단'이 필요하므로 
-        # 환각(Hallucination)을 최소화하기 위해 temperature를 0.0으로 완벽히 고정합니다.
-        self.llm = ChatOpenAI(model=model_name, temperature=0.0)
+    def __init__(self, 
+                 model_name: str, 
+                 runpod_base_url: str, 
+                 runpod_api_key: str):
+        self.llm = ChatOpenAI(
+            model=model_name,
+            temperature=0.0,  
+            base_url=runpod_base_url,
+            api_key=runpod_api_key
+        )
 
     def _format_claims_to_text(self, claims_result: ClaimResult) -> str:
-        """
-        LLM 심사관이 청구항 간의 구조와 인용 관계를 한눈에 파악할 수 있도록 
-        JSON 데이터를 읽기 편한 텍스트 전문으로 정제하는 헬퍼 함수입니다.
-        """
         text_lines = []
         for c in claims_result.get("claims", []):
             prefix = "[종속항]" if c.get("is_dependent") else "[독립항]"
@@ -27,21 +28,19 @@ class ExaminerAgent:
         return "\n".join(text_lines)
 
     def run(self, state: PatentState) -> Dict[str, Any]:
-        """
-        LangGraph 노드 함수: 작성된 청구항을 검토하여 특허법 위배 여부를 심사합니다.
-        """
-        logger.info("[Examiner Agent] 특허 청구범위 심사 시작...")
+        logger.info("[Examiner Agent] 특허 청구범위 심사 시작... (RunPod vLLM 연동)")
 
-        # 1. State에서 이전 노드(ClaimAgent)가 만든 청구항 데이터 가져오기
-        claims_data: ClaimResult = state.get("claims_data")
+        claims_data: Optional[ClaimResult] = state.get("claims_data")
         if not claims_data or "claims" not in claims_data:
             logger.error("State에 claims_data가 존재하지 않습니다.")
-            raise ValueError("State에 claims_data가 존재하지 않습니다. 청구항 생성 노드를 먼저 실행하세요.")
+            raise ValueError("State에 claims_data가 존재하지 않습니다.")
 
-        # 2. 심사를 위한 텍스트 변환
         claims_text_for_review = self._format_claims_to_text(claims_data)
 
-        # 3. 심사관 프롬프트 (특허법 기반 Few-Shot 역할)
+        # 현재 누적 수정 횟수 확인
+        examiner_state = state.get("examiner_data") or {}
+        current_count = examiner_state.get("revision_count", 0)
+
         system_prompt = (
             "당신은 대한민국 특허청의 엄격한 베테랑 특허심사관입니다.\n"
             "입력된 청구범위를 검토하여 다음 '2가지 법적 요건'만 집중적으로 심사해 주세요.\n\n"
@@ -56,28 +55,30 @@ class ExaminerAgent:
             "반드시 제공된 ExaminerResult 스키마 규격을 준수하여 응답하세요."
         )
 
-        # 4. 구조화된 출력 (Structured Output) 강제 적용
         structured_llm = self.llm.with_structured_output(ExaminerResult)
 
-        # 5. LLM 심사 진행
-        examination_output: ExaminerResult = structured_llm.invoke([
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"이하의 청구범위를 엄격하게 심사하십시오:\n\n{claims_text_for_review}"}
-        ])
+        try:
+            examination_output: ExaminerResult = structured_llm.invoke([
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"이하의 청구범위를 엄격하게 심사하십시오:\n\n{claims_text_for_review}"}
+            ])
+        except Exception as e:
+            logger.error(f"[Examiner Agent] vLLM 호출 중 오류 발생: {str(e)}")
+            # 🌟 수정 2 & 4: 예외 발생 시에도 카운트를 1 증가시켜 무한 루프 방지
+            return {
+                "examiner_data": {
+                    "is_approved": False, 
+                    "rejections": [{"claims": [], "reason_text": f"vLLM 서버 응답 오류로 인한 일시적 심사 보류: {str(e)}"}], 
+                    "revision_count": current_count + 1
+                }
+            }
 
-        # 6. 루프 제어용 State 관리 (revision_count)
-        # 이전 심사 기록이 있다면 가져오고, 첫 심사라면 0으로 세팅합니다.
-        examiner_state = state.get("examiner_data") or {}
-        current_count = examiner_state.get("revision_count", 0)
-
-        # 거절 이유가 하나라도 있다면(승인 실패) 카운트를 1 올립니다.
+        # 정상 응답 시 로직
         if not examination_output.get("is_approved"):
             examination_output["revision_count"] = current_count + 1
             logger.warning(f"[Examiner Agent] 거절 이유 발견! (현재 누적 수정 횟수: {examination_output['revision_count']})")
         else:
-            # 승인되었다면 카운트 유지
             examination_output["revision_count"] = current_count
             logger.info("[Examiner Agent] 모든 청구항 심사 통과! (최종 승인)")
 
-        # 7. LangGraph의 State 업데이트를 위한 딕셔너리 리턴
         return {"examiner_data": examination_output}

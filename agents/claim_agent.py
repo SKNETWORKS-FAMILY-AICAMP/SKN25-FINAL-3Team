@@ -2,119 +2,102 @@ import json
 import logging
 from typing import Dict, List, Any
 from langchain_openai import ChatOpenAI
-from agents.core.state import PatentState, ConsultationData, ClaimResult, ClaimItem, Element
+from langsmith import traceable
+
+from agents.core.state import PatentState, ParsedInvention, ClaimResult, ClaimItem
 
 logger = logging.getLogger(__name__)
 
-def parent_map_desc(element_map: Dict[int, Element], parent_id: int) -> str:
-    """부모 구성요소의 명칭을 정제해서 가져오는 헬퍼 함수"""
-    full_desc = element_map[parent_id]['description']
-
-    # 프롬프트나 로직에서 명칭만 자르기 위한 임시 파싱 (실무에서는 더 정교한 명사 추출 필요)
-    return full_desc.split("하는")[-1].strip() if "하는" in full_desc else full_desc[:15]
-
-def generate_claims_structure(consultation: ConsultationData) -> ClaimResult:
+@traceable(name="Generate Claims Structure (Rule-Based)")
+def generate_claims_structure(parsed_data: ParsedInvention) -> ClaimResult:
     """
-    [Rule-Based] 요약 데이터를 바탕으로 특허법적 계층 구조를 가진 청구항 뼈대를 생성합니다.
+    [Rule-Based] ParsedInvention 데이터를 바탕으로 청구항 뼈대를 생성합니다.
+    최초 생성 시에만 사용됩니다.
     """
-    elements = consultation["elements"]
-    problems = consultation.get("problems", [])
-    effects = consultation.get("effects", [])
-
-    #element_map: Dict[int, Element] = {el["element_id"]: el for el in elements}
-    element_map = {}
-    for el in elements:
-        key = el["element_id"]
-        element_map[key] = el
-    el_to_claim_map: Dict[int, int] = {}
+    components = parsed_data.get("architecture", {}).get("components", [])
+    problem_text = parsed_data.get("technical_context", {}).get("problem_to_solve", "")
+    effect_text = parsed_data.get("technical_context", {}).get("expected_effect", "")
     
     claims_list: List[ClaimItem] = []
     current_claim_no = 1
-
-    # [STEP 1] 독립항 생성 (parent_id가 없는 최상위 요소)
-    #top_elements = [el for el in elements if el.get("parent_id") is None]
-    top_elements = []
-    for el in elements:
-        if el.get("parent_id") is None:
-            top_elements.append(el)
     
-    for el in top_elements:
-        el_id = el["element_id"]
-        el_to_claim_map[el_id] = current_claim_no
-        
-        category = "시스템" if "시스템" in el["description"] else "방법"
-        problem_text = problems[0] if problems else ""
-        effect_text = effects[0] if effects else ""
-        
+    if not components:
+        return {"claims": []}
+
+    # [STEP 1] 독립항 생성
+    main_comp = components[0]
+    category_str = parsed_data.get("invention_metadata", {}).get("category", "SYSTEM")
+    
+    # 🌟 수정 3: TypedDict 스키마 Literal["방법", "시스템", "CRM"]에 맞게 매핑 수정
+    category_map = {
+        "METHOD": "방법", 
+        "SYSTEM": "시스템", 
+        "PROGRAM": "CRM", 
+        "APPARATUS": "시스템"
+    }
+    category = category_map.get(category_str, "시스템")
+
+    content = (
+        f"[해결과제: {problem_text}]를 해결하기 위한 {main_comp['name']}로서, "
+        f"상기 {main_comp['name']}의 세부 메커니즘을 포함하여 [기대효과: {effect_text}]를 특징으로 하는 {category}."
+    )
+    
+    claims_list.append({
+        "claim_no": current_claim_no,
+        "is_dependent": False,
+        "cited_claim_no": [],
+        "category": category, 
+        "content": content
+    })
+    
+    parent_claim_no = current_claim_no
+    current_claim_no += 1
+
+    # [STEP 2] 종속항 생성
+    for sub_comp in components[1:]:
         content = (
-            f"[해결과제: {problem_text}]를 해결하기 위한 {el['description']}로서, "
-            f"상기 {el['description']}의 세부 메커니즘을 포함하여 [기대효과: {effect_text}]를 특징으로 하는 {category}."
+            f"제{parent_claim_no}항에 있어서, "
+            f"상기 {main_comp['name']}는, "
+            f"{sub_comp['name']}을(를) 더 포함하는 것을 특징으로 하는 {category}."
         )
         
         claims_list.append({
             "claim_no": current_claim_no,
-            "is_dependent": False,
-            "cited_claim_no": [],
+            "is_dependent": True,
+            "cited_claim_no": [parent_claim_no],
             "category": category,
             "content": content
         })
         current_claim_no += 1
 
-    # [STEP 2] 종속항 생성 (parent_id가 존재하는 세부 요소)
-    #sub_elements = [el for el in elements if el.get("parent_id") is not None]
-    sub_elements = []
-    for el in elements:
-        if el.get("parent_id") is not None:
-            sub_elements.append(el)
-
-    for el in sub_elements:
-        el_id = el["element_id"]
-        parent_id = el["parent_id"]
-        parent_claim_no = el_to_claim_map.get(parent_id)
-        
-        if parent_claim_no is not None:
-            el_to_claim_map[el_id] = current_claim_no
-            parent_claim = next((c for c in claims_list if c["claim_no"] == parent_claim_no), None)
-            category = parent_claim["category"]
-            
-            content = (
-                f"제{parent_claim_no}항에 있어서, "
-                f"상기 {parent_map_desc(element_map, parent_id)}는, "
-                f"{el['description']}을(를) 더 포함하는 것을 특징으로 하는 {category}."
-            )
-            
-            claims_list.append({
-                "claim_no": current_claim_no,
-                "is_dependent": True,
-                "cited_claim_no": [parent_claim_no],
-                "category": category,
-                "content": content
-            })
-            current_claim_no += 1
-
     return {"claims": claims_list}
 
 class ClaimGenerationAgent:
     def __init__(self, model_name: str = "gpt-4o"):
-        # 모델명을 외부에서 주입받을 수 있도록 수정 (유연성 확보)
-        # 청구항 구조를 건드리지 않고 문장만 다듬는 것이라 gpt-4o 또는 gpt-4o-mini 모두 적합합니다.
         self.llm = ChatOpenAI(model=model_name, temperature=0.2)
 
     def run(self, state: PatentState) -> Dict[str, Any]:
-        """
-        LangGraph 노드 함수: 요약 데이터를 읽어 청구항을 생성(윤문)하고 반환합니다.
-        """
-        logger.info("[Claim Agent] 구조화된 출력을 활용한 청구항 생성 시작...")
+        logger.info("[Claim Agent] 청구항 생성/보정 노드 시작...")
         
-        consultation_data = state.get("summary_data")
-        if not consultation_data:
+        parsed_data = state.get("summary_data")
+        if not parsed_data:
             logger.error("State에 summary_data가 존재하지 않습니다.")
-            raise ValueError("State에 summary_data가 존재하지 않습니다. 요약 노드를 먼저 확인하세요.")
+            raise ValueError("State에 summary_data가 존재하지 않습니다.")
         
-        # 1. 뼈대 생성 (Rule-based)
-        base_claim_structure = generate_claims_structure(consultation_data)
+        # 🌟 수정 1: 심사관 피드백 및 이전 청구항 데이터 확인
+        examiner_data = state.get("examiner_data")
+        previous_claims_data = state.get("claims_data")
         
-        # 2. 프롬프트 작성
+        is_rejection_loop = False
+        rejection_reasons = ""
+
+        # 거절 사유가 존재하는 경우 (루프를 타고 돌아온 경우)
+        if examiner_data and not examiner_data.get("is_approved") and previous_claims_data:
+            is_rejection_loop = True
+            rejections = examiner_data.get("rejections", [])
+            rejection_lines = [f"- 대상 청구항: {r.get('claims')} / 사유: {r.get('reason_text')}" for r in rejections]
+            rejection_reasons = "\n".join(rejection_lines)
+
         system_prompt = (
             "당신은 대한민국의 베테랑 특허출원 전문 변리사입니다.\n"
             "제공된 청구항 JSON 구조의 'claim_no', 'is_dependent', 'cited_claim_no', 'category' 데이터는 "
@@ -123,12 +106,24 @@ class ClaimGenerationAgent:
             "세련되고 유기적인 청구범위 문체(예: ~을 특징으로 하는 방법.)로 확장하고 다듬는 것입니다."
         )
         
-        user_prompt = (
-            f"아래의 청구항 뼈대 구조를 바탕으로 content 영역의 문장을 변리사답게 다듬어 주세요.\n"
-            f"입력 데이터: {json.dumps(base_claim_structure, ensure_ascii=False)}"
-        )
+        if is_rejection_loop:
+            logger.info("[Claim Agent] 심사관 거절 사유를 반영하여 기존 청구항을 보정합니다.")
+            user_prompt = (
+                f"이전에 작성된 청구항에 대해 특허 심사관의 [거절 이유]가 통지되었습니다.\n"
+                f"아래의 거절 이유를 꼼꼼히 분석하여, [이전 청구항]의 문제점을 완전히 해소한 새로운 청구항을 작성해 주세요.\n\n"
+                # 🌟 [추가된 강력한 제약 조건]
+                f"⚠️ [매우 중요] 'claim_no', 'is_dependent', 'cited_claim_no', 'category' 값은 [이전 청구항]의 값과 반드시 100% 동일하게 유지하고, 거절 이유를 해소하기 위해 오직 'content' 영역의 문장만 수정하십시오.\n\n"
+                f"=== [거절 이유] ===\n{rejection_reasons}\n\n"
+                f"=== [이전 청구항] ===\n{json.dumps(previous_claims_data, ensure_ascii=False)}\n\n"
+            )
+        else:
+            logger.info("[Claim Agent] 요약 데이터를 바탕으로 최초 청구항을 생성합니다.")
+            base_claim_structure = generate_claims_structure(parsed_data)
+            user_prompt = (
+                f"아래의 청구항 뼈대 구조를 바탕으로 content 영역의 문장을 변리사답게 다듬어 주세요.\n"
+                f"입력 데이터: {json.dumps(base_claim_structure, ensure_ascii=False)}"
+            )
         
-        # 3. LLM 호출 및 Pydantic(TypedDict) 포맷 강제
         structured_llm = self.llm.with_structured_output(ClaimResult)
         
         refined_claims: ClaimResult = structured_llm.invoke([
@@ -136,7 +131,5 @@ class ClaimGenerationAgent:
             {"role": "user", "content": user_prompt}
         ])
         
-        logger.info("[Claim Agent] 청구항 윤문 및 생성 완료.")
-        
-        # 4. State 업데이트를 위한 딕셔너리 반환
+        logger.info("[Claim Agent] 청구항 생성/보정 완료.")
         return {"claims_data": refined_claims}
