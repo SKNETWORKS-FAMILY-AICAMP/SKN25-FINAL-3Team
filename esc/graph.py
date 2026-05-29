@@ -86,7 +86,7 @@ workflow.add_conditional_edges(
     }
 )
 
-# 보정(rewrite)이 끝나면 무조건 종료
+# 보정(rewrite)이 끝나면 무조건 종료. 현재는 단순하게 구현. 추후 보완 예정.
 workflow.add_edge("claim_rewrite", END)
 
 # =========================================================

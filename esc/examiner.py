@@ -21,6 +21,7 @@ load_dotenv()
 
 # ==========================================
 # 1. 🛠️ 파싱 구조대 (Regex + JSON Fallback)
+# -> 아직 파인튜닝이 완전하지 않아, Output 형식이 깨져서 파싱 구조대가 필요. 추후 보완예정
 # ==========================================
 def salvage_via_regex(text: str) -> dict:
     """JSON 문법이 깨진 텍스트에서 정규식으로 데이터 추출"""
@@ -73,7 +74,7 @@ def extract_payload(text: str) -> dict:
     return salvage_via_regex(text)
 
 # ==========================================
-# 2. 심  사관 에이전트 클래스
+# 2. 심사관 에이전트 클래스
 # ==========================================
 class ExaminerAgent:
     def __init__(self):
