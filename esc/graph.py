@@ -51,6 +51,20 @@ def should_rewrite(state: PatentState):
     else:
         return "rewrite"
 
+def after_rewrite(state: PatentState):
+    """
+    청구항 재작성 후, 재심사를 받을지 종료할지 결정합니다.
+    (최대 2회 재작성 제한)
+    """
+    examiner_data = state.get("examiner_data")
+    
+    # examiner_data.revision_count는 심사관 에이전트가 실행될 때마다 1씩 증가합니다.
+    # 2번 거절당하고 2번째 재작성을 마쳤다면 무조건 종료
+    if examiner_data and examiner_data.revision_count >= 2:
+        return "end"
+    else:
+        return "examiner"
+
 # =========================================================
 # 4. 그래프(Graph) 조립
 # =========================================================
@@ -76,7 +90,7 @@ workflow.add_edge("drawing", END)
 # claim이 끝나면 심사관에게 전달
 workflow.add_edge("claim", "examiner")
 
-# 심사관 결과에 따른 조건부 분기
+# 심사관 결과에 따른 조건부 분기 (승인 -> 종료 / 거절 -> 보정)
 workflow.add_conditional_edges(
     "examiner",
     should_rewrite,
@@ -86,8 +100,15 @@ workflow.add_conditional_edges(
     }
 )
 
-# 보정(rewrite)이 끝나면 무조건 종료. 현재는 단순하게 구현. 추후 보완 예정.
-workflow.add_edge("claim_rewrite", END)
+# 보정(rewrite) 후 조건부 분기 (최대 2회 왕복 후 종료)
+workflow.add_conditional_edges(
+    "claim_rewrite",
+    after_rewrite,
+    {
+        "examiner": "examiner",
+        "end": END
+    }
+)
 
 # =========================================================
 # 5. 그래프 컴파일
