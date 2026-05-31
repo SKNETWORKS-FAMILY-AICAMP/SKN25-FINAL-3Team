@@ -84,22 +84,27 @@ PHASE2_QUESTION = """
 """
 
 PHASE2_EXTRACT_PROMPT = """ 
-당신은 특허 전문 변리사입니다. 발명가의 답변에서 심화 정보를 추출하세요. (JSON 응답)
-[발명 맥락]
-- 해결방법: {solution}
-사용자 입력: {user_input}
-[추출 규칙]
-1. 사용자가 청구항에 대해 질문하거나 검수를 요청하면, 전문가로서 피드백을 작성하여 'ai_reply'에 담아주세요. 단순 기술 설명일 경우 자연스러운 호응 멘트를 담아주세요.
-2. 사용자의 입력에서 '구현수단, 데이터, 로직, 부가기능, 예외처리'에 해당하는 항목이 있다면 추출하세요. (없으면 빈 배열)
-3. 절대로 추측하지 말고 언급된 내용만 문장 형태로 정리하여 아래 JSON 구조에 담아주세요.
+당신은 특허 전문 변리사입니다. 사용자의 입력을 분석하여 다음 2가지를 동시에 수행하세요.
+
+[수행 규칙]
+1. 사용자가 질문하거나 검수를 요청하면 'ai_reply'에 전문가적 피드백을 자연스럽게 작성하세요.
+2. 사용자의 설명에서 발명의 구조를 파악하여 아래의 엄격한 JSON 스키마에 맞춰 추출하세요. 
+   - components: 발명을 구성하는 모듈, DB, 장치 등
+   - data_flows: 컴포넌트 간의 데이터 이동 (source와 target은 컴포넌트 ID 사용)
+   - processing_steps: 시계열적인 작동 순서
+
 반드시 아래 JSON 형식으로만 응답하세요:
 {{
-    "ai_reply": "사용자 질문에 대한 자연스러운 변리사 답변 또는 청구항 검수 피드백 (마크다운 사용 가능)",
-    "implementations": ["문장형태의 구현 수단", ...],
-    "parameters": ["문장형태의 데이터 파라미터", ...],
-    "algorithms": ["문장형태의 로직", ...],
-    "optional_features": ["문장형태의 부가기능", ...],
-    "error_handling": ["문장형태의 예외처리", ...]
+    "ai_reply": "자연스러운 답변 텍스트...",
+    "components": [
+        {{"id": "COMP_001", "name": "명사형 명칭", "type": "MODULE", "description": "설명"}}
+    ],
+    "data_flows": [
+        {{"flow_id": "FLOW_001", "source": "INPUT 또는 COMP_XXX", "target": "COMP_XXX", "data_name": "전달되는 데이터명"}}
+    ],
+    "processing_steps": [
+        {{"step_number": 1, "subject_id": "COMP_001", "action_description": "~하는 단계", "input_data_ids": ["FLOW_001"], "output_data_ids": ["FLOW_002"]}}
+    ]
 }}
 """
 

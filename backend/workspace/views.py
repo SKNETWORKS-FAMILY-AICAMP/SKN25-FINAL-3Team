@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, DetailElement, PatentClaim, PatentClaim
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, PatentClaim, PatentClaim
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
@@ -13,6 +13,9 @@ from .utils import extract_text_from_pdf, extract_text_from_docx, extract_text_f
 import os
 import logging
 from agents.core.graph import build_patent_graph
+#from agents.core.graph import app as patent_graph
+from agents.core.graph import build_patent_graph as patent_graph
+from agents.core.state import PatentState, ParsedInvention
 
 logger = logging.getLogger(__name__)
 
@@ -246,6 +249,7 @@ def upload_file_api(request, project_id):
 def generate_claims_api(request, project_id):
     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
     state = get_object_or_404(ConsultationState, project=project)
+    inv_input = getattr(project, 'inventioninput', None)# 기존 원본 입력 데이터 가져오기 (없을 경우를 대비한 안전망)
 
     def is_valid(val):
         return bool(val and val.strip() != "미파악")
@@ -262,66 +266,59 @@ def generate_claims_api(request, project_id):
         })
     
     try:
-        db_details = project.details.all()
-
-        graph_elements = []
-        # 최상위 메인 해결수단(독립항용) 배치
-        graph_elements.append({
-            "element_id": 1,
-            "description": state.ext_solution or "본 발명의 핵심 제어 시스템",
-            "parent_id": None
-        })
-
-        # 유저가 채팅과 파일로 추가한 심화 정보들(종속항용)을 하위 엘리먼트로 주입
-        for idx, detail in enumerate(db_details, start=2):
-            graph_elements.append({
-                "element_id": idx,
-                "description": detail.content,
-                "parent_id": 1 # 1번 메인 기술 구성을 부모로 인용하도록 계층 구조 강제 맵핑
-            })
-
-        # 랭그래프 초기 데이터셋 구성
-        initial_patent_state = {
-            "summary_data": {
-                "problems": [state.ext_problem or "기존 기술의 명세서 기재 부족 문제"],
-                "elements": graph_elements,
-                "effects": [state.ext_effect or "특허 권리범위 확보 효율 증대 효과"],
-                "user_confirmed": True
-            }
+        mock_input_data = {
+            "title": project.title,
+            "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
+            "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
+            "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
+            "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
         }
 
-        logger.info(f"[{project.title}] 랭그래프 멀티에이전트 가동...")
-        graph = build_patent_graph()
-        
-        # 앙상블 체인이 스스로 수정을 거쳐 최종 통과한 결과물이 리턴됩니다.
-        final_output = graph.invoke(initial_patent_state)
-        
-        # 3. 결과 파싱 및 응답 데이터 정제
-        claims_data = final_output.get("claims_data", {}).get("claims", [])
-        examiner_data = final_output.get("examiner_data", {})
-        loop_count = examiner_data.get('revision_count', 0)
+        initial_state = {
+            "mock_input_data": mock_input_data,
+            "summary_data": None,
+            "claims_data": None,
+            "examiner_data": None,
+            "drawing_spec": None
+        }
 
+        compiled_graph = patent_graph() 
+        final_state = compiled_graph.invoke(initial_state)
+        claims_result = final_state.get("claims_data")
+        examiner_result = final_state.get("examiner_data")
+
+        if not claims_result or not claims_result.get("claims"):
+            raise Exception("AI 엔진이 청구항을 생성하지 못했습니다.")
+        
+        loop_count = examiner_result.get("revision_count") if examiner_result else 0
         claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
 
-        for c in claims_data:
-            type_badge = '[종속항]' if c.get('is_dependent') else '[독립항]'
-            claim_result_text += f"**청구항 {c.get('claim_no')} {type_badge}**\n{c.get('content')}\n\n"
+        claims_list_for_frontend = []
+        for c in claims_result["claims"]: 
+            type_badge = '[종속항]' if c["is_dependent"] else '[독립항]'
+            claim_result_text += f"**청구항 {c['claim_no']} {type_badge}**\n{c['content']}\n\n"
+            
+            # 프론트엔드 모달창으로 보낼 JSON 데이터 만들기
+            claims_list_for_frontend.append({
+                "claim_no": c["claim_no"],
+                "is_dependent": c["is_dependent"],
+                "cited_claim_no": c["cited_claim_no"],
+                "category": c["category"],
+                "content": c["content"]
+            })
 
-        ChatMessage.objects.create(
-            project=project,
-            role='assistant',
-            content=claim_result_text
-        )
+
+        ChatMessage.objects.create(project=project, role='assistant', content=claim_result_text)
 
         return JsonResponse({
             'status': 'success',
             'message_content': claim_result_text,
-            'claims': claims_data
+            'claims': claims_list_for_frontend
         })
 
     except Exception as e:
         logger.error(f"랭그래프 청구항 생성 에러: {e}")
-        return JsonResponse({'status': 'error', 'message': f"청구항 생성 중 AI 엔진 오류가 발생했습니다: {str(e)}"})
+        return JsonResponse({'status': 'error', 'message': f"청구항 생성 중 오류가 발생했습니다: {str(e)}"})
     
 @login_required(login_url='/accounts/login/')
 @require_POST
@@ -370,6 +367,8 @@ def manage_claims_api(request, project_id):
             'id': c.id,
             'claim_no': c.claim_no,
             'is_dependent': c.is_dependent,
+            'category': c.category,
+            'cited_claim_no': c.cited_claim_no,
             'content': c.content
         } for c in claims]
         
@@ -380,12 +379,17 @@ def manage_claims_api(request, project_id):
             data = json.loads(request.body)
             updated_claims = data.get('claims', [])
 
-            # 각 청구항의 id를 찾아 content만 갈아끼움
             for item in updated_claims:
                 claim = PatentClaim.objects.get(id=item['id'], project=project)
-                claim.content = item['content']
+                
+                claim.content = item.get('content', claim.content)
+                
+                if 'category' in item:
+                    claim.category = item['category']
+                if 'cited_claim_no' in item:
+                    claim.cited_claim_no = item['cited_claim_no']
+                    
                 claim.save()
-
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
