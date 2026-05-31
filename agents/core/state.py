@@ -45,27 +45,27 @@ class ParsedInvention(BaseModel):
 # ---------------------------------------------------------
 # 2. 청구항(Claim) 관련 State
 # ---------------------------------------------------------
-class ClaimItem(TypedDict):
-    claim_no: int
-    is_dependent: bool
-    cited_claim_no: List[int]  # 인용항이 없으면 빈 리스트 [] 반환
-    category: Literal["방법", "시스템", "CRM"]
-    content: str
+class ClaimItem(BaseModel):
+    claim_no: int = Field(description="청구항 번호")
+    is_dependent: bool = Field(description="종속항 여부 (독립항이면 False)")
+    cited_claim_no: List[int] = Field(description="인용하는 청구항 번호 리스트 (독립항인 경우 빈 리스트)")
+    category: Literal["방법", "시스템", "CRM"] = Field(description="청구항 카테고리")
+    content: str = Field(description="청구항 내용 전문")
 
-class ClaimResult(TypedDict):
-    claims: List[ClaimItem]
+class ClaimResult(BaseModel):
+    claims: List[ClaimItem] = Field(description="작성된 청구항 리스트")
 
 # ---------------------------------------------------------
 # 3. 심사관(Examiner) 관련 State
 # ---------------------------------------------------------
-class RejectionDetail(TypedDict):
-    claims: List[int]        # 거절 이유에 해당하는 청구항 번호들 (예: [1, 3, 4])
-    reason_text: str         # 명확성 요건 위배 이유 구체적 기술 (또는 기존 RejectionReason 객체)
+class RejectionDetail(BaseModel):
+    claims: List[int] = Field(description="거절 이유가 발생한 청구항 번호 리스트")
+    reason_text: str = Field(description="거절 사유에 대한 상세 설명 텍스트")
 
-class ExaminerResult(TypedDict):
-    is_approved: bool
-    rejections: List[RejectionDetail]  # 청구항별 거절 이유 매핑 리스트
-    revision_count: int                # 최대 2번 루프 제어용
+class ExaminerResult(BaseModel):
+    is_approved: bool = Field(description="전체 청구항 승인 여부 (수정 필요 시 False)")
+    rejections: List[RejectionDetail] = Field(description="거절 사유 리스트")
+    revision_count: int = Field(description="현재까지 진행된 수정 회차")
 
 # ---------------------------------------------------------
 # Master Graph State
@@ -73,5 +73,5 @@ class ExaminerResult(TypedDict):
 class PatentState(TypedDict):
     mock_input_data: Dict[str, Any]
     summary_data: Optional[ParsedInvention]
-    claims_data: ClaimResult         
-    examiner_data: ExaminerResult
+    claims_data: Optional[ClaimResult]  
+    examiner_data: Optional[ExaminerResult]

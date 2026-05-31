@@ -3,7 +3,8 @@ from agents.core.state import PatentState
 
 from agents.claim_agent import ClaimAgent
 from agents.summary_agent import SummaryAgent
-#from agents.examiner_agent import ExaminerAgent
+from agents.examiner import ExaminerAgent
+from agents.claim_rewrite_agent import ClaimRewriteAgent
 
 # def should_continue(state: PatentState):
 #     examiner_data = state.get("examiner_data")
@@ -47,25 +48,55 @@ from agents.summary_agent import SummaryAgent
     
 #     return workflow.compile()
 
+def should_continue(state: PatentState):
+    """
+    심사관의 결과를 보고 끝낼지, 다시 수정(Rewrite)할지 결정하는 신호등 함수
+    """
+    examiner_data = state.get("examiner_data")
+    if not examiner_data:
+        return END
+        
+    is_approved = examiner_data.is_approved
+    revision_count = examiner_data.revision_count
+    
+    # 승인(통과)되었거나, 2번 이상 수정을 반복했다면 강제 종료!
+    if is_approved or revision_count >= 2:
+        return END
+    
+    # 거절당했으면 수정하러 가기
+    return "rewrite_node"
 
 def build_patent_graph():
-    """
-    [실전 통합 그래프]
-    단순 텍스트 -> (SummaryAgent) -> 구조화 데이터 -> (ClaimAgent) -> 청구항 생성
-    """
     workflow = StateGraph(PatentState)
 
-    # 1. 에이전트 초기화 (요약은 빠르고 싼 mini, 청구항은 똑똑한 4o 추천)
-    summary_agent = SummaryAgent(model_name="gpt-4o-mini") 
+    # 1. 에이전트 장전
+    summary_agent = SummaryAgent(model_name="gpt-4o-mini")
     claim_agent = ClaimAgent(model_name="gpt-4o")
+    examiner_agent = ExaminerAgent(model_name="gpt-4o")
+    rewrite_agent = ClaimRewriteAgent(model_name="gpt-4o")
     
-    # 2. 노드(Node) 등록
+    # 2. 노드 등록
     workflow.add_node("summary_node", summary_agent.run)
     workflow.add_node("claim_node", claim_agent.run)
+    workflow.add_node("examiner_node", examiner_agent.run)
+    workflow.add_node("rewrite_node", rewrite_agent.run)
     
-    # 3. 엣지(Edge) 연결 : 시작 -> 요약 -> 청구항 -> 끝
+    # 3. 엣지 연결 (직진 코스)
     workflow.add_edge(START, "summary_node")
     workflow.add_edge("summary_node", "claim_node")
-    workflow.add_edge("claim_node", END)
+    workflow.add_edge("claim_node", "examiner_node") # 1차 초안 작성 후 심사관에게 제출
+    
+    # 4. 조건부 엣지 (루프 코스)
+    workflow.add_conditional_edges(
+        "examiner_node",
+        should_continue, # 신호등 함수 실행
+        {
+            "rewrite_node": "rewrite_node", # 빠꾸 먹으면 수정 노드로!
+            END: END                        # 통과하면 끝!
+        }
+    )
+    
+    # 5. 수정(Rewrite)이 끝나면 다시 심사관에게 제출!
+    workflow.add_edge("rewrite_node", "examiner_node")
     
     return workflow.compile()

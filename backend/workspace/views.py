@@ -287,24 +287,24 @@ def generate_claims_api(request, project_id):
         claims_result = final_state.get("claims_data")
         examiner_result = final_state.get("examiner_data")
 
-        if not claims_result or not claims_result.get("claims"):
+        if not claims_result or not claims_result.claims:
             raise Exception("AI 엔진이 청구항을 생성하지 못했습니다.")
         
-        loop_count = examiner_result.get("revision_count") if examiner_result else 0
+        loop_count = examiner_result.revision_count if examiner_result else 0
         claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
 
         claims_list_for_frontend = []
-        for c in claims_result["claims"]: 
-            type_badge = '[종속항]' if c["is_dependent"] else '[독립항]'
-            claim_result_text += f"**청구항 {c['claim_no']} {type_badge}**\n{c['content']}\n\n"
+        for c in claims_result.claims: 
+            # ✅ 수정: c.속성명 으로 원상복구!
+            type_badge = '[종속항]' if c.is_dependent else '[독립항]'
+            claim_result_text += f"**청구항 {c.claim_no} {type_badge}**\n{c.content}\n\n"
             
-            # 프론트엔드 모달창으로 보낼 JSON 데이터 만들기
             claims_list_for_frontend.append({
-                "claim_no": c["claim_no"],
-                "is_dependent": c["is_dependent"],
-                "cited_claim_no": c["cited_claim_no"],
-                "category": c["category"],
-                "content": c["content"]
+                "claim_no": c.claim_no,
+                "is_dependent": c.is_dependent,
+                "cited_claim_no": c.cited_claim_no,
+                "category": c.category,
+                "content": c.content
             })
 
 
