@@ -325,6 +325,7 @@
             
             // 모달창 화면에 띄우기
             agentModal.style.display = 'block';
+            showLoading();
 
             try {
                 // 2. Fetch로 백엔드 스트리밍 API 호출
@@ -389,6 +390,7 @@
                         }
                         else if (data.step === 'done') {
                             // 🏁 5. 모든 작업 완료 시: 모달 끄고 채팅방에 결과 출력
+                            removeLoading();
                             agentModal.style.display = 'none';
                             addMessage('assistant', data.message_content);
                             
