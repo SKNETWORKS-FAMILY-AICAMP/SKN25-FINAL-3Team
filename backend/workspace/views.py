@@ -16,6 +16,8 @@ from agents.core.graph import build_patent_graph
 #from agents.core.graph import app as patent_graph
 from agents.core.graph import build_patent_graph as patent_graph
 from agents.core.state import PatentState, ParsedInvention
+from django.http import StreamingHttpResponse
+
 
 logger = logging.getLogger(__name__)
 
@@ -265,61 +267,87 @@ def generate_claims_api(request, project_id):
             'message': '아직 발명의 핵심 4대 요소가 모두 파악되지 않았습니다.\nAI 변리사와의 대화를 통해 좌측 패널의 빈칸을 모두 채운 후 다시 시도해 주세요!'
         })
     
-    try:
-        mock_input_data = {
-            "title": project.title,
-            "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-            "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-            "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-            "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-        }
-
-        initial_state = {
-            "mock_input_data": mock_input_data,
-            "summary_data": None,
-            "claims_data": None,
-            "examiner_data": None,
-            "drawing_spec": None
-        }
-
-        compiled_graph = patent_graph() 
-        final_state = compiled_graph.invoke(initial_state)
-        claims_result = final_state.get("claims_data")
-        examiner_result = final_state.get("examiner_data")
-
-        if not claims_result or not claims_result.claims:
-            raise Exception("AI 엔진이 청구항을 생성하지 못했습니다.")
-        
-        loop_count = examiner_result.revision_count if examiner_result else 0
-        claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
-
-        claims_list_for_frontend = []
-        for c in claims_result.claims: 
-            # ✅ 수정: c.속성명 으로 원상복구!
-            type_badge = '[종속항]' if c.is_dependent else '[독립항]'
-            claim_result_text += f"**청구항 {c.claim_no} {type_badge}**\n{c.content}\n\n"
-            
-            claims_list_for_frontend.append({
-                "claim_no": c.claim_no,
-                "is_dependent": c.is_dependent,
-                "cited_claim_no": c.cited_claim_no,
-                "category": c.category,
-                "content": c.content
-            })
-
-
-        ChatMessage.objects.create(project=project, role='assistant', content=claim_result_text)
-
-        return JsonResponse({
-            'status': 'success',
-            'message_content': claim_result_text,
-            'claims': claims_list_for_frontend
-        })
-
-    except Exception as e:
-        logger.error(f"랭그래프 청구항 생성 에러: {e}")
-        return JsonResponse({'status': 'error', 'message': f"청구항 생성 중 오류가 발생했습니다: {str(e)}"})
     
+    mock_input_data = {
+        "title": project.title,
+        "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
+        "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
+        "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
+        "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
+    }
+
+    initial_state = {
+        "mock_input_data": mock_input_data,
+        "summary_data": None,
+        "claims_data": None,
+        "examiner_data": None,
+        "drawing_spec": None
+    }
+
+    def event_stream():
+        try:
+            # 첫 번째 신호 발송
+            yield json.dumps({"step": "start", "message": "에이전트 가동을 시작합니다."}) + "\n"
+
+            compiled_graph = patent_graph() 
+            #final_state = compiled_graph.invoke(initial_state)
+            final_state = {}
+
+            for output in compiled_graph.stream(initial_state):
+                for node_name, state_update in output.items():
+                    final_state.update(state_update)
+
+                    if node_name == "summary_node":
+                        yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
+                    elif node_name == "claim_node":
+                        yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
+                    elif node_name == "examiner_node":
+                        examiner_data = state_update.get("examiner_data")
+                        if examiner_data and not examiner_data.is_approved:
+                            yield json.dumps({"step": "rewrite", "message": f"심사관 반려! ({examiner_data.revision_count}차 보정 진행)"}) + "\n"
+                        else:
+                            yield json.dumps({"step": "examiner", "message": "심사관 승인 완료!"}) + "\n"
+                    elif node_name == "rewrite_node":
+                        yield json.dumps({"step": "rewrite_done", "message": "보정 완료! 재심사 요청 중..."}) + "\n"
+                    
+
+            claims_result = final_state.get("claims_data")
+            examiner_result = final_state.get("examiner_data")
+
+            if not claims_result or not claims_result.claims:
+                yield json.dumps({"step": "error", "message": "AI 엔진이 청구항을 생성하지 못했습니다."}) + "\n"
+                return
+        
+            loop_count = examiner_result.revision_count if examiner_result else 0
+            claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
+
+            claims_list_for_frontend = []
+            for c in claims_result.claims: 
+                type_badge = '[종속항]' if c.is_dependent else '[독립항]'
+                claim_result_text += f"**청구항 {c.claim_no} {type_badge}**\n{c.content}\n\n"
+                
+                claims_list_for_frontend.append({
+                    "claim_no": c.claim_no,
+                    "is_dependent": c.is_dependent,
+                    "cited_claim_no": c.cited_claim_no,
+                    "category": c.category,
+                    "content": c.content
+                })
+
+            ChatMessage.objects.create(project=project, role='assistant', content=claim_result_text)
+
+            yield json.dumps({
+                "step": "done",
+                "message_content": claim_result_text,
+                "claims": claims_list_for_frontend
+            }) + "\n"
+
+        except Exception as e:
+            logger.error(f"랭그래프 청구항 생성 에러: {e}")
+            yield json.dumps({"step": "error", "message": f"청구항 생성 중 오류가 발생했습니다: {str(e)}"}) + "\n"
+
+    return StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
+
 @login_required(login_url='/accounts/login/')
 @require_POST
 def save_claims_api(request, project_id):
