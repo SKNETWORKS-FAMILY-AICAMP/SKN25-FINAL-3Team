@@ -15,18 +15,12 @@ main = 최종 안정판
 ```text
 main
 name
-name/docs/llm-wiki
 name/feat/login
+name/refactor/agent-service
 name/fix/api-error
 ```
 
 여기서 `name`은 각자 정한 짧은 이름을 씁니다.
-
-예:
-
-```text
-본인 이름, 영문 이니셜, GitHub ID 일부 등
-```
 
 ## 1. main
 
@@ -48,14 +42,6 @@ name/fix/api-error
 <name>
 ```
 
-예:
-
-```text
-name
-user
-member
-```
-
 용도:
 
 - 내 작업들을 모아서 확인하는 공간
@@ -75,10 +61,11 @@ member
 예:
 
 ```text
-name/docs/llm-wiki
-name/data/pilot-manifest
-name/feat/consultation-agent
+name/feat/summary-router
+name/feat/prior-art-search
+name/refactor/agent-service
 name/fix/pdf-download
+name/data/pilot-manifest
 name/exp/prompt-comparison
 ```
 
@@ -86,35 +73,35 @@ name/exp/prompt-comparison
 
 | type | 의미 | 예시 |
 |---|---|---|
-| `feat` | 기능 개발 | `name/feat/consultation-agent` |
-| `fix` | 버그 수정 | `name/fix/pdf-download` |
-| `docs` | 문서 수정 | `name/docs/llm-wiki` |
+| `feat` | 기능 개발 | `name/feat/summary-router` |
+| `fix` | 버그 수정 | `name/fix/api-error` |
+| `docs` | 문서 수정 | `name/docs/service-roadmap` |
 | `data` | 데이터/manifest 작업 | `name/data/pilot-manifest` |
 | `exp` | 실험/비교 | `name/exp/prompt-comparison` |
-| `refactor` | 구조 개선 | `name/refactor/agent-state` |
-| `test` | 테스트 | `name/test/payload-validation` |
+| `refactor` | 구조 개선 | `name/refactor/agent-service` |
+| `test` | 테스트 | `name/test/state-validation` |
 | `chore` | 설정/잡무 | `name/chore/update-gitignore` |
 
 ## 5. 추천 사용 예시
 
-LLM Wiki 문서를 고칠 때:
+서비스 구조를 리팩터링할 때:
 
 ```bash
 git checkout main
 git pull origin main
 git checkout <name>
 git merge main
-git checkout -b <name>/docs/llm-wiki
+git checkout -b <name>/refactor/agent-service
 ```
 
-상담 에이전트 기능을 만들 때:
+요약/라우터 기능을 만들 때:
 
 ```bash
 git checkout main
 git pull origin main
 git checkout <name>
 git merge main
-git checkout -b <name>/feat/consultation-agent
+git checkout -b <name>/feat/summary-router
 ```
 
 데이터 manifest 작업을 할 때:
@@ -241,4 +228,5 @@ main 반영 = PR 사용 + 팀원별 확인 체크리스트 + 최종 PM 확인
 <name>/feat/... = 기능 작업
 <name>/fix/... = 버그 수정
 <name>/exp/... = 실험 작업
+<name>/refactor/... = 구조 개선 작업
 ```

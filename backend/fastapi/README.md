@@ -1,17 +1,25 @@
 # FastAPI Backend
 
-향후 FastAPI + LangGraph API 서버를 둘 위치입니다.
-
-예정 구조:
+특허 Agent Service의 API 서버 위치입니다.
 
 ```text
-backend/fastapi/
-  app/
-    main.py
-    routers/
-    graphs/
-    schemas/
-    services/
+backend/fastapi/app/
+  main.py                 FastAPI 앱 진입점
+  routers/pipeline.py     pipeline run/continue API
 ```
 
-1차 MVP에서는 `agents/`의 상담/선행기술 파이프라인을 먼저 안정화하고, API 서버를 붙일 때 이 폴더에서 시작합니다.
+기본 확인:
+
+```bash
+PYTHONPATH=. python -m compileall agents backend/fastapi/app
+PYTHONPATH=. python - <<'PY'
+from backend.fastapi.app.main import app
+print(app.title)
+PY
+```
+
+실행 예시:
+
+```bash
+PYTHONPATH=. uvicorn backend.fastapi.app.main:app --reload
+```

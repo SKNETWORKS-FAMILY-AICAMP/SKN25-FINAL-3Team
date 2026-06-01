@@ -2,13 +2,21 @@
 
 React + TypeScript 프론트엔드를 둘 위치입니다.
 
-아직 MVP 1단계에서는 AI 파이프라인 검증이 우선이라 비워 둡니다. 이후 화면 개발을 시작하면 예시는 아래 구조로 둡니다.
+서비스 API 기준 화면은 아래 흐름을 우선합니다.
 
 ```text
 frontend/
   package.json
   src/
+    pages 또는 routes
+    components
+    api
   public/
 ```
 
-Django 템플릿 기반 기존 화면은 `backend/django/frontend/`에 있습니다.
+초기 화면 목표:
+
+- 발명 입력
+- Master Router가 반환한 추가 질문 표시
+- run 상태와 agent별 결과 확인
+- 최종 패키지 다운로드/미리보기

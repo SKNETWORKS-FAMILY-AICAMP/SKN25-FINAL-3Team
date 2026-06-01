@@ -1,10 +1,9 @@
 # uv 사용을 권장합니다.
 # 설치: uv sync --dev
-# 실행 예시는 README.md / docs/PROJECT_STRUCTURE.md 참고
+# API 실행: PYTHONPATH=. uvicorn backend.fastapi.app.main:app --reload
 
-Django==5.0.6
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.5.1
+fastapi>=0.115
+uvicorn>=0.30
 numpy>=1.26
 olefile>=0.47
 openai>=1.0
@@ -16,4 +15,3 @@ python-docx>=1.1
 python-dotenv>=1.0
 requests>=2.31
 SQLAlchemy>=2.0
-streamlit>=1.35
