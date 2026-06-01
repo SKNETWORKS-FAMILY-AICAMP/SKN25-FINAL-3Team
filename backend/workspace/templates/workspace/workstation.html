@@ -143,6 +143,7 @@
 </style>
 
 <script>
+    //let claimAbortController = null;
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatBox = document.getElementById('chat-box');
@@ -306,149 +307,183 @@
         });
     }
 
-    if (generateClaimsBtn) {
-        generateClaimsBtn.addEventListener('click', async function() {
-            // 1. 모달창 및 상태 텍스트 요소 가져오기
-            const agentModal = document.getElementById('ai-agent-modal');
-            const statusText = document.getElementById('agent-status-text');
+    // if (generateClaimsBtn) {
+    //     generateClaimsBtn.addEventListener('click', async function() {
+    //         const agentModal = document.getElementById('ai-agent-modal');
+    //         const statusText = document.getElementById('agent-status-text');
             
-            // 💡 [중요] 모달창 UI 초기화 (버튼을 여러 번 누를 때를 대비)
-            document.getElementById('step-summary').innerText = '⏳ 1. 발명 내용 분석 및 구조화';
-            document.getElementById('step-summary').style.color = '#666';
-            document.getElementById('step-claim').innerText = '⏳ 2. 특허 청구항 초안 작성';
-            document.getElementById('step-claim').style.color = '#bbb';
-            document.getElementById('step-examiner').innerText = '⏳ 3. AI 심사관 명확성 검토';
-            document.getElementById('step-examiner').style.color = '#bbb';
-            document.getElementById('step-rewrite').style.display = 'none';
-            statusText.innerText = '통신을 준비하고 있습니다...';
-            statusText.style.color = '#0056b3';
+    //         //  [중요] 모달창 UI 초기화 (버튼을 여러 번 누를 때를 대비)
+    //         document.getElementById('step-summary').innerText = '⏳ 1. 발명 내용 분석 및 구조화';
+    //         document.getElementById('step-summary').style.color = '#666';
+    //         document.getElementById('step-claim').innerText = '⏳ 2. 특허 청구항 초안 작성';
+    //         document.getElementById('step-claim').style.color = '#bbb';
+    //         document.getElementById('step-examiner').innerText = '⏳ 3. AI 심사관 명확성 검토';
+    //         document.getElementById('step-examiner').style.color = '#bbb';
+    //         document.getElementById('step-rewrite').style.display = 'none';
+    //         statusText.innerText = '통신을 준비하고 있습니다...';
+    //         statusText.style.color = '#0056b3';
             
-            // 모달창 화면에 띄우기
-            agentModal.style.display = 'block';
-            showLoading();
+    //         agentModal.style.display = 'block';
+    //         claimAbortController = new AbortController();
+    //         showLoading();
 
-            try {
-                // 2. Fetch로 백엔드 스트리밍 API 호출
-                const response = await fetch("{% url 'generate_claims_api' project.id %}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}' 
-                    }
-                });
+    //         try {
+    //             // 2. Fetch로 백엔드 스트리밍 API 호출
+    //             const response = await fetch("{% url 'generate_claims_api' project.id %}", {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'X-CSRFToken': '{{ csrf_token }}' 
+    //                 },
+    //                 signal: claimAbortController.signal
+    //             });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! status: ${response.status}`);
+    //             }
 
-                // 3. 스트리밍 데이터 읽기 준비
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder("utf-8");
-                let buffer = "";
+    //             // 3. 스트리밍 데이터 읽기 준비
+    //             const reader = response.body.getReader();
+    //             const decoder = new TextDecoder("utf-8");
+    //             let buffer = "";
 
-                // 4. 데이터가 들어오는 족족 읽어들이는 무한 루프
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break; // 통신이 끝나면 루프 탈출
+    //             // 4. 데이터가 들어오는 족족 읽어들이는 무한 루프
+    //             while (true) {
+    //                 const { done, value } = await reader.read();
+    //                 if (done) break; // 통신이 끝나면 루프 탈출
 
-                    // 버퍼에 텍스트를 쌓고 줄바꿈(\n) 단위로 쪼개기
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split("\n");
-                    buffer = lines.pop(); // 마지막 불완전한 줄은 다시 버퍼에 보관
+    //                 // 버퍼에 텍스트를 쌓고 줄바꿈(\n) 단위로 쪼개기
+    //                 buffer += decoder.decode(value, { stream: true });
+    //                 const lines = buffer.split("\n");
+    //                 buffer = lines.pop(); // 마지막 불완전한 줄은 다시 버퍼에 보관
 
-                    for (const line of lines) {
-                        if (!line.trim()) continue; // 빈 줄 무시
+    //                 for (const line of lines) {
+    //                     if (!line.trim()) continue; // 빈 줄 무시
                         
-                        const data = JSON.parse(line); 
-                        statusText.innerText = data.message; 
-                        statusText.style.color = '#0056b3';
+    //                     const data = JSON.parse(line); 
+    //                     statusText.innerText = data.message; 
+    //                     statusText.style.color = '#0056b3';
 
-                        // 💡 백엔드 신호(step)에 따라 모달창 불 켜주기
-                        if (data.step === 'summary') {
-                            document.getElementById('step-summary').innerText = '✅ 1. 발명 내용 분석 및 구조화 완료';
-                            document.getElementById('step-summary').style.color = 'green';
-                            document.getElementById('step-claim').style.color = '#666'; // 다음 스텝 진하게
-                        } 
-                        else if (data.step === 'claim') {
-                            document.getElementById('step-claim').innerText = '✅ 2. 특허 청구항 초안 작성 완료';
-                            document.getElementById('step-claim').style.color = 'green';
-                            document.getElementById('step-examiner').style.color = '#666';
-                        } 
-                        else if (data.step === 'examiner') {
-                            document.getElementById('step-examiner').innerText = '✅ 3. AI 심사관 명확성 검토 통과';
-                            document.getElementById('step-examiner').style.color = 'green';
-                            document.getElementById('step-rewrite').style.display = 'none';
-                        } 
-                        else if (data.step === 'rewrite') {
-                            document.getElementById('step-examiner').innerText = '❌ 3. AI 심사관 명확성 반려';
-                            document.getElementById('step-examiner').style.color = 'red';
-                            document.getElementById('step-rewrite').style.display = 'block';
-                            document.getElementById('step-rewrite').innerText = `🔄 [심사관 반려] ${data.message}`;
-                        }
-                        else if (data.step === 'error') {
-                            alert("에러 발생: " + data.message);
-                            agentModal.style.display = 'none';
-                        }
-                        else if (data.step === 'done') {
-                            // 🏁 5. 모든 작업 완료 시: 모달 끄고 채팅방에 결과 출력
-                            removeLoading();
-                            agentModal.style.display = 'none';
-                            addMessage('assistant', data.message_content);
+    //                     // 💡 백엔드 신호(step)에 따라 모달창 불 켜주기
+    //                     if (data.step === 'summary') {
+    //                         document.getElementById('step-summary').innerText = '✅ 1. 발명 내용 분석 및 구조화 완료';
+    //                         document.getElementById('step-summary').style.color = 'green';
+    //                         document.getElementById('step-claim').style.color = '#666'; // 다음 스텝 진하게
+    //                     } 
+    //                     else if (data.step === 'claim') {
+    //                         document.getElementById('step-claim').innerText = '✅ 2. 특허 청구항 초안 작성 완료';
+    //                         document.getElementById('step-claim').style.color = 'green';
+    //                         document.getElementById('step-examiner').style.color = '#666';
+    //                     } 
+    //                     else if (data.step === 'examiner') {
+    //                         document.getElementById('step-examiner').innerText = '✅ 3. AI 심사관 명확성 검토 통과';
+    //                         document.getElementById('step-examiner').style.color = 'green';
+    //                         document.getElementById('step-rewrite').style.display = 'none';
+    //                     } 
+    //                     else if (data.step === 'rewrite') {
+    //                         document.getElementById('step-examiner').innerText = '❌ 3. AI 심사관 명확성 반려';
+    //                         document.getElementById('step-examiner').style.color = 'red';
+    //                         document.getElementById('step-rewrite').style.display = 'block';
+    //                         document.getElementById('step-rewrite').innerText = `🔄 [심사관 반려] ${data.message}`;
+    //                     }
+    //                     else if (data.step === 'error') {
+    //                         alert("에러 발생: " + data.message);
+    //                         agentModal.style.display = 'none';
+    //                     }
+    //                     else if (data.step === 'done') {
+    //                         // 🏁 5. 모든 작업 완료 시: 모달 끄고 채팅방에 결과 출력
+    //                         removeLoading();
+    //                         agentModal.style.display = 'none';
+    //                         addMessage('assistant', data.message_content);
                             
-                            // 💾 저장 버튼 생성 (버튼 ID를 시간값으로 고유하게 생성)
-                            const saveBtnId = 'save-claim-btn-' + Date.now();
-                            const btnHtml = `
-                            <div style="text-align: right; margin-top: -5px; margin-bottom: 20px; max-width: 80%;">
-                                <button id="${saveBtnId}" style="background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
-                                    이 청구항 맘에 들면 저장해랏
-                                </button>
-                            </div>
-                            `;
+    //                         // 💾 저장 버튼 생성 (버튼 ID를 시간값으로 고유하게 생성)
+    //                         const saveBtnId = 'save-claim-btn-' + Date.now();
+    //                         const btnHtml = `
+    //                         <div style="text-align: right; margin-top: -5px; margin-bottom: 20px; max-width: 80%;">
+    //                             <button id="${saveBtnId}" style="background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+    //                                 이 청구항 맘에 들면 저장해랏
+    //                             </button>
+    //                         </div>
+    //                         `;
                             
-                            chatBox.insertAdjacentHTML('beforeend', btnHtml);
-                            chatBox.scrollTop = chatBox.scrollHeight;
+    //                         chatBox.insertAdjacentHTML('beforeend', btnHtml);
+    //                         chatBox.scrollTop = chatBox.scrollHeight;
                             
-                            // 생성된 저장 버튼에 클릭 이벤트 달아주기
-                            document.getElementById(saveBtnId).addEventListener('click', function() {
-                                const btn = this;
-                                btn.innerText = "저장 중...";
-                                btn.disabled = true;
+    //                         // 생성된 저장 버튼에 클릭 이벤트 달아주기
+    //                         document.getElementById(saveBtnId).addEventListener('click', function() {
+    //                             const btn = this;
+    //                             btn.innerText = "저장 중...";
+    //                             btn.disabled = true;
 
-                                fetch("{% url 'save_claims_api' project.id %}", {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRFToken': '{{ csrf_token }}'
-                                    },
-                                    body: JSON.stringify({ claims: data.claims })
-                                })
-                                .then(res => res.json())
-                                .then(saveData => {
-                                    if (saveData.status === 'success') {
-                                        btn.innerText = "저장 완료!";
-                                        btn.style.background = "#10b981"; 
-                                        btn.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.3)";
-                                    } else {
-                                        alert("저장 실패: " + saveData.message);
-                                        btn.innerText = "다시 시도";
-                                        btn.disabled = false;
-                                    }
-                                });
-                            });
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("스트리밍 에러:", error);
-                statusText.innerText = "통신 중 오류가 발생했습니다.";
-                statusText.style.color = "red";
+    //                             fetch("{% url 'save_claims_api' project.id %}", {
+    //                                 method: 'POST',
+    //                                 headers: {
+    //                                     'Content-Type': 'application/json',
+    //                                     'X-CSRFToken': '{{ csrf_token }}'
+    //                                 },
+    //                                 body: JSON.stringify({ claims: data.claims })
+    //                             })
+    //                             .then(res => res.json())
+    //                             .then(saveData => {
+    //                                 if (saveData.status === 'success') {
+    //                                     btn.innerText = "저장 완료!";
+    //                                     btn.style.background = "#10b981"; 
+    //                                     btn.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.3)";
+    //                                 } else {
+    //                                     alert("저장 실패: " + saveData.message);
+    //                                     btn.innerText = "다시 시도";
+    //                                     btn.disabled = false;
+    //                                 }
+    //                             });
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             if (error.name === 'AbortError') {
+    //                 console.log('사용자에 의해 청구항 생성이 중단되었습니다.');
+    //             } else {
+    //                 console.error("스트리밍 에러:", error);
+    //                 statusText.innerText = "통신 중 오류가 발생했습니다.";
+    //                 statusText.style.color = "red";
+    //                 setTimeout(() => {
+    //                     agentModal.style.display = 'none';
+    //                 }, 3000);
+    //             }
+    //         }
+    //     });
+    // }
+
+    // document.addEventListener('DOMContentLoaded', function() {
+        
+    //     // [최소화 버튼] 동작
+    //     const minimizeBtn = document.getElementById('modal-minimize-btn');
+    //     if (minimizeBtn) {
+    //         minimizeBtn.addEventListener('click', () => {
+    //             document.getElementById('ai-agent-modal').style.display = 'none';
+    //             // (선택) 최소화했을 때 채팅창에 넌지시 알려주기
+    //             // addMessage('assistant', '💡 백그라운드에서 청구항 작성을 계속 진행합니다...');
+    //         });
+    //     }
+
+    //     // [취소(X) 버튼] 동작
+    //     const cancelBtn = document.getElementById('modal-cancel-btn');
+    //     if (cancelBtn) {
+    //         cancelBtn.addEventListener('click', () => {
+    //             // 통신 목줄이 있으면 끊어버리기!
+    //             if (claimAbortController) {
+    //                 claimAbortController.abort();
+    //             }
+    //             document.getElementById('ai-agent-modal').style.display = 'none';
                 
-                // 에러 발생 시 3초 뒤에 모달 자동으로 닫기
-                setTimeout(() => {
-                    agentModal.style.display = 'none';
-                }, 3000);
-            }
-        });
-    }
+    //             // 모달 껐을 때 로딩 애니메이션 지우고 취소 메시지 띄우기
+    //             removeLoading();
+    //             addMessage('assistant', '청구항 생성이 취소되었습니다. 다시 시도해 주세요.');
+    //         });
+    //     }
+        
+    // });
+
+
     document.addEventListener('DOMContentLoaded', function() {
     // 장고 템플릿 변수를 활용해 현재 방의 기존 메시지 개수를 파악합니다.
         const messageCount = parseInt("{{ chat_messages.count }}") || 0;
@@ -765,10 +800,16 @@ modalSaveBtn.addEventListener('click', () => {
     });
 </script>
 
-<!-- 모달 -->
+<!-- 
 <div id="ai-agent-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
-    <div style="background: white; width: 450px; margin: 15vh auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-        <h3 style="text-align: center; margin-bottom: 20px;">AI 작업 진행 중</h3>
+    <div style="background: white; width: 450px; margin: 15vh auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); position: relative;">
+
+        <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+            <button id="modal-minimize-btn" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #94a3b8; transition: 0.2s;" title="백그라운드에서 실행 (숨기기)">_</button>
+            <button id="modal-cancel-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #ef4444; transition: 0.2s;" title="작업 강제 취소">✕</button>
+        </div>
+
+        <h3 style="text-align: center; margin-bottom: 20px; color: #0f172a;">AI 작업 진행 중</h3>
         
         <ul style="list-style: none; padding: 0; font-size: 16px; line-height: 2;">
             <li id="step-summary" style="color: #666;">⏳ 1. 발명 내용 분석 및 구조화</li>
@@ -782,6 +823,9 @@ modalSaveBtn.addEventListener('click', () => {
         </div>
     </div>
 </div>
+모달 -->
+
+{% include "workspace/ai_agent_modal.html" %}
 
 {% endblock %}
 

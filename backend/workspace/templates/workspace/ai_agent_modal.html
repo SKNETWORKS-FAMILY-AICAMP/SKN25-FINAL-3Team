@@ -1,0 +1,256 @@
+<div id="ai-agent-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; backdrop-filter: blur(5px);">
+    
+    <div style="background: #111827; width: 80vw; height: 80vh; margin: 10vh auto; border-radius: 16px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); display: flex; flex-direction: column; overflow: hidden; position: relative;">
+        
+        <div style="background: #1e293b; padding: 15px 25px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; color: #38bdf8; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                <span class="pulse-dot" style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+                AI 에이전트 실시간 작업 관제 센터
+            </h3>
+            <div style="display: flex; gap: 15px;">
+                <button id="modal-minimize-btn" style="background: none; border: none; font-size: 22px; font-weight: bold; cursor: pointer; color: #94a3b8; transition: 0.2s;" title="백그라운드에서 실행 (숨기기)">_</button>
+                <button id="modal-cancel-btn" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #ef4444; transition: 0.2s;" title="작업 강제 취소">✕</button>
+            </div>
+        </div>
+
+        <div style="display: flex; flex: 1; overflow: hidden;">
+            
+            <div style="flex: 1; border-right: 1px solid #334155; background: #0f172a; padding: 30px; display: flex; flex-direction: column; gap: 20px;">
+                <h4 style="color: #94a3b8; margin-top: 0;">Multi-Agent Pipeline</h4>
+                
+                <div id="node-summary" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #475569; color: #cbd5e1;">
+                    <strong style="display: block; font-size: 16px;">1. Summary Agent</strong>
+                    <span style="font-size: 13px; color: #94a3b8;">발명 내용 분석 및 Pydantic 구조화 대기 중...</span>
+                </div>
+                
+                <div id="node-claim" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #475569; color: #cbd5e1;">
+                    <strong style="display: block; font-size: 16px;">2. Claim Draft Agent</strong>
+                    <span style="font-size: 13px; color: #94a3b8;">독립항/종속항 초안 작성 대기 중...</span>
+                </div>
+                
+                <div id="node-examiner" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #475569; color: #cbd5e1;">
+                    <strong style="display: block; font-size: 16px;">3. AI Examiner Agent</strong>
+                    <span style="font-size: 13px; color: #94a3b8;">명확성 심사 및 거절 사유 생성 대기 중...</span>
+                </div>
+
+                <div id="node-rewrite" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #ef4444; color: #cbd5e1; display: none;">
+                    <strong style="display: block; font-size: 16px; color: #fca5a5;">⚠️ Claim Rewrite Agent</strong>
+                    <span id="rewrite-status" style="font-size: 13px; color: #f87171;">심사관 반려에 의한 보정 진행 중...</span>
+                </div>
+            </div>
+
+            <div style="flex: 2; background: #000; padding: 20px; overflow-y: auto; font-family: 'Courier New', Courier, monospace;" id="live-terminal">
+                <div style="color: #10b981; font-size: 14px; margin-bottom: 10px;">> 시스템 연결 완료. 에이전트 작업을 대기합니다...</div>
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 활성화된 노드 반짝임 효과 */
+    @keyframes node-active-pulse {
+        0% { border-left-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        50% { border-left-color: #7dd3fc; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+        100% { border-left-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+    }
+    .node-running {
+        animation: node-active-pulse 1.5s infinite;
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+    }
+    .node-done {
+        border-left-color: #10b981 !important;
+        background: #064e3b !important;
+        color: #a7f3d0 !important;
+    }
+    .terminal-log { margin-bottom: 15px; line-height: 1.5; font-size: 14px; }
+    .log-info { color: #38bdf8; }
+    .log-success { color: #10b981; }
+    .log-error { color: #ef4444; }
+    .log-warning { color: #f59e0b; }
+    .log-data { color: #94a3b8; background: #111827; padding: 10px; border-radius: 4px; border: 1px dashed #334155; margin-top: 5px; white-space: pre-wrap; font-size: 13px; }
+</style>
+
+<script>
+    let claimAbortController = null; 
+
+    // 터미널에 텍스트 찍어주는 헬퍼 함수
+    function appendTerminalLog(type, text, data = null) {
+        const terminal = document.getElementById('live-terminal');
+        const time = new Date().toLocaleTimeString();
+        let html = `<div class="terminal-log log-${type}">[${time}] > ${text}</div>`;
+        
+        if (data) {
+            html += `<div class="log-data">${data}</div>`;
+        }
+        terminal.insertAdjacentHTML('beforeend', html);
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    // 노드 UI 변경 함수
+    function updateNodeStatus(nodeId, status) {
+        const node = document.getElementById(nodeId);
+        if (!node) return;
+        node.classList.remove('node-running', 'node-done');
+        if (status === 'running') node.classList.add('node-running');
+        if (status === 'done') node.classList.add('node-done');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const generateClaimsBtn = document.getElementById('generate-claims-btn');
+        
+        if (generateClaimsBtn) {
+            generateClaimsBtn.addEventListener('click', async function() {
+                const agentModal = document.getElementById('ai-agent-modal');
+                const terminal = document.getElementById('live-terminal');
+                
+                // UI 초기화
+                terminal.innerHTML = '<div style="color: #10b981; font-size: 14px; margin-bottom: 10px;">> 시스템 연결 완료. 에이전트 작업을 대기합니다...</div>';
+                document.querySelectorAll('.agent-node').forEach(n => n.classList.remove('node-running', 'node-done'));
+                document.getElementById('node-rewrite').style.display = 'none';
+                
+                agentModal.style.display = 'block';
+                claimAbortController = new AbortController();
+
+                try {
+                    appendTerminalLog('info', 'Graph 구동 시작...');
+                    updateNodeStatus('node-summary', 'running');
+
+                    const response = await fetch("{% url 'generate_claims_api' project.id %}", {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                        signal: claimAbortController.signal
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+                    let buffer = "";
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break; 
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split("\n");
+                        buffer = lines.pop(); 
+
+                        for (const line of lines) {
+                            if (!line.trim()) continue; 
+                            const data = JSON.parse(line); 
+
+                            // 상태에 따른 뷰직 분기
+                            if (data.step === 'summary') {
+                                updateNodeStatus('node-summary', 'done');
+                                appendTerminalLog('success', data.message);
+                                appendTerminalLog('info', 'Claim Agent로 제어권 전환...');
+                                updateNodeStatus('node-claim', 'running');
+                            } 
+                            else if (data.step === 'claim') {
+                                updateNodeStatus('node-claim', 'done');
+                                appendTerminalLog('success', data.message);
+                                appendTerminalLog('info', 'Examiner Agent로 1차 초안 전송 중...');
+                                updateNodeStatus('node-examiner', 'running');
+                            } 
+                            else if (data.step === 'examiner') {
+                                updateNodeStatus('node-examiner', 'done');
+                                appendTerminalLog('success', '✅ ' + data.message);
+                                document.getElementById('node-rewrite').style.display = 'none';
+                            } 
+                            else if (data.step === 'rewrite') {
+                                updateNodeStatus('node-examiner', 'running'); // 심사관이 거절했으니 다시 심사관 빨간불
+                                appendTerminalLog('error', '❌ 심사관 거절 사유 발견!');
+                                // 거절 사유(data.message)를 터미널의 log-data 박스에 상세히 출력
+                                appendTerminalLog('warning', 'Rewrite Agent 가동. 보정 루프 진입...', data.message);
+                                
+                                document.getElementById('node-rewrite').style.display = 'block';
+                                updateNodeStatus('node-rewrite', 'running');
+                                document.getElementById('rewrite-status').innerText = data.message;
+                            }
+                            else if (data.step === 'rewrite_done') {
+                                updateNodeStatus('node-rewrite', 'done');
+                                appendTerminalLog('info', '보정 완료. 심사관에게 재심사 요청 중...');
+                                updateNodeStatus('node-examiner', 'running');
+                            }
+                            else if (data.step === 'error') {
+                                appendTerminalLog('error', '에러 발생: ' + data.message);
+                            }
+                            else if (data.step === 'done') {
+                                appendTerminalLog('success', '🎉 최종 청구항 발행 완료! 화면을 전환합니다.');
+                                
+                                setTimeout(() => {
+                                    agentModal.style.display = 'none';
+                                    addMessage('assistant', data.message_content);
+                                    
+                                    const saveBtnId = 'save-claim-btn-' + Date.now();
+                                    const btnHtml = `
+                                    <div style="text-align: right; margin-top: -5px; margin-bottom: 20px; max-width: 80%;">
+                                        <button id="${saveBtnId}" style="background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+                                            이 청구항 맘에 들면 저장해럇!
+                                        </button>
+                                    </div>`;
+                                    
+                                    chatBox.insertAdjacentHTML('beforeend', btnHtml);
+                                    chatBox.scrollTop = chatBox.scrollHeight;
+                                    
+                                    // 저장 버튼 이벤트 연동
+                                    document.getElementById(saveBtnId).addEventListener('click', function() {
+                                        const btn = this;
+                                        btn.innerText = "저장 중...";
+                                        btn.disabled = true;
+
+                                        fetch("{% url 'save_claims_api' project.id %}", {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRFToken': '{{ csrf_token }}'
+                                            },
+                                            body: JSON.stringify({ claims: data.claims })
+                                        })
+                                        .then(res => res.json())
+                                        .then(saveData => {
+                                            if (saveData.status === 'success') {
+                                                btn.innerText = "저장 완료!";
+                                                btn.style.background = "#10b981"; 
+                                            } else {
+                                                alert("저장 실패: " + saveData.message);
+                                                btn.innerText = "다시 시도";
+                                                btn.disabled = false;
+                                            }
+                                        });
+                                    });
+                                }, 1500); // 사용자가 '성공' 메시지를 읽을 수 있게 1.5초 대기 후 닫기
+                            }
+                        }
+                    }
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        appendTerminalLog('warning', '사용자에 의해 작업이 강제 취소되었습니다.');
+                    } else {
+                        appendTerminalLog('error', '통신 중 오류가 발생했습니다: ' + error.message);
+                    }
+                }
+            });
+        }
+
+        // [최소화 버튼]
+        const minimizeBtn = document.getElementById('modal-minimize-btn');
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', () => {
+                document.getElementById('ai-agent-modal').style.display = 'none';
+            });
+        }
+
+        // [취소 버튼]
+        const cancelBtn = document.getElementById('modal-cancel-btn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                if (claimAbortController) claimAbortController.abort();
+                document.getElementById('ai-agent-modal').style.display = 'none';
+                addMessage('assistant', '🚫 청구항 생성이 취소되었습니다.');
+            });
+        }
+    });
+</script>
