@@ -468,6 +468,7 @@ class PatentAgentState(TypedDict, total=False):
     """
 
     workflow: WorkflowState  # 현재 진행 상태/다음 agent/trace/error.
+    user_input: str  # 이번 실행에서 사용자가 입력한 원문 또는 누적 입력.
     messages: list[dict[str, Any]]  # 대화 메시지 기록. LangGraph messages와 연결 가능.
 
     summary: SummaryState  # 요약본작성 agent 산출물.
@@ -481,6 +482,7 @@ class PatentAgentState(TypedDict, total=False):
     drafting_options: DraftingOptionsState  # 이번 실행의 문체/작성 옵션.
 
     composer: ComposerState  # 명세서 병합 agent의 병합/재편집 작업 상태.
+    master_decision: dict[str, Any]  # Master Router의 최근 판단 결과.
     review: ReviewState  # Review agent 산출물.
     final_package: FinalPackageState  # 최종 명세서/보고서 산출물.
 
@@ -502,6 +504,7 @@ def create_initial_state(user_input: str = "") -> PatentAgentState:
             "trace": [],
             "errors": [],
         },
+        "user_input": user_input,
         "messages": [],
         "summary": {
             "project_name": "",

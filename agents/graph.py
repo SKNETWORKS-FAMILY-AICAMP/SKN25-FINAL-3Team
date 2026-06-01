@@ -1,104 +1,87 @@
-"""중간발표 MVP용 단방향 graph skeleton.
+"""서비스용 agent graph 실행 골격입니다.
 
-실제 LangGraph(StateGraph) 연결 전에도 같은 계약을 테스트할 수 있도록 단순 순차 실행기로 둔다.
-각 node는 PatentAgentState를 입력으로 받고, raw output을 반환한다.
-Master/Graph는 raw output을 Pydantic 검증/repair/fallback 후 state에 병합한다.
-Master는 중간발표 MVP에서 지능형 라우터가 아니라 고정 DEFAULT_PIPELINE 실행 관리자다.
+중간발표용 고정 단방향 데모가 아니라, Master Router가 정한 route만 실행하고
+각 단계는 adapter를 통해 schema 검증 후 shared state에 병합합니다.
 """
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Sequence
 from typing import Any
 
-from agents.schemas import (
-    ClaimAgentOutput,
-    ComposerAgentOutput,
-    MasterAgentOutput,
-    SummaryAgentOutput,
-    DrawingAgentOutput,
-    PriorArtAgentOutput,
-    SpecificationAgentOutput,
-)
+from agents.adapters.base import AgentAdapter
+from agents.claim.adapter import ClaimAdapter
+from agents.composer.adapter import ComposerAdapter
+from agents.drawing.adapter import DrawingAdapter
+from agents.master.router import SERVICE_PIPELINE, decide_next_agent
+from agents.priorart.adapter import PriorArtAdapter
+from agents.specification.adapter import SpecificationAdapter
 from agents.state import PatentAgentState, create_initial_state
-from agents.validation import safe_validate_output
+from agents.summary.adapter import SummaryAdapter
 
-AgentRunner = Callable[[PatentAgentState], Any]
-
-
-def _fallbacks() -> dict[str, Any]:
-    return {
-        "master": MasterAgentOutput(status="failed", summary="Master agent output 검증 실패", stage="failed", action="fail"),
-        "summary": SummaryAgentOutput(status="failed", summary="요약본작성 agent output 검증 실패"),
-        "claim": ClaimAgentOutput(status="failed", summary="청구항 agent output 검증 실패"),
-        "drawing": DrawingAgentOutput(status="failed", summary="도면 agent output 검증 실패"),
-        "prior_art": PriorArtAgentOutput(status="failed", summary="선행기술 agent output 검증 실패"),
-        "specification": SpecificationAgentOutput(status="failed", summary="발명의 설명 agent output 검증 실패"),
-        "composer": ComposerAgentOutput(
-            status="failed",
-            title="특허 초안 생성 실패",
-            abstract="일부 agent output 검증에 실패했습니다.",
-            rendered_markdown="# 특허 초안 생성 실패\n\n중간 결과의 warnings/details를 확인하세요.",
-            unresolved_items=["agent output validation failed"],
-        ),
-    }
-
-SCHEMAS = {
-    "master": MasterAgentOutput,
-    "summary": SummaryAgentOutput,
-    "claim": ClaimAgentOutput,
-    "drawing": DrawingAgentOutput,
-    "prior_art": PriorArtAgentOutput,
-    "specification": SpecificationAgentOutput,
-    "composer": ComposerAgentOutput,
-}
-
-STATE_KEYS = {
-    "summary": "summary",
-    "claim": "claims",
-    "drawing": "drawings",
-    "prior_art": "prior_art",
-    "specification": "specification",
-    "composer": "final_package",
-}
-
-DEFAULT_PIPELINE = ("summary", "claim", "drawing", "prior_art", "specification", "composer")
+DEFAULT_PIPELINE = SERVICE_PIPELINE
 
 
-def run_mvp_pipeline(
+def build_default_adapters() -> dict[str, AgentAdapter[Any]]:
+    """서비스 graph가 기본으로 사용할 adapter 목록을 만듭니다."""
+    adapters: list[AgentAdapter[Any]] = [
+        SummaryAdapter(),
+        PriorArtAdapter(),
+        ClaimAdapter(),
+        DrawingAdapter(),
+        SpecificationAdapter(),
+        ComposerAdapter(),
+    ]
+    return {adapter.agent_name: adapter for adapter in adapters}
+
+
+def run_service_pipeline(
     user_input: str,
-    runners: dict[str, AgentRunner],
+    adapters: dict[str, AgentAdapter[Any]] | None = None,
     *,
+    initial_state: PatentAgentState | None = None,
+    route: Sequence[str] | None = None,
     enable_llm_repair: bool | None = None,
 ) -> PatentAgentState:
-    """등록된 runner를 단방향으로 실행한다.
-
-    아직 구현되지 않은 agent는 건너뛰고 workflow.errors에 남긴다.
-    """
-
-    state = create_initial_state(user_input)
+    """주어진 route만 실행하고 결과를 state에 병합합니다."""
+    state = initial_state or create_initial_state(user_input)
+    state["user_input"] = user_input or state.get("user_input", "")
+    state.setdefault("workflow", {})
     state["workflow"]["status"] = "running"
-    fallbacks = _fallbacks()
+    state["workflow"].setdefault("errors", [])
+    state["workflow"].setdefault("trace", [])
 
-    for agent_name in DEFAULT_PIPELINE:
-        runner = runners.get(agent_name)
+    adapter_map = adapters or build_default_adapters()
+    selected_route = tuple(route or DEFAULT_PIPELINE)
+
+    for agent_name in selected_route:
+        adapter = adapter_map.get(agent_name)
         state["workflow"]["current_agent"] = agent_name  # type: ignore[typeddict-item]
-        if runner is None:
-            state["workflow"]["errors"].append(f"runner not registered: {agent_name}")
+        if adapter is None:
+            state["workflow"]["errors"].append(f"adapter not registered: {agent_name}")
             continue
+        try:
+            state[adapter.state_key] = adapter.run(state, enable_llm_repair=enable_llm_repair)  # type: ignore[literal-required]
+            state["workflow"]["trace"].append({"agent": agent_name, "action": "run", "summary": "adapter executed"})
+        except Exception as exc:  # 서비스 골격에서는 실패 위치를 state에 남기고 중단합니다.
+            state["workflow"]["status"] = "failed"
+            state["workflow"]["errors"].append(f"{agent_name}: {type(exc).__name__}: {exc}")
+            return state
 
-        raw_output = runner(state)
-        state_key = STATE_KEYS[agent_name]
+        decision = decide_next_agent(state)
+        if decision.requires_user_input:
+            state["workflow"]["status"] = "wait_user"
+            state["workflow"]["next_agent"] = "master"
+            state["master_decision"] = decision.model_dump(mode="json")
+            return state
 
-        validated = safe_validate_output(
-            agent_name=agent_name,
-            schema=SCHEMAS[agent_name],
-            raw_output=raw_output,
-            fallback=fallbacks[agent_name],
-            enable_llm_repair=enable_llm_repair,
-        )
-        state[state_key] = validated.model_dump()  # type: ignore[literal-required]
-
-    state["workflow"]["status"] = "completed"
+    final_decision = decide_next_agent(state)
+    state["workflow"]["status"] = "completed" if final_decision.status == "completed" else "running"
     state["workflow"]["current_agent"] = "master"
-    state["workflow"]["next_agent"] = "review"
+    state["workflow"]["next_agent"] = final_decision.next_agent if final_decision.next_agent != "end" else "review"
+    state["master_decision"] = final_decision.model_dump(mode="json")
     return state
+
+
+def run_mvp_pipeline(user_input: str, runners: dict[str, Any] | None = None, **_: Any) -> PatentAgentState:
+    """이전 호출부 호환용 wrapper입니다. 신규 코드는 run_service_pipeline을 사용합니다."""
+    return run_service_pipeline(user_input, build_default_adapters())

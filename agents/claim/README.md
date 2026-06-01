@@ -1,8 +1,12 @@
 # Claim Agent
 
-청구항 생성/저장 관련 에이전트 코드 위치입니다.
+청구항 agent는 서비스 graph에서 `agents.claim.adapter.ClaimAdapter`를 통해 호출합니다.
 
-- `claim_agent.py`: 상담 DB 내용을 청구항 생성 입력으로 변환하고 생성 청구항을 DB에 저장합니다.
-- 서비스 화면에서는 `apps/streamlit/main.py`가 이 모듈을 호출합니다.
+현재 기준:
 
-학습 노트북은 `notebooks/claim/`, 학습 JSONL은 `data/processed/claim_loop/training/`에 둡니다.
+- 입력: `summary`, `prior_art` 등 shared state
+- 출력: `agents.schemas.claim.ClaimAgentOutput`
+- 연결: `API → Master Router → Graph → ClaimAdapter → ClaimAgentOutput`
+
+레거시 상담 DB/Streamlit/학습 노트북 흐름은 main 서비스 구조에서 제거했습니다.
+실제 청구항 품질화 로직은 `ClaimAdapter.call_agent()` 또는 `run_claim_agent()` 내부에 schema 기반으로 연결합니다.
