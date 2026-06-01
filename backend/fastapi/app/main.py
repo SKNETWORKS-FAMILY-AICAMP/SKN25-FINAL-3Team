@@ -46,17 +46,14 @@ app = FastAPI(title="Patent AI Agent Service", version="0.1.0", lifespan=lifespa
 
 # ── CORS 미들웨어 ──────────────────────────────────────
 # 브라우저에서 React 앱이 이 API를 호출할 때 필요한 보안 허용 설정입니다.
-# CORS_ORIGINS에 쉼표로 허용 origin을 넣습니다.
-# 예: CORS_ORIGINS=http://localhost:3000,https://example.com
-cors_origins = [
-    origin.strip()
-    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
-    if origin.strip()
-]
+# main 반영용 PR에서는 기존 동작과 비슷하게 기본값을 "*"로 둡니다.
+# 배포 시에는 CORS_ORIGINS=https://frontend.example.com 처럼 실제 프론트 도메인으로 제한하세요.
+_raw_cors_origins = os.getenv("CORS_ORIGINS", "*")
+cors_origins = [origin.strip() for origin in _raw_cors_origins.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_credentials=True,
+    allow_credentials=False if "*" in cors_origins else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

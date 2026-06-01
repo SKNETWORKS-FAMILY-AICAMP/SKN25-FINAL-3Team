@@ -135,7 +135,7 @@ async def run_pipeline(request: PipelineRunRequest, db: Session = Depends(get_db
     db_run = _save_run_start(db, run_id, request.user_input)
 
     # asyncio.to_thread(): 동기 파이프라인을 별도 스레드에서 실행
-    # progress_callback으로 각 agent 완료 시 Redis에 진행상황 업데이트
+    # progress_callback으로 각 agent 시작 시 Redis에 진행상황 업데이트
     state = await asyncio.to_thread(
         run_service_pipeline,
         request.user_input,
