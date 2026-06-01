@@ -180,12 +180,19 @@ class DjangoPatentConsultant:
     def interact(self, user_input: str) -> str:
         ChatMessage.objects.create(project=self.project, role='user', content=user_input)
 
+        has_claims = self.project.claims.exists()
+        if has_claims and self.state.phase < 3:
+            self.state.phase = 3
+            self.state.save()
+
         response = ""
 
         if self.state.phase == 1:
             response = self._handle_phase_1(user_input)
         elif self.state.phase == 2:
             response = self._handle_phase_2(user_input)
+        elif self.state.phase == 3:
+            response = self._handle_phase_3(user_input) 
 
         ChatMessage.objects.create(project=self.project, role='assistant', content=response)
         return response
@@ -279,42 +286,89 @@ class DjangoPatentConsultant:
         if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
             return "건너뛰셨습니다. 다른 심화 정보를 추가하시거나 리포트를 발행해주세요."
 
-        # 심화 정보 추출 로직 (GPT-4o)
         #algo_steps = [s.content for s in self.project.algorithm_steps.order_by('step_seq')]
-        resp = self.client.chat.completions.create(
-            model="gpt-4o", 
-            messages=[
-                {"role": "system", "content": self._get_dynamic_system_prompt()}, 
-                {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps="사용자 설명 참조", user_input=user_input)}
-            ], 
-            response_format={"type": "json_object"}
-        )
-        res = json.loads(resp.choices[0].message.content)
-
-        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다.")
+        try:
+            resp = self.client.chat.completions.create(
+                model="gpt-4o", 
+                messages=[
+                    {"role": "system", "content": self._get_dynamic_system_prompt()}, 
+                    {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps="사용자 설명 참조", user_input=user_input)}
+                ], 
+                response_format={"type": "json_object"}
+            )
+            res = json.loads(resp.choices[0].message.content)
+        except Exception as e:
+            logger.error(f"Phase 2 파싱 에러: {e}")
+            return "심화 정보 분석 중 오류가 발생했습니다. 다시 한 번 말씀해 주시겠어요?"
         
-        type_map = {
-            "implementations": "implementation", "parameters": "parameter", 
-            "algorithms": "algorithm", "optional_features": "optional", "error_handling": "error_handling"
-        }
-
+        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다.")
         detail_elements_to_create = []
+        
+        #  1. 컴포넌트(Components) 파싱 및 저장
+        if res.get("components"):
+            for comp in res["components"]:
+                content = f"[{comp.get('type', 'MODULE')}] {comp.get('name', '미상')} - {comp.get('description', '')}"
+                detail_elements_to_create.append(DetailElement(project=self.project, element_type="component", content=content))
 
-        for json_key, db_choice in type_map.items():
-            extracted = res.get(json_key, [])
-            validated = [item for item in extracted if item and item.strip()]
-            for item in validated:
-                detail_elements_to_create.append(
-                    DetailElement(
-                        project=self.project,
-                        element_type=db_choice,
-                        content=item
-                    )
-                )
+        #  2. 데이터 흐름(Data Flows) 파싱 및 저장
+        if res.get("data_flows"):
+            for flow in res["data_flows"]:
+                content = f"[{flow.get('flow_id', 'FLOW')}] {flow.get('source', '')} -> {flow.get('target', '')} : {flow.get('data_name', '')}"
+                detail_elements_to_create.append(DetailElement(project=self.project, element_type="data_flow", content=content))
+
+        #  3. 처리 단계(Processing Steps) 파싱 및 저장
+        if res.get("processing_steps"):
+            for step in res["processing_steps"]:
+                content = f"[STEP {step.get('step_number', 0)}] {step.get('subject_id', '')}: {step.get('action_description', '')}"
+                detail_elements_to_create.append(DetailElement(project=self.project, element_type="processing_step", content=content))
+
+
+        # type_map = {
+        #     "implementations": "implementation", "parameters": "parameter", 
+        #     "algorithms": "algorithm", "optional_features": "optional", "error_handling": "error_handling"
+        # }
+
+
+        # for json_key, db_choice in type_map.items():
+        #     extracted = res.get(json_key, [])
+        #     validated = [item for item in extracted if item and item.strip()]
+        #     for item in validated:
+        #         detail_elements_to_create.append(
+        #             DetailElement(
+        #                 project=self.project,
+        #                 element_type=db_choice,
+        #                 content=item
+        #             )
+        #         )
 
         if detail_elements_to_create:
             DetailElement.objects.bulk_create(detail_elements_to_create)
-            return f"{ai_reply}\n\n*(덧붙여 주신 상세 기술 정보가 기록되었습니다. 내용이 충분하다면 우측 상단의 'AI 청구항 작성 시작'을 눌러주세요.)*"
+            return f"{ai_reply}\n\n*(덧붙여 주신 발명 구조 정보가 완벽히 기록되었습니다. 내용이 충분하다면 우측 상단의 '청구항 작성'을 눌러주세요.)*"
         else:
             return ai_reply
+        
+    def _handle_phase_3(self, user_input: str) -> str:
+        # 1. 도면 생성 의도 파악
+        if any(kw in user_input.lower() for kw in ["도면", "그려", "시각화", "순서도", "블록도", "구조도", "플로우차트"]):
+            return "네! 확정된 청구항을 바탕으로 **[AI 특허 도면 생성]** 작업을 시작하겠습니다. 상단의 '도면 생성' 버튼을 눌러주시면 바로 렌더링을 진행해 드릴게요!"
+        
+        # 2. 상세 설명(명세서 본문) 작성 의도 파악
+        if any(kw in user_input.lower() for kw in ["명세서", "상세", "설명", "배경기술"]):
+            return "좋습니다! 청구항을 뒷받침할 **[발명의 상세한 설명]** 파트를 작성할 차례입니다. '명세서 작성' 기능을 실행해 드릴까요?"
+
+        # 3. 일반적인 대화 및 피드백 유도 (GPT 위임)
+        try:
+            resp = self.client.chat.completions.create(
+                model="gpt-4o", 
+                messages=[
+                    {"role": "system", "content": self._get_dynamic_system_prompt()}, 
+                    {"role": "system", "content": "현재 상태: 사용자의 특허 청구항 초안이 이미 작성 완료 및 저장되었습니다. \n지침: 사용자의 피드백을 듣고, 수정이 필요하면 '청구항 수정' 버튼을 안내하세요. 다음 단계로 넘어가려 한다면 '도면 생성'이나 '상세 설명 작성'을 제안하며 마스터 에이전트로서 대화를 자연스럽게 리드하세요."},
+                    {"role": "user", "content": user_input}
+                ]
+            )
+            return resp.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Phase 3 마스터 응답 실패: {e}")
+            return "말씀하신 내용을 잘 들었습니다. 작성된 청구항을 검토 후 직접 수정하시거나, 다음 단계인 '도면 생성'을 진행해 보시는 것은 어떨까요?"
+
         

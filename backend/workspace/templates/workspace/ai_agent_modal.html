@@ -249,7 +249,7 @@
             cancelBtn.addEventListener('click', () => {
                 if (claimAbortController) claimAbortController.abort();
                 document.getElementById('ai-agent-modal').style.display = 'none';
-                addMessage('assistant', '🚫 청구항 생성이 취소되었습니다.');
+                addMessage('assistant', '청구항 생성이 취소되었습니다.');
             });
         }
     });
