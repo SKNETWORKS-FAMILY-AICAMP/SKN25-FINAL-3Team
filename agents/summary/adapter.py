@@ -15,7 +15,6 @@ class SummaryAdapter(AgentAdapter[SummaryAgentOutput]):
     agent_name = "summary"
     state_key = "summary"
     schema = SummaryAgentOutput
-    fallback = SummaryAgentOutput(status="failed", summary="summary output validation failed")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         return {"user_input": state.get("user_input", ""), "summary": state.get("summary", {})}

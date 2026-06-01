@@ -36,10 +36,10 @@ _DTYPE_MAP = {
     "data_flow":    "data_flow",
 }
 
-# hard fallback — 파이프라인이 죽지 않도록
+# 입력 자체가 부족할 때 반환할 명시적 failed output
 _FALLBACK = DrawingAgentOutput(
     status="failed",
-    summary="도면 생성 실패 — hard fallback",
+    summary="도면 생성 실패 — 발명 데이터 부족",
     figures=[],
     reference_numerals=[],
     drawing_notes=[],
@@ -188,8 +188,8 @@ def drawing_node(state: dict) -> dict:
     출력: state["drawings"] ← DrawingAgentOutput.model_dump()
           state["workflow"]
 
-    어떤 state가 들어와도 예외를 바깥으로 던지지 않는다.
-    실패 시 hard fallback DrawingAgentOutput 반환.
+    입력 데이터가 아예 없으면 명시적 failed output을 반환한다.
+    schema 검증 실패는 safe_validate_output()에서 AgentValidationError로 드러난다.
     """
     workflow = state.get("workflow") or {}
     errors: list[str] = list(workflow.get("errors") or [])
@@ -228,7 +228,6 @@ def drawing_node(state: dict) -> dict:
         agent_name="drawing",
         schema=DrawingAgentOutput,
         raw_output=raw_output,
-        fallback=_FALLBACK,
     )
 
     return {

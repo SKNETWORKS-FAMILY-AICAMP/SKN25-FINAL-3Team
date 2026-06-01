@@ -15,7 +15,6 @@ class ClaimAdapter(AgentAdapter[ClaimAgentOutput]):
     agent_name = "claim"
     state_key = "claims"
     schema = ClaimAgentOutput
-    fallback = ClaimAgentOutput(status="failed", summary="claim output validation failed")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         return {

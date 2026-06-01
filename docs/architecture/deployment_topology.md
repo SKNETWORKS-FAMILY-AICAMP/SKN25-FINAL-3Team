@@ -78,6 +78,25 @@ API router
   -> state bucket 저장
 ```
 
+## 현재 `/run` 구현 범위
+
+현재 `/api/pipeline/run`은 `asyncio.to_thread()`로 동기 pipeline을 별도 스레드에서 실행한다.
+이 방식은 FastAPI 이벤트 루프 차단을 줄이지만, **백그라운드 큐는 아니다.**
+즉 요청자는 agent 실행이 끝날 때까지 기다린 뒤 응답을 받는다.
+
+운영형 구조에서는 다음 PR에서 아래처럼 바꾼다.
+
+```text
+POST /api/pipeline/run
+  -> run_id 즉시 반환(status=queued)
+
+worker queue
+  -> agent pipeline 백그라운드 실행
+
+GET /api/runs/{run_id}
+  -> 진행상태/결과 조회
+```
+
 ## agent 실행 책임
 
 | Layer | 책임 |
@@ -120,7 +139,7 @@ API router
 
 5. agent output 저장
    - Pydantic 검증 성공 결과: JSON dict
-   - 실패 시 fallback output + warnings/details
+   - 검증 실패 시 AgentValidationError로 중단하고 errors에 원인 기록
 
 6. artifact 저장
    - HTML/DOCX/PDF/SVG/JSON은 파일/object storage에 저장

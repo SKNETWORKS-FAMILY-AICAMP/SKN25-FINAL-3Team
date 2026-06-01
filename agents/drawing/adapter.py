@@ -15,7 +15,6 @@ class DrawingAdapter(AgentAdapter[DrawingAgentOutput]):
     agent_name = "drawing"
     state_key = "drawings"
     schema = DrawingAgentOutput
-    fallback = DrawingAgentOutput(status="failed", summary="drawing output validation failed")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         return {"summary": state.get("summary", {}) or {}, "claims": state.get("claims", {}) or {}}
