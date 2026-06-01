@@ -15,7 +15,6 @@ class ComposerAdapter(AgentAdapter[ComposerAgentOutput]):
     agent_name = "composer"
     state_key = "final_package"
     schema = ComposerAgentOutput
-    fallback = ComposerAgentOutput(status="failed", summary="composer output validation failed", rendered_markdown="# 생성 실패")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         return dict(state)

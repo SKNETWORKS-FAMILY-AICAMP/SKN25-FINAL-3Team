@@ -15,7 +15,6 @@ class PriorArtAdapter(AgentAdapter[PriorArtAgentOutput]):
     agent_name = "prior_art"
     state_key = "prior_art"
     schema = PriorArtAgentOutput
-    fallback = PriorArtAgentOutput(status="failed", summary="prior_art output validation failed")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         summary = state.get("summary", {}) or {}

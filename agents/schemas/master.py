@@ -1,4 +1,8 @@
-"""중간발표 MVP용 Master Agent output schema."""
+"""Master Agent output schema.
+
+현재 서비스 라우팅은 MasterDecision (agents/master/router.py)이 담당합니다.
+이 스키마는 Master Agent가 자체 LLM 판단 결과를 반환할 때 사용하는 계약입니다.
+"""
 from __future__ import annotations
 
 from typing import Literal
@@ -29,14 +33,14 @@ MasterAction = Literal[
 
 
 class MasterAgentOutput(AgentOutputBase):
-    """Master는 MVP에서 지능형 라우터가 아니라 고정 파이프라인 실행 관리자다."""
+    """Master Agent의 LLM 판단 결과 schema입니다."""
 
     stage: MasterStage = Field(..., description="현재 진행 단계")
     action: MasterAction = Field(..., description="다음 수행 동작")
 
     current_agent: str = Field("", description="현재 실행 중인 agent")
     next_agent: str = Field("", description="다음 실행할 agent")
-    pipeline_index: int = Field(0, description="DEFAULT_PIPELINE에서 현재 위치")
+    pipeline_index: int = Field(0, description="SERVICE_PIPELINE에서 현재 위치")
 
     summary_accepted: bool = Field(False, description="사용자가 요약본을 승인했는지 여부")
     feedback_required: bool = Field(False, description="요약본 수정 피드백이 필요한지 여부")

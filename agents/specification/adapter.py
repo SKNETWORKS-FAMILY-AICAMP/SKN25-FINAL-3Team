@@ -15,7 +15,6 @@ class SpecificationAdapter(AgentAdapter[SpecificationAgentOutput]):
     agent_name = "specification"
     state_key = "specification"
     schema = SpecificationAgentOutput
-    fallback = SpecificationAgentOutput(status="failed", summary="specification output validation failed")
 
     def build_input(self, state: dict[str, Any]) -> dict[str, Any]:
         return {

@@ -1,6 +1,6 @@
 # Agent Contracts
 
-중간발표 MVP는 복잡한 분기/순환 LangGraph가 아니라 **고정 단방향 파이프라인**으로 구현한다.
+서비스 agent 간 입출력 계약입니다.
 
 ```text
 5개 입력 → Summary Agent(요약본작성) → 사용자 확인/피드백 → 청구항 → 도면 → 선행기술 → 명세서 → Composer → 최종 출력
@@ -19,30 +19,30 @@
 
 ## Master Agent 범위
 
-중간발표용 Master는 지능형 라우터가 아니라 **고정 파이프라인 실행 관리자**다.
+Master Router는 현재 state를 보고 다음 실행할 agent, 사용자 추가 입력 필요 여부, 재시도/종료 여부를 결정한다.
 
 하는 일:
 
-1. 5개 입력값 존재 여부 확인
+1. 입력값 존재 여부 및 충분성 판단
 2. Summary Agent 호출
 3. 요약본을 사용자에게 보여주고 승인/피드백 상태 관리
 4. 피드백이 있으면 Summary Agent 재호출
-5. 승인되면 `DEFAULT_PIPELINE`을 순서대로 실행
+5. 승인되면 `SERVICE_PIPELINE`을 순서대로 실행
 6. 각 agent output을 Pydantic 검증 후 state에 저장
 
-하지 않는 일:
+추후 고도화 방향:
 
-- 입력 내용에 따라 agent를 동적으로 생략/추가
-- claim/prior_art/drawing 실행 순서 판단
+- 입력 내용에 따른 agent 동적 생략/추가
+- claim/prior_art/drawing 실행 순서 동적 판단
 - Review 결과 기반 자동 재실행
-- 복잡한 LangGraph conditional routing
+- LangGraph conditional routing
 
 ```python
-DEFAULT_PIPELINE = (
+SERVICE_PIPELINE = (
     "summary",
+    "prior_art",
     "claim",
     "drawing",
-    "prior_art",
     "specification",
     "composer",
 )
@@ -55,9 +55,9 @@ DEFAULT_PIPELINE = (
 ```text
 raw_output
 → Pydantic validate
-→ 실패 시 LLM repair 1회
+→ 실패 시 ENABLE_LLM_REPAIR=true인 경우만 LLM repair 1회
 → repair 결과 재검증
-→ 그래도 실패하면 hard fallback
+→ 그래도 실패하거나 repair가 꺼져 있으면 AgentValidationError로 중단
 → 검증 통과한 model_dump()만 state 저장
 ```
 
@@ -82,7 +82,9 @@ Repair에 넘기는 정보:
 - Pydantic `validation_errors`
 - `raw_output`
 
-Hard fallback은 repair도 실패했을 때 쓰는 미리 정의된 빈/기본 결과다. 목적은 좋은 결과 생성이 아니라 데모 파이프라인이 죽지 않게 하는 것이다.
+검증 실패는 조용히 빈 결과로 넘어가지 않는다. `AgentValidationError`로 중단하고,
+`state["workflow"]["errors"]` 또는 개별 agent API의 422 응답에 실패 정보를 남긴다.
+목적은 특허 문서에서 잘못된/빈 산출물이 다음 단계로 섞이지 않게 하는 것이다.
 
 ## 모든 Agent 공통 output 필드
 
@@ -129,7 +131,6 @@ agents/schemas/common.py
 - 출력: `MasterAgentOutput`
 - 저장 위치: 필요 시 `state["workflow"]`/trace에 반영
 - 최소 필드: `stage`, `action`, `current_agent`, `next_agent`, `pipeline_index`, `summary_accepted`, `feedback_required`, `route_reason`
-- 중간발표에서는 고정 pipeline 실행 상태만 관리한다.
 
 ### Summary Agent
 
@@ -303,7 +304,7 @@ state["summary"] = {
 - 출력: `ClaimAgentOutput`
 - 저장 위치: `state["claims"]`
 - 최소 필드: `claim_plan`, `draft_claims`, `independent_claim_numbers`, `dependent_claim_numbers`, `claim_strategy_notes`
-- `ClaimDraft.category`는 중간발표 기준 `method | system | storage_medium | unknown`만 사용한다.
+- `ClaimDraft.category`는 `method | system | storage_medium | unknown`만 사용한다.
 - 종속항은 `depends_on`이 있어야 한다.
 
 ### Drawing Agent
@@ -338,12 +339,20 @@ state["summary"] = {
 - `run_composer_agent(state)`는 실제 `.docx`를 생성하고, `final_package` 형태의 dict를 반환한다.
 - `graph.py`는 `safe_validate_output()`를 통해 Composer raw output을 검증한 뒤 `state["final_package"]`에 저장한다.
 
+### Review Agent
+
+- TODO: 미구현. 추후 Claim/Specification 결과를 검토하고 개선 제안을 반환하는 역할 예정.
+- 저장 위치: `state["review"]`
+
 ## 구현 파일 역할
 
-- `agents/schemas/master.py`: 중간발표용 Master 진행 상태/action 계약.
+- `agents/schemas/master.py`: Master Agent LLM 판단 결과 계약.
 - `agents/schemas/summary.py`: 5개 입력, readable summary, structured invention 계약.
 - `agents/schemas/`: 나머지 agent별 최소 output 계약.
 - `agents/repair.py`: LLM repair prompt/API 호출. 형식 정규화 전용.
-- `agents/validation.py`: validate → repair once → validate again → hard fallback 공통 함수.
-- `agents/graph.py`: 중간발표용 단방향 실행 skeleton. 나중에 LangGraph `StateGraph`로 옮길 수 있는 연결 통로.
+- `agents/validation.py`: validate → optional repair → validate again → 실패 시 AgentValidationError 발생.
+- `agents/graph.py`: 서비스 graph 실행 골격. 추후 LangGraph `StateGraph`로 확장 예정.
 - `agents/state.py`: shared state의 큰 그릇. 실제 output 검증은 schema/validation에서 처리한다.
+- `agents/master/router.py`: 현재 state 기반 다음 agent 결정 로직. agent→state key는 `adapter.state_key`에서 만들어 전달받는다.
+- `backend/fastapi/app/routers/pipeline.py`: 전체 파이프라인 API (`/run`, `/continue`).
+- `backend/fastapi/app/routers/agents.py`: 개별 agent 단독 호출 API (`/{agent_name}/run`).
