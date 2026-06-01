@@ -14,7 +14,7 @@ Master Router가 정한 route만 실행하고,
 """
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from agents.adapters.base import AgentAdapter
@@ -74,6 +74,7 @@ def run_service_pipeline(
     initial_state: PatentAgentState | None = None,
     route: Sequence[str] | None = None,
     enable_llm_repair: bool | None = None,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> PatentAgentState:
     """주어진 route만 실행하고 결과를 state에 병합합니다.
 
@@ -83,6 +84,8 @@ def run_service_pipeline(
         initial_state: 이어서 실행할 때 넘기는 기존 state. None이면 새 state 생성.
         route: 실행할 agent 이름 순서. None이면 DEFAULT_PIPELINE 전체 실행.
         enable_llm_repair: LLM repair 기능 켜기/끄기. None이면 환경변수 ENABLE_LLM_REPAIR 참고.
+        progress_callback: agent 하나 시작될 때마다 호출되는 콜백. callback(agent_name) 형태.
+            pipeline.py에서 Redis 진행 상황 업데이트에 씁니다.
 
     Returns:
         모든 agent 결과가 담긴 PatentAgentState.
@@ -119,6 +122,13 @@ def run_service_pipeline(
             continue
 
         try:
+            # agent 시작 시 콜백 호출 (Redis 진행 상황 업데이트 등)
+            if progress_callback is not None:
+                try:
+                    progress_callback(agent_name)
+                except Exception:
+                    pass  # 콜백 실패가 파이프라인을 중단시키지 않습니다.
+
             # adapter.run()이 핵심입니다:
             # 1) state에서 입력 추출  2) agent 실행  3) Pydantic 검증  4) dict 반환
             state[adapter.state_key] = adapter.run(state, enable_llm_repair=enable_llm_repair)  # type: ignore[literal-required]

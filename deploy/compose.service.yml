@@ -11,7 +11,7 @@ services:
       APP_HOST: 0.0.0.0
       APP_PORT: 8000
       APP_WORKERS: ${APP_WORKERS:-2}
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://patent_app:patent_app@postgres:5432/patent_ai}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://patent_app:${POSTGRES_PASSWORD}@postgres:5432/patent_ai}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       ARTIFACT_ROOT: ${ARTIFACT_ROOT:-/app/artifacts}
       PATENTS_TEXT_DIR: ${PATENTS_TEXT_DIR:-/app/data/patents_txt}

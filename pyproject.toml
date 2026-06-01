@@ -17,6 +17,7 @@ dependencies = [
     "python-dotenv>=1.0",
     "requests>=2.31",
     "sqlalchemy>=2.0",
+    "redis>=5.0",
 ]
 
 [dependency-groups]

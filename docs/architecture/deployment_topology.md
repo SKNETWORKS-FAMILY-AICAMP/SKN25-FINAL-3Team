@@ -64,6 +64,7 @@ volumes     = artifacts/data persistence
 Frontend/Product Backend
   -> /api/pipeline/run
   -> /api/pipeline/continue
+  -> /api/runs/{run_id}
 ```
 
 FastAPI 내부에서만 다음을 호출한다.
@@ -84,7 +85,7 @@ API router
 이 방식은 FastAPI 이벤트 루프 차단을 줄이지만, **백그라운드 큐는 아니다.**
 즉 요청자는 agent 실행이 끝날 때까지 기다린 뒤 응답을 받는다.
 
-운영형 구조에서는 다음 PR에서 아래처럼 바꾼다.
+운영형 구조에서는 이후 PR에서 아래처럼 바꾼다.
 
 ```text
 POST /api/pipeline/run
@@ -108,6 +109,32 @@ GET /api/runs/{run_id}
 | Agent | LLM/DB/search/drafting 등 실제 작업 |
 | Schema | agent output 계약의 단일 기준 |
 | State | graph 실행 중 공유 컨테이너 |
+
+## 현재 구현된 storage/session 범위
+
+이번 PR에서 1차로 구현된 범위:
+
+```text
+POST /api/pipeline/run
+  -> PostgreSQL patent_runs 생성(status=running)
+  -> pipeline 실행
+  -> Redis run:{run_id}:agent에 현재 agent 기록
+  -> PostgreSQL patent_runs.state/errors/status 최종 업데이트
+
+GET /api/runs/{run_id}
+  -> PostgreSQL에 저장된 run/state/errors 조회
+  -> 실행 중이면 Redis current_agent 참고
+```
+
+아직 구현하지 않은 범위:
+
+```text
+- step별 별도 테이블(run_steps)
+- artifact 별도 테이블/스토리지 업로드
+- /api/runs/{run_id}/steps
+- /api/runs/{run_id}/artifacts
+- /run 즉시 반환 + worker queue 실행
+```
 
 ## storage/session lifecycle
 
