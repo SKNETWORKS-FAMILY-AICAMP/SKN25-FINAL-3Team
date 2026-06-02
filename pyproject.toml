@@ -1,7 +1,7 @@
 [project]
 name = "skn25-final-3team-patent-ai"
 version = "0.1.0"
-description = "AI/software patent consultation and prior-art MVP"
+description = "AI/software patent agent service skeleton"
 requires-python = ">=3.11"
 dependencies = [
     "django==5.0.6",
@@ -23,6 +23,7 @@ dependencies = [
     "streamlit>=1.35",
     "uvicorn[standard]>=0.29",
     "pgvector>=0.3.0",
+    "redis>=5.0"
 ]
 
 [dependency-groups]

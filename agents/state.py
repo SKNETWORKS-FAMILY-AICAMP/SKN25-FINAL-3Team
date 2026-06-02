@@ -1,567 +1,210 @@
-"""특허 멀티 에이전트용 LangGraph 공유 State 스키마.
+"""특허 agent 서비스의 공유 실행 state를 정의합니다.
 
-이 파일은 실제 기능 구현 파일이라기보다, 여러 에이전트가 서로 주고받을
-공통 JSON 구조를 정의하는 설계도에 가깝다.
+중복 방지 원칙:
+- 각 agent의 상세 output 계약은 `agents/schemas/*.py`의 Pydantic 모델이 단일 기준입니다.
+- `PatentAgentState`는 LangGraph/FastAPI가 공유하는 컨테이너만 정의합니다.
+- agent 결과는 adapter에서 Pydantic 검증 후 `model_dump()`된 dict로 저장합니다.
 
-핵심 설계 의도:
-- 각 에이전트 산출물은 자유 텍스트만 두지 말고 구조화된 JSON으로 저장한다.
-- 지금 구조는 별도 `drafts` 층을 두지 않는 A안이다.
-  즉, 각 agent State 안에 "구조화 데이터 + 자기 영역 부분 초안"을 함께 둔다.
-  예: `claims.claim_plan`은 구조화 설계도이고, `claims.draft_claims`는 청구항 초안이다.
-  최종 제출용 문서는 `final_package`에만 저장한다.
-- `document_links`는 "상기", "전술한", "도 1", "(120)", "제1항"처럼
-  특허 문서 내부에서 서로를 참조하는 관계를 저장한다.
-- `invention_graph`는 발명의 구성요소/데이터 흐름/관계를 저장한다.
-  여기서 graph는 ReAct의 숨은 추론 과정이 아니라, 에이전트들이 공유할
-  발명 구조 JSON이다.
-- 고정 문체/작성 규칙은 `rules/*.yaml`에 두고, 이번 실행에서 바뀌는 옵션만
-  `drafting_options`에 저장한다.
+즉, state.py는 schema 필드를 다시 복붙하지 않고 실행 상태, 사용자 입력,
+agent별 결과 저장 위치, artifact/session 메타데이터만 관리합니다.
 """
-
 from __future__ import annotations
 
 from typing import Any, Literal, TypedDict
 
-# -----------------------------------------------------------------------------
-# 1. 공통 분류값
-# -----------------------------------------------------------------------------
-# Literal은 "이 값들 중 하나만 허용한다"는 뜻이다.
-# 예: AgentName은 "master", "summary" 등 정해진 agent 이름만 가질 수 있다.
+# ──────────────────────────────────────────────
+# 타입 별칭 (Literal)
+# ──────────────────────────────────────────────
+# Literal은 "이 변수는 이 값들 중 하나만 가능하다"를 타입으로 표현합니다.
+# 예: AgentName = "summary" | "claim" | ... 처럼 허용된 agent 이름만 쓸 수 있게 제한합니다.
 
-# 그래프에 참여하는 에이전트 이름 목록.
 AgentName = Literal[
-    "master",  # 전체 흐름을 제어하는 Orchestrator. 직접 문서 작성보다는 다음 agent 선택 담당.
-    "summary",  # 요약본작성 agent. 5개 입력을 readable_summary와 structured_invention으로 정리.
-    "prior_art",  # 선행기술조사 agent. 유사 특허 검색, 차이점, 신규성/진보성 리스크 분석.
-    "claim",  # 청구항 생성 agent. 청구항 설계도와 독립항/종속항 초안 생성.
-    "drawing",  # 도면 agent. 도면 구성, 도 번호, 참조부호 계획 생성.
-    "specification",  # 발명의 설명 agent. 기술분야/배경기술/효과/상세설명 초안 생성.
-    "composer",  # 명세서 병합 agent. State를 참조해 용어/참조/문체를 통일하고 최종 패키지 생성.
-    "review",  # Review agent. 산출물 간 불일치, 참조 오류, 품질 문제를 검사.
+    "master",
+    "summary",
+    "prior_art",
+    "claim",
+    "drawing",
+    "specification",
+    "composer",
+    "review",  # TODO: 미구현. adapter/agent/schema 작업 후 master/router.py SERVICE_PIPELINE에 추가 예정.
 ]
 
-# 전체 workflow의 현재 상태.
+# 파이프라인 전체의 진행 상태를 나타내는 값 목록입니다.
+# "idle"=시작 전, "running"=실행 중, "wait_user"=사용자 입력 대기,
+# "needs_revision"=수정 필요, "completed"=완료, "failed"=실패
 WorkflowStatus = Literal[
-    "idle",  # 아직 실행 전.
-    "running",  # 어떤 agent가 실행 중.
-    "wait_user",  # 사용자 추가 답변이 필요한 상태.
-    "needs_revision",  # Review 결과 수정이 필요한 상태.
-    "completed",  # 전체 작업 완료.
-    "failed",  # 에러로 중단.
-]
-
-# 위험도/심각도 공통 표현.
-RiskLevel = Literal["low", "medium", "high", "unknown"]
-
-# 청구항 종류: 독립항인지 종속항인지.
-ClaimType = Literal["independent", "dependent"]
-
-# 청구항 카테고리: 방법항, 시스템항, 장치항, 기록매체항 등.
-ClaimCategory = Literal[
-    "method",  # ~하는 방법.
-    "system",  # ~하는 시스템.
-    "device",  # ~하는 장치.
-    "apparatus",  # 장치/기구 계열 표현. device와 유사하나 문서에 따라 구분 가능.
-    "storage_medium",  # 컴퓨터 판독가능 기록매체.
-    "program",  # 프로그램 청구항.
-    "training_method",  # AI 모델 학습 방법.
-    "inference_method",  # AI 모델 추론/판단 방법.
-    "unknown",  # 아직 분류되지 않음.
-]
-
-# 도면 종류: 시스템 구성도, 흐름도, 데이터 흐름도 등.
-FigureType = Literal[
-    "system_architecture",  # 시스템/장치 구성도.
-    "flowchart",  # 방법 단계 흐름도.
-    "data_flow",  # 입력-처리-출력 데이터 흐름도.
-    "model_structure",  # AI 모델 구조도.
-    "ui",  # 화면/UI 예시도.
-    "hardware_structure",  # 하드웨어 구조도.
-    "sequence",  # 메시지/프로토콜 순서도.
-    "other",  # 기타 도면.
+    "idle",
+    "running",
+    "wait_user",
+    "needs_revision",
+    "completed",
+    "failed",
 ]
 
 
-# -----------------------------------------------------------------------------
-# 2. Workflow / 실행 추적 State
-# -----------------------------------------------------------------------------
+# ──────────────────────────────────────────────
+# TypedDict란?
+# ──────────────────────────────────────────────
+# TypedDict는 Python dict에 키와 값의 타입을 명시하는 방법입니다.
+# 일반 dict는 어떤 키/값이든 넣을 수 있지만,
+# TypedDict를 쓰면 IDE와 타입 검사기가 잘못된 키나 타입을 잡아줍니다.
+# total=False는 "모든 키가 필수는 아니다(선택적이다)"는 뜻입니다.
 
 class TraceEvent(TypedDict, total=False):
-    """각 노드/agent가 무엇을 했는지 남기는 짧은 로그. 숨은 CoT는 저장하지 않는다."""
+    """agent 실행 이력을 남기는 짧은 로그입니다.
 
-    agent: AgentName  # 실행한 agent 이름.
-    node: str  # LangGraph 내부 노드 이름. 예: slot_extract, route_next.
-    action: str  # 수행한 작업. 예: extract_slots, generate_claims.
-    summary: str  # 사람이 볼 수 있는 짧은 요약.
-    timestamp: str  # 실행 시각 문자열.
-    inputs: dict[str, Any]  # 디버깅용 입력 요약. 민감정보/긴 전문은 피한다.
-    outputs: dict[str, Any]  # 디버깅용 출력 요약. 전체 문서 전문 저장은 피한다.
+    파이프라인이 실행되는 동안 각 단계에서 무슨 일이 있었는지 기록합니다.
+    디버깅이나 사용자에게 진행 상황을 보여줄 때 씁니다.
+    """
+
+    agent: str       # 어떤 agent가 실행됐는지 (예: "summary", "claim")
+    node: str        # LangGraph 노드 이름 (추후 LangGraph 전환 시 사용)
+    action: str      # 무슨 동작을 했는지 (예: "run", "skip", "retry")
+    summary: str     # 한 줄 요약
+    timestamp: str   # 실행 시각 (ISO 8601 문자열)
+    inputs: dict[str, Any]   # agent에 넘긴 입력 (디버깅용)
+    outputs: dict[str, Any]  # agent가 반환한 출력 (디버깅용)
 
 
 class WorkflowState(TypedDict, total=False):
-    """현재 workflow가 어디까지 진행됐는지 관리한다."""
+    """현재 workflow 진행 상태와 에러/추적 정보를 관리합니다.
 
-    status: WorkflowStatus  # idle/running/wait_user/completed 등 전체 상태.
-    current_agent: AgentName  # 지금 실행 중인 agent.
-    next_agent: AgentName  # 다음에 실행할 agent.
-    route_reason: str  # 왜 그 agent로 이동하는지 설명.
-    iteration_count: int  # 반복 횟수. 무한 루프 방지용.
-    max_iterations: int  # 최대 반복 횟수.
-    trace: list[TraceEvent]  # 실행 로그 목록.
-    errors: list[str]  # 에러 메시지 목록.
-
-
-# -----------------------------------------------------------------------------
-# 3. 요약본작성 Summary agent State
-# -----------------------------------------------------------------------------
-
-class Component(TypedDict, total=False):
-    """발명을 이루는 구성요소 하나. 예: 데이터 수집부, AI 분석부."""
-
-    id: str  # 내부 식별자. 예: C001.
-    name: str  # 구성요소 이름.
-    role: str  # 구성요소 역할.
-    type: str  # component/module/step/model 등 자유 분류.
-    mandatory: bool  # 발명 핵심 필수 구성인지 여부.
-    aliases: list[str]  # 별칭. 예: 분석부, 상기 분석부.
-    source_text: str  # 사용자 입력 또는 문서에서 근거가 된 원문.
-
-
-class ProcessStep(TypedDict, total=False):
-    """방법항/흐름도에 쓰일 수 있는 처리 단계 하나."""
-
-    id: str  # 내부 식별자. 예: S001.
-    order: int  # 단계 순서.
-    name: str  # 단계 이름.
-    actor: str  # 수행 주체. 예: AI 분석부.
-    input: list[str]  # 입력 데이터.
-    output: list[str]  # 출력 데이터.
-    description: str  # 단계 설명.
-    mandatory: bool  # 필수 단계인지 여부.
-
-
-class SummaryState(TypedDict, total=False):
-    """요약본작성 agent가 5개 입력을 정리한 결과.
-
-    중간발표 MVP에서는 재질문/slot filling을 하지 않는다.
-    사용자가 입력한 5개 필드를 사람이 읽는 요약본과 후속 agent용 구조화 발명 정보로 정리한다.
+    graph.py가 파이프라인을 실행하면서 이 dict를 직접 수정합니다.
+    프론트엔드는 이 값을 보고 "지금 어느 단계인지" 사용자에게 보여줄 수 있습니다.
     """
 
-    project_name: str  # 프로젝트명 또는 발명 명칭 후보.
-    problem_to_solve: str  # 해결하고자 하는 문제/과제.
-    prior_art_problem: str  # 기존 기술의 문제점.
-    core_technology: str  # 핵심 기술 구성/해결 수단.
-    expected_effect: str  # 발명의 효과.
+    status: WorkflowStatus     # 파이프라인 전체 상태 (위 WorkflowStatus 참고)
+    current_agent: str         # 지금 실행 중인 agent 이름
+    next_agent: str            # 다음에 실행할 agent 이름
+    route_reason: str          # master router가 이 순서를 선택한 이유
+    iteration_count: int       # 현재까지 실행한 agent 수
+    max_iterations: int        # 무한 루프 방지를 위한 최대 실행 횟수
+    trace: list[TraceEvent]    # 지금까지의 실행 이력 목록
+    errors: list[str]          # 실행 중 발생한 에러 메시지 목록
 
-    readable_summary: str  # 사용자가 확인할 사람이 읽기 쉬운 요약본.
-    structured_invention: dict[str, Any]  # 후속 agent가 공통으로 읽을 발명 구조.
-
-    feedback_history: list[str]  # 사용자가 남긴 요약본 수정 피드백 이력.
-    feedback_applied: list[str]  # 반영된 피드백.
-    warnings: list[str]  # 입력만으로 확정하기 어려운 부분.
-    accepted: bool  # 사용자가 요약본을 승인했는지 여부.
-
-
-# -----------------------------------------------------------------------------
-# 4. 선행기술조사 agent State
-# -----------------------------------------------------------------------------
-
-class PriorArtCandidate(TypedDict, total=False):
-    """검색된 선행문헌/특허 후보 하나."""
-
-    patent_id: str  # 내부 특허 ID.
-    title: str  # 특허 제목.
-    publication_no: str  # 공개번호/등록번호.
-    ipc_codes: list[str]  # IPC/CPC 코드.
-    score: float  # 검색 점수. 법적 확신도가 아님.
-    score_note: str  # 점수 의미 설명.
-    overlap_points: list[str]  # 우리 발명과 겹치는 점.
-    difference_points: list[str]  # 차이점.
-    evidence: list[dict[str, Any]]  # 근거 문장/청구항/요약 조각.
-    pdf_path: str  # 원문 PDF 경로.
-    url: str  # 외부 링크가 있으면 저장.
-
-
-class PriorArtState(TypedDict, total=False):
-    """선행기술 검색/분석 결과."""
-
-    search_query: str  # 검색에 사용한 대표 쿼리.
-    expanded_queries: list[str]  # 확장 검색어.
-    ipc_focus: list[str]  # 집중 IPC. 예: G06F, G06N, G06V.
-    search_focus: list[str]  # problem/solution/components 등 검색 초점.
-    candidates: list[PriorArtCandidate]  # 검색 후보 목록.
-    closest_candidate_ids: list[str]  # 가장 가까운 후보 ID들.
-    overlap_points: list[str]  # 전체적으로 겹치는 핵심 포인트.
-    difference_points: list[str]  # 전체적으로 다른 핵심 포인트.
-    novelty_risk: RiskLevel  # 신규성 리스크.
-    inventive_step_risk: RiskLevel  # 진보성 리스크.
-    analysis_summary: str  # 분석 요약.
-    limitations: list[str]  # 한계/불확실성.
-
-
-# -----------------------------------------------------------------------------
-# 5. 청구항 생성 agent State
-# -----------------------------------------------------------------------------
-
-class ClaimDraft(TypedDict, total=False):
-    """생성된 청구항 하나."""
-
-    claim_no: int  # 청구항 번호.
-    type: ClaimType  # independent/dependent.
-    category: ClaimCategory  # method/system/storage_medium 등.
-    depends_on: list[int]  # 종속항이면 참조하는 부모 청구항 번호.
-    elements: list[str]  # 청구항 구성요소/단계 목록.
-    text: str  # 실제 청구항 문장.
-    source_components: list[str]  # 어떤 발명 구성요소에서 왔는지.
-    review_flags: list[str]  # 검토 필요 표시.
-
-
-class ClaimState(TypedDict, total=False):
-    """청구항 설계도와 생성 결과."""
-
-    claim_plan: dict[str, Any]  # 청구항 작성 전 설계도. claim 1 핵심, family 계획 등.
-    draft_claims: list[ClaimDraft]  # 실제 생성된 청구항 목록.
-    claim_dependency_graph: dict[str, Any]  # 제1항/제2항 의존관계 그래프.
-    independent_claim_numbers: list[int]  # 독립항 번호 목록.
-    dependent_claim_numbers: list[int]  # 종속항 번호 목록.
-    claim_strategy_notes: list[str]  # 권리범위/작성 전략 메모.
-
-
-# -----------------------------------------------------------------------------
-# 6. 도면 agent State
-# -----------------------------------------------------------------------------
-
-class FigureSpec(TypedDict, total=False):
-    """도면 하나에 대한 설계 정보."""
-
-    fig_no: int  # 도면 번호. 예: 1이면 도 1.
-    title: str  # 도면 제목.
-    type: FigureType  # 도면 종류.
-    purpose: str  # 이 도면이 설명하려는 목적.
-    components: list[str]  # 도면에 들어가는 구성요소.
-    steps: list[str]  # 흐름도라면 들어가는 단계.
-    description: str  # 도면 설명 초안.
-
-
-class ReferenceNumeral(TypedDict, total=False):
-    """도면 참조부호 하나. 예: 110 = 데이터 수집부."""
-
-    number: str  # 참조부호 번호.
-    term: str  # 해당 구성요소 이름.
-    figure: str  # 등장 도면. 예: 도 1.
-    component_id: str  # Component.id와 연결.
-    description: str  # 짧은 설명.
-
-
-class DrawingState(TypedDict, total=False):
-    """도면 구성과 참조부호 계획."""
-
-    figures: list[FigureSpec]  # 도면 목록.
-    reference_numerals: dict[str, ReferenceNumeral]  # 참조부호 map. key 예: "110".
-    drawing_notes: list[str]  # 도면 작성/검토 메모.
-
-
-# -----------------------------------------------------------------------------
-# 7. 발명의 설명 agent State
-# -----------------------------------------------------------------------------
-
-class SpecificationState(TypedDict, total=False):
-    """발명의 설명 agent가 만든 섹션별 초안.
-
-    여기 내용은 최종본이 아니라 composer가 재편집할 재료다.
-    composer는 이 초안을 그대로 붙이기보다 document_links/invention_graph/rules를 참조해
-    용어, 참조부호, "상기/전술한" 표현, 문체를 최종 통일한다.
-    """
-
-    technical_field: str  # 기술분야.
-    background_art: str  # 배경기술.
-    problem_to_solve: str  # 해결하려는 과제.
-    means_for_solving: str  # 과제의 해결 수단.
-    effects: str  # 발명의 효과.
-    brief_description_of_drawings: str  # 도면의 간단한 설명.
-    detailed_description: str  # 발명을 실시하기 위한 구체적인 내용.
-    embodiment_notes: list[str]  # 실시예 관련 메모.
-
-
-# -----------------------------------------------------------------------------
-# 8. document_links: 문서 내부 참조/연결 State
-# -----------------------------------------------------------------------------
-
-class TermEntry(TypedDict, total=False):
-    """용어 사전 항목. 같은 대상을 여러 표현으로 부를 때 기준점이 된다."""
-
-    canonical_name: str  # 표준 명칭. 예: AI 분석부.
-    type: str  # component/step/data/effect 등.
-    aliases: list[str]  # 별칭. 예: 분석부, 상기 분석부.
-    reference_no: str  # 참조부호. 예: 120.
-    first_defined_in: str  # 처음 정의된 위치. 예: drawings.figures[0].
-    used_in: list[str]  # 사용된 위치 목록.
-    source_component_id: str  # summary.structured_invention의 component id/name과 연결.
-
-
-class LinkEntry(TypedDict, total=False):
-    """두 대상 사이의 연결 관계. claim→component, figure→component 등에 공통 사용."""
-
-    source: str  # 출발점. 예: claims.draft_claims[0].
-    target: str  # 도착점. 예: consultation.components.C001.
-    relation: str  # 관계 유형. 예: mentions, supports, refers_to.
-    evidence: str  # 이 연결의 근거 문장/필드.
-    confidence: float  # 연결 신뢰도.
-    review_flag: str  # 불확실하거나 검토 필요한 내용.
-
-
-class ParagraphAnchor(TypedDict, total=False):
-    """명세서 문단 기준점. '상기' 같은 표현이 무엇을 가리키는지 추적하는 데 사용."""
-
-    anchor_id: str  # 문단/대상 식별자. 예: P003.
-    section: str  # 섹션명. 예: detailed_description.
-    paragraph_id: str  # 문단 ID.
-    entity: str  # 이 문단이 설명하는 대상. 예: AI 분석부.
-    text: str  # 문단 원문 또는 요약.
-
-
-class DocumentLinksState(TypedDict, total=False):
-    """문서 내부 참조 관계를 저장한다.
-
-    해결하려는 문제:
-    - "상기 분석부"가 무엇을 가리키는지
-    - "도 1"과 참조부호 "120"이 어떤 구성요소와 연결되는지
-    - 청구항 구성요소가 도면/명세서에서 뒷받침되는지
-    - 제1항/제2항 참조 관계가 꼬이지 않았는지
-    """
-
-    term_registry: dict[str, TermEntry]  # 용어 사전.
-    reference_numeral_map: dict[str, ReferenceNumeral]  # 참조부호 map.
-    claim_to_component_links: list[LinkEntry]  # 청구항과 구성요소 연결.
-    figure_to_component_links: list[LinkEntry]  # 도면과 구성요소 연결.
-    spec_support_links: list[LinkEntry]  # 명세서 문단이 청구항을 뒷받침하는 연결.
-    anaphora_links: list[LinkEntry]  # 상기/전술한/이러한 표현 해소 연결.
-    paragraph_anchors: list[ParagraphAnchor]  # 명세서 문단 기준점 목록.
-
-
-# -----------------------------------------------------------------------------
-# 9. invention_graph: 발명 구조/관계 State
-# -----------------------------------------------------------------------------
-
-class RelationEdge(TypedDict, total=False):
-    """발명 구성요소 사이의 관계 하나. 예: 데이터 수집부 → AI 분석부."""
-
-    source: str  # 관계 시작 구성요소/단계.
-    target: str  # 관계 도착 구성요소/단계.
-    relation: str  # 관계 유형. 예: provides_input_to, generates_result_for.
-    direction: str  # 방향성 설명. 예: source_to_target.
-    evidence: str  # 관계를 판단한 근거.
-    confidence: float  # 신뢰도.
-    mandatory: bool  # 발명 핵심 필수 관계인지.
-    review_flag: str  # 검토 필요 표시.
-
-
-class InventionGraphState(TypedDict, total=False):
-    """발명의 구조 그래프. ReAct의 숨은 추론이 아니라 공유용 구조화 JSON이다."""
-
-    component_graph: dict[str, Any]  # 구성요소 노드/관계 전체 구조.
-    relation_edges: list[RelationEdge]  # 구성요소 간 관계 목록.
-    data_flow_graph: dict[str, Any]  # 입력→처리→출력 흐름.
-    mandatory_optional_judgement: dict[str, str]  # 필수/선택 판단. 예: C001=mandatory.
-    claim_1_core_candidates: list[str]  # 청구항 1에 들어갈 핵심 후보.
-    dependent_claim_candidates: list[str]  # 종속항으로 뺄 세부 후보.
-
-
-# -----------------------------------------------------------------------------
-# 10. drafting_options: 이번 실행의 작성 옵션
-# -----------------------------------------------------------------------------
-
-class DraftingOptionsState(TypedDict, total=False):
-    """이번 실행에서 선택한 작성 옵션. 고정 규칙은 rules/*.yaml에 둔다."""
-
-    claim_style: str  # 청구항 문체. 예: korean_patent.
-    specification_tone: str  # 명세서 문체. 예: formal.
-    use_reference_numerals: bool  # 참조부호를 사용할지.
-    use_semicolon: bool  # 청구항 구성요소 사이 세미콜론을 사용할지.
-    use_anaphora_phrases: bool  # 상기/전술한 표현을 사용할지.
-    target_claim_categories: list[ClaimCategory]  # 생성 목표 청구항 카테고리.
-
-# -----------------------------------------------------------------------------
-# 11. Composer agent State
-# -----------------------------------------------------------------------------
-
-class ComposerState(TypedDict, total=False):
-    """명세서 병합 agent가 최종 문서를 만들 때 사용하는 작업 상태.
-
-    현재 설계는 각 agent가 자기 영역의 구조화 JSON과 부분 초안을 만들고,
-    composer가 그 결과를 단순히 붙이는 것이 아니라 최종 문서로 재편집하는 방식이다.
-
-    composer의 우선순위:
-    1. structured JSON: summary, prior_art, claims, drawings, specification
-    2. reference/relation: document_links, invention_graph
-    3. fixed rules: rules/*.yaml
-    4. 각 agent가 만든 초안 문장
-    """
-
-    source_priority: list[str]  # composer가 참고할 정보 우선순위.
-    merged_sections: dict[str, str]  # composer가 재작성/병합한 섹션별 본문.
-    composer_notes: list[str]  # 병합 중 판단한 내용 또는 주의점.
-    unresolved_links: list[str]  # 해소하지 못한 참조. 예: 대상 없는 "상기 분석부".
-    normalized_terms: dict[str, str]  # 용어 통일 결과. 예: 분석 엔진 -> AI 분석부.
-
-
-# -----------------------------------------------------------------------------
-# 12. Review agent State
-# -----------------------------------------------------------------------------
-
-class ReviewIssue(TypedDict, total=False):
-    """Review agent가 발견한 문제 하나."""
-
-    severity: RiskLevel  # 문제 심각도.
-    target_agent: AgentName  # 피드백 받을 agent.
-    target_path: str  # state 내부 위치. 예: claims.draft_claims[0].text.
-    issue: str  # 문제 설명.
-    suggestion: str  # 수정 제안.
-    evidence: str  # 문제 판단 근거.
-
-
-class ReviewState(TypedDict, total=False):
-    """전체 산출물 검토 결과."""
-
-    review_results: list[ReviewIssue]  # 발견된 문제 목록.
-    overall_risk: RiskLevel  # 전체 위험도.
-    feedback_to_agents: dict[str, list[str]]  # agent별 피드백 모음.
-    consistency_score: float  # 청구항/도면/명세서 일관성 점수.
-    passed: bool  # 통과 여부.
-
-
-# -----------------------------------------------------------------------------
-# 13. 최종 패키지 State
-# -----------------------------------------------------------------------------
-
-class FinalPackageState(TypedDict, total=False):
-    """최종 명세서/보고서 산출물."""
-
-    title: str  # 최종 발명 명칭.
-    abstract: str  # 요약.
-    claims: list[ClaimDraft]  # 최종 청구항.
-    drawings: DrawingState  # 최종 도면 계획.
-    specification: SpecificationState  # 최종 발명의 설명.
-    prior_art_report: PriorArtState  # 선행기술 보고서.
-    review_report: ReviewState  # 리뷰 보고서.
-    rendered_markdown: str  # 렌더링된 Markdown.
-    rendered_html_path: str  # HTML 파일 경로.
-    rendered_docx_path: str  # DOCX 파일 경로.
-
-
-# -----------------------------------------------------------------------------
-# 14. 최상위 LangGraph 공유 State
-# -----------------------------------------------------------------------------
 
 class PatentAgentState(TypedDict, total=False):
-    """LangGraph 전체에서 공유되는 최상위 State.
+    """서비스 graph 전체에서 공유하는 최상위 state 컨테이너입니다.
 
-    A안 유지:
-    - `summary`, `prior_art`, `claims`, `drawings`, `specification` 안에
-      각 agent의 구조화 데이터와 부분 초안을 함께 저장한다.
-    - `composer`는 각 초안을 단순 조립하지 않고, State 전체를 참조해 최종 문서로 재편집한다.
-    - `final_package`만 최종 산출물이다.
+    ─ 이 dict 하나가 파이프라인을 흐르는 "공유 작업판"입니다 ─
+
+    모든 agent는 이 state를 읽고(input), 자신의 결과를 이 state에 씁니다(output).
+    FastAPI API 응답에도 이 state가 그대로 담겨 프론트엔드로 전달됩니다.
+
+    각 agent output의 내부 필드 구조는 이 파일이 아니라
+    `agents/schemas/*.py`의 Pydantic schema가 책임집니다.
     """
 
-    workflow: WorkflowState  # 현재 진행 상태/다음 agent/trace/error.
-    messages: list[dict[str, Any]]  # 대화 메시지 기록. LangGraph messages와 연결 가능.
+    # ── 파이프라인 인프라 필드 ──────────────────────────
+    # graph.py, pipeline.py가 직접 관리합니다.
 
-    summary: SummaryState  # 요약본작성 agent 산출물.
-    prior_art: PriorArtState  # 선행기술조사 agent 산출물.
-    claims: ClaimState  # 청구항 agent 산출물.
-    drawings: DrawingState  # 도면 agent 산출물.
-    specification: SpecificationState  # 발명의 설명 agent 산출물.
+    workflow: WorkflowState       # 파이프라인 실행 상태 (running/completed 등)
+    run_session: dict[str, Any]   # run_id 등 이번 실행 세션 메타데이터. DB 연결 전까지 임시.
+    user_input: str               # 사용자가 입력한 발명 설명 원문
+    messages: list[dict[str, Any]] # 대화 이력 (추후 멀티턴 대화 지원 시 사용 예정)
 
-    document_links: DocumentLinksState  # 상기/도면번호/참조부호/청구항 연결 정보.
-    invention_graph: InventionGraphState  # 발명 구성요소/관계/데이터흐름 정보.
-    drafting_options: DraftingOptionsState  # 이번 실행의 문체/작성 옵션.
+    # ── agent별 결과 저장 공간 ──────────────────────────
+    # 각 agent의 adapter가 실행 완료 후 여기에 결과를 저장합니다.
+    # 내부 구조는 agents/schemas/*.py의 Pydantic 모델을 참고하세요.
 
-    composer: ComposerState  # 명세서 병합 agent의 병합/재편집 작업 상태.
-    review: ReviewState  # Review agent 산출물.
-    final_package: FinalPackageState  # 최종 명세서/보고서 산출물.
+    summary: dict[str, Any]        # SummaryAgent 결과 → agents/schemas/summary.py
+    prior_art: dict[str, Any]      # PriorArtAgent 결과 → agents/schemas/prior_art.py
+    claims: dict[str, Any]         # ClaimAgent 결과 → agents/schemas/claim.py
+    drawings: dict[str, Any]       # DrawingAgent 결과 → agents/schemas/drawing.py
+    specification: dict[str, Any]  # SpecificationAgent 결과 → agents/schemas/specification.py
+    composer: dict[str, Any]       # ComposerAgent 중간 데이터 (현재 미사용)
+    review: dict[str, Any]         # TODO: 미구현. 저장 위치 예약만 해둠.
+    final_package: dict[str, Any]  # ComposerAgent 최종 출력 (렌더링된 문서 패키지)
 
+    # ── 라우팅/판단 결과 ──────────────────────────
+    master_decision: dict[str, Any]  # MasterDecision 모델의 model_dump() 결과.
+                                     # "다음 agent가 뭔지", "사용자 입력이 더 필요한지" 등 포함.
 
-# -----------------------------------------------------------------------------
-# 15. 초기 State 생성 함수
-# -----------------------------------------------------------------------------
+    # ── 문서 연결 정보 (DocumentLinks) ──────────────────
+    # 청구항·도면·명세서 간의 용어/번호/단락 연결 정보입니다.
+    # create_initial_state()에서 초기 구조만 잡혀 있고, 아직 agent가 채우지 않습니다.
+    document_links: dict[str, Any]
+
+    # ── 발명 구조 그래프 (InventionGraph) ──────────────
+    # 발명의 구성요소와 관계를 그래프로 표현하는 공간입니다.
+    # 청구항·도면 agent가 구성요소 관계를 분석할 때 쓸 예정입니다. (미구현)
+    invention_graph: dict[str, Any]
+
+    # ── 작성 옵션 (DraftingOptions) ──────────────────
+    # "청구항 스타일", "명세서 어조" 같은 문서 작성 설정값입니다.
+    # create_initial_state()에서 기본값이 채워집니다. 사용자가 변경 가능하도록 설계 예정.
+    drafting_options: dict[str, Any]
+
+    # ── 생성된 파일 목록 (Artifacts) ──────────────────
+    # 파이프라인이 만든 PDF·DOCX·HTML·SVG 파일의 경로/URL을 저장합니다.
+    # DB와 파일 스토리지가 연결되면 여기에 artifact 메타데이터가 쌓입니다. (미구현)
+    artifacts: dict[str, Any]
+
 
 def create_initial_state(user_input: str = "") -> PatentAgentState:
-    """그래프 첫 실행 또는 테스트용 빈 State를 만든다."""
+    """새 실행 또는 테스트용 빈 state를 만듭니다.
+
+    파이프라인을 처음 시작할 때 이 함수를 호출해서 빈 state를 만든 뒤,
+    각 agent가 순서대로 자신의 결과를 채워 넣습니다.
+    """
 
     return {
+        # 파이프라인 실행 상태 초기값
         "workflow": {
-            "status": "idle",
-            "current_agent": "master",
-            "next_agent": "summary",
+            "status": "idle",           # 아직 시작 전
+            "current_agent": "master",  # master router가 첫 번째로 판단
+            "next_agent": "summary",    # 첫 번째로 실행할 agent
             "iteration_count": 0,
-            "max_iterations": 8,
+            "max_iterations": 8,        # 8단계 이상 실행되면 무한 루프로 간주
             "trace": [],
             "errors": [],
         },
+        "run_session": {},   # pipeline.py에서 run_id 등을 넣어줌
+        "user_input": user_input,
         "messages": [],
-        "summary": {
-            "project_name": "",
-            "problem_to_solve": user_input,
-            "prior_art_problem": "",
-            "core_technology": "",
-            "expected_effect": "",
-            "readable_summary": "",
-            "structured_invention": {},
-            "feedback_history": [],
-            "feedback_applied": [],
-            "warnings": [],
-            "accepted": False,
-        },
-        "prior_art": {"candidates": [], "limitations": []},
-        "claims": {"draft_claims": [], "claim_strategy_notes": []},
-        "drawings": {"figures": [], "reference_numerals": {}, "drawing_notes": []},
-        "specification": {"embodiment_notes": []},
-        "document_links": {
-            "term_registry": {},
-            "reference_numeral_map": {},
-            "claim_to_component_links": [],
-            "figure_to_component_links": [],
-            "spec_support_links": [],
-            "anaphora_links": [],
-            "paragraph_anchors": [],
-        },
-        "invention_graph": {
-            "component_graph": {},
-            "relation_edges": [],
-            "data_flow_graph": {},
-            "mandatory_optional_judgement": {},
-            "claim_1_core_candidates": [],
-            "dependent_claim_candidates": [],
-        },
-        "drafting_options": {
-            "claim_style": "korean_patent",
-            "specification_tone": "formal",
-            "use_reference_numerals": True,
-            "use_semicolon": True,
-            "use_anaphora_phrases": True,
-            "target_claim_categories": ["method", "system", "storage_medium"],
-        },
-        "composer": {
-            "source_priority": [
-                "summary",
-                "document_links",
-                "invention_graph",
-                "claims",
-                "drawings",
-                "specification",
-                "prior_art",
-                "rules",
-            ],
-            "merged_sections": {},
-            "composer_notes": [],
-            "unresolved_links": [],
-            "normalized_terms": {},
-        },
-        "review": {
-            "review_results": [],
-            "overall_risk": "unknown",
-            "feedback_to_agents": {},
-            "passed": False,
-        },
+
+        # agent 결과 공간 (모두 빈 dict로 시작)
+        "summary": {},
+        "prior_art": {},
+        "claims": {},
+        "drawings": {},
+        "specification": {},
+        "composer": {},
+        "review": {},
         "final_package": {},
+
+        # document_links: 청구항·도면·명세서 간 용어/번호 연결 정보의 초기 구조
+        "document_links": {
+            "term_registry": {},           # 용어 사전 (용어 → 정의/동의어)
+            "reference_numeral_map": {},   # 참조 번호 지도 (번호 → 구성요소 이름)
+            "claim_to_component_links": [], # 청구항 구성요소 ↔ 도면 구성요소 연결
+            "figure_to_component_links": [], # 도면 번호 ↔ 구성요소 연결
+            "spec_support_links": [],       # 명세서 단락 ↔ 청구항 지지 연결
+            "anaphora_links": [],           # "상기 ~" 같은 지시어 해소 연결
+            "paragraph_anchors": [],        # 명세서 단락 앵커 (문단 번호 등)
+        },
+
+        # invention_graph: 발명 구성요소 관계 그래프의 초기 구조
+        "invention_graph": {
+            "component_graph": {},              # 구성요소 간 관계 (노드·엣지)
+            "relation_edges": [],               # 관계 엣지 목록
+            "data_flow_graph": {},              # 데이터 흐름 그래프
+            "mandatory_optional_judgement": {}, # 각 구성요소의 필수/선택 여부
+            "claim_1_core_candidates": [],      # 독립 청구항 1항 핵심 후보
+            "dependent_claim_candidates": [],   # 종속항 후보
+        },
+
+        # drafting_options: 문서 작성 스타일 기본값
+        "drafting_options": {
+            "claim_style": "korean_patent",          # 한국 특허 청구항 스타일
+            "specification_tone": "formal",           # 명세서 문체 (격식체)
+            "use_reference_numerals": True,           # 참조 번호 사용 여부
+            "use_semicolon": True,                    # 청구항 세미콜론 구분 사용
+            "use_anaphora_phrases": True,             # "상기" 같은 지시어 사용
+            "target_claim_categories": ["method", "system", "storage_medium"],
+            # ^ 방법/시스템/저장매체 3종 세트로 청구항 작성
+        },
+
+        "master_decision": {},
+        "artifacts": {},
     }

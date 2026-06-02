@@ -8,10 +8,13 @@ from agents.schemas.common import AgentOutputBase
 
 class PriorArtCandidate(BaseModel):
     patent_id: str
+    publication_no: str = ""
     title: str = ""
+    summary: str = ""
     score: float = 0.0
-    matched_points: list[str] = Field(default_factory=list)
+    overlap_points: list[str] = Field(default_factory=list)
     difference_points: list[str] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
     evidence: list[str] = Field(default_factory=list)
     pdf_path: str | None = None
 
@@ -24,7 +27,11 @@ class PriorArtCandidate(BaseModel):
 
 class PriorArtAgentOutput(AgentOutputBase):
     query: str = ""
+    ipc_focus: list[str] = Field(default_factory=list)
     candidates: list[PriorArtCandidate] = Field(default_factory=list)
+    analysis_summary: str = ""
     overlap_points: list[str] = Field(default_factory=list)
     difference_points: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
+    novelty_risk: str = ""
+    inventive_step_risk: str = ""

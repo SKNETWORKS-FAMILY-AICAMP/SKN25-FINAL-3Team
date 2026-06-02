@@ -1,5 +1,4 @@
-"""Claim-generation agent package."""
+"""서비스형 Claim agent 패키지입니다."""
+from agents.claim.claim_agent import run_claim_agent
 
-from .claim_agent import GeneratedClaim, fetch_consultation_from_db, save_claims_to_db
-
-__all__ = ["GeneratedClaim", "fetch_consultation_from_db", "save_claims_to_db"]
+__all__ = ["run_claim_agent"]

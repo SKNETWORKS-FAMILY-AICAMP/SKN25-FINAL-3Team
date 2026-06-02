@@ -1,7 +1,14 @@
 """LLM 기반 agent output schema repair.
 
-Repair는 review가 아니다. raw_output의 특허 내용을 새로 쓰거나 품질을 개선하지 않고,
-Pydantic schema에 맞게 필드명/타입/리스트 구조만 정규화한다.
+─ repair의 목적 ─
+  agent가 반환한 JSON이 Pydantic schema와 형식이 맞지 않을 때,
+  GPT에게 "내용은 그대로 두고 형식(필드명/타입/구조)만 고쳐달라"고 요청합니다.
+  새 특허 내용을 만들거나 품질을 개선하는 게 아니라, 형식 정규화만 합니다.
+
+─ 언제 호출되는가? ─
+  agents/validation.py의 safe_validate_output()에서
+  Pydantic 검증이 실패했을 때 1회만 호출됩니다.
+  repair도 실패하면 AgentValidationError로 중단됩니다.
 """
 from __future__ import annotations
 
@@ -9,11 +16,18 @@ import json
 import os
 from typing import Any
 
+# repair에 쓸 GPT 모델. 환경변수로 바꿀 수 있습니다.
+# 기본값은 gpt-4o-mini (빠르고 저렴함. repair는 형식 교정만이라 고성능 모델 불필요).
 DEFAULT_REPAIR_MODEL = os.getenv("AGENT_REPAIR_MODEL") or os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
+
+# repair에 넘기는 raw_output이 너무 길면 토큰 초과가 납니다.
+# 이 글자 수를 넘으면 잘라서 보냅니다.
 MAX_RAW_OUTPUT_CHARS = int(os.getenv("AGENT_REPAIR_MAX_RAW_CHARS", "12000"))
 
+# GPT에게 파이프라인 전체 맥락을 설명하는 문장 (repair 프롬프트에 포함)
 PIPELINE_CONTEXT = "입력 → 요약본작성 → 청구항 → 도면/선행기술/명세서 → Composer → 최종 출력"
 
+# 각 agent별로 repair 시 특별히 신경 써야 할 내용 (프롬프트에 포함)
 AGENT_REPAIR_HINTS: dict[str, str] = {
     "master": "현재 단계, 다음 action, current_agent, next_agent, pipeline_index, 요약본 승인 여부를 보존한다.",
     "summary": "5개 입력 필드, readable_summary, structured_invention, feedback_applied, warnings를 raw_output에서 보존한다.",
@@ -26,6 +40,7 @@ AGENT_REPAIR_HINTS: dict[str, str] = {
 
 
 def _safe_json(value: Any, *, max_chars: int | None = None) -> str:
+    """Python 객체를 JSON 문자열로 변환합니다. max_chars를 넘으면 뒷부분을 자릅니다."""
     text = json.dumps(value, ensure_ascii=False, indent=2, default=str)
     if max_chars is not None and len(text) > max_chars:
         return text[:max_chars] + "\n...<truncated>"
@@ -40,8 +55,15 @@ def build_repair_prompt(
     raw_output: Any,
     validation_errors: list[dict[str, Any]],
 ) -> str:
-    """Repair LLM에 넘길 단일 prompt를 만든다."""
+    """GPT에게 보낼 repair 프롬프트를 만듭니다.
 
+    프롬프트에 포함되는 내용:
+    - 이 output이 어느 agent의 결과인지
+    - 어떤 schema에 맞춰야 하는지 (JSON Schema 형식)
+    - Pydantic이 발견한 검증 오류 목록
+    - 원본 raw_output
+    - 주의사항 (내용을 새로 만들지 말 것)
+    """
     hint = AGENT_REPAIR_HINTS.get(agent_name, "raw_output의 유용한 내용을 schema 필드에 맞게 보존한다.")
     return f"""너는 특허 멀티에이전트 파이프라인의 output schema repair 함수다.
 
@@ -78,16 +100,28 @@ def repair_agent_output_with_llm(
     validation_errors: list[dict[str, Any]],
     model: str | None = None,
 ) -> dict[str, Any]:
-    """OpenAI API로 raw output을 schema-conforming JSON으로 1회 repair한다.
+    """OpenAI API로 raw output을 schema-conforming JSON으로 1회 repair합니다.
 
-    OPENAI_API_KEY가 없거나 openai 패키지가 없으면 예외를 던진다. 호출 여부와 fallback은
-    agents.validation.safe_validate_output()에서 제어한다.
+    이 함수는 safe_validate_output()에서만 호출됩니다.
+    직접 호출하지 마세요.
+
+    실패 조건 (예외 발생):
+    - OPENAI_API_KEY 환경변수가 없을 때
+    - openai 패키지가 설치 안 됐을 때
+    - API 호출 자체가 실패했을 때
+    - GPT가 반환한 JSON이 파싱 불가할 때
+
+    예외가 발생하면 safe_validate_output()이 받아서 AgentValidationError로 중단합니다.
     """
-
+    # OPENAI_API_KEY는 .env 파일에 넣어두세요.
+    # Docker에서는 compose.service.yml의 env_file로 자동 로드됩니다.
+    # 로컬 실행 시에는 main.py의 load_dotenv()가 처리합니다.
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is not set; cannot run LLM repair")
 
-    from openai import OpenAI  # optional dependency: repair를 실제 호출할 때만 필요
+    # openai 패키지는 repair를 실제 호출할 때만 import합니다.
+    # repair를 안 쓰는 환경에서 openai가 설치 안 돼있어도 에러가 안 납니다.
+    from openai import OpenAI
 
     prompt = build_repair_prompt(
         agent_name=agent_name,
@@ -96,7 +130,8 @@ def repair_agent_output_with_llm(
         raw_output=raw_output,
         validation_errors=validation_errors,
     )
-    client = OpenAI()
+
+    client = OpenAI()  # OPENAI_API_KEY 환경변수를 자동으로 읽습니다
     response = client.chat.completions.create(
         model=model or DEFAULT_REPAIR_MODEL,
         messages=[
@@ -106,8 +141,8 @@ def repair_agent_output_with_llm(
             },
             {"role": "user", "content": prompt},
         ],
-        temperature=0,
-        response_format={"type": "json_object"},
+        temperature=0,                              # 창의성 0: 정해진 형식에 맞게만 고칩니다
+        response_format={"type": "json_object"},    # GPT가 반드시 JSON만 반환하도록 강제
     )
     content = response.choices[0].message.content or "{}"
     return json.loads(content)
