@@ -29,7 +29,7 @@ WORKDIR /app
 
 # 공통 의존성 (openai, pydantic, sqlalchemy 등) → /opt/venv 에 설치
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --only-group shared --only-group fastapi
 
 # ML 의존성 — pyproject.toml 외부 (RunPod 전용), /opt/venv 에 추가 설치
 # CPU 모드: torch CPU wheel 사용 (이미지 크기 ~400MB 절약)

@@ -6,11 +6,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
+from django.http import JsonResponse
 
 from rest_framework_simplejwt.views import TokenRefreshView
 from accounts.api_views import SignupAPIView, LoginAPIView, LogoutAPIView, MeAPIView
 
+
+def health(request):
+    return JsonResponse({"status": "ok", "service": "patent-auth"})
+
+
 urlpatterns = [
+    # ── 헬스체크 ──────────────────────────────────
+    path('health/', health, name='health'),
+
     # ── Django Admin ──────────────────────────────
     path('admin/', admin.site.urls),
 

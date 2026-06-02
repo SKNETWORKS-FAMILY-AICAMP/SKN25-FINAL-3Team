@@ -1,0 +1,38 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    DJANGO_HOST=0.0.0.0 \
+    DJANGO_PORT=8000
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv==0.7.*
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --only-group shared --only-group django
+
+COPY backend/django ./backend/django
+
+RUN useradd --create-home --shell /usr/sbin/nologin patent \
+    && mkdir -p /app/backend/django/staticfiles /app/backend/django/media \
+    && chown -R patent:patent /app
+USER patent
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app/backend/django
+
+EXPOSE ${DJANGO_PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${DJANGO_PORT}/health/" || exit 1
+
+# 기본: 프로덕션 (gunicorn). 개발 시 docker-compose에서 command로 오버라이드.
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind ${DJANGO_HOST}:${DJANGO_PORT} --workers 2"]

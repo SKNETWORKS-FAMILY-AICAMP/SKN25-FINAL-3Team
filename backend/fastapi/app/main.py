@@ -8,7 +8,7 @@
   GET  /health                    : 서버 상태 확인
 
 ─ 시작 시 ─
-  DB 테이블(patent_runs)을 자동 생성합니다. 이미 있으면 무시합니다.
+  DB 마이그레이션은 컨테이너 entrypoint에서 alembic upgrade head 로 처리합니다.
   .env 파일을 로드합니다 (로컬 uvicorn 실행 시).
 """
 from __future__ import annotations
@@ -25,19 +25,14 @@ from fastapi.middleware.cors import CORSMiddleware
 # Docker 환경에서는 env_file 설정으로 이미 들어오므로 중복 호출은 무해합니다.
 load_dotenv()
 
-from backend.fastapi.app.db import Base, engine
-from backend.fastapi.app.models import Run  # noqa: F401 — Base에 테이블 등록을 위해 import
 from backend.fastapi.app.routers import agents as agents_router
 from backend.fastapi.app.routers.pipeline import router as pipeline_router
 from backend.fastapi.app.routers.runs import router as runs_router
 
-# ── 시작 시 DB 테이블 생성 ────────────────────────────
-# Base.metadata.create_all(): Base를 상속한 모델(Run 등)에 해당하는 테이블을 생성합니다.
-# 이미 테이블이 있으면 아무것도 하지 않습니다 (checkfirst=True 기본값).
-# 기존 특허 PDF 테이블은 건드리지 않습니다.
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # noqa: ARG001
-    Base.metadata.create_all(bind=engine)
+    # 테이블 생성은 alembic upgrade head 로 처리합니다.
     yield
 
 

@@ -1,0 +1,41 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    APP_HOST=0.0.0.0 \
+    APP_PORT=8080 \
+    APP_WORKERS=2
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv==0.7.*
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --only-group shared --only-group fastapi
+
+COPY agents ./agents
+COPY backend/fastapi ./backend/fastapi
+COPY alembic.ini ./alembic.ini
+
+RUN useradd --create-home --shell /usr/sbin/nologin patent \
+    && mkdir -p /app/artifacts /app/data \
+    && chown -R patent:patent /app
+USER patent
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+EXPOSE ${APP_PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${APP_PORT}/health" || exit 1
+
+# 기본: 프로덕션 (멀티 워커). 개발 시 docker-compose에서 command로 오버라이드.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn backend.fastapi.app.main:app --host ${APP_HOST} --port ${APP_PORT} --workers ${APP_WORKERS}"]
