@@ -49,7 +49,7 @@
 
 11. 팀원 개발자로서, `AgentValidationError`의 메시지 포맷이 테스트되길 원한다. 검증 실패 시 agent 이름, 재실행 힌트(`/api/agents/{name}/run`), repair 오류가 에러 메시지에 포함되는지 확인할 수 있기 때문이다.
 
-12. 인프라 담당자로서, GitHub Actions가 `uv sync --frozen --group dev`로 의존성을 설치하길 원한다. `uv.lock`을 기준으로 재현 가능한 CI 환경을 보장할 수 있기 때문이다.
+12. 인프라 담당자로서, GitHub Actions가 `uv sync --frozen --only-group shared --only-group fastapi --only-group django --only-group dev`로 의존성을 설치하길 원한다. `uv.lock`을 기준으로 재현 가능한 CI 환경을 보장할 수 있기 때문이다.
 
 13. 팀원 개발자로서, 테스트가 실제 DB 연결 없이 실행되길 원한다. `DATABASE_URL` 환경변수만 dummy 값으로 설정하면 로컬에서도, CI에서도 동일하게 동작하기 때문이다.
 
@@ -97,7 +97,7 @@ tests/
 
 - 트리거: `pull_request` (branches: main) + `push` (branches: main)
 - 환경: `ubuntu-latest`, Python 3.11
-- 의존성 설치: `astral-sh/setup-uv@v4` → `uv sync --frozen --group dev`
+- 의존성 설치: `astral-sh/setup-uv@v4` → `uv sync --frozen --only-group shared --only-group fastapi --only-group django --only-group dev`
 - 테스트 실행: `uv run pytest -v --tb=short`
 - `DATABASE_URL`, `REDIS_URL`은 workflow env로 dummy 값 주입
 

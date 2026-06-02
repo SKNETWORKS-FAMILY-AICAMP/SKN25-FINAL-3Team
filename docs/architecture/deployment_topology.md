@@ -47,7 +47,7 @@ external API
   POST /api/pipeline/continue
 ```
 
-`deploy/compose.service.yml`은 개발 편의용 compose가 아니라 서버에서 필요한 런타임 구성 기준이다.
+`docker-compose.yml`은 개발 편의용 compose가 아니라 서버에서 필요한 런타임 구성 기준이다.
 
 ```text
 patent-api  = agent orchestration API

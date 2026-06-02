@@ -107,10 +107,12 @@ def mock_run_record() -> MagicMock:
     return run
 
 
-def make_mock_adapter(agent_name: str, state_key: str, result: dict[str, Any] | None = None) -> MagicMock:
-    """지정된 agent_name/state_key를 가진 mock adapter를 생성합니다."""
-    adapter = MagicMock()
-    adapter.agent_name = agent_name
-    adapter.state_key = state_key
-    adapter.run.return_value = result or {"status": "ok", "summary": f"{agent_name} 결과"}
-    return adapter
+@pytest.fixture
+def make_mock_adapter():
+    def _factory(agent_name: str, state_key: str, result: dict[str, Any] | None = None) -> MagicMock:
+        adapter = MagicMock()
+        adapter.agent_name = agent_name
+        adapter.state_key = state_key
+        adapter.run.return_value = result or {"status": "ok", "summary": f"{agent_name} 결과"}
+        return adapter
+    return _factory

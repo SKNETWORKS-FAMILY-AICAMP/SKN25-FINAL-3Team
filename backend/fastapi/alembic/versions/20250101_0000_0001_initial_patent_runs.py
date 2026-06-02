@@ -45,4 +45,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_table("patent_runs")
+    if inspect(op.get_bind()).has_table("patent_runs"):
+        op.drop_table("patent_runs")
