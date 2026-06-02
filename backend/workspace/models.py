@@ -47,7 +47,6 @@ class DetailElement(models.Model):
     element_type = models.CharField(max_length=50)
     content = models.TextField()
 
-
 class PatentClaim(models.Model):
     project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='claims')
     claim_no = models.IntegerField(verbose_name="청구항 번호")
@@ -58,7 +57,16 @@ class PatentClaim(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['claim_no'] # 항상 청구항 번호 순서대로 정렬되도록 설정
+        ordering = ['claim_no'] 
 
     def __str__(self):
         return f"[{self.project.title}] 청구항 {self.claim_no}"
+    
+class PatentDrawingFile(models.Model):
+    project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='drawings')
+    title = models.CharField(max_length=200)  
+    image_url = models.CharField(max_length=500) 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project.title} - {self.title}"

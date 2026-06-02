@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, PatentClaim, PatentClaim
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, PatentClaim, PatentClaim, PatentDrawingFile
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
@@ -498,13 +498,16 @@ def generate_drawings_api(request, project_id):
         chat_content = "[AI 특허 도면 생성 완료]\n요청하신 발명의 구성도와 흐름도입니다.\n\n"
         
         for dwg in drawing_spec.drawings:
-            # 절대 경로를 웹 브라우저용 미디어 URL로 변환
-            # 예: /media/drawings/system_block_fig1.png
             file_name = os.path.basename(dwg.image_path)
             web_url = f"{settings.MEDIA_URL}drawings/{file_name}"
             drawing_urls.append({"title": dwg.title, "url": web_url})
-            
             chat_content += f"- **{dwg.fig_no}**: {dwg.title}\n"
+
+            PatentDrawingFile.objects.create(
+                project=project,
+                title=dwg.title,
+                image_url=web_url
+            )
 
         # 5. 채팅 기록 저장
         ChatMessage.objects.create(project=project, role='assistant', content=chat_content)

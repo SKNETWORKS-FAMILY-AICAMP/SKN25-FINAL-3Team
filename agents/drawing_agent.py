@@ -77,7 +77,8 @@ class SmartDrawingAgent:
                 dot.edge(flow.source, flow.target, label=flow.data_name)
 
         # 렌더링
-        file_name = f"system_block_fig1"
+        unique_id = uuid.uuid4().hex[:8]  
+        file_name = f"system_block_fig1_{unique_id}"
         file_path = os.path.join(self.output_dir, file_name)
         dot.render(file_path, format='png', cleanup=True)
 
@@ -124,7 +125,8 @@ class SmartDrawingAgent:
             dot.edge(f"STEP_{steps[i].step_number}", f"STEP_{steps[i+1].step_number}")
 
         # 렌더링
-        file_name = f"method_flow_fig2"
+        unique_id = uuid.uuid4().hex[:8]
+        file_name = f"method_flow_fig2_{unique_id}"
         file_path = os.path.join(self.output_dir, file_name)
         dot.render(file_path, format='png', cleanup=True)
 
