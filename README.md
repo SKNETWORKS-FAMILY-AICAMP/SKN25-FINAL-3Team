@@ -62,3 +62,15 @@ POST /api/pipeline/continue
 대량 특허 PDF/XML 원천 데이터는 AWS S3 등 외부 저장소에서 관리하며, GitHub에는 소스 코드, 문서, 데이터 매니페스트, 샘플 데이터 중심으로 정리합니다.
 
 API Key, AWS 인증 정보, `.env` 파일 등 민감 정보는 GitHub에 포함하지 않습니다.
+
+## 참고 문서
+
+| 문서 | 내용 |
+|------|------|
+| [docs/QUICKSTART.md](docs/QUICKSTART.md) | Docker Compose로 전체 스택 실행 및 컨테이너별 동작 확인 |
+| [docs/local-dev.md](docs/local-dev.md) | Docker 없이 로컬에서 FastAPI·Django·테스트 실행 |
+| [docs/corpus-loading.md](docs/corpus-loading.md) | 선행기술 검색용 특허 코퍼스 S3 적재 가이드 |
+| [docs/architecture/deployment_topology.md](docs/architecture/deployment_topology.md) | 배포 구조, 서비스 간 API 연결, storage lifecycle |
+| [docs/architecture/agent_contracts.md](docs/architecture/agent_contracts.md) | Agent별 입출력 계약 및 Pydantic schema 상세 |
+| [docs/adr/](docs/adr/) | 주요 설계 의사결정 기록 (ADR) |
+| [BRANCH_RULES.md](BRANCH_RULES.md) | 브랜치 이름 규칙 및 PR 체크리스트 |
