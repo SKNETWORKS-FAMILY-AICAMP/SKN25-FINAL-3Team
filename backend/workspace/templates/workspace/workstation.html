@@ -76,6 +76,10 @@
                         style="background: #334155; color: white; border: 1px solid #475569; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
                     청구항 수정
                 </button>
+                <button type="button" id="generate-drawing-btn" 
+                        style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    도면 생성
+                </button>
             </div>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
@@ -798,6 +802,42 @@ modalSaveBtn.addEventListener('click', () => {
     window.addEventListener('click', (e) => {
         if (e.target === processModal) processModal.style.display = 'none';
     });
+
+
+// 프론트엔드 JS 어딘가에 추가
+const drawBtn = document.getElementById('generate-drawing-btn');
+if (drawBtn) {
+    drawBtn.addEventListener('click', function() {
+        showLoading(); // "AI가 도면을 그리는 중입니다..."
+        
+        fetch("{% url 'generate_drawings_api' project.id %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeLoading();
+            if(data.status === 'success') {
+                // 1. 안내 텍스트 출력
+                addMessage('assistant', data.message);
+                
+                // 2. 채팅창에 <img> 태그로 도면 쾅쾅 꽂아주기!
+                data.drawings.forEach(dwg => {
+                    const imgHtml = `
+                        <div style="margin-bottom: 15px; text-align: center; background: white; padding: 10px; border-radius: 8px;">
+                            <strong style="color: #0f172a; display: block; margin-bottom: 5px;">${dwg.title}</strong>
+                            <img src="${dwg.url}" alt="${dwg.title}" style="max-width: 100%; border: 1px solid #e2e8f0;">
+                        </div>
+                    `;
+                    chatBox.insertAdjacentHTML('beforeend', imgHtml);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                alert("오류: " + data.message);
+            }
+        });
+    });
+}
 </script>
 
 <!-- 

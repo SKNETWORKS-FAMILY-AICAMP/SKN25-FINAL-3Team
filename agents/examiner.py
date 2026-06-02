@@ -78,35 +78,35 @@ def extract_payload(text: str) -> dict:
 # ==========================================
 class ExaminerAgent:
     def __init__(self, model_name: str = "gpt-4o"):
-        #vllm_base_url = os.getenv("RUNPOD_VLLM_URL", "https://api.runpod.ai/v2/삭제/openai/v1")
-        #vllm_api_key = os.getenv("RUNPOD_API_KEY", "key")
-        self.llm = ChatOpenAI(model=model_name, temperature=0.1)
+        vllm_base_url = os.getenv("RUNPOD_VLLM_URL", "https://api.runpod.ai/v2/pe6bshkphhhmam/openai/v1")
+        vllm_api_key = os.getenv("RUNPOD_API_KEY", "key")
+        #self.llm = ChatOpenAI(model=model_name, temperature=0.1)
         
         # ==========================================
         # 🛠️ [핵심] vLLM에 등록된 실제 모델 이름 동적 확인
         # ==========================================
-        # actual_model_name = "silverstone1004/exaone-3.5-7.8B-custom" # 실패 시 사용할 기본값
-        # try:
-        #     headers = {"Authorization": f"Bearer {vllm_api_key}"}
-        #     # RunPod vLLM 서버에 등록된 모델 리스트를 요청
-        #     response = requests.get(f"{vllm_base_url}/models", headers=headers)
-        #     if response.status_code == 200:
-        #         models_data = response.json().get("data", [])
-        #         if models_data:
-        #             # 서버가 응답한 첫 번째 모델의 진짜 이름을 가져옴
-        #             actual_model_name = models_data[0]["id"]
-        #             logger.info(f"💡 RunPod vLLM 실제 등록 모델명 확인됨: {actual_model_name}")
-        # except Exception as e:
-        #     logger.warning(f"모델명 조회 실패, 기본값으로 시도합니다: {e}")
+        actual_model_name = "silverstone1004/exaone-3.5-7.8B-custom" # 실패 시 사용할 기본값
+        try:
+            headers = {"Authorization": f"Bearer {vllm_api_key}"}
+            # RunPod vLLM 서버에 등록된 모델 리스트를 요청
+            response = requests.get(f"{vllm_base_url}/models", headers=headers)
+            if response.status_code == 200:
+                models_data = response.json().get("data", [])
+                if models_data:
+                    # 서버가 응답한 첫 번째 모델의 진짜 이름을 가져옴
+                    actual_model_name = models_data[0]["id"]
+                    logger.info(f"💡 RunPod vLLM 실제 등록 모델명 확인됨: {actual_model_name}")
+        except Exception as e:
+            logger.warning(f"모델명 조회 실패, 기본값으로 시도합니다: {e}")
 
-        # # 알아낸 진짜 모델 이름(actual_model_name)으로 ChatOpenAI 초기화
-        # self.llm = ChatOpenAI(
-        #     model=actual_model_name, 
-        #     temperature=0.1,
-        #     openai_api_base=vllm_base_url,
-        #     openai_api_key=vllm_api_key,
-        #     max_tokens=4096
-        # )
+        # 알아낸 진짜 모델 이름(actual_model_name)으로 ChatOpenAI 초기화
+        self.llm = ChatOpenAI(
+            model=actual_model_name, 
+            temperature=0.1,
+            openai_api_base=vllm_base_url,
+            openai_api_key=vllm_api_key,
+            max_tokens=4096
+        )
 
     def format_claims_for_prompt(self, claims_data) -> str:
         formatted_text = ""
@@ -164,7 +164,12 @@ class ExaminerAgent:
             
             current_revision = 1
             if state.get("examiner_data"):
-                current_revision = state["examiner_data"].revision_count + 1
+                ex_data = state["examiner_data"]
+                if isinstance(ex_data, dict):
+                    current_revision = ex_data.get("revision_count", 0) + 1
+                else:
+                    current_revision = ex_data.revision_count + 1
+                
 
             rejections_pydantic = [
                 RejectionDetail(claims=r.get("claims", []), reason_text=r.get("reason_text", ""))

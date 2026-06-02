@@ -56,8 +56,13 @@ def should_continue(state: PatentState):
     if not examiner_data:
         return END
         
-    is_approved = examiner_data.is_approved
-    revision_count = examiner_data.revision_count
+    # 💡 [핵심] 딕셔너리로 들어오든, Pydantic 객체로 들어오든 유연하게 꺼냅니다.
+    if isinstance(examiner_data, dict):
+        is_approved = examiner_data.get("is_approved", False)
+        revision_count = examiner_data.get("revision_count", 0)
+    else:
+        is_approved = examiner_data.is_approved
+        revision_count = examiner_data.revision_count
     
     # 승인(통과)되었거나, 2번 이상 수정을 반복했다면 강제 종료!
     if is_approved or revision_count >= 2:

@@ -17,6 +17,9 @@ from agents.core.graph import build_patent_graph
 from agents.core.graph import build_patent_graph as patent_graph
 from agents.core.state import PatentState, ParsedInvention
 from django.http import StreamingHttpResponse
+from agents.summary_agent import SummaryAgent 
+from agents.drawing_agent import SmartDrawingAgent 
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -459,3 +462,59 @@ def patent_report_view(request, project_id):
         'claims': claims
     }
     return render(request, 'workspace/report.html', context)
+
+@login_required
+@require_POST
+def generate_drawings_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    state = get_object_or_404(ConsultationState, project=project)
+    inv_input = getattr(project, 'inventioninput', None)
+
+    try:
+        # 1. 원본 데이터 준비
+        mock_input_data = {
+            "title": project.title,
+            "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
+            "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
+            "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
+            "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
+        }
+
+        # 2. 요약 에이전트를 한 번 돌려서 Pydantic 객체(ParsedInvention) 추출
+        # (청구항 짤 때와 동일한 데이터 구조 획득)
+        summary_agent = SummaryAgent(model_name="gpt-4o-mini")
+        summary_state = summary_agent.run({"mock_input_data": mock_input_data})
+        
+        # 3. 도면 에이전트 가동! (1초 컷)
+        drawing_agent = SmartDrawingAgent()
+        drawing_result = drawing_agent.run(summary_state)
+        
+        drawing_spec = drawing_result.get("drawing_spec")
+        if not drawing_spec:
+            raise Exception("도면 생성에 실패했습니다.")
+
+        # 4. 프론트엔드로 보낼 이미지 URL 조립
+        drawing_urls = []
+        chat_content = "[AI 특허 도면 생성 완료]\n요청하신 발명의 구성도와 흐름도입니다.\n\n"
+        
+        for dwg in drawing_spec.drawings:
+            # 절대 경로를 웹 브라우저용 미디어 URL로 변환
+            # 예: /media/drawings/system_block_fig1.png
+            file_name = os.path.basename(dwg.image_path)
+            web_url = f"{settings.MEDIA_URL}drawings/{file_name}"
+            drawing_urls.append({"title": dwg.title, "url": web_url})
+            
+            chat_content += f"- **{dwg.fig_no}**: {dwg.title}\n"
+
+        # 5. 채팅 기록 저장
+        ChatMessage.objects.create(project=project, role='assistant', content=chat_content)
+
+        return JsonResponse({
+            "status": "success",
+            "message": chat_content,
+            "drawings": drawing_urls
+        })
+
+    except Exception as e:
+        logger.error(f"도면 생성 에러: {e}")
+        return JsonResponse({"status": "error", "message": str(e)})

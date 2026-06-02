@@ -42,10 +42,14 @@ class ClaimRewriteAgent:
     def _format_rejections(self, examiner_data) -> str:
         """심사관의 거절 사유 데이터를 프롬프트 입력용 텍스트로 포맷팅"""
         formatted = ""
-        for idx, rej in enumerate(examiner_data.rejections, 1):
+        rejections = examiner_data.get("rejections", []) if isinstance(examiner_data, dict) else examiner_data.rejections
+        for idx, rej in enumerate(rejections, 1):
+            claims = rej.get("claims", []) if isinstance(rej, dict) else rej.claims
+            reason = rej.get("reason_text", "") if isinstance(rej, dict) else rej.reason_text
+
             formatted += f"[거절 이유 {idx}]\n"
-            formatted += f"- 대상 청구항: {rej.claims}\n"
-            formatted += f"- 상세 사유:\n{rej.reason_text}\n\n"
+            formatted += f"- 대상 청구항: {claims}\n"
+            formatted += f"- 상세 사유:\n{reason}\n\n"
         return formatted.strip()
 
     def run(self, state: dict) -> dict:

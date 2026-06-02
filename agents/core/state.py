@@ -67,6 +67,23 @@ class ExaminerResult(BaseModel):
     rejections: List[RejectionDetail] = Field(description="거절 사유 리스트")
     revision_count: int = Field(description="현재까지 진행된 수정 회차")
 
+# --- 도면 생성용 스키마 ---
+class PatentDrawing(BaseModel):
+    fig_no: str = Field(description="도면 번호")
+    title: str = Field(description="도면 타이틀")
+    diagram_type: Literal["BLOCK_DIAGRAM", "FLOWCHART"]
+    dot_code: str = Field(description="Graphviz DOT 코드")
+    image_path: str = Field(description="생성된 PNG 파일 경로")
+
+class ReferenceMapping(BaseModel):
+    component_id: str
+    name: str
+    numeral: str
+
+class PatentDrawingSpecification(BaseModel):
+    drawings: List[PatentDrawing]
+    reference_numerals: List[ReferenceMapping]
+
 # ---------------------------------------------------------
 # Master Graph State
 # ---------------------------------------------------------
