@@ -471,7 +471,6 @@ def generate_drawings_api(request, project_id):
     inv_input = getattr(project, 'inventioninput', None)
 
     try:
-        # 1. 원본 데이터 준비
         mock_input_data = {
             "title": project.title,
             "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
@@ -493,7 +492,6 @@ def generate_drawings_api(request, project_id):
         if not drawing_spec:
             raise Exception("도면 생성에 실패했습니다.")
 
-        # 4. 프론트엔드로 보낼 이미지 URL 조립
         drawing_urls = []
         chat_content = "[AI 특허 도면 생성 완료]\n요청하신 발명의 구성도와 흐름도입니다.\n\n"
         
