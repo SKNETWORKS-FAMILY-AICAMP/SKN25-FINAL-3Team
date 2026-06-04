@@ -17,4 +17,5 @@ urlpatterns = [
     path('workstation/bulk_delete/', views.bulk_delete_projects_api, name='bulk_delete_projects_api'),
     path('workstation/<int:project_id>/report/', views.patent_report_view, name='patent_report'),
     path('workstation/<int:project_id>/generate_drawings_api/', views.generate_drawings_api, name='generate_drawings_api'),
+    path('workstation/<int:project_id>/generate_specification_api/',views.generate_specification_api, name='generate_specification_api'),
 ]

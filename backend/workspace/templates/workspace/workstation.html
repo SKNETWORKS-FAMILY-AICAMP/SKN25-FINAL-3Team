@@ -80,6 +80,10 @@
                         style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
                     도면 생성
                 </button>
+                <button type="button" id="generate-spec-btn" 
+                        style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    명세서 작성
+                </button>
             </div>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
@@ -525,6 +529,42 @@
             });
         }
     });
+</script>
+<script>
+const specBtn = document.getElementById('generate-spec-btn');
+if (specBtn) {
+    specBtn.addEventListener('click', function() {
+        showLoading(); // "AI가 분석 중입니다..." 표시
+        
+        fetch("{% url 'generate_specification_api' project.id %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeLoading();
+            if(data.status === 'success') {
+                addMessage('assistant', data.message);
+                
+                // 마크다운 내용을 보기 좋게 코드 블럭이나 별도의 박스로 렌더링
+                const mdHtml = `
+                    <div style="background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 15px; color: #f8fafc; font-family: 'Malgun Gothic', sans-serif; white-space: pre-wrap; font-size: 14px; min-height: 500px; max-height: 75vh; overflow-y: auto; line-height: 1.6; resize: vertical;">
+                        ${data.markdown}
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', mdHtml);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                alert("명세서 생성 오류: " + data.message);
+            }
+        })
+        .catch(err => {
+            removeLoading();
+            alert("통신 중 오류가 발생했습니다.");
+            console.error(err);
+        });
+    });
+}
 </script>
 <div id="claim-edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
     

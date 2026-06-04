@@ -8,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 class ExaminerAgent:
     def __init__(self, model_name: str = "gpt-4o"):
-        # 💡 [핵심] 심사관은 창의성보다는 깐깐하고 일관된 '법적 판단'이 필요하므로 
-        # 환각(Hallucination)을 최소화하기 위해 temperature를 0.0으로 완벽히 고정합니다.
         self.llm = ChatOpenAI(model=model_name, temperature=0.0)
 
     def _format_claims_to_text(self, claims_result: ClaimResult) -> str:
@@ -70,14 +68,11 @@ class ExaminerAgent:
         examiner_state = state.get("examiner_data") or {}
         current_count = examiner_state.get("revision_count", 0)
 
-        # 거절 이유가 하나라도 있다면(승인 실패) 카운트를 1 올립니다.
         if not examination_output.get("is_approved"):
             examination_output["revision_count"] = current_count + 1
             logger.warning(f"[Examiner Agent] 거절 이유 발견! (현재 누적 수정 횟수: {examination_output['revision_count']})")
         else:
-            # 승인되었다면 카운트 유지
             examination_output["revision_count"] = current_count
             logger.info("[Examiner Agent] 모든 청구항 심사 통과! (최종 승인)")
 
-        # 7. LangGraph의 State 업데이트를 위한 딕셔너리 리턴
         return {"examiner_data": examination_output}

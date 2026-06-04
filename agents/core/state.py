@@ -67,7 +67,10 @@ class ExaminerResult(BaseModel):
     rejections: List[RejectionDetail] = Field(description="거절 사유 리스트")
     revision_count: int = Field(description="현재까지 진행된 수정 회차")
 
-# --- 도면 생성용 스키마 ---
+
+#----------------------------------------------------------
+# 도면 생성용 스키마 
+#----------------------------------------------------------
 class PatentDrawing(BaseModel):
     fig_no: str = Field(description="도면 번호")
     title: str = Field(description="도면 타이틀")

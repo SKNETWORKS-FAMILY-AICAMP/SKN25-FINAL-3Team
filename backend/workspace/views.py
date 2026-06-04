@@ -20,6 +20,8 @@ from django.http import StreamingHttpResponse
 from agents.summary_agent import SummaryAgent 
 from agents.drawing_agent import SmartDrawingAgent 
 from django.conf import settings
+from agents.specification.specification_agent import run_specification_agent
+from agents.specification.specification_storage import convert_to_markdown_format
 
 
 logger = logging.getLogger(__name__)
@@ -518,4 +520,77 @@ def generate_drawings_api(request, project_id):
 
     except Exception as e:
         logger.error(f"도면 생성 에러: {e}")
+        return JsonResponse({"status": "error", "message": str(e)})
+
+@login_required
+@require_POST
+def generate_specification_api(request, project_id):
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    state = get_object_or_404(ConsultationState, project=project)
+
+    try:
+        saved_claims = project.claims.all() if hasattr(project, 'claims') else []
+        saved_drawings = project.drawings.all() if hasattr(project, 'drawings') else []
+
+        draft_claims = []
+        for c in saved_claims:
+            draft_claims.append({
+                "claim_no": c.claim_no,
+                "text": c.content,
+                "type": "dependent" if c.is_dependent else "independent",
+                "category": getattr(c, 'category', '장치')
+            })
+
+        figures = []
+        for i, d in enumerate(saved_drawings):
+            figures.append({
+                "fig_no": i + 1,
+                "title": d.title,
+                "brief_description": f"본 발명의 실시예에 따른 {d.title}이다."
+            })
+
+        agent_state = {
+            "consultation": {
+                "invention_title": project.title,
+                "problem": state.ext_problem,
+                "solution": state.ext_solution,
+                "differentiation": state.ext_differentiation,
+                "effect": state.ext_effect,
+            },
+            "claims": {
+                "draft_claims": draft_claims
+            },
+            "drawings": {
+                "figures": figures,
+                "reference_numerals": {} # 도면 에이전트에서 파싱한 데이터가 있다면 매핑
+            },
+            "drafting_options": {
+                "use_subheadings_in_detailed_description": True,
+                "brief_drawing_description": True,
+                "strict_grounding": False,
+                "method_step_format": {"enabled": False}
+            }
+        }
+
+        result = run_specification_agent(agent_state)
+
+        if result.get("status") != "ok":
+            raise Exception(f"명세서 생성 실패: {result.get('warnings', ['알 수 없는 오류'])}")
+
+        md_content = convert_to_markdown_format(project.title, result)
+
+        chat_message = "📝 **[AI 발명의 설명(명세서 본문) 작성 완료]**\n명세서 초안 작성이 완료되었습니다. 아래 마크다운 내용을 확인해 주세요!\n\n"
+        ChatMessage.objects.create(project=project, role='assistant', content=chat_message)
+        
+        ChatMessage.objects.create(project=project, role='assistant', content=md_content)
+
+        return JsonResponse({
+            "status": "success",
+            "message": chat_message,
+            "markdown": md_content,
+            "details": result.get("details", {})
+        })
+
+    except Exception as e:
+        logger.error(f"명세서 생성 에러: {e}")
         return JsonResponse({"status": "error", "message": str(e)})
