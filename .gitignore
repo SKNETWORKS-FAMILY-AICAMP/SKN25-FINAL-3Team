@@ -6,12 +6,18 @@ __pycache__/
 *.pyo
 *.pyd
 .pytest_cache/
+.mypy_cache/
 
 # 환경변수 (절대 커밋 금지!)
 .env
 .env.local
+.env.*
 
-# Streamlit (Next.js로 교체됨)
+# Django
+media/
+staticfiles/
+
+# Streamlit
 .streamlit/
 
 # 임시 폴더
@@ -23,10 +29,8 @@ temp_uploads/
 Thumbs.db
 
 # 임시/캐시 파일
-temp_imgs/
-temp_uploads/
 .prior_art_index.pkl
-
+.cache/
 
 # DB
 *.sqlite3
@@ -38,11 +42,19 @@ temp_uploads/
 # Claude Code 내부
 .claude/
 
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
 # Data 폴더 정책: 매니페스트와 README만 추적
 data/raw/**
 data/processed/**
 data/reports/**
 data/tmp/**
+data/specifications/**
 
 !data/
 !data/README.md
@@ -76,7 +88,7 @@ drawing_analysis/
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 
-# Model/checkpoint artifacts: configs/README are okay, weights are not
+# Model/checkpoint artifacts
 models/**/*.safetensors
 models/**/*.bin
 models/**/*.pt
@@ -90,3 +102,7 @@ models/**/wandb/
 
 # IDE
 .vscode/
+.idea/
+
+# Node
+node_modules/
