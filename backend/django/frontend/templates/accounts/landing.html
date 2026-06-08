@@ -196,6 +196,20 @@
   text-decoration: none; transition: color .2s;
 }
 .lf-login:hover { color: var(--lf-navy); }
+.lf-login--cta {
+  color: #fff; background: var(--lf-navy);
+  padding: .3rem .8rem; border-radius: 2px;
+  transition: background .2s;
+}
+.lf-login--cta:hover { background: var(--lf-gold); color: #fff; }
+.lf-util-logout {
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  background: none; border: 1px solid var(--lf-border);
+  border-radius: 2px; padding: .3rem .8rem; cursor: pointer;
+  transition: border-color .2s, color .2s; font-family: inherit;
+}
+.lf-util-logout:hover { border-color: rgba(239,68,68,.4); color: #e57373; }
 
 /* lang-btn (light override) */
 .lf .lang-btn { border-color: rgba(0,0,0,.12); color: var(--lf-mid); font-size: 10px; letter-spacing: 1.4px; background: transparent; }
@@ -1204,29 +1218,28 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
         <!-- PYPI 소개 -->
         <div class="lf-gnb-item">
           <a href="{% url 'accounts:about' %}" class="lf-gnb-a">
-            <span>PYPI 소개</span>
+            <span data-i18n="nav_about_top">PYPI 소개</span>
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop"><div class="lf-drop-inner">
-            <a href="{% url 'accounts:about' %}"    class="lf-drop-a">서비스 소개</a>
-            <a href="{% url 'accounts:features' %}" class="lf-drop-a">특징 및 원칙</a>
+            <a href="{% url 'accounts:about' %}"    class="lf-drop-a" data-i18n="nav_about">서비스 소개</a>
+            <a href="{% url 'accounts:features' %}" class="lf-drop-a" data-i18n="nav_features">특징 및 원칙</a>
             <div class="lf-drop-sep"></div>
-            <a href="{% url 'accounts:team' %}"     class="lf-drop-a">팀 소개</a>
+            <a href="{% url 'accounts:team' %}"     class="lf-drop-a" data-i18n="nav_team">팀 소개</a>
           </div></div>
         </div>
 
         <!-- 서비스 -->
         <div class="lf-gnb-item">
           <a href="{% url 'accounts:agents_overview' %}" class="lf-gnb-a">
-            <span>서비스</span>
+            <span data-i18n="nav_service">서비스</span>
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop"><div class="lf-drop-inner">
-            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a">AI 에이전트 파이프라인</a>
-            <a href="{% url 'accounts:drawing' %}"         class="lf-drop-a">도면 자동 생성</a>
-            <a href="{% url 'accounts:chat' %}"            class="lf-drop-a">AI 어시스턴트</a>
+            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a" data-i18n="nav_agents_pipeline">AI 에이전트 파이프라인</a>
+            <a href="{% url 'accounts:chat' %}"            class="lf-drop-a" data-i18n="nav_ai">AI 어시스턴트</a>
             <div class="lf-drop-sep"></div>
-            <a href="{% url 'accounts:pipeline' %}" class="lf-drop-a lf-drop-a--cta">파이프라인 실행 →</a>
+            <a href="{% url 'accounts:pipeline' %}" class="lf-drop-a lf-drop-a--cta" data-i18n="nav_pipeline_run">파이프라인 실행</a>
           </div></div>
         </div>
 
@@ -1253,49 +1266,26 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
-            <a href="{% url 'accounts:qna' %}#basics" class="lf-drop-a">출원 기초</a>
-            <a href="{% url 'accounts:qna' %}#claims" class="lf-drop-a">청구항 작성</a>
-            <a href="{% url 'accounts:qna' %}#exam"   class="lf-drop-a">심사·등록</a>
-            <a href="{% url 'accounts:qna' %}#ai"     class="lf-drop-a lf-drop-a--hl">AI 특허 Q&amp;A</a>
+            <a href="{% url 'accounts:qna' %}#basics" class="lf-drop-a" data-i18n="nav_qna_basics">출원 기초</a>
+            <a href="{% url 'accounts:qna' %}#claims" class="lf-drop-a" data-i18n="nav_qna_claims">청구항 작성</a>
+            <a href="{% url 'accounts:qna' %}#exam"   class="lf-drop-a" data-i18n="nav_qna_exam">심사·등록</a>
+            <a href="{% url 'accounts:qna' %}#ai"     class="lf-drop-a lf-drop-a--hl" data-i18n="nav_qna_ai">AI 특허 Q&amp;A</a>
           </div></div>
         </div>
 
         <!-- 특허 자료 -->
         <div class="lf-gnb-item">
           <a href="{% url 'accounts:insights' %}" class="lf-gnb-a">
-            <span>특허 자료</span>
+            <span data-i18n="nav_patent_data">특허 자료</span>
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop"><div class="lf-drop-inner">
-            <a href="{% url 'accounts:insights' %}" class="lf-drop-a">특허 인사이트</a>
-            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a">에이전트 소개</a>
-            <a href="{% url 'accounts:features' %}"        class="lf-drop-a">기술 원칙</a>
+            <a href="{% url 'accounts:insights' %}" class="lf-drop-a" data-i18n="nav_insights">특허 인사이트</a>
+            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a" data-i18n="nav_agents">에이전트 소개</a>
+            <a href="{% url 'accounts:features' %}"        class="lf-drop-a" data-i18n="nav_features">기술 원칙</a>
           </div></div>
         </div>
 
-        <!-- 이용하기 -->
-        <div class="lf-gnb-item">
-          <a href="{% url 'accounts:login' %}" class="lf-gnb-a">
-            <span data-i18n="nav_use">이용하기</span>
-            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
-          </a>
-          <div class="lf-drop"><div class="lf-drop-inner">
-            {% if user.is_authenticated %}
-            <a href="{% url 'accounts:dashboard' %}" class="lf-drop-a" data-i18n="nav_dashboard">대시보드</a>
-            <a href="{% url 'accounts:chat' %}"      class="lf-drop-a lf-drop-a--hl" data-i18n="nav_ai">AI 어시스턴트</a>
-            <a href="{% url 'accounts:pipeline' %}"  class="lf-drop-a" data-i18n="nav_pipeline_run">파이프라인 실행</a>
-            <a href="{% url 'accounts:drawing' %}"   class="lf-drop-a" data-i18n="nav_drawing">도면 생성</a>
-            <div class="lf-drop-sep"></div>
-            <form method="POST" action="{% url 'accounts:logout' %}" style="margin:0;">
-              {% csrf_token %}
-              <button type="submit" class="lf-drop-a lf-drop-logout" data-i18n="nav_logout">로그아웃</button>
-            </form>
-            {% else %}
-            <a href="{% url 'accounts:login' %}"  class="lf-drop-a" data-i18n="nav_login">로그인</a>
-            <a href="{% url 'accounts:signup' %}" class="lf-drop-a lf-drop-a--cta" data-i18n="nav_signup">서비스 신청</a>
-            {% endif %}
-          </div></div>
-        </div>
 
       </nav>
       <div class="lf-util">
@@ -1305,16 +1295,21 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <span data-lang-display>KO</span>
           </button>
           <div class="lang-dropdown">
-            <a href="#" class="lang-option" data-lang="ko"><span class="lang-flag">🇰🇷</span><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
-            <a href="#" class="lang-option" data-lang="en"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span><span class="lang-code">EN</span></a>
-            <a href="#" class="lang-option" data-lang="ja"><span class="lang-flag">🇯🇵</span><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
-            <a href="#" class="lang-option" data-lang="zh"><span class="lang-flag">🇨🇳</span><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+            <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+            <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+            <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+            <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
           </div>
         </div>
         {% if user.is_authenticated %}
         <a href="{% url 'accounts:dashboard' %}" class="lf-login" data-i18n="nav_dashboard">대시보드</a>
+        <form method="POST" action="{% url 'accounts:logout' %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="lf-util-logout" data-i18n="nav_logout">로그아웃</button>
+        </form>
         {% else %}
-        <a href="{% url 'accounts:login' %}" class="lf-login" data-i18n="nav_login">로그인</a>
+        <a href="{% url 'accounts:login' %}"  class="lf-login" data-i18n="nav_login">로그인</a>
+        <a href="{% url 'accounts:signup' %}" class="lf-login lf-login--cta" data-i18n="nav_signup">서비스 신청</a>
         {% endif %}
       </div>
     </div>
@@ -1991,11 +1986,10 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
 
       <div class="lf-hero-cta reveal reveal-d3">
         {% if user.is_authenticated %}
-        <a href="{% url 'accounts:pipeline' %}" class="lf-hero-btn-fill">특허 출원 업무 시작 →</a>
-        <a href="{% url 'accounts:chat' %}" class="lf-hero-btn-line">AI 어시스턴트</a>
+        <a href="{% url 'accounts:pipeline' %}" class="lf-hero-btn-fill" data-i18n="hero_start_auth">특허 출원 업무 시작 →</a>
         {% else %}
-        <a href="{% url 'accounts:signup' %}" class="lf-hero-btn-fill">업무 의뢰 신청하기 →</a>
-        <a href="#about" class="lf-hero-btn-line">서비스 소개</a>
+        <a href="{% url 'accounts:signup' %}" class="lf-hero-btn-fill" data-i18n="hero_start_guest">업무 의뢰 신청하기 →</a>
+        <a href="#about" class="lf-hero-btn-line" data-i18n="hero_about">서비스 소개</a>
         {% endif %}
       </div>
 
@@ -2033,303 +2027,13 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
         <span class="lf-cred-label" data-i18n="lf_cred_auto">AI 자동 생성</span>
       </div>
       <div class="lf-cred-sep"></div>
-      <div class="lf-cred-item lf-cred-item--attorney" style="background:rgba(201,168,76,0.12);border:1.5px solid rgba(201,168,76,0.5);border-radius:8px;padding:10px 14px;">
+      <div class="lf-cred-item lf-cred-item--attorney">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--lf-gold);opacity:.7;margin-bottom:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span class="lf-cred-phrase" style="font-size:13px;">변리사 자문 완료</span>
+        <span class="lf-cred-phrase" style="font-size:13px;" data-i18n="lf_cred_attorney">변리사 자문 완료</span>
         <span class="lf-cred-label">Patent Attorney Reviewed</span>
       </div>
     </div>
   </div>
-
-  <!-- ══ ABOUT ════════════════════════════════════════════ -->
-  <section class="lf-about" id="about">
-    <div class="lf-container">
-      <div class="lf-about-grid">
-        <div class="lf-about-l reveal">
-          <!-- 저울 장식 SVG -->
-          <div class="lf-about-deco" aria-hidden="true">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- 저울대 기둥 -->
-              <line x1="60" y1="20" x2="60" y2="95" stroke="#9a7840" stroke-width="1" opacity="0.5"/>
-              <!-- 받침대 -->
-              <line x1="40" y1="95" x2="80" y2="95" stroke="#9a7840" stroke-width="1.2" opacity="0.5"/>
-              <line x1="48" y1="95" x2="48" y2="100" stroke="#9a7840" stroke-width="1" opacity="0.4"/>
-              <line x1="72" y1="95" x2="72" y2="100" stroke="#9a7840" stroke-width="1" opacity="0.4"/>
-              <line x1="44" y1="100" x2="76" y2="100" stroke="#9a7840" stroke-width="1.2" opacity="0.4"/>
-              <!-- 저울대 가로 -->
-              <line x1="20" y1="38" x2="100" y2="38" stroke="#9a7840" stroke-width="1" opacity="0.5"/>
-              <!-- 중심 원 -->
-              <circle cx="60" cy="38" r="4" stroke="#9a7840" stroke-width="0.8" opacity="0.5" fill="#9a7840" fill-opacity="0.1"/>
-              <!-- 왼쪽 접시 체인 -->
-              <line x1="20" y1="38" x2="20" y2="55" stroke="#9a7840" stroke-width="0.7" opacity="0.4" stroke-dasharray="2 2"/>
-              <line x1="14" y1="55" x2="26" y2="55" stroke="#9a7840" stroke-width="0.6" opacity="0.3"/>
-              <!-- 왼쪽 접시 -->
-              <path d="M14 55 Q20 62 26 55" stroke="#9a7840" stroke-width="1" opacity="0.45" fill="none"/>
-              <!-- 오른쪽 접시 체인 -->
-              <line x1="100" y1="38" x2="100" y2="58" stroke="#9a7840" stroke-width="0.7" opacity="0.4" stroke-dasharray="2 2"/>
-              <line x1="94" y1="58" x2="106" y2="58" stroke="#9a7840" stroke-width="0.6" opacity="0.3"/>
-              <!-- 오른쪽 접시 (살짝 내려감 — 균형) -->
-              <path d="M94 58 Q100 65 106 58" stroke="#9a7840" stroke-width="1" opacity="0.45" fill="none"/>
-              <!-- 상단 다이아몬드 장식 -->
-              <path d="M60 10 L64 18 L60 22 L56 18 Z" stroke="#9a7840" stroke-width="0.8" fill="#9a7840" fill-opacity="0.12" opacity="0.6"/>
-            </svg>
-          </div>
-          <p class="lf-tag" data-i18n="lf_about_tag">서비스 소개</p>
-          <h2 class="lf-h2" data-i18n="lf_about_h2" data-i18n-html>지식재산 보호의<br><em>새로운 기준</em></h2>
-        </div>
-        <div class="lf-about-r">
-          <blockquote class="lf-pullquote reveal" data-i18n="lf_about_quote" data-i18n-html>"발명자의 아이디어에 담긴 가치를<br>PYPI가 권리로 완성합니다"</blockquote>
-          <p class="lf-body reveal reveal-d1" data-i18n="lf_about_body1">PYPI는 발명자의 아이디어를 입력받아 7개 전문 AI 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 수준의 완성 명세서를 자동으로 생성합니다. 요약·선행기술조사·청구항 구성·도면 생성·명세서 초안·최종 통합까지 전 과정이 단일 파이프라인 안에서 완결됩니다.</p>
-          <p class="lf-body reveal reveal-d2" data-i18n="lf_about_body2">변리사 수준의 특허 작성 품질을 AI로 구현하여, 개인 발명가부터 기업 연구개발팀까지 특허 출원에 소요되는 비용과 시간을 획기적으로 절감합니다.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ ATTORNEY TRUST BAR ═══════════════════════════════ -->
-  <div class="lf-attorney-bar">
-    <div class="lf-container">
-      <div class="lf-atty-inner">
-        <div class="lf-atty-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="lf-atty-body">
-          <p class="lf-atty-title">변리사 자문 참여 시스템</p>
-          <p class="lf-atty-desc">PYPI의 에이전트 설계 및 청구항·명세서 작성 기준은 등록 변리사의 실무 자문을 통해 검증되었습니다. AI 생성 결과물의 특허청 규정 적합성 및 품질 기준은 전문가 검토를 거쳤으며, 최종 출원 전 변리사 확인을 권장합니다.</p>
-        </div>
-        <div class="lf-atty-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <span>Patent Attorney<br>Reviewed</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ PIPELINE ══════════════════════════════════════════ -->
-  <section class="lf-pipeline" id="pipeline">
-    <div class="lf-container">
-      <div class="lf-section-hd">
-        <p class="lf-tag reveal" data-i18n="lf_pipe_tag">전문 서비스 영역</p>
-        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_pipe_h2" data-i18n-html>7개 전문 에이전트의<br><em>체계적인 협력 구조</em></h2>
-      </div>
-      <div class="lf-agents">
-        <div class="lf-agent reveal"><div class="lf-agent-num">I</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_I">상담 에이전트</h3><span class="lf-agent-en" data-i18n="en_consultation">Consultation</span></div><p class="lf-agent-desc" data-i18n="desc_I">발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석하고, 후속 에이전트에 전달할 구조화된 발명 정보를 추출합니다.</p></div></div>
-        <div class="lf-agent reveal"><div class="lf-agent-num">II</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_II">요약 에이전트</h3><span class="lf-agent-en" data-i18n="en_summary">Summary</span></div><p class="lf-agent-desc" data-i18n="desc_II">5개 발명 필드를 사람이 확인할 수 있는 요약본과 후속 에이전트용 구조화 발명 JSON으로 정리합니다.</p></div></div>
-        <div class="lf-agent reveal"><div class="lf-agent-num">III</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_III">선행기술조사 에이전트</h3><span class="lf-agent-en" data-i18n="en_prior_art">Prior Art</span></div><p class="lf-agent-desc" data-i18n="desc_III">특허 DB에서 text-embedding-3-small 임베딩 유사도 검색으로 선행문헌을 탐색하고, GPT-4o로 신규성·진보성 리스크를 분석해 보고합니다.</p></div></div>
-        <div class="lf-agent reveal"><div class="lf-agent-num">IV</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_IV">청구항 에이전트</h3><span class="lf-agent-en" data-i18n="en_claim">Claim</span></div><p class="lf-agent-desc" data-i18n="desc_IV">발명 구조를 분석해 독립항·종속항·방법항·시스템항을 특허청 작성 규정에 맞게 자동 생성합니다.</p></div></div>
-        <div class="lf-agent lf-agent--hl reveal"><div class="lf-agent-num">V</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_V">도면 에이전트</h3><span class="lf-agent-en" data-i18n="en_drawing">Drawing</span></div><p class="lf-agent-desc" data-i18n="desc_V">블록도·흐름도·시퀀스 다이어그램을 SVG로 자동 렌더링하고, 품질 점수 검수 및 자동 보정 후 파일을 제공합니다.</p></div></div>
-        <div class="lf-agent reveal"><div class="lf-agent-num">VI</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_VI">명세서 에이전트</h3><span class="lf-agent-en" data-i18n="en_specification">Specification</span></div><p class="lf-agent-desc" data-i18n="desc_VI">기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체에 맞게 초안 작성합니다.</p></div></div>
-        <div class="lf-agent reveal"><div class="lf-agent-num">VII</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_VII">컴포저 에이전트</h3><span class="lf-agent-en" data-i18n="en_composer">Composer</span></div><p class="lf-agent-desc" data-i18n="desc_VII">전 에이전트 산출물을 병합·통일하고, 용어·참조부호를 일관화해 DOCX 완성 명세서를 출력합니다.</p></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ 업무 절차 ══════════════════════════════════════════ -->
-  <section class="lf-process">
-    <div class="lf-container">
-      <div class="lf-section-hd">
-        <p class="lf-tag reveal">업무 절차</p>
-        <h2 class="lf-h2 reveal reveal-d1">특허 출원 대행의<br><em>4단계 프로세스</em></h2>
-      </div>
-      <div class="lf-proc-grid">
-
-        <div class="lf-proc-item reveal">
-          <div class="lf-proc-step">
-            <span class="lf-proc-n">01</span>
-            <div class="lf-proc-line"></div>
-          </div>
-          <div class="lf-proc-body">
-            <h3 class="lf-proc-name">발명 정보 제출</h3>
-            <p class="lf-proc-sub">Invention Disclosure</p>
-            <p class="lf-proc-desc">발명의 명칭·기술적 과제·해결 수단·기대 효과를 5개 필드에 입력합니다. 자연어로 작성하면 AI가 구조화된 발명 정보로 자동 변환합니다.</p>
-          </div>
-        </div>
-
-        <div class="lf-proc-item reveal reveal-d1">
-          <div class="lf-proc-step">
-            <span class="lf-proc-n">02</span>
-            <div class="lf-proc-line"></div>
-          </div>
-          <div class="lf-proc-body">
-            <h3 class="lf-proc-name">선행기술 조사 및 분석</h3>
-            <p class="lf-proc-sub">Prior Art Search & Analysis</p>
-            <p class="lf-proc-desc">특허 데이터베이스에서 임베딩 유사도 검색으로 관련 선행문헌을 탐색하고, 신규성·진보성 리스크를 분석하여 청구항 전략 수립의 기초로 활용합니다.</p>
-          </div>
-        </div>
-
-        <div class="lf-proc-item reveal reveal-d2">
-          <div class="lf-proc-step">
-            <span class="lf-proc-n">03</span>
-            <div class="lf-proc-line"></div>
-          </div>
-          <div class="lf-proc-body">
-            <h3 class="lf-proc-name">명세서 및 청구항 작성</h3>
-            <p class="lf-proc-sub">Specification & Claim Drafting</p>
-            <p class="lf-proc-desc">특허청 작성 규정에 따라 독립항·종속항·방법항을 구성하고, 기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체로 초안 작성합니다.</p>
-          </div>
-        </div>
-
-        <div class="lf-proc-item reveal reveal-d3">
-          <div class="lf-proc-step">
-            <span class="lf-proc-n">04</span>
-          </div>
-          <div class="lf-proc-body">
-            <h3 class="lf-proc-name">최종 명세서 완성 및 납품</h3>
-            <p class="lf-proc-sub">Final Specification Delivery</p>
-            <p class="lf-proc-desc">전 단계 산출물을 통합·교열하여 용어·참조부호·문체를 일관화한 완성 명세서를 DOCX 형식으로 납품합니다. 제출 전 등록 변리사 최종 검토를 권장합니다.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ FEATURES ══════════════════════════════════════════ -->
-  <section class="lf-features" id="features">
-    <div class="lf-container">
-      <div class="lf-section-hd">
-        <p class="lf-tag reveal" data-i18n="lf_feat_tag">PYPI의 원칙</p>
-        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_feat_h2" data-i18n-html>왜 <em>PYPI</em>인가</h2>
-      </div>
-      <div class="lf-feat-grid">
-        <article class="lf-feat reveal">
-          <div class="lf-feat-line"></div>
-          <div class="lf-feat-no">01</div>
-          <div class="lf-feat-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none">
-              <!-- 방패 + 체크 -->
-              <path d="M24 6L8 13v10c0 9.6 6.8 18.6 16 21 9.2-2.4 16-11.4 16-21V13L24 6z" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-              <path d="M17 24l5 5 9-10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h3 class="lf-feat-name" data-i18n="feat1_name">변리사 수준의 품질</h3>
-          <p class="lf-feat-desc" data-i18n="feat1_desc">특허청 작성 규정을 기반으로 독립항·종속항·방법항을 체계적으로 구성하고, AI 품질 점수(0–100점) 자동 검수를 통해 전문 변리사 수준의 명세서 품질을 보장합니다.</p>
-        </article>
-        <article class="lf-feat reveal reveal-d1">
-          <div class="lf-feat-line"></div>
-          <div class="lf-feat-no">02</div>
-          <div class="lf-feat-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none">
-              <!-- 번개 / 속도 -->
-              <path d="M26 6L12 26h14l-4 16 18-24H26L30 6z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
-            </svg>
-          </div>
-          <h3 class="lf-feat-name" data-i18n="feat2_name">획기적인 처리 속도</h3>
-          <p class="lf-feat-desc" data-i18n="feat2_desc">아이디어 입력 한 번으로 7개 에이전트가 순차적으로 협력하여, 수일이 소요되던 특허 명세서 작성을 수십 분 이내에 자동으로 완성합니다.</p>
-        </article>
-        <article class="lf-feat reveal reveal-d2">
-          <div class="lf-feat-line"></div>
-          <div class="lf-feat-no">03</div>
-          <div class="lf-feat-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none">
-              <!-- 연결된 노드 파이프라인 -->
-              <circle cx="12" cy="24" r="4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-              <circle cx="24" cy="24" r="5" stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.08" opacity="0.7"/>
-              <circle cx="36" cy="24" r="4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-              <line x1="16" y1="24" x2="19" y2="24" stroke="currentColor" stroke-width="1" opacity="0.5"/>
-              <line x1="29" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1" opacity="0.5"/>
-              <!-- 상단 노드 -->
-              <circle cx="24" cy="12" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
-              <line x1="24" y1="15" x2="24" y2="19" stroke="currentColor" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 1"/>
-              <!-- 하단 노드 -->
-              <circle cx="24" cy="36" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
-              <line x1="24" y1="29" x2="24" y2="33" stroke="currentColor" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 1"/>
-            </svg>
-          </div>
-          <h3 class="lf-feat-name" data-i18n="feat3_name">완결형 파이프라인</h3>
-          <p class="lf-feat-desc" data-i18n="feat3_desc">상담 단계부터 선행기술조사·청구항·도면·명세서·최종 통합까지, 단일 파이프라인 내에서 전 과정이 완결되어 특허청에 바로 제출 가능한 문서를 출력합니다.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ CARD NEWS ════════════════════════════════════════ -->
-  <section class="lf-news" id="insights">
-    <div class="lf-container">
-      <div class="lf-news-hd">
-        <div class="lf-news-hd-l reveal">
-          <p class="lf-tag">특허 인사이트</p>
-          <h2 class="lf-h2">알아두면 유용한<br><em>특허 출원 지식</em></h2>
-        </div>
-        <a href="{% url 'accounts:insights' %}" class="lf-news-more reveal">
-          모든 인사이트 보기 →
-        </a>
-      </div>
-      <div class="lf-news-grid">
-        {% for card in insights_preview %}
-        <a href="{% url 'accounts:insights' %}" class="lf-news-card reveal {% if forloop.counter == 2 %}reveal-d1{% elif forloop.counter == 3 %}reveal-d2{% endif %}">
-          <div class="lf-news-card-top">
-            <span class="lf-news-no">{{ card.no }}</span>
-            <span class="lf-news-tag">{{ card.tag }}</span>
-          </div>
-          <h3 class="lf-news-title">{{ card.title }}</h3>
-          <p class="lf-news-summary">{{ card.summary }}</p>
-          <ul class="lf-news-points">
-            {% for pt in card.points %}<li>{{ pt }}</li>{% endfor %}
-          </ul>
-          <span class="lf-news-link">자세히 보기 →</span>
-          <div class="lf-news-accent"></div>
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ TEAM ══════════════════════════════════════════════ -->
-  <section class="lf-team" id="team">
-    <div class="lf-container">
-      <div class="lf-section-hd">
-        <p class="lf-tag reveal" data-i18n="lf_team_tag">팀 소개</p>
-        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_team_h2" data-i18n-html>PYPI를<br><em>만든 사람들</em></h2>
-      </div>
-      <div class="lf-team-grid">
-
-        {% load static %}
-        <div class="lf-member reveal">
-          <div class="lf-member-avatar"><img src="{% static 'team/kwon-gayoung.jpg' %}" alt="권가영" onerror="this.parentElement.innerHTML='권'"></div>
-          <div class="lf-member-name">권가영</div>
-          <div class="lf-member-role">Consultation · Summary Agent</div>
-          <p class="lf-member-desc">상담 에이전트 및 요약 에이전트의 LLM 프롬프트 설계와 발명 정보 구조화 로직을 담당했습니다.</p>
-        </div>
-
-        <div class="lf-member reveal reveal-d1">
-          <div class="lf-member-avatar"><img src="{% static 'team/kim-seohyun.jpg' %}" alt="김서현" onerror="this.parentElement.innerHTML='김'"></div>
-          <div class="lf-member-name">김서현</div>
-          <div class="lf-member-role">Drawing Agent · Web UI</div>
-          <p class="lf-member-desc">도면 에이전트 SVG 자동 생성 시스템과 Django 기반 웹 인터페이스 전체를 개발했습니다.</p>
-        </div>
-
-        <div class="lf-member reveal reveal-d2">
-          <div class="lf-member-avatar"><img src="{% static 'team/kim-hongik.jpg' %}" alt="김홍익" onerror="this.parentElement.innerHTML='김'"></div>
-          <div class="lf-member-name">김홍익</div>
-          <div class="lf-member-role">Prior Art Agent</div>
-          <p class="lf-member-desc">선행기술조사 에이전트의 특허 DB 임베딩 검색 및 신규성·진보성 리스크 분석 시스템을 구현했습니다.</p>
-        </div>
-
-        <div class="lf-member reveal">
-          <div class="lf-member-avatar"><img src="{% static 'team/park-beomsoo.jpg' %}" alt="박범수" onerror="this.parentElement.innerHTML='박'"></div>
-          <div class="lf-member-name">박범수</div>
-          <div class="lf-member-role">Claim Agent</div>
-          <p class="lf-member-desc">청구항 에이전트 설계 및 특허청 규정 기반 독립항·종속항·방법항 자동 생성 로직을 구현했습니다.</p>
-        </div>
-
-        <div class="lf-member reveal reveal-d1">
-          <div class="lf-member-avatar"><img src="{% static 'team/jo-eunseok.jpg' %}" alt="조은석" onerror="this.parentElement.innerHTML='조'"></div>
-          <div class="lf-member-name">조은석</div>
-          <div class="lf-member-role">Specification Agent</div>
-          <p class="lf-member-desc">명세서 에이전트의 기술분야·배경기술·해결수단·발명의 효과 섹션 자동 초안 생성 시스템을 개발했습니다.</p>
-        </div>
-
-        <div class="lf-member reveal reveal-d2">
-          <div class="lf-member-avatar"><img src="{% static 'team/choi-hyunwoo.jpg' %}" alt="최현우" onerror="this.parentElement.innerHTML='최'"></div>
-          <div class="lf-member-name">최현우</div>
-          <div class="lf-member-role">Project Lead · Composer Agent</div>
-          <p class="lf-member-desc">전체 멀티에이전트 아키텍처 설계 및 컴포저 에이전트의 최종 명세서 통합 파이프라인을 구성했습니다.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- ══ CLOSING ════════════════════════════════════════════ -->
   <section class="lf-closing">
@@ -2410,8 +2114,7 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <p class="lf-footer-hd" data-i18n="lf_foot_h3">지원 언어</p>
             <span class="lf-footer-link">한국어</span>
             <span class="lf-footer-link">English</span>
-            <span class="lf-footer-link">日本語</span>
-            <span class="lf-footer-link">中文</span>
+            <span class="lf-footer-link">日本語 · 中文</span>
           </div>
         </div>
       </div>
@@ -2421,6 +2124,41 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
       </div>
     </div>
   </footer>
+
+  <!-- ══ AI CHATBOT WIDGET ══════════════════════════════ -->
+  <div class="lf-chat-widget" id="lfChatWidget">
+    <!-- 접힌 상태: 버튼 -->
+    <button class="lf-chat-fab" id="lfChatToggle" aria-label="AI 어시스턴트 열기">
+      <svg class="lf-chat-fab-icon lf-chat-fab-icon--open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <svg class="lf-chat-fab-icon lf-chat-fab-icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span class="lf-chat-fab-badge">AI</span>
+    </button>
+    <!-- 펼친 상태: 채팅 패널 -->
+    <div class="lf-chat-panel" id="lfChatPanel">
+      <div class="lf-chat-panel-hd">
+        <div class="lf-chat-panel-title">
+          <span class="lf-chat-panel-dot"></span>
+          PYPI AI 어시스턴트
+        </div>
+        <button class="lf-chat-panel-close" id="lfChatClose" aria-label="닫기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="lf-chat-msgs" id="lfChatMsgs">
+        <div class="lf-chat-msg lf-chat-msg--ai">
+          <div class="lf-chat-bubble">특허 출원에 대해 궁금한 점이 있으신가요? 무엇이든 물어보세요.</div>
+        </div>
+      </div>
+      <div class="lf-chat-input-row">
+        <input type="text" class="lf-chat-input" id="lfChatInput" placeholder="메시지를 입력하세요…" autocomplete="off" maxlength="500">
+        <button class="lf-chat-send" id="lfChatSend" aria-label="전송">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock %}
@@ -2529,5 +2267,239 @@ document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
 });
 var saved; try { saved = localStorage.getItem('pm-lang'); } catch(e) {}
 pmApplyLang(saved || 'ko');
+
+/* ── AI CHATBOT WIDGET ───────────────────────────── */
+(function() {
+  var toggle  = document.getElementById('lfChatToggle');
+  var panel   = document.getElementById('lfChatPanel');
+  var closeBtn = document.getElementById('lfChatClose');
+  var input   = document.getElementById('lfChatInput');
+  var sendBtn = document.getElementById('lfChatSend');
+  var msgs    = document.getElementById('lfChatMsgs');
+  var widget  = document.getElementById('lfChatWidget');
+  var open    = false;
+  var busy    = false;
+
+  function toggleWidget() {
+    open = !open;
+    widget.classList.toggle('lf-chat-widget--open', open);
+    if (open) { setTimeout(function() { input.focus(); }, 300); }
+  }
+
+  toggle.addEventListener('click', toggleWidget);
+  closeBtn.addEventListener('click', function() { open = true; toggleWidget(); });
+
+  function addMsg(text, role) {
+    var div = document.createElement('div');
+    div.className = 'lf-chat-msg lf-chat-msg--' + role;
+    var bub = document.createElement('div');
+    bub.className = 'lf-chat-bubble';
+    bub.innerHTML = text;
+    div.appendChild(bub);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return bub;
+  }
+
+  function mdToHtml(t) {
+    return t
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\[([^\]]+)\]\((\/[^)]*)\)/g, '<a href="$2" style="color:#9a7840;font-weight:600;text-decoration:underline;">$1 →</a>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function sendMessage() {
+    if (busy) return;
+    var q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    addMsg(q, 'user');
+    busy = true;
+    sendBtn.disabled = true;
+
+    var aiBub = addMsg('<span class="lf-chat-dots"><span></span><span></span><span></span></span>', 'ai');
+    var text = '';
+
+    fetch('/accounts/chat/stream/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+      body: JSON.stringify({ message: q, history: [] })
+    }).then(function(res) {
+      var reader = res.body.getReader();
+      var dec = new TextDecoder();
+      var buf = '';
+
+      function pump() {
+        reader.read().then(function(chunk) {
+          if (chunk.done) { finalize(); return; }
+          buf += dec.decode(chunk.value, { stream: true });
+          var parts = buf.split('\n\n');
+          buf = parts.pop();
+          parts.forEach(function(part) {
+            if (!part.startsWith('data:')) return;
+            var data = part.slice(5).trim();
+            if (data === '[DONE]') return;
+            try {
+              var parsed = JSON.parse(data);
+              if (parsed.content) { text += parsed.content; aiBub.innerHTML = mdToHtml(text); msgs.scrollTop = msgs.scrollHeight; }
+            } catch(e) {}
+          });
+          pump();
+        });
+      }
+      pump();
+
+      function finalize() {
+        if (!text) aiBub.innerHTML = '죄송합니다, 응답을 받지 못했습니다.';
+        busy = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    }).catch(function() {
+      aiBub.innerHTML = '연결 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+      busy = false;
+      sendBtn.disabled = false;
+    });
+  }
+
+  function getCsrf() {
+    var m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? m[1] : '';
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+})();
 </script>
+
+<style>
+/* ── Chatbot Widget ── */
+.lf-chat-widget {
+  position: fixed; bottom: 32px; right: 32px;
+  z-index: 9000; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 12px;
+}
+.lf-chat-fab {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--lf-navy, #12100e);
+  border: 1px solid rgba(154,120,64,.35);
+  box-shadow: 0 8px 32px rgba(0,0,0,.22), 0 0 0 0 rgba(154,120,64,.25);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  position: relative; transition: transform .25s, box-shadow .25s;
+  color: #fff;
+}
+.lf-chat-fab:hover { transform: scale(1.06); box-shadow: 0 12px 40px rgba(0,0,0,.28); }
+.lf-chat-fab-icon { position: absolute; transition: opacity .2s, transform .2s; }
+.lf-chat-fab-icon--close { opacity: 0; transform: rotate(-45deg) scale(.7); }
+.lf-chat-widget--open .lf-chat-fab-icon--open { opacity: 0; transform: rotate(45deg) scale(.7); }
+.lf-chat-widget--open .lf-chat-fab-icon--close { opacity: 1; transform: rotate(0) scale(1); }
+.lf-chat-fab-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: #9a7840; color: #fff;
+  font-size: 8px; font-weight: 700; letter-spacing: .5px;
+  padding: 2px 5px; border-radius: 10px;
+  transition: opacity .2s;
+}
+.lf-chat-widget--open .lf-chat-fab-badge { opacity: 0; }
+
+.lf-chat-panel {
+  width: 340px; max-height: 480px;
+  background: #fff;
+  border: 1px solid rgba(154,120,64,.2);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.18);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: scale(.9) translateY(16px); transform-origin: bottom right;
+  opacity: 0; pointer-events: none;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+}
+.lf-chat-widget--open .lf-chat-panel {
+  transform: scale(1) translateY(0); opacity: 1; pointer-events: auto;
+}
+.lf-chat-panel-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,.06);
+  background: #faf8f4;
+}
+.lf-chat-panel-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: #12100e; letter-spacing: .3px;
+}
+.lf-chat-panel-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #9a7840;
+  box-shadow: 0 0 0 0 rgba(154,120,64,.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(154,120,64,.5); }
+  50% { box-shadow: 0 0 0 5px rgba(154,120,64,.0); }
+}
+.lf-chat-panel-close {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: #aaa; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: color .15s, background .15s;
+}
+.lf-chat-panel-close:hover { color: #333; background: rgba(0,0,0,.05); }
+
+.lf-chat-msgs {
+  flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth;
+}
+.lf-chat-msgs::-webkit-scrollbar { width: 4px; }
+.lf-chat-msgs::-webkit-scrollbar-track { background: transparent; }
+.lf-chat-msgs::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px; }
+
+.lf-chat-msg { display: flex; }
+.lf-chat-msg--user { justify-content: flex-end; }
+.lf-chat-msg--ai { justify-content: flex-start; }
+.lf-chat-bubble {
+  max-width: 84%; padding: 10px 14px;
+  border-radius: 16px; font-size: 13.5px; line-height: 1.6;
+}
+.lf-chat-msg--user .lf-chat-bubble {
+  background: #12100e; color: #fff;
+  border-radius: 16px 16px 4px 16px;
+}
+.lf-chat-msg--ai .lf-chat-bubble {
+  background: #f4f0e8; color: #12100e;
+  border-radius: 16px 16px 16px 4px;
+}
+
+.lf-chat-dots { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; }
+.lf-chat-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: #9a7840;
+  animation: chat-dot-bounce .9s infinite;
+}
+.lf-chat-dots span:nth-child(2) { animation-delay: .15s; }
+.lf-chat-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes chat-dot-bounce { 0%,80%,100% { transform: scale(.7); opacity:.5; } 40% { transform: scale(1); opacity:1; } }
+
+.lf-chat-input-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px; border-top: 1px solid rgba(0,0,0,.06);
+  background: #faf8f4;
+}
+.lf-chat-input {
+  flex: 1; background: #fff; border: 1px solid rgba(0,0,0,.1);
+  border-radius: 20px; padding: 8px 14px;
+  font-size: 13px; color: #12100e; outline: none;
+  transition: border-color .15s;
+  font-family: inherit;
+}
+.lf-chat-input:focus { border-color: rgba(154,120,64,.5); }
+.lf-chat-input::placeholder { color: #bbb; }
+.lf-chat-send {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #9a7840; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; transition: background .15s, transform .15s;
+  flex-shrink: 0;
+}
+.lf-chat-send:hover { background: #b8935a; transform: scale(1.05); }
+.lf-chat-send:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+</style>
+
 {% endblock %}

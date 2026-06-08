@@ -1,157 +1,153 @@
 {% extends 'base.html' %}
-
-{% block title %}회원가입 | PatentMind{% endblock %}
-{% block meta_description %}PatentMind - 새 계정을 만들고 AI 특허 청구항 작성을 시작하세요{% endblock %}
+{% block title %}서비스 신청 | PYPI{% endblock %}
 
 {% block content %}
-<div class="auth-wrapper">
-    <div class="auth-card wide-card" id="signup-card">
-        <div class="auth-brand">
-            <div class="brand-icon">⚖️</div>
-            <h1 class="brand-name">PatentMind</h1>
-            <p class="brand-tagline">특허 청구항, AI에게 맡기세요 📝</p>
+<div class="lf-auth-page">
+
+  <div class="lf-auth-lines" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="lf-auth-wrap">
+
+    <!-- 좌측 브랜드 패널 -->
+    <aside class="lf-auth-brand">
+      <a href="{% url 'accounts:landing' %}" class="lf-auth-wordmark">
+        <span class="lf-auth-monogram">Pi</span>
+        <span class="lf-auth-firmname">PYPI</span>
+      </a>
+      <div class="lf-auth-vline"></div>
+      <p class="lf-auth-brand-desc">계정을 등록하시면 PYPI의 7개 전문 AI 에이전트 파이프라인을 통해 특허 출원 전 과정을 체계적으로 자동화하실 수 있습니다.</p>
+      <div class="lf-auth-sep"></div>
+      <ul class="lf-auth-steps">
+        <li><span class="lf-step-n">01</span><span>계정 등록</span></li>
+        <li><span class="lf-step-n">02</span><span>발명 정보 입력 (5개 필드)</span></li>
+        <li><span class="lf-step-n">03</span><span>AI 파이프라인 자동 실행</span></li>
+        <li><span class="lf-step-n">04</span><span>특허청 제출용 명세서 완성</span></li>
+      </ul>
+    </aside>
+
+    <!-- 우측 폼 패널 -->
+    <main class="lf-auth-form-panel">
+
+      <div class="lf-auth-form-hd">
+        <p class="lf-auth-kicker" data-i18n="signup_label">신규 계정</p>
+        <h1 class="lf-auth-h1" data-i18n="signup_h1">서비스 신청</h1>
+        <div class="lf-auth-rule"></div>
+      </div>
+
+      {% if error %}
+      <div class="lf-auth-error">{{ error }}</div>
+      {% endif %}
+      {% if form.errors %}
+      <div class="lf-auth-error">
+        {% for field, errors in form.errors.items %}{% for e in errors %}{{ e }} {% endfor %}{% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="POST" class="lf-auth-form">
+        {% csrf_token %}
+
+        <div class="lf-field">
+          <label class="lf-field-label" data-i18n="signup_name">이름</label>
+          <div class="lf-field-wrap">
+            <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <input type="text" name="name" placeholder="이름" value="{{ form.name.value|default:'' }}" required autofocus autocomplete="name">
+          </div>
         </div>
 
-        <form method="POST" action="{% url 'accounts:signup' %}" id="signup-form" novalidate>
-            {% csrf_token %}
+        <div class="lf-field">
+          <label class="lf-field-label" data-i18n="signup_id">아이디</label>
+          <div class="lf-field-wrap">
+            <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <input type="text" name="username" placeholder="영문·숫자 조합" value="{{ form.username.value|default:'' }}" required autocomplete="username">
+          </div>
+        </div>
 
-            <!-- 아이디 -->
-            <div class="form-group">
-                <label for="id_signup_username" class="form-label">아이디</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🆔</span>
-                    {{ form.username }}
-                </div>
-                {% if form.username.errors %}
-                    <p class="field-error">{{ form.username.errors|join:", " }}</p>
-                {% endif %}
+        <div class="lf-field-row">
+          <div class="lf-field">
+            <label class="lf-field-label" data-i18n="signup_pw">비밀번호</label>
+            <div class="lf-field-wrap">
+              <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" name="password1" placeholder="8자 이상" required autocomplete="new-password">
             </div>
-
-            <!-- 이름 -->
-            <div class="form-group">
-                <label for="id_name" class="form-label">이름</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">✏️</span>
-                    {{ form.name }}
-                </div>
-                {% if form.name.errors %}
-                    <p class="field-error">{{ form.name.errors|join:", " }}</p>
-                {% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-field-label" data-i18n="signup_pw2">비밀번호 확인</label>
+            <div class="lf-field-wrap">
+              <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" name="password2" placeholder="동일하게 입력" required autocomplete="new-password">
             </div>
+          </div>
+        </div>
 
-            <!-- 성별 + 나이 (2열 그리드) -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="id_gender" class="form-label">성별</label>
-                    <div class="input-wrapper select-wrapper">
-                        <span class="input-icon">⚧</span>
-                        {{ form.gender }}
-                    </div>
-                    {% if form.gender.errors %}
-                        <p class="field-error">{{ form.gender.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
+        <button type="submit" class="lf-auth-btn" data-i18n="signup_btn">계정 생성</button>
+      </form>
 
-                <div class="form-group">
-                    <label for="id_age" class="form-label">나이</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">🎂</span>
-                        {{ form.age }}
-                    </div>
-                    {% if form.age.errors %}
-                        <p class="field-error">{{ form.age.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
-            </div>
+      <p class="lf-auth-switch">
+        <span data-i18n="signup_have_account">이미 계정이 있으신가요?</span>
+        <a href="{% url 'accounts:login' %}" data-i18n="signup_login_link">로그인</a>
+        &nbsp;·&nbsp;
+        <a href="{% url 'accounts:landing' %}">홈으로</a>
+      </p>
 
-            <!-- 비밀번호 -->
-            <div class="form-group">
-                <label for="id_password1" class="form-label">비밀번호</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    {{ form.password1 }}
-                    <button type="button" class="toggle-password" id="toggle-pw1" aria-label="비밀번호 보기/숨기기">👁</button>
-                </div>
-                <div class="password-strength">
-                    <div class="strength-bar" id="strength-bar"></div>
-                </div>
-                <p class="hint-text" id="pw-hint">8자 이상 입력해주세요</p>
-                {% if form.password1.errors %}
-                    <p class="field-error">{{ form.password1.errors|join:", " }}</p>
-                {% endif %}
-            </div>
-
-            <!-- 비밀번호 확인 -->
-            <div class="form-group">
-                <label for="id_password2" class="form-label">비밀번호 확인</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔐</span>
-                    {{ form.password2 }}
-                    <button type="button" class="toggle-password" id="toggle-pw2" aria-label="비밀번호 확인 보기/숨기기">👁</button>
-                </div>
-                <p class="hint-text" id="pw-match-hint"></p>
-                {% if form.password2.errors %}
-                    <p class="field-error">{{ form.password2.errors|join:", " }}</p>
-                {% endif %}
-            </div>
-
-            <button type="submit" class="btn-primary" id="signup-btn">
-                <span class="btn-text">회원가입</span>
-                <span class="btn-arrow">→</span>
-            </button>
-        </form>
-
-        <div class="auth-divider"><span>또는</span></div>
-
-        <p class="auth-switch">
-            이미 계정이 있으신가요?
-            <a href="{% url 'accounts:login' %}" class="auth-link" id="go-login">로그인 하기</a>
-        </p>
-    </div>
+    </main>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    function togglePassword(btnId, fieldId) {
-        document.getElementById(btnId).addEventListener('click', function() {
-            const f = document.getElementById(fieldId);
-            if (f.type === 'password') { f.type = 'text'; this.textContent = '🙈'; }
-            else { f.type = 'password'; this.textContent = '👁'; }
-        });
-    }
-    togglePassword('toggle-pw1', 'id_password1');
-    togglePassword('toggle-pw2', 'id_password2');
+<style>
+:root {
+  --la-bg:#ffffff; --la-bg2:#faf8f4; --la-navy:#12100e; --la-body:#3d3830;
+  --la-mid:#7c756e; --la-muted:#b8b0a8; --la-gold:#9a7840; --la-gold-lt:#b8935a;
+  --la-border:rgba(0,0,0,.08);
+  --la-serif:'DM Serif Display','Noto Serif KR',Georgia,serif;
+  --la-sans:'Pretendard Variable','Pretendard','Noto Sans KR',-apple-system,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-    document.getElementById('id_password1').addEventListener('input', (e) => {
-        const pw = e.target.value;
-        const bar = document.getElementById('strength-bar');
-        const hint = document.getElementById('pw-hint');
-        let s = 0;
-        if (pw.length >= 8) s++;
-        if (/[A-Z]/.test(pw)) s++;
-        if (/[0-9]/.test(pw)) s++;
-        if (/[^A-Za-z0-9]/.test(pw)) s++;
-        const labels = ['', '🔴 약함', '🟡 보통', '🟢 좋음', '✅ 강함'];
-        const cls    = ['', 'weak', 'fair', 'good', 'strong'];
-        bar.className = 'strength-bar ' + (cls[s] || '');
-        bar.style.width = (s * 25) + '%';
-        hint.textContent = pw.length === 0 ? '8자 이상 입력해주세요' : labels[s];
-    });
+.lf-auth-page{min-height:100vh;display:flex;align-items:stretch;background:var(--la-bg);font-family:var(--la-sans);position:relative;overflow:hidden;}
+.lf-auth-lines{position:fixed;inset:0;pointer-events:none;z-index:0;display:flex;justify-content:space-evenly;}
+.lf-auth-lines span{width:1px;background:linear-gradient(180deg,transparent 0%,rgba(154,120,64,.05) 30%,rgba(154,120,64,.05) 70%,transparent 100%);}
+.lf-auth-wrap{display:flex;width:100%;position:relative;z-index:1;}
 
-    document.getElementById('id_password2').addEventListener('input', () => {
-        const pw1 = document.getElementById('id_password1').value;
-        const pw2 = document.getElementById('id_password2').value;
-        const hint = document.getElementById('pw-match-hint');
-        if (!pw2) { hint.textContent = ''; return; }
-        hint.textContent = pw1 === pw2 ? '✅ 비밀번호가 일치합니다' : '❌ 비밀번호가 일치하지 않습니다';
-        hint.style.color  = pw1 === pw2 ? '#22c55e' : '#ef4444';
-    });
+.lf-auth-brand{width:360px;flex-shrink:0;background:var(--la-bg2);border-right:1px solid var(--la-border);padding:72px 56px;display:flex;flex-direction:column;}
+.lf-auth-wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;margin-bottom:56px;}
+.lf-auth-monogram{width:38px;height:38px;border:1px solid rgba(154,120,64,.35);display:flex;align-items:center;justify-content:center;font-family:var(--la-serif);font-size:12px;color:var(--la-gold);}
+.lf-auth-firmname{font-family:var(--la-serif);font-size:16px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--la-navy);}
+.lf-auth-vline{width:1px;height:56px;background:linear-gradient(180deg,transparent,rgba(154,120,64,.4),transparent);margin-bottom:36px;}
+.lf-auth-brand-desc{font-size:12px;font-weight:300;color:var(--la-mid);line-height:2;letter-spacing:.2px;margin-bottom:40px;}
+.lf-auth-sep{width:36px;height:1px;background:var(--la-border);margin-bottom:32px;}
+.lf-auth-steps{list-style:none;display:flex;flex-direction:column;gap:16px;}
+.lf-auth-steps li{display:flex;align-items:center;gap:14px;font-size:11.5px;font-weight:300;color:var(--la-muted);}
+.lf-step-n{font-family:var(--la-serif);font-size:13px;font-weight:300;color:var(--la-gold);opacity:.65;width:22px;flex-shrink:0;}
 
-    document.getElementById('signup-form').addEventListener('submit', () => {
-        const btn = document.getElementById('signup-btn');
-        btn.innerHTML = '<span class="spinner"></span> 처리 중...';
-        btn.disabled = true;
-    });
-</script>
+.lf-auth-form-panel{flex:1;display:flex;flex-direction:column;justify-content:center;padding:80px 80px;max-width:520px;}
+.lf-auth-form-hd{margin-bottom:40px;}
+.lf-auth-kicker{font-size:9px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--la-gold);opacity:.7;margin-bottom:16px;display:block;}
+.lf-auth-h1{font-family:var(--la-serif);font-size:38px;font-weight:300;color:var(--la-navy);letter-spacing:-.5px;margin-bottom:22px;}
+.lf-auth-rule{width:48px;height:1px;background:rgba(154,120,64,.45);}
+.lf-auth-error{background:rgba(220,38,38,.06);border-left:2px solid rgba(220,38,38,.45);color:#dc2626;font-size:.85rem;font-weight:300;padding:.75rem 1rem;margin-bottom:1.5rem;}
+.lf-auth-form{display:flex;flex-direction:column;gap:1.25rem;}
+.lf-field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+.lf-field{display:flex;flex-direction:column;gap:.5rem;}
+.lf-field-label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--la-mid);}
+.lf-field-wrap{position:relative;display:flex;align-items:center;}
+.lf-field-icon{position:absolute;left:.9rem;color:var(--la-muted);pointer-events:none;}
+.lf-field-wrap input{width:100%;padding:.78rem 1rem .78rem 2.5rem;background:var(--la-bg);border:1px solid var(--la-border);color:var(--la-navy);font-family:var(--la-sans);font-size:.9rem;font-weight:300;outline:none;transition:border-color .2s,box-shadow .2s;}
+.lf-field-wrap input:focus{border-color:rgba(154,120,64,.5);box-shadow:0 0 0 3px rgba(154,120,64,.08);}
+.lf-field-wrap input::placeholder{color:var(--la-muted);font-size:.86rem;}
+
+.lf-auth-btn{display:block;width:100%;padding:.85rem 1rem;margin-top:.5rem;background:var(--la-gold);border:none;cursor:pointer;font-family:var(--la-sans);font-size:.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;transition:background .2s,letter-spacing .2s;}
+.lf-auth-btn:hover{background:var(--la-gold-lt);letter-spacing:2.3px;}
+
+.lf-auth-switch{margin-top:1.75rem;font-size:11.5px;font-weight:300;color:var(--la-mid);}
+.lf-auth-switch a{color:var(--la-gold);text-decoration:none;}
+.lf-auth-switch a:hover{opacity:.75;}
+
+@media(max-width:860px){.lf-auth-brand{display:none;}.lf-auth-form-panel{padding:60px 40px;max-width:100%;}}
+@media(max-width:480px){.lf-auth-form-panel{padding:48px 28px;}.lf-field-row{grid-template-columns:1fr;}}
+</style>
 {% endblock %}

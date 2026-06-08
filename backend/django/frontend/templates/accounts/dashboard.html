@@ -1,111 +1,435 @@
 {% extends 'base.html' %}
-
-{% block title %}대시보드 | PatentMind{% endblock %}
+{% block title %}포털 | PYPI{% endblock %}
 
 {% block content %}
 <div class="dashboard-wrapper">
-    <!-- Navbar -->
-    <nav class="dashboard-nav" id="main-nav">
-        <div class="nav-brand">
-            <span class="brand-icon-sm">⚖️</span>
-            <span>PatentMind</span>
-        </div>
-        <div class="nav-user">
-            <div class="user-avatar" id="user-avatar">
-                {{ user.name|slice:":1" }}
-            </div>
-            <span class="user-email">{{ user.username }}</span>
-            <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn-logout" id="logout-btn">로그아웃</button>
-            </form>
-        </div>
-    </nav>
 
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
-
-        <!-- Welcome Card -->
-        <div class="welcome-card" id="welcome-card">
-            <div class="welcome-text">
-                <h2>안녕하세요, <span class="highlight">{{ user.name }}</span>님! 👋</h2>
-                <p>PatentMind에 오신 것을 환영합니다. AI와 함께 특허 청구항을 작성해보세요. ✍️</p>
-            </div>
-            <div class="welcome-emoji">📜</div>
-        </div>
-
-        <!-- Info Cards -->
-        <div class="info-grid">
-            <div class="info-card" id="info-uid">
-                <div class="info-icon">#️⃣</div>
-                <div class="info-content">
-                    <p class="info-label">고유 번호 (DB ID)</p>
-                    <p class="info-value">{{ user.id }}</p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-username">
-                <div class="info-icon">🆔</div>
-                <div class="info-content">
-                    <p class="info-label">아이디</p>
-                    <p class="info-value">{{ user.username }}</p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-name">
-                <div class="info-icon">✏️</div>
-                <div class="info-content">
-                    <p class="info-label">이름</p>
-                    <p class="info-value">{{ user.name }}</p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-gender">
-                <div class="info-icon">⚧</div>
-                <div class="info-content">
-                    <p class="info-label">성별</p>
-                    <p class="info-value">{{ user.get_gender_display }}</p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-age">
-                <div class="info-icon">🎂</div>
-                <div class="info-content">
-                    <p class="info-label">나이</p>
-                    <p class="info-value">{{ user.age }}세</p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-login-status">
-                <div class="info-icon">🟢</div>
-                <div class="info-content">
-                    <p class="info-label">로그인 상태 (is_login)</p>
-                    <p class="info-value status-active">
-                        {% if user.is_login %}1 (로그인 중){% else %}0 (로그아웃){% endif %}
-                    </p>
-                </div>
-            </div>
-
-            <div class="info-card" id="info-joined">
-                <div class="info-icon">📅</div>
-                <div class="info-content">
-                    <p class="info-label">가입일</p>
-                    <p class="info-value">{{ user.date_joined|date:"Y년 m월 d일" }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Link (only for staff) -->
-        {% if user.is_staff %}
-        <div class="admin-card" id="admin-card">
-            <div class="admin-icon">⚙️</div>
-            <div class="admin-content">
-                <h3>관리자 페이지</h3>
-                <p>Django Admin에서 전체 회원 정보를 관리할 수 있습니다.</p>
-            </div>
-            <a href="/admin/" class="btn-admin" id="go-admin" target="_blank">Admin 열기 →</a>
-        </div>
-        {% endif %}
+  <!-- ══ NAV ════════════════════════════════════════════ -->
+  <nav class="dashboard-nav">
+    <a href="{% url 'accounts:landing' %}" class="nav-brand">
+      <span class="brand-icon-sm">Pi</span>
+      <span>PYPI</span>
+    </a>
+    <div class="nav-links">
+      <a href="{% url 'accounts:dashboard' %}" class="nav-link active" data-i18n="nav_dashboard">대시보드</a>
+      <span class="nav-link-divider"></span>
+      <a href="{% url 'accounts:pipeline' %}"  class="nav-link">파이프라인</a>
+      <a href="{% url 'accounts:chat' %}"       class="nav-link">AI 어시스턴트</a>
+      <a href="{% url 'accounts:drawing' %}"    class="nav-link">도면 분석</a>
     </div>
+    <div class="nav-user">
+      <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+      <span class="user-email">{{ user.username }}</span>
+      <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-logout" data-i18n="nav_logout">로그아웃</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="dashboard-content">
+
+    <!-- ══ PORTAL HEADER ═══════════════════════════════ -->
+    <div class="portal-hd">
+      <div class="portal-hd-l">
+        <p class="portal-label" data-i18n="client_portal">클라이언트 포털</p>
+        <h1 class="portal-title">
+          {{ user.name|default:user.username }}<span data-i18n="dash_welcome_suffix"> 님, PYPI에 오신 것을 환영합니다</span>
+        </h1>
+      </div>
+      <div class="portal-btn-group">
+        <a href="{% url 'accounts:chat' %}" class="portal-run-btn portal-run-btn--chat">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="prb-label" data-i18n="nav_ai">AI 어시스턴트</span>
+        </a>
+        <a href="{% url 'accounts:pipeline' %}" class="portal-run-btn portal-run-btn--primary">
+          <span class="prb-label" data-i18n="btn_pipeline">파이프라인 실행</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="portal-rule"></div>
+
+    <!-- ══ AGENTS — Practice Areas ══════════════════════ -->
+    <div class="practice-hd">
+      <p class="practice-kicker" data-i18n="dash_practice_kicker">전문 서비스</p>
+      <p class="practice-sub" data-i18n="dash_practice_sub">7개 에이전트가 특허 출원의 전 과정을 분담하여 처리합니다</p>
+    </div>
+
+    <!-- ══ CHAT 빠른 진입 ════════════════════════════════ -->
+    <a href="{% url 'accounts:chat' %}" class="chat-entry-card">
+      <div class="chat-entry-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="chat-entry-body">
+        <p class="chat-entry-label">AI 특허 어시스턴트</p>
+        <p class="chat-entry-sub">소스를 추가하고 특허 전문 AI에게 질문하세요 — NotebookLM 스타일</p>
+      </div>
+      <span class="chat-entry-arrow">→</span>
+    </a>
+
+    <div class="practice-list">
+
+      <!-- I -->
+      <div class="pa-item pa-item--off">
+        <div class="pa-num">I</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_I">상담 에이전트</h3>
+            <span class="pa-en" data-i18n="en_consultation">Consultation</span>
+            <span class="pa-status pa-status--off" data-i18n="status_pending">준비 중</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_I">발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석하고, 후속 에이전트에 전달할 구조화된 발명 정보를 추출합니다.</p>
+        </div>
+      </div>
+
+      <!-- II -->
+      <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">
+        <div class="pa-num">II</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_II">요약 에이전트</h3>
+            <span class="pa-en" data-i18n="en_summary">Summary</span>
+            <span class="pa-status pa-status--on" data-i18n="status_active">활성</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_II">5개 발명 필드를 사람이 확인할 수 있는 요약본과 후속 에이전트용 구조화 발명 JSON으로 정리합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
+      </a>
+
+      <!-- III -->
+      <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">
+        <div class="pa-num">III</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_III">선행기술조사 에이전트</h3>
+            <span class="pa-en" data-i18n="en_prior_art">Prior Art</span>
+            <span class="pa-status pa-status--on" data-i18n="status_active">활성</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_III">특허 DB에서 text-embedding-3-small 임베딩 유사도 검색으로 선행문헌을 탐색하고, GPT-4o로 신규성·진보성 리스크를 분석해 보고합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
+      </a>
+
+      <!-- IV -->
+      <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">
+        <div class="pa-num">IV</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_IV">청구항 에이전트</h3>
+            <span class="pa-en" data-i18n="en_claim">Claim</span>
+            <span class="pa-status pa-status--on" data-i18n="status_active">활성</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_IV">발명 구조를 분석해 독립항·종속항·방법항·시스템항을 특허청 작성 규정에 맞게 자동 생성합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
+      </a>
+
+      <!-- V — 하이라이트 -->
+      <a href="{% url 'accounts:drawing' %}" class="pa-item pa-item--on pa-item--hl">
+        <div class="pa-num">V</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_V">도면 에이전트</h3>
+            <span class="pa-en" data-i18n="en_drawing">Drawing</span>
+            <span class="pa-status pa-status--on" data-i18n="status_standalone">활성 · 단독 실행</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_V">블록도·흐름도·시퀀스 다이어그램을 SVG로 자동 렌더링하고, 품질 점수 검수 및 자동 보정 후 파일을 제공합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_solo">단독 실행 →</div>
+      </a>
+
+      <!-- VI -->
+      <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">
+        <div class="pa-num">VI</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_VI">명세서 에이전트</h3>
+            <span class="pa-en" data-i18n="en_specification">Specification</span>
+            <span class="pa-status pa-status--on" data-i18n="status_active">활성</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_VI">기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체에 맞게 초안 작성합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
+      </a>
+
+      <!-- VII -->
+      <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">
+        <div class="pa-num">VII</div>
+        <div class="pa-body">
+          <div class="pa-hd">
+            <h3 class="pa-name" data-i18n="agent_VII">컴포저 에이전트</h3>
+            <span class="pa-en" data-i18n="en_composer">Composer</span>
+            <span class="pa-status pa-status--on" data-i18n="status_active">활성</span>
+          </div>
+          <p class="pa-desc" data-i18n="desc_VII">전 에이전트 산출물을 병합·통일하고, 용어·참조부호를 일관화해 DOCX 완성 명세서를 출력합니다.</p>
+        </div>
+        <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
+      </a>
+
+    </div><!-- /.practice-list -->
+
+    <!-- ══ STATS ════════════════════════════════════════ -->
+    <div class="portal-rule" style="margin-top:3.5rem;"></div>
+    <div class="portal-stats">
+      <div class="ps-item">
+        <span class="ps-n">7</span>
+        <span class="ps-l" data-i18n="dash_stat_agents">전문 에이전트</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item">
+        <span class="ps-n">6</span>
+        <span class="ps-l" data-i18n="dash_stat_active">활성 에이전트</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item">
+        <span class="ps-n">4</span>
+        <span class="ps-l" data-i18n="dash_stat_lang">지원 언어</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item ps-item--text">
+        <span class="ps-phrase" data-i18n="dash_stat_phrase">제출 가능한 완성 명세서</span>
+      </div>
+    </div>
+
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── Portal Header ─────────────────────────────── */
+.portal-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 3rem 0 2.5rem; gap: 2rem; flex-wrap: wrap;
+}
+.portal-btn-group {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.portal-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 3.5px;
+  text-transform: uppercase; color: var(--gold); opacity: .65;
+  margin-bottom: 16px;
+}
+.portal-title {
+  font-family: var(--serif); font-size: clamp(26px, 3vw, 40px);
+  font-weight: 300; color: var(--text-primary); line-height: 1.3;
+  letter-spacing: -0.5px;
+}
+.portal-title em { font-style: italic; color: var(--gold); }
+
+.portal-run-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: .75rem 1.4rem;
+  text-decoration: none; flex-shrink: 0;
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; transition: all .2s;
+  border: 1px solid var(--border-subtle); color: var(--text-muted);
+}
+.portal-run-btn:hover { border-color: var(--gold); color: var(--text-primary); }
+.portal-run-btn--primary {
+  background: var(--gold); border-color: var(--gold); color: #fff;
+}
+.portal-run-btn--primary:hover { background: var(--gold-lt); border-color: var(--gold-lt); color: #fff; }
+.portal-run-btn--chat { color: var(--gold); border-color: rgba(154,120,64,.3); }
+.portal-run-btn--chat:hover { background: rgba(154,120,64,.06); color: var(--gold); }
+.portal-run-btn--chat .prb-label { color: var(--gold); }
+.prb-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-secondary);
+  transition: color .25s;
+}
+.portal-run-btn:hover .prb-label { color: var(--text-primary); }
+.portal-run-btn--primary .prb-label { color: #fff; }
+.portal-run-btn--chat .prb-label { color: var(--gold); }
+.prb-arrow { color: var(--gold); transition: transform .25s; }
+.portal-run-btn:hover .prb-arrow { transform: translateX(3px); }
+
+.portal-rule {
+  width: 100%; height: 1px; background: var(--border); margin-bottom: 3rem;
+}
+
+/* ── Chat Entry Card ─────────────────────────────── */
+.chat-entry-card {
+  display: flex; align-items: center; gap: 1.25rem;
+  background: rgba(154,120,64,.05);
+  border: 1px solid rgba(154,120,64,.2);
+  padding: 1.25rem 1.75rem;
+  text-decoration: none; color: inherit;
+  margin-bottom: 2rem;
+  transition: all .22s;
+  position: relative; overflow: hidden;
+}
+.chat-entry-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--gold);
+}
+.chat-entry-card:hover { background: rgba(154,120,64,.09); border-color: rgba(154,120,64,.35); }
+.chat-entry-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(154,120,64,.1); border: 1px solid rgba(154,120,64,.2);
+  color: var(--gold);
+}
+.chat-entry-body { flex: 1; }
+.chat-entry-label {
+  font-family: var(--serif); font-size: 17px; font-weight: 400;
+  color: var(--gold); margin-bottom: 4px;
+}
+.chat-entry-sub {
+  font-size: .8rem; font-weight: 300; color: var(--mid); letter-spacing: .2px;
+}
+.chat-entry-arrow { font-size: 1.1rem; color: var(--gold); transition: transform .2s; }
+.chat-entry-card:hover .chat-entry-arrow { transform: translateX(4px); }
+
+/* ── Practice Areas Header ─────────────────────── */
+.practice-hd {
+  display: flex; align-items: baseline; gap: 2rem;
+  margin-bottom: 0;
+}
+.practice-kicker {
+  font-size: 9px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold); opacity: .65;
+  white-space: nowrap;
+}
+.practice-sub {
+  font-size: 11.5px; font-weight: 300; color: var(--mid);
+  letter-spacing: .2px; line-height: 1.6;
+}
+
+/* ── Practice Area List ────────────────────────── */
+.practice-list {
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
+}
+
+.pa-item {
+  display: grid; grid-template-columns: 72px 1fr auto;
+  align-items: start; gap: 0;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none; color: inherit;
+  transition: background .2s;
+  position: relative;
+}
+.pa-item--on { cursor: pointer; }
+.pa-item--off { opacity: .45; cursor: default; }
+.pa-item--on:hover { background: rgba(184,147,90,.025); }
+
+/* highlight — 도면 에이전트 */
+.pa-item--hl { background: rgba(184,147,90,.03); }
+.pa-item--hl .pa-num { color: var(--gold); opacity: .9; }
+.pa-item--hl .pa-name { color: var(--gold-lt); }
+
+/* 왼쪽 골드 라인 on hover */
+.pa-item--on::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--gold); transform: scaleY(0); transform-origin: top;
+  transition: transform .3s cubic-bezier(.25,.46,.45,.94);
+}
+.pa-item--on:hover::before { transform: scaleY(1); }
+.pa-item--hl::before { transform: scaleY(1); opacity: .6; }
+
+.pa-num {
+  font-family: var(--serif); font-size: 22px; font-weight: 300;
+  font-style: italic; color: var(--muted); padding-top: 2px;
+  padding-left: 16px;
+  transition: color .2s;
+}
+.pa-item--on:hover .pa-num { color: var(--gold); opacity: .7; }
+
+.pa-body { padding: 0 2rem 0 0; }
+.pa-hd {
+  display: flex; align-items: baseline; flex-wrap: wrap;
+  gap: 10px; margin-bottom: 10px;
+}
+.pa-name {
+  font-family: var(--serif); font-size: clamp(17px, 2vw, 22px);
+  font-weight: 400; color: var(--text-primary); letter-spacing: -.2px;
+  transition: color .2s;
+}
+.pa-item--on:hover .pa-name { color: var(--text-primary); }
+
+.pa-en {
+  font-size: .68rem; font-weight: 400; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+}
+.pa-status {
+  font-size: .65rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; padding: .16rem .5rem; border-radius: 3px;
+}
+.pa-status--on  { background: rgba(184,147,90,.12); color: var(--gold); }
+.pa-status--off { background: rgba(0,0,0,.05); color: var(--muted); }
+
+.pa-desc {
+  font-size: .84rem; font-weight: 300; color: var(--mid);
+  line-height: 1.9; max-width: 600px; letter-spacing: .1px;
+}
+
+.pa-link {
+  font-size: .7rem; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); opacity: 0;
+  white-space: nowrap; padding-top: 4px;
+  transition: opacity .2s;
+}
+.pa-item--on:hover .pa-link { opacity: 1; }
+.pa-item--hl .pa-link { opacity: .7; }
+.pa-item--hl:hover .pa-link { opacity: 1; }
+
+/* ── Stats ─────────────────────────────────────── */
+.portal-stats {
+  display: flex; align-items: center;
+  padding: 2rem 0 3rem;
+}
+.ps-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+}
+.ps-item--text { gap: 0; }
+.ps-n {
+  font-family: var(--serif); font-size: 36px; font-weight: 300;
+  color: var(--gold); line-height: 1; letter-spacing: -1.5px;
+}
+.ps-l {
+  font-size: 8.5px; font-weight: 400; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.ps-phrase {
+  font-family: var(--serif); font-size: 15px; font-weight: 400;
+  color: var(--text-primary); text-align: center; letter-spacing: .1px;
+}
+.ps-sep { width: 1px; height: 36px; background: var(--border); }
+
+@media (max-width: 768px) {
+  .portal-hd { flex-direction: column; align-items: flex-start; }
+  .pa-item { grid-template-columns: 52px 1fr; }
+  .pa-link { display: none; }
+  .portal-stats { flex-wrap: wrap; gap: 1.5rem; padding: 1.5rem 0 2.5rem; }
+  .ps-sep { display: none; }
+  .ps-item { min-width: 40%; }
+  .practice-hd { flex-direction: column; gap: .5rem; }
+}
+</style>
+
+<script>
+function pmApplyLang(code) {
+  var d = document.getElementById('lang-code-display');
+  if (d) d.textContent = code.toUpperCase();
+  document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
+    o.classList.toggle('active', o.dataset.lang === code);
+  });
+  document.documentElement.lang = {ko:'ko',en:'en',ja:'ja',zh:'zh-Hans'}[code] || 'ko';
+  try { localStorage.setItem('pm-lang', code); } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
+    o.addEventListener('click', function(e) {
+      e.preventDefault(); pmApplyLang(o.dataset.lang);
+    });
+  });
+  var saved; try { saved = localStorage.getItem('pm-lang'); } catch(e) {}
+  pmApplyLang(saved || 'ko');
+});
+</script>
 {% endblock %}

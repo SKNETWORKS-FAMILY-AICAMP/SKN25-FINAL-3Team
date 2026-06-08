@@ -1,22 +1,17 @@
-"""
-Django settings for config project.
-"""
-
 from pathlib import Path
+import sys
 import os
-from datetime import timedelta
 from dotenv import load_dotenv
 
-_SETTINGS_FILE = Path(__file__).resolve()
-load_dotenv(_SETTINGS_FILE.parents[3] / ".env")
-load_dotenv(_SETTINGS_FILE.parents[1] / ".env", override=True)
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent.parent / '.env')
+# 프로젝트 루트(agents/ 포함)를 Python 경로에 추가
+PROJECT_ROOT = BASE_DIR.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-BASE_DIR = _SETTINGS_FILE.parents[1]  # backend/django
-
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production-key-12345')
-
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
-
+SECRET_KEY = 'django-insecure-patentmind-dev-change-in-production-xyz123'
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -26,12 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third-party
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    # Local apps
     'accounts',
+    'frontend',
+    'workspace',
 ]
 
 MIDDLEWARE = [
@@ -66,17 +58,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DJANGO_DB_NAME', str(BASE_DIR / 'db.sqlite3')),
-        'USER': os.getenv('DJANGO_DB_USER', ''),
-        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD', ''),
-        'HOST': os.getenv('DJANGO_DB_HOST', ''),
-        'PORT': os.getenv('DJANGO_DB_PORT', ''),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# Custom User Model
-AUTH_USER_MODEL = 'accounts.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -93,34 +78,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'frontend' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Auth redirects
+# 파일 업로드 최대 크기: 200 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 200 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 200 * 1024 * 1024
+
+AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/dashboard/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-# ── Django REST Framework ──────────────────────────────────────
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
-
-# ── Simple JWT ────────────────────────────────────────────────
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=1),    # 액세스 토큰 유효기간: 1시간
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # 리프레시 토큰 유효기간: 7일
-    'ROTATE_REFRESH_TOKENS':  True,                  # 리프레시 시 새 토큰 발급
-    'BLACKLIST_AFTER_ROTATION': True,                # 사용된 리프레시 토큰 블랙리스트 처리
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-}
+LOGOUT_REDIRECT_URL = '/'

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="560" viewBox="0 0 700 560">
+<defs>
+  <marker id="ba-arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#222"/></marker>
+  <marker id="ba-arrd" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#777"/></marker>
+</defs>
+<rect x="0" y="0" width="700" height="560" fill="#fff"/>
+<rect x="4" y="4" width="692" height="552" fill="#fff" stroke="#444" stroke-width="1.8"/>
+<rect x="10" y="10" width="680" height="540" fill="none" stroke="#ccc" stroke-width="0.6"/>
+<text x="350" y="33" font-family="'Courier New',monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">도 1  시스템 전체 구성도</text>
+<line x1="14" y1="43" x2="686" y2="43" stroke="#999" stroke-width="0.8"/>
+<!-- 외부 시스템 경계 -->
+<rect x="40" y="55" width="620" height="390" rx="0" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="10 5"/>
+<text x="56" y="70" font-family="Arial,sans-serif" font-size="10" fill="#888">통합 시스템 (10)</text>
+<!-- 최상단: 입력 장치 -->
+<rect x="260" y="65" width="180" height="48" rx="2" fill="#f5f5f5" stroke="#222" stroke-width="1.8"/>
+<text x="350" y="85" font-family="Arial,sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">입력 장치부</text>
+<text x="350" y="101" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#555">(110)</text>
+<!-- 화살표 아래 -->
+<line x1="350" y1="113" x2="350" y2="147" stroke="#222" stroke-width="1.5" marker-end="url(#ba-arr)"/>
+<!-- 중앙 제어부 (강조) -->
+<rect x="210" y="147" width="280" height="56" rx="2" fill="#efefef" stroke="#111" stroke-width="2.2"/>
+<text x="350" y="170" font-family="Arial,sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#111">중앙 처리 제어부</text>
+<text x="350" y="190" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#444">(200)</text>
+<!-- 좌측 분기 -->
+<line x1="210" y1="175" x2="148" y2="175" stroke="#222" stroke-width="1.5"/>
+<line x1="148" y1="175" x2="148" y2="265" stroke="#222" stroke-width="1.5" marker-end="url(#ba-arr)"/>
+<!-- 우측 분기 -->
+<line x1="490" y1="175" x2="552" y2="175" stroke="#222" stroke-width="1.5"/>
+<line x1="552" y1="175" x2="552" y2="265" stroke="#222" stroke-width="1.5" marker-end="url(#ba-arr)"/>
+<!-- 하단 직선 -->
+<line x1="350" y1="203" x2="350" y2="265" stroke="#222" stroke-width="1.5" marker-end="url(#ba-arr)"/>
+<!-- 왼쪽 모듈 -->
+<rect x="58" y="265" width="180" height="50" rx="2" fill="#fff" stroke="#333" stroke-width="1.6"/>
+<text x="148" y="286" font-family="Arial,sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">신호 처리부</text>
+<text x="148" y="302" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#555">(210)</text>
+<!-- 가운데 모듈 -->
+<rect x="260" y="265" width="180" height="50" rx="2" fill="#fff" stroke="#333" stroke-width="1.6"/>
+<text x="350" y="286" font-family="Arial,sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">연산 처리부</text>
+<text x="350" y="302" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#555">(220)</text>
+<!-- 오른쪽 모듈 -->
+<rect x="462" y="265" width="180" height="50" rx="2" fill="#fff" stroke="#333" stroke-width="1.6"/>
+<text x="552" y="286" font-family="Arial,sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">출력 처리부</text>
+<text x="552" y="302" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#555">(230)</text>
+<!-- 공유 버스 -->
+<line x1="58" y1="340" x2="642" y2="340" stroke="#666" stroke-width="2.2" stroke-dasharray="8 4"/>
+<text x="350" y="332" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#888">공유 데이터 버스 (BUS-01)</text>
+<!-- 각 모듈 → 버스 수직 연결 -->
+<line x1="148" y1="315" x2="148" y2="340" stroke="#aaa" stroke-width="1.1"/>
+<line x1="350" y1="315" x2="350" y2="340" stroke="#aaa" stroke-width="1.1"/>
+<line x1="552" y1="315" x2="552" y2="340" stroke="#aaa" stroke-width="1.1"/>
+<!-- 버스 → 저장부 -->
+<line x1="350" y1="340" x2="350" y2="368" stroke="#555" stroke-width="1.4" marker-end="url(#ba-arr)"/>
+<!-- 저장부 -->
+<rect x="245" y="368" width="210" height="50" rx="2" fill="#fff" stroke="#333" stroke-width="1.6"/>
+<text x="350" y="389" font-family="Arial,sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#111">데이터 저장부</text>
+<text x="350" y="405" font-family="Arial,sans-serif" font-size="10" text-anchor="middle" fill="#555">(300)</text>
+<!-- 참조번호 -->
+<circle cx="662" cy="86" r="12" fill="#fff" stroke="#555" stroke-width="1.1"/>
+<text x="662" y="90" font-family="Arial,sans-serif" font-size="9" font-weight="bold" text-anchor="middle" fill="#333">110</text>
+<circle cx="662" cy="175" r="12" fill="#fff" stroke="#555" stroke-width="1.1"/>
+<text x="662" y="179" font-family="Arial,sans-serif" font-size="9" font-weight="bold" text-anchor="middle" fill="#333">200</text>
+<!-- 타이틀 블록 -->
+<line x1="14" y1="512" x2="686" y2="512" stroke="#888" stroke-width="0.8"/>
+<line x1="234" y1="512" x2="234" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<line x1="468" y1="512" x2="468" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<text x="22" y="528" font-family="'Courier New',monospace" font-size="11" font-weight="bold" fill="#333">도 1</text>
+<text x="22" y="543" font-family="Arial,sans-serif" font-size="9" fill="#777">시스템 블록 구성도</text>
+<text x="350" y="528" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">SCALE : N.T.S  |  UNIT : —</text>
+<text x="678" y="528" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#aaa">PYPI AI · 특허청 기준</text>
+<text x="678" y="543" font-family="Arial,sans-serif" font-size="7" text-anchor="end" fill="#bbb">AUTO GENERATED</text>
+</svg>

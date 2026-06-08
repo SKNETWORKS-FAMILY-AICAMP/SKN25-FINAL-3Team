@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="580" viewBox="0 0 700 580">
+<defs>
+  <marker id="chb-arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#222"/></marker>
+</defs>
+<rect x="0" y="0" width="700" height="580" fill="#fff"/>
+<rect x="4" y="4" width="692" height="572" fill="#fff" stroke="#444" stroke-width="1.8"/>
+<rect x="10" y="10" width="680" height="560" fill="none" stroke="#ccc" stroke-width="0.6"/>
+<text x="350" y="33" font-family="'Courier New',monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">도 11  증류 공정 계통도</text>
+<line x1="14" y1="43" x2="686" y2="43" stroke="#999" stroke-width="0.8"/>
+<!-- 원료 투입 스트림 -->
+<line x1="30" y1="230" x2="95" y2="230" stroke="#222" stroke-width="2" marker-end="url(#chb-arr)"/>
+<text x="62" y="222" font-family="'Courier New',monospace" font-size="9" text-anchor="middle" fill="#555">Feed (F)</text>
+<!-- 증류탑 (중앙 세로 용기) -->
+<rect x="95" y="80" width="130" height="320" rx="4" fill="#f8f8f8" stroke="#222" stroke-width="2.2"/>
+<ellipse cx="160" cy="80" rx="65" ry="15" fill="#efefef" stroke="#222" stroke-width="1.6"/>
+<ellipse cx="160" cy="400" rx="65" ry="15" fill="#efefef" stroke="#222" stroke-width="1.6"/>
+<!-- 트레이 라인들 -->
+<line x1="95" y1="140" x2="225" y2="140" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<line x1="95" y1="180" x2="225" y2="180" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<line x1="95" y1="220" x2="225" y2="220" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<line x1="95" y1="260" x2="225" y2="260" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<line x1="95" y1="300" x2="225" y2="300" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<line x1="95" y1="340" x2="225" y2="340" stroke="#aaa" stroke-width="0.7" stroke-dasharray="3 2"/>
+<text x="160" y="200" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#333">증류탑</text>
+<text x="160" y="215" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Distillation Col.</text>
+<text x="160" y="230" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#aaa">(100)</text>
+<!-- 상단 증기 라인 → 응축기 -->
+<line x1="160" y1="65" x2="160" y2="50" stroke="#222" stroke-width="1.8"/>
+<line x1="160" y1="50" x2="360" y2="50" stroke="#222" stroke-width="1.8" marker-end="url(#chb-arr)"/>
+<text x="260" y="43" font-family="'Courier New',monospace" font-size="8" text-anchor="middle" fill="#777">증기 스트림 (V)</text>
+<!-- 응축기 -->
+<rect x="360" y="28" width="100" height="60" rx="3" fill="#f0f0f0" stroke="#333" stroke-width="1.8"/>
+<text x="410" y="53" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">응축기</text>
+<text x="410" y="68" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Condenser (200)</text>
+<!-- 응축액 → 환류탱크 -->
+<line x1="460" y1="58" x2="540" y2="58" stroke="#222" stroke-width="1.5" marker-end="url(#chb-arr)"/>
+<!-- 환류 탱크 -->
+<rect x="540" y="38" width="100" height="60" rx="3" fill="#f5f5f5" stroke="#333" stroke-width="1.6"/>
+<text x="590" y="63" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">환류 탱크</text>
+<text x="590" y="78" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Reflux Drum (210)</text>
+<!-- 제품 D (증류물) -->
+<line x1="640" y1="58" x2="680" y2="58" stroke="#222" stroke-width="1.8" marker-end="url(#chb-arr)"/>
+<text x="660" y="50" font-family="'Courier New',monospace" font-size="9" fill="#333">D (제품)</text>
+<!-- 환류 (되돌아가는) -->
+<line x1="590" y1="98" x2="590" y2="130" stroke="#555" stroke-width="1.3" stroke-dasharray="5 2"/>
+<line x1="590" y1="130" x2="225" y2="130" stroke="#555" stroke-width="1.3" stroke-dasharray="5 2"/>
+<line x1="225" y1="130" x2="225" y2="120" stroke="#555" stroke-width="1.3" stroke-dasharray="5 2" marker-end="url(#chb-arr)"/>
+<text x="400" y="122" font-family="'Courier New',monospace" font-size="8" text-anchor="middle" fill="#aaa">환류 (L/V)</text>
+<!-- 하단 스트림 → 재비기 -->
+<line x1="160" y1="415" x2="160" y2="450" stroke="#222" stroke-width="1.8"/>
+<line x1="160" y1="450" x2="360" y2="450" stroke="#222" stroke-width="1.8" marker-end="url(#chb-arr)"/>
+<text x="260" y="442" font-family="'Courier New',monospace" font-size="8" text-anchor="middle" fill="#777">하부 스트림 (B)</text>
+<!-- 재비기 -->
+<ellipse cx="430" cy="450" rx="60" ry="35" fill="#f8f8f8" stroke="#333" stroke-width="1.8"/>
+<text x="430" y="447" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">재비기</text>
+<text x="430" y="462" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Reboiler (300)</text>
+<!-- 증기 환류 → 탑 하단 -->
+<line x1="430" y1="415" x2="430" y2="380" stroke="#555" stroke-width="1.3" stroke-dasharray="5 2"/>
+<line x1="430" y1="380" x2="225" y2="380" stroke="#555" stroke-width="1.3" stroke-dasharray="5 2" marker-end="url(#chb-arr)"/>
+<!-- 제품 B -->
+<line x1="490" y1="450" x2="560" y2="450" stroke="#222" stroke-width="1.8" marker-end="url(#chb-arr)"/>
+<rect x="560" y="428" width="100" height="44" rx="3" fill="#f5f5f5" stroke="#333" stroke-width="1.6"/>
+<text x="610" y="448" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">잔류물</text>
+<text x="610" y="463" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Bottoms (400)</text>
+<!-- 열 공급 -->
+<line x1="430" y1="485" x2="430" y2="510" stroke="#c44" stroke-width="1.5"/>
+<text x="430" y="524" font-family="'Courier New',monospace" font-size="9" text-anchor="middle" fill="#c44">Q (열 공급)</text>
+<!-- 타이틀 블록 -->
+<line x1="14" y1="512" x2="686" y2="512" stroke="#888" stroke-width="0.8"/>
+<line x1="234" y1="512" x2="234" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<line x1="468" y1="512" x2="468" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<text x="22" y="528" font-family="'Courier New',monospace" font-size="11" font-weight="bold" fill="#333">도 11</text>
+<text x="22" y="543" font-family="Arial,sans-serif" font-size="9" fill="#777">증류 공정 계통도</text>
+<text x="350" y="528" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">SCALE : N.T.S  |  UNIT : —</text>
+<text x="678" y="528" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#aaa">PYPI AI · 특허청 기준</text>
+<text x="678" y="543" font-family="Arial,sans-serif" font-size="7" text-anchor="end" fill="#bbb">AUTO GENERATED</text>
+</svg>

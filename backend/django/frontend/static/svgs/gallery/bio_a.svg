@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="580" viewBox="0 0 700 580">
+<defs>
+  <marker id="bia-arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#222"/></marker>
+  <marker id="bia-inh" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><line x1="9" y1="0" x2="9" y2="8" stroke="#444" stroke-width="1.6"/><line x1="0" y1="4" x2="9" y2="4" stroke="#444" stroke-width="1.4"/></marker>
+</defs>
+<rect x="0" y="0" width="700" height="580" fill="#fff"/>
+<rect x="4" y="4" width="692" height="572" fill="#fff" stroke="#444" stroke-width="1.8"/>
+<rect x="10" y="10" width="680" height="560" fill="none" stroke="#ccc" stroke-width="0.6"/>
+<text x="350" y="33" font-family="'Courier New',monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">도 8  생체 신호 처리 시스템 구성도</text>
+<line x1="14" y1="43" x2="686" y2="43" stroke="#999" stroke-width="0.8"/>
+<!-- 센서 입력 (타원형 생물학적 표현) -->
+<ellipse cx="110" cy="130" rx="65" ry="40" fill="#f5f5f5" stroke="#222" stroke-width="1.8"/>
+<text x="110" y="126" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">생체 센서</text>
+<text x="110" y="142" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">Biosensor (100)</text>
+<!-- 신호 증폭기 -->
+<rect x="230" y="108" width="120" height="44" rx="2" fill="#fff" stroke="#222" stroke-width="1.8"/>
+<text x="290" y="128" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">신호 증폭</text>
+<text x="290" y="142" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">Amplifier (110)</text>
+<!-- ADC 변환기 -->
+<rect x="390" y="108" width="120" height="44" rx="2" fill="#fff" stroke="#222" stroke-width="1.8"/>
+<text x="450" y="128" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">ADC 변환</text>
+<text x="450" y="142" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">A/D Conv. (120)</text>
+<!-- AI 처리 엔진 (중앙 강조) -->
+<rect x="230" y="220" width="280" height="80" rx="2" fill="#efefef" stroke="#111" stroke-width="2.2"/>
+<text x="370" y="248" font-family="Arial,sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#111">AI 생체신호 분석 엔진</text>
+<text x="280" y="270" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">[특징 추출 (210)]</text>
+<text x="370" y="270" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">[패턴 인식 (220)]</text>
+<text x="460" y="270" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">[이상 감지 (230)]</text>
+<text x="370" y="292" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">(200)</text>
+<!-- 출력부 3가지 -->
+<ellipse cx="150" cy="400" rx="80" ry="35" fill="#f5f5f5" stroke="#333" stroke-width="1.6"/>
+<text x="150" y="397" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">진단 결과</text>
+<text x="150" y="412" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Diagnosis (310)</text>
+<rect x="310" y="373" width="120" height="54" rx="2" fill="#f5f5f5" stroke="#333" stroke-width="1.6"/>
+<text x="370" y="397" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">알람 발생</text>
+<text x="370" y="412" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">Alert (320)</text>
+<ellipse cx="570" cy="400" rx="80" ry="35" fill="#f5f5f5" stroke="#333" stroke-width="1.6"/>
+<text x="570" y="397" font-family="Arial,sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#222">데이터 저장</text>
+<text x="570" y="412" font-family="Arial,sans-serif" font-size="8" text-anchor="middle" fill="#777">Storage (330)</text>
+<!-- 피드백 루프 (바이오 특성) -->
+<rect x="430" y="108" width="120" height="44" rx="0"/>
+<!-- 연결 화살표들 -->
+<line x1="175" y1="130" x2="230" y2="130" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<line x1="350" y1="130" x2="390" y2="130" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<!-- ADC → AI 엔진 -->
+<line x1="510" y1="130" x2="560" y2="130" stroke="#222" stroke-width="1.5"/>
+<line x1="560" y1="130" x2="560" y2="220" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<!-- 센서 → AI (직접) -->
+<line x1="290" y1="152" x2="290" y2="220" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bia-arr)"/>
+<!-- AI → 출력들 -->
+<line x1="300" y1="300" x2="200" y2="373" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<line x1="370" y1="300" x2="370" y2="373" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<line x1="440" y1="300" x2="520" y2="373" stroke="#222" stroke-width="1.5" marker-end="url(#bia-arr)"/>
+<!-- 피드백 화살표 -->
+<line x1="150" y1="435" x2="150" y2="480" stroke="#888" stroke-width="1.1"/>
+<line x1="150" y1="480" x2="110" y2="480" stroke="#888" stroke-width="1.1"/>
+<line x1="110" y1="480" x2="110" y2="170" stroke="#888" stroke-width="1.1" stroke-dasharray="5 3"/>
+<line x1="110" y1="170" x2="110" y2="175" stroke="#888" stroke-width="1.1" marker-end="url(#bia-arr)"/>
+<text x="58" y="385" font-family="Arial,sans-serif" font-size="8" fill="#aaa" transform="rotate(-90,58,385)">피드백 (340)</text>
+<!-- 참조번호 -->
+<circle cx="646" cy="260" r="12" fill="#fff" stroke="#555" stroke-width="1.1"/>
+<text x="646" y="264" font-family="Arial,sans-serif" font-size="9" font-weight="bold" text-anchor="middle" fill="#333">200</text>
+<!-- 타이틀 블록 -->
+<line x1="14" y1="512" x2="686" y2="512" stroke="#888" stroke-width="0.8"/>
+<line x1="234" y1="512" x2="234" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<line x1="468" y1="512" x2="468" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<text x="22" y="528" font-family="'Courier New',monospace" font-size="11" font-weight="bold" fill="#333">도 8</text>
+<text x="22" y="543" font-family="Arial,sans-serif" font-size="9" fill="#777">생체 신호 처리 구성도</text>
+<text x="350" y="528" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">SCALE : N.T.S  |  UNIT : —</text>
+<text x="678" y="528" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#aaa">PYPI AI · 특허청 기준</text>
+<text x="678" y="543" font-family="Arial,sans-serif" font-size="7" text-anchor="end" fill="#bbb">AUTO GENERATED</text>
+</svg>
