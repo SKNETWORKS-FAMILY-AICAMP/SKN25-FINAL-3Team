@@ -1,0 +1,2533 @@
+{% extends 'base.html' %}
+{% block title %}PYPI — AI 특허 자동화{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   PYPI Landing — White Law Firm Theme
+   율촌·김앤장 스타일 라이트 테마
+════════════════════════════════════════════════════════ */
+
+/* ── Color tokens (light override) ─────────────────── */
+:root {
+  --lf-bg:        #ffffff;
+  --lf-bg2:       #faf8f4;
+  --lf-bg3:       #f4f0e8;
+  --lf-navy:      #12100e;
+  --lf-body:      #3d3830;
+  --lf-mid:       #7c756e;
+  --lf-muted:     #b8b0a8;
+  --lf-gold:      #9a7840;
+  --lf-gold-lt:   #b8935a;
+  --lf-border:    rgba(0,0,0,.08);
+  --lf-serif:     'DM Serif Display','Noto Serif KR',Georgia,serif;
+  --lf-sans:      'Pretendard Variable','Pretendard','Noto Sans KR',-apple-system,sans-serif;
+  --lf-ease:      cubic-bezier(.25,.46,.45,.94);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.lf {
+  font-family: var(--lf-sans);
+  background: var(--lf-bg);
+  color: var(--lf-navy);
+  overflow-x: hidden;
+}
+
+.lf-container {
+  max-width: 1180px; margin: 0 auto; padding: 0 64px;
+}
+
+/* ── Scroll reveal ──────────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 1s var(--lf-ease), transform 1s var(--lf-ease);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+.reveal-d4 { transition-delay: .4s; }
+
+/* ════════ HEADER ════════════════════════════════════ */
+.lf-header {
+  position: sticky; top: 0; z-index: 600;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-nav {
+  max-width: 1180px; margin: 0 auto;
+  padding: 0 64px; height: 70px;
+  display: flex; align-items: center;
+}
+.lf-logo {
+  display: flex; align-items: center; gap: 11px;
+  text-decoration: none; margin-right: 52px; flex-shrink: 0;
+}
+.lf-logo-mark {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(154,120,64,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 10px; color: var(--lf-gold);
+  transition: background .2s;
+}
+.lf-logo:hover .lf-logo-mark { background: rgba(154,120,64,.06); }
+.lf-logo-name {
+  font-family: var(--lf-serif); font-size: 15px; font-weight: 400;
+  letter-spacing: 2.8px; text-transform: uppercase; color: var(--lf-navy);
+}
+
+/* GNB — 드롭다운 nav */
+.lf-gnb { display: flex; align-items: center; flex: 1; gap: 0; }
+.lf-gnb-item { position: relative; height: 70px; display: flex; align-items: center; }
+
+.lf-gnb-a {
+  position: relative;
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  text-decoration: none; padding: 0 18px; height: 70px;
+  display: flex; align-items: center; gap: 5px;
+  transition: color .2s;
+}
+.lf-gnb-a::after {
+  content: ''; position: absolute; bottom: 0; left: 18px; right: 18px; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .28s cubic-bezier(.25,.46,.45,.94);
+}
+.lf-gnb-a:hover,
+.lf-gnb-item:hover > .lf-gnb-a { color: var(--lf-navy); }
+.lf-gnb-a:hover::after,
+.lf-gnb-item:hover > .lf-gnb-a::after { transform: scaleX(1); }
+
+.lf-gnb-chev {
+  flex-shrink: 0; transition: transform .25s;
+}
+.lf-gnb-item:hover .lf-gnb-chev { transform: rotate(180deg); }
+
+/* ── 드롭다운 패널 ───────────────────────────────── */
+.lf-drop {
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid var(--lf-border);
+  border-top: 2px solid var(--lf-gold);
+  box-shadow: 0 20px 56px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 700;
+}
+.lf-drop--wide { min-width: 240px; }
+.lf-gnb-item:hover .lf-drop {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.lf-drop-inner { padding: .6rem 0; }
+.lf-drop-a {
+  display: flex; align-items: center; gap: 10px;
+  padding: .6rem 1.2rem;
+  font-size: 11.5px; font-weight: 400; letter-spacing: .2px;
+  color: var(--lf-body); text-decoration: none;
+  transition: background .15s, color .15s;
+  white-space: nowrap; cursor: pointer;
+  background: transparent; border: none; width: 100%;
+  text-align: left; font-family: var(--lf-sans);
+}
+.lf-drop-a:hover { background: var(--lf-bg2); color: var(--lf-navy); }
+.lf-drop-a--hl { color: var(--lf-gold); font-weight: 500; }
+.lf-drop-a--hl:hover { color: var(--lf-gold-lt); background: rgba(154,120,64,.05); }
+.lf-drop-a--cta { color: var(--lf-gold); font-weight: 600; letter-spacing: .5px; }
+.lf-drop-a--cta:hover { background: rgba(154,120,64,.06); }
+.lf-drop-logout:hover { color: #dc2626; background: rgba(220,38,38,.05); }
+.lf-drop-num {
+  font-family: var(--lf-serif); font-size: 11px; font-style: italic;
+  color: var(--lf-muted); width: 18px; flex-shrink: 0;
+}
+.lf-drop-a:hover .lf-drop-num { color: var(--lf-gold); }
+.lf-drop-sep { height: 1px; background: var(--lf-border); margin: .4rem 1.2rem; }
+
+/* Dropdown */
+.lf-drop {
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 210px;
+  background: #fff;
+  border: 1px solid var(--lf-border);
+  border-top: 2px solid var(--lf-gold);
+  box-shadow: 0 20px 60px rgba(0,0,0,.12);
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s, transform .22s;
+  z-index: 700;
+}
+.lf-gnb-item:hover .lf-drop {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.lf-drop-inner { padding: .6rem 0; }
+
+.lf-drop-a {
+  display: flex; align-items: center; gap: 10px;
+  padding: .6rem 1.25rem;
+  font-size: 11.5px; font-weight: 400; letter-spacing: .2px;
+  color: var(--lf-body); text-decoration: none;
+  transition: color .15s, background .15s;
+  white-space: nowrap; cursor: pointer;
+  background: transparent; border: none; width: 100%; text-align: left;
+  font-family: var(--lf-sans);
+}
+.lf-drop-a:hover { color: var(--lf-navy); background: var(--lf-bg2); }
+.lf-drop-a--hl { color: var(--lf-gold); font-weight: 500; }
+.lf-drop-a--hl:hover { color: var(--lf-gold-lt); }
+.lf-drop-a--cta { color: var(--lf-gold); font-weight: 600; letter-spacing: .5px; }
+.lf-drop-a--cta:hover { background: rgba(154,120,64,.06); }
+.lf-drop-logout:hover { color: #dc2626; background: rgba(220,38,38,.05); }
+.lf-drop-num {
+  font-family: var(--lf-serif); font-size: 11px; font-style: italic;
+  color: var(--lf-muted); width: 16px; flex-shrink: 0;
+}
+.lf-drop-sep { height: 1px; background: var(--lf-border); margin: .4rem 1.25rem; }
+
+.lf-util { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.lf-login {
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  text-decoration: none; transition: color .2s;
+}
+.lf-login:hover { color: var(--lf-navy); }
+
+/* lang-btn (light override) */
+.lf .lang-btn { border-color: rgba(0,0,0,.12); color: var(--lf-mid); font-size: 10px; letter-spacing: 1.4px; background: transparent; }
+.lf .lang-btn:hover { border-color: rgba(154,120,64,.4); color: var(--lf-gold); }
+.lf .lang-dropdown { background: #fff; border-color: var(--lf-border); box-shadow: 0 16px 40px rgba(0,0,0,.1); margin-top: 4px; }
+.lf .lang-switcher::before {
+  content: ''; display: none;
+  position: absolute; top: 100%; right: 0;
+  width: 100%; height: 8px;
+}
+.lf .lang-switcher:hover::before { display: block; }
+.lf .lang-switcher:hover .lang-dropdown,
+.lf .lang-switcher.open .lang-dropdown { display: block; }
+.lf .lang-option { color: var(--lf-body); }
+.lf .lang-option:hover, .lf .lang-option.active { background: var(--lf-bg2); color: var(--lf-navy); }
+.lf .lang-code { color: var(--lf-muted); }
+.lf .lang-option.active .lang-code { color: var(--lf-gold); }
+
+/* ════════ 부유 요소 — 매우 절제 ════════════════════ */
+.lf-floats { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.lf-float {
+  position: absolute; opacity: 0;
+  animation: floatIn 1.2s ease forwards, floatDrift linear infinite;
+}
+@keyframes floatIn   { to { opacity: .14; } }
+@keyframes floatDrift{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.lf-float--doc  { width:40px; top:20%; left:7%;  animation-duration:1.2s,8s;  animation-delay:.8s,.8s; }
+.lf-float--node { width:44px; top:65%; left:5%;  animation-duration:1.2s,11s; animation-delay:1s,1s; }
+.lf-float--scale{ width:38px; top:25%; left:87%; animation-duration:1.2s,9s;  animation-delay:.9s,.9s; }
+.lf-float--pipe { width:24px; top:58%; left:90%; animation-duration:1.2s,13s; animation-delay:1.1s,1.1s; }
+.lf-float--axis { width:48px; top:70%; left:83%; animation-duration:1.2s,10s; animation-delay:1.2s,1.2s; }
+@media (max-width: 768px) { .lf-floats { display: none; } }
+
+/* ════════ 기술 마퀴 — 하단 고정 ══════════════════════ */
+.lf-hero-ticker {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  overflow: hidden; pointer-events: none;
+  border-top: 1px solid rgba(154,120,64,.08);
+  padding: 9px 0;
+}
+.lf-ticker-track {
+  display: flex; align-items: center; gap: 32px; width: max-content;
+  animation: tickerScroll 36s linear infinite;
+}
+.lf-ticker-track span {
+  font-family: 'Courier New', monospace; font-size: 8.5px;
+  font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--lf-gold); opacity: .45; white-space: nowrap;
+}
+.lf-ticker-dot { font-size: 6px !important; opacity: .2 !important; }
+@keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ════════ HERO DECO SVG (애니메이션) ════════════════ */
+.lf-hero-deco {
+  position: absolute; right: -1vw; top: 50%;
+  transform: translateY(-50%);
+  width: clamp(340px, 50vw, 640px);
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+.lf-deco-svg { width: 100%; height: auto; }
+.lf-hero-left-bg {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: clamp(280px, 42vw, 520px); height: auto;
+  pointer-events: none; z-index: 0; opacity: .85;
+}
+
+/* ── 원형 네트워크 애니메이션 ──────────────────────── */
+@keyframes drawLine  { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn    { from{opacity:0} to{opacity:1} }
+@keyframes nodeIn    { from{opacity:0;transform:scale(.3)} to{opacity:1;transform:scale(1)} }
+@keyframes pulsate   { 0%,100%{transform:scale(1);opacity:.25} 50%{transform:scale(1.2);opacity:.55} }
+@keyframes ref-pulse { 0%,100%{r:10;opacity:.56} 50%{r:13;opacity:.85} }
+.ref-pulse { animation: ref-pulse 2.4s ease-in-out infinite; }
+@keyframes scale-sway { 0%,100%{transform:rotate(0deg)} 30%{transform:rotate(-14deg)} 70%{transform:rotate(14deg)} }
+.scale-beam { transform-box:fill-box; transform-origin:center top; animation:scale-sway 2.8s ease-in-out infinite; }
+@keyframes ringRotate{ to{transform:rotate(360deg)} }
+
+/* 외곽 회전 링 */
+.ring-rotate { transform-origin:250px 250px; animation:ringRotate 50s linear infinite; }
+
+/* 연결선 순차 등장 */
+.net-line { stroke-dasharray:500; stroke-dashoffset:500; animation:drawLine 1.6s ease forwards; }
+.net-line:nth-child(1){animation-delay:.7s} .net-line:nth-child(2){animation-delay:.9s}
+.net-line:nth-child(3){animation-delay:1s}  .net-line:nth-child(4){animation-delay:1.1s}
+.net-line:nth-child(5){animation-delay:1.2s}.net-line:nth-child(6){animation-delay:1.3s}
+.net-line:nth-child(7){animation-delay:1.4s}
+
+/* 스포크 */
+.net-spoke { stroke-dasharray:250; stroke-dashoffset:250; animation:drawLine 1.2s 1.6s ease forwards; }
+
+/* 노드 */
+.net-node { opacity:0; transform-box:fill-box; transform-origin:center; animation:nodeIn .4s ease forwards; }
+.net-node:nth-child(3n+1){animation-delay:1.2s} .net-node:nth-child(3n+2){animation-delay:1.4s} .net-node:nth-child(3n){animation-delay:1.6s}
+
+/* 텍스트 */
+.net-label { opacity:0; animation:fadeIn .5s 2s forwards; }
+.net-dot   { opacity:0; animation:fadeIn .4s 1.8s forwards; }
+
+/* Agent V 펄스 */
+.pulse-outer { transform-origin:250px 185px; animation:pulsate 2.8s 3s ease-in-out infinite; }
+
+/* 데이터 플로우 */
+.flow-dot { opacity:0; }
+
+/* 중앙 텍스트 */
+.lf-deco-svg text { opacity:0; animation:fadeIn .6s 2.5s forwards; }
+
+@media (max-width: 1024px) { .lf-hero-deco { width: clamp(260px, 42vw, 480px); right: -2vw; } }
+@media (max-width: 768px)  { .lf-hero-deco { display: none; } }
+
+/* ════════ HERO ══════════════════════════════════════ */
+.lf-hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: var(--lf-bg);
+}
+
+/* 도트 그리드 배경 — 매우 섬세하게 */
+.lf-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(154,120,64,.11) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* 가이드 그리드 — 거의 보이지 않게 */
+.lf-hero::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(154,120,64,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(154,120,64,.025) 1px, transparent 1px);
+  background-size: 160px 160px;
+  pointer-events: none;
+}
+
+/* ── 코너 브래킷 — 정제된 크기 ─────────────────────── */
+.lf-corner {
+  position: absolute; width: 24px; height: 24px; pointer-events: none; z-index: 2;
+  opacity: .28;
+}
+.lf-corner--tl { top: 40px; left: 40px; }
+.lf-corner--tr { top: 40px; right: 40px; transform: scaleX(-1); }
+.lf-corner--bl { bottom: 40px; left: 40px; transform: scaleY(-1); }
+.lf-corner--br { bottom: 40px; right: 40px; transform: scale(-1); }
+
+/* ── 치수 주석선 ──────────────────────────────────── */
+.lf-dim-left {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none; z-index: 2; opacity: 0;
+  animation: dimFade 1.5s 1.2s ease forwards;
+}
+@keyframes dimFade { to { opacity: .22; } }
+.lf-dim-line {
+  width: 1px; height: 80px;
+  background: linear-gradient(180deg, transparent, rgba(154,120,64,.5), transparent);
+}
+.lf-dim-label {
+  font-family: 'Courier New', monospace; font-size: 8px;
+  color: var(--lf-gold); letter-spacing: 1px;
+  transform: rotate(-90deg); white-space: nowrap;
+}
+.lf-dim-tick { width: 8px; height: 1px; background: rgba(154,120,64,.5); }
+
+/* ── 타이틀 블록 (도면 우측 하단) ─────────────────── */
+.lf-title-block {
+  position: absolute; bottom: 36px; right: 36px; z-index: 2;
+  opacity: 0; animation: dimFade 1.5s 1.2s ease forwards;
+  pointer-events: none;
+}
+
+/* ── 중앙 크로스헤어 ─────────────────────────────── */
+.lf-crosshair {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px; z-index: 0; pointer-events: none;
+  opacity: .12;
+}
+
+@media (max-width: 768px) {
+  .lf-corner, .lf-dim-left, .lf-title-block, .lf-crosshair { display: none; }
+}
+.lf-hero-stamp {
+  position: absolute; right: -1vw; bottom: -6vh;
+  font-family: var(--lf-serif); font-size: clamp(180px,22vw,340px);
+  font-weight: 300; font-style: italic;
+  color: rgba(154,120,64,.04);
+  line-height: 1; pointer-events: none; user-select: none; letter-spacing: -4px;
+}
+.lf-hero-lines {
+  position: absolute; inset: 0;
+  display: flex; justify-content: space-evenly; pointer-events: none;
+}
+.lf-hero-lines span {
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(154,120,64,.05) 30%, rgba(154,120,64,.05) 70%, transparent 100%);
+}
+.lf-hero-body {
+  position: relative; z-index: 1;
+  text-align: center; max-width: 760px; padding: 0 40px;
+}
+.lf-eyebrow {
+  display: inline-flex; align-items: center; gap: 20px;
+  font-size: 7.5px; font-weight: 500; letter-spacing: 4.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .6;
+  margin-bottom: 44px;
+}
+.lf-eyebrow::before, .lf-eyebrow::after {
+  content: ''; display: block; width: 44px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(154,120,64,.32));
+}
+.lf-eyebrow::after { transform: scaleX(-1); }
+.lf-hero-h1 {
+  font-family: var(--lf-serif);
+  font-size: clamp(42px, 6vw, 84px);
+  font-weight: 300; line-height: 1.1;
+  letter-spacing: -2px; color: var(--lf-navy);
+  margin-bottom: 32px;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+}
+.lf-hero-h1 em { font-style: italic; color: var(--lf-gold); font-weight: 300; }
+
+.lf-ornament {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin-bottom: 32px;
+}
+.lf-orn-l, .lf-orn-r {
+  display: block; width: 64px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(154,120,64,.4));
+}
+.lf-orn-r { transform: scaleX(-1); }
+.lf-orn-d {
+  display: block; width: 4px; height: 4px;
+  background: var(--lf-gold); transform: rotate(45deg); opacity: .5;
+}
+/* 심플 골드 구분선 */
+.lf-hero-rule {
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lf-gold), transparent);
+  margin: 28px auto 24px;
+}
+
+.lf-hero-sub {
+  font-size: 13.5px; font-weight: 300; line-height: 2;
+  color: var(--lf-mid); letter-spacing: .3px; margin-bottom: 44px;
+  max-width: 560px; margin-left: auto; margin-right: auto;
+}
+
+/* 히어로 CTA 버튼 */
+.lf-hero-cta {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; margin-bottom: 60px; flex-wrap: wrap;
+}
+.lf-hero-btn-fill {
+  display: inline-flex; align-items: center;
+  padding: 15px 40px;
+  background: var(--lf-navy); color: #fff;
+  font-family: var(--lf-sans); font-size: 10px; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
+  transition: background .25s, letter-spacing .2s;
+  position: relative; overflow: hidden;
+}
+.lf-hero-btn-fill::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s;
+}
+.lf-hero-btn-fill:hover { background: #1e1a18; letter-spacing: 2.8px; }
+.lf-hero-btn-fill:hover::after { transform: scaleX(1); }
+.lf-hero-btn-line {
+  display: inline-flex; align-items: center;
+  padding: 15px 36px;
+  border: 1px solid rgba(154,120,64,.25); color: var(--lf-mid);
+  font-family: var(--lf-sans); font-size: 10px; font-weight: 400;
+  letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.lf-hero-btn-line:hover { color: var(--lf-navy); border-color: var(--lf-gold); background: rgba(154,120,64,.04); }
+.lf-scroll {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--lf-muted); text-decoration: none; transition: color .2s;
+}
+.lf-scroll:hover { color: var(--lf-gold); }
+.lf-scroll-line {
+  display: block; width: 1px; height: 36px;
+  background: linear-gradient(180deg, transparent, rgba(154,120,64,.4));
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* ════════ ATTORNEY BADGE (hero) ════════════════════ */
+.lf-attorney-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(154,120,64,.07);
+  border: 1px solid rgba(154,120,64,.25);
+  padding: .4rem 1rem;
+  font-size: 9.5px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .85;
+  margin-bottom: 36px;
+}
+.lf-badge-sep { opacity: .3; }
+
+/* ════════ TOP CREDENTIAL BAR ════════════════════════ */
+.lf-top-bar {
+  background: var(--lf-navy);
+  padding: 8px 0;
+}
+.lf-top-bar-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; flex-wrap: wrap;
+}
+.lf-top-bar-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 500; letter-spacing: 1.3px;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+}
+.lf-top-bar-item svg { color: var(--lf-gold-lt); opacity: .7; }
+.lf-top-bar-sep { color: rgba(255,255,255,.12); font-size: 9px; }
+@media (max-width: 768px) {
+  .lf-top-bar-sep:nth-child(n+4), .lf-top-bar-item:nth-child(n+4) { display: none; }
+}
+
+/* ════════ 업무 절차 ══════════════════════════════════ */
+.lf-process {
+  padding: 120px 0;
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-proc-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--lf-border);
+}
+.lf-proc-item {
+  padding: 40px 32px; border-right: 1px solid var(--lf-border);
+  position: relative; transition: background .2s;
+}
+.lf-proc-item:last-child { border-right: none; }
+.lf-proc-item:hover { background: var(--lf-bg); }
+
+/* 상단 골드 라인 on hover */
+.lf-proc-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.25,.46,.45,.94);
+}
+.lf-proc-item:hover::before { transform: scaleX(1); }
+
+.lf-proc-step {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+}
+.lf-proc-n {
+  font-family: 'Courier New', monospace; font-size: 13px; font-weight: 700;
+  color: var(--lf-gold); opacity: .6; line-height: 1; letter-spacing: 1px;
+  border: 1px solid rgba(154,120,64,.3); padding: 3px 6px;
+}
+.lf-proc-line {
+  flex: 1; height: 1px; background: linear-gradient(90deg, rgba(154,120,64,.3), transparent);
+}
+.lf-proc-name {
+  font-family: var(--lf-serif); font-size: 17px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 4px; letter-spacing: -.1px;
+  line-height: 1.3;
+}
+.lf-proc-sub {
+  font-size: 9px; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .6;
+  margin-bottom: 16px;
+}
+.lf-proc-desc {
+  font-size: 12.5px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.85; letter-spacing: .1px;
+}
+@media (max-width: 1024px) {
+  .lf-proc-grid { grid-template-columns: repeat(2,1fr); }
+  .lf-proc-item:nth-child(2) { border-right: none; }
+  .lf-proc-item:nth-child(1), .lf-proc-item:nth-child(2) { border-bottom: 1px solid var(--lf-border); }
+}
+@media (max-width: 560px) {
+  .lf-proc-grid { grid-template-columns: 1fr; }
+  .lf-proc-item { border-right: none; border-bottom: 1px solid var(--lf-border); }
+  .lf-proc-item:last-child { border-bottom: none; }
+}
+
+/* ════════ CRED BAR ══════════════════════════════════ */
+.lf-cred {
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-cred-wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding: 0 64px; height: 88px;
+  display: flex; align-items: center;
+}
+.lf-cred-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+}
+.lf-cred-n {
+  font-family: var(--lf-serif); font-size: 32px; font-weight: 300;
+  color: var(--lf-gold); line-height: 1; letter-spacing: -1px;
+  display: flex; align-items: baseline; gap: 1px;
+}
+.lf-cred-pct { font-size: 18px; }
+.lf-cred-label {
+  font-size: 8px; font-weight: 500; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-muted);
+}
+.lf-cred-phrase {
+  font-family: var(--lf-serif); font-size: 13.5px; font-weight: 300;
+  color: var(--lf-body); text-align: center; letter-spacing: .2px;
+}
+.lf-cred-item--attorney { gap: 4px; }
+.lf-cred-item--attorney .lf-cred-phrase { font-size: 12.5px; }
+.lf-cred-sep { width: 1px; height: 28px; background: var(--lf-border); flex-shrink: 0; }
+
+/* ════════ SECTION TOKENS ════════════════════════════ */
+.lf-tag {
+  display: block; font-size: 8.5px; font-weight: 600;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--lf-gold); margin-bottom: 22px; opacity: .75;
+}
+.lf-h2 {
+  font-family: var(--lf-serif);
+  font-size: clamp(26px, 2.8vw, 40px);
+  font-weight: 300; line-height: 1.25; color: var(--lf-navy);
+  letter-spacing: -.4px;
+  font-feature-settings: 'kern' 1;
+}
+.lf-h2 em { font-style: italic; color: var(--lf-gold); }
+.lf-body {
+  font-size: 14px; font-weight: 300; line-height: 2.05;
+  color: var(--lf-mid); margin-bottom: 20px; letter-spacing: .05px;
+}
+.lf-body:last-child { margin-bottom: 0; }
+.lf-section-hd { margin-bottom: 80px; }
+
+/* ════════ ATTORNEY TRUST BAR ══════════════════════ */
+.lf-attorney-bar {
+  background: var(--lf-bg);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+  padding: 48px 0;
+}
+.lf-atty-inner {
+  display: flex; align-items: flex-start; gap: 32px;
+}
+.lf-atty-icon {
+  width: 52px; height: 52px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(154,120,64,.3);
+  color: var(--lf-gold); opacity: .7;
+}
+.lf-atty-body { flex: 1; }
+.lf-atty-title {
+  font-family: var(--lf-serif); font-size: 17px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 10px; letter-spacing: -.1px;
+}
+.lf-atty-desc {
+  font-size: 13px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.9; letter-spacing: .1px;
+}
+.lf-atty-badge {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  flex-shrink: 0; text-align: center;
+  border-left: 1px solid var(--lf-border); padding-left: 32px;
+  color: var(--lf-gold); min-width: 120px;
+}
+.lf-atty-badge svg { opacity: .7; }
+.lf-atty-badge span {
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65;
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+  .lf-atty-inner { flex-direction: column; gap: 20px; }
+  .lf-atty-badge { border-left: none; padding-left: 0; flex-direction: row; }
+}
+
+/* ════════ ABOUT DECO ═══════════════════════════════ */
+.lf-about-deco {
+  width: 88px; height: 88px; margin-bottom: 28px; opacity: .7;
+}
+.lf-about-deco svg { width: 100%; height: auto; }
+
+/* ════════ ABOUT ═════════════════════════════════════ */
+.lf-about { padding: 120px 0; background: var(--lf-bg); }
+.lf-about-grid {
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 96px; align-items: start;
+}
+.lf-about-l { position: sticky; top: 90px; }
+.lf-pullquote {
+  font-family: var(--lf-serif);
+  font-size: clamp(18px, 1.9vw, 24px);
+  font-style: italic; font-weight: 300;
+  color: var(--lf-navy); line-height: 1.65;
+  border-left: 2px solid var(--lf-gold);
+  padding: 4px 0 4px 24px; margin-bottom: 36px;
+  letter-spacing: -.1px;
+}
+
+/* ════════ PIPELINE ══════════════════════════════════ */
+.lf-pipeline {
+  padding: 120px 0; background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-agents {
+  position: relative; border-top: 1px solid rgba(0,0,0,.07);
+}
+.lf-agents::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
+  background: rgba(154,120,64,.15);
+}
+.lf-agent {
+  display: grid; grid-template-columns: 88px 1fr;
+  padding: 44px 0 44px 32px;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  position: relative; transition: background .2s;
+}
+.lf-agent::before {
+  content: ''; position: absolute; left: -4px; top: 48px;
+  width: 7px; height: 7px; border-radius: 50%;
+  border: 1px solid rgba(154,120,64,.25); background: var(--lf-bg2);
+  transition: border-color .25s, background .25s;
+}
+.lf-agent:hover::before, .lf-agent--hl::before {
+  border-color: var(--lf-gold); background: rgba(154,120,64,.12);
+}
+.lf-agent:hover { background: rgba(154,120,64,.02); }
+.lf-agent-num {
+  font-family: 'Courier New', monospace; font-size: 13px; font-weight: 400;
+  color: var(--lf-gold); opacity: .5; transition: opacity .2s;
+  line-height:1; padding-top:4px; letter-spacing: 1px;
+}
+.lf-agent:hover .lf-agent-num, .lf-agent--hl .lf-agent-num { opacity: .9; }
+.lf-agent:hover .lf-agent-num { color: var(--lf-gold); }
+.lf-agent--hl .lf-agent-num { color: var(--lf-gold); }
+.lf-agent--hl .lf-agent-name { color: var(--lf-gold); }
+.lf-agent-body { display: flex; flex-direction: column; gap: 10px; }
+.lf-agent-hd { display: flex; align-items: baseline; gap: 14px; }
+.lf-agent-name {
+  font-family: var(--lf-serif);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 400; color: var(--lf-navy); letter-spacing: -.1px;
+  transition: color .2s;
+}
+.lf-agent-en {
+  font-size: 8.5px; font-weight: 500; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-muted);
+}
+.lf-agent-desc {
+  font-size: 13px; font-weight: 300; line-height: 2;
+  color: var(--lf-mid); max-width: 540px;
+}
+
+/* ════════ FEATURES ══════════════════════════════════ */
+.lf-features { padding: 120px 0; background: var(--lf-bg); }
+.lf-feat-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--lf-border);
+  border: 1px solid var(--lf-border);
+}
+.lf-feat {
+  background: var(--lf-bg);
+  padding: 52px 40px 48px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden; transition: background .25s;
+}
+.lf-feat:hover { background: var(--lf-bg2); }
+.lf-feat-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--lf-ease);
+}
+.lf-feat:hover .lf-feat-line { transform: scaleX(1); }
+.lf-feat-no {
+  font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; color: var(--lf-gold); opacity: .55; margin-bottom: 28px;
+  border-bottom: 1px solid rgba(154,120,64,.25); padding-bottom: 8px;
+  display: inline-block;
+}
+.lf-feat-icon {
+  width: 48px; height: 48px; color: var(--lf-gold);
+  opacity: .55; margin-bottom: 28px; transition: opacity .25s;
+}
+.lf-feat:hover .lf-feat-icon { opacity: .85; }
+.lf-feat-name {
+  font-family: var(--lf-serif); font-size: 20px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 14px;
+}
+.lf-feat-desc {
+  font-size: 13px; font-weight: 300; line-height: 2; color: var(--lf-mid); flex: 1;
+}
+
+/* ════════ CARD NEWS ═════════════════════════════════ */
+.lf-news {
+  padding: 128px 0; background: var(--lf-bg);
+  border-top: 1px solid var(--lf-border);
+}
+.lf-news-hd {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 60px; gap: 24px;
+}
+.lf-news-more {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lf-gold); text-decoration: none;
+  padding-bottom: 2px; border-bottom: 1px solid rgba(154,120,64,.3);
+  white-space: nowrap; transition: opacity .2s;
+}
+.lf-news-more:hover { opacity: .7; }
+
+.lf-news-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; background: var(--lf-border); border: 1px solid var(--lf-border);
+}
+
+.lf-news-card {
+  background: var(--lf-bg); padding: 44px 36px 40px;
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  position: relative; overflow: hidden;
+  transition: background .22s;
+}
+.lf-news-card:hover { background: var(--lf-bg2); }
+
+/* 골드 상단 라인 */
+.lf-news-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+}
+.lf-news-card:hover .lf-news-accent { transform: scaleX(1); }
+
+.lf-news-card-top {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.lf-news-no {
+  font-family: var(--lf-serif); font-size: 13px; font-weight: 300;
+  font-style: italic; color: var(--lf-gold); opacity: .5;
+}
+.lf-news-tag {
+  font-size: 8.5px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65;
+  padding: .18rem .55rem; border: 1px solid rgba(154,120,64,.2);
+}
+.lf-news-title {
+  font-family: var(--lf-serif); font-size: clamp(16px,1.6vw,20px);
+  font-weight: 400; color: var(--lf-navy); line-height: 1.45;
+  margin-bottom: 14px; letter-spacing: -.1px;
+}
+.lf-news-summary {
+  font-size: 13px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.85; margin-bottom: 20px; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.lf-news-points {
+  list-style: none; margin-bottom: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.lf-news-points li {
+  font-size: 11.5px; font-weight: 300; color: var(--lf-mid);
+  padding-left: 14px; position: relative; line-height: 1.55;
+}
+.lf-news-points li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 5px; height: 1px; background: var(--lf-gold);
+}
+.lf-news-link {
+  font-size: 9.5px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold);
+  opacity: 0; transition: opacity .2s; margin-top: auto;
+}
+.lf-news-card:hover .lf-news-link { opacity: .85; }
+
+@media (max-width: 900px) { .lf-news-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .lf-news-grid { grid-template-columns: 1fr; } .lf-news-hd { flex-direction: column; align-items: flex-start; } }
+
+/* ════════ TEAM ══════════════════════════════════════ */
+.lf-team { padding: 128px 0; background: var(--lf-bg2); border-top: 1px solid var(--lf-border); }
+.lf-team-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--lf-border);
+  border: 1px solid var(--lf-border);
+}
+.lf-member {
+  background: var(--lf-bg2); padding: 48px 36px;
+  display: flex; flex-direction: column; gap: 0;
+  transition: background .2s; position: relative; overflow: hidden;
+}
+.lf-member::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s var(--lf-ease);
+}
+.lf-member:hover { background: #fff; }
+.lf-member:hover::before { transform: scaleX(1); }
+
+.lf-member-avatar {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 2px solid rgba(154,120,64,.22);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 28px; font-weight: 300;
+  color: var(--lf-gold); margin-bottom: 28px;
+  overflow: hidden; background: var(--lf-bg3);
+  transition: border-color .25s, box-shadow .25s;
+}
+.lf-member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.lf-member:hover .lf-member-avatar {
+  border-color: rgba(154,120,64,.5);
+  box-shadow: 0 0 0 5px rgba(154,120,64,.07);
+}
+.lf-member-name {
+  font-family: var(--lf-serif); font-size: 19px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 5px; letter-spacing: -.1px;
+}
+.lf-member-role {
+  font-size: 8.5px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65;
+  margin-bottom: 22px;
+}
+.lf-member-desc {
+  font-size: 12.5px; font-weight: 300; line-height: 1.9;
+  color: var(--lf-mid); letter-spacing: .05px;
+}
+
+/* ════════ HERO SECTION NAV (scroll indicator) ══════ */
+.lf-section-nav {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--lf-muted); transition: color .2s;
+  margin-top: 8px;
+}
+.lf-section-nav:hover { color: var(--lf-gold); }
+.lf-section-nav-inner {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Courier New', monospace; font-size: 8px; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.lf-section-nav-label { color: var(--lf-gold); opacity: .5; }
+.lf-section-nav-line {
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(154,120,64,.3), transparent);
+}
+.lf-section-nav-text { color: var(--lf-muted); font-size: 7px; }
+.lf-section-nav-arrow { opacity: .4; animation: scrollPulse 2s ease-in-out infinite; }
+.lf-section-nav:hover .lf-section-nav-arrow { opacity: .8; }
+
+/* ════════ CLOSING (리디자인) ════════════════════════ */
+.lf-closing {
+  padding: 120px 0;
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  text-align: center;
+}
+.lf-closing-inner {
+  max-width: 640px; margin: 0 auto;
+  position: relative; padding: 56px 64px;
+  border: 1px solid rgba(154,120,64,.2);
+}
+
+/* 코너 브래킷 */
+.lf-close-bracket {
+  position: absolute; width: 20px; height: 20px; opacity: .45;
+}
+.lf-close-bracket--tl { top: -1px; left: -1px; }
+.lf-close-bracket--tr { top: -1px; right: -1px; transform: scaleX(-1); }
+.lf-close-bracket--bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+.lf-close-bracket--br { bottom: -1px; right: -1px; transform: scale(-1); }
+
+/* 상단 레이블 */
+.lf-close-ref {
+  display: flex; align-items: center; gap: 12px;
+  justify-content: center; margin-bottom: 40px;
+}
+.lf-close-ref-line {
+  width: 40px; height: 1px; background: rgba(154,120,64,.3); flex-shrink: 0;
+}
+.lf-close-ref-label {
+  font-family: 'Courier New', monospace; font-size: 8px; font-weight: 500;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--lf-gold); opacity: .55; white-space: nowrap;
+}
+
+.lf-closing-h2 {
+  font-family: var(--lf-serif);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 300; color: var(--lf-navy); line-height: 1.12; letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.lf-closing-sub {
+  font-size: 13.5px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.9; letter-spacing: .2px; margin-bottom: 44px;
+}
+
+.lf-closing-actions {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; flex-wrap: wrap; margin-bottom: 40px;
+}
+.lf-btn-fill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none;
+  color: #fff; background: var(--lf-navy);
+  border: 1px solid var(--lf-navy);
+  transition: background .2s, border-color .2s;
+}
+.lf-btn-fill:hover { background: var(--lf-gold); border-color: var(--lf-gold); }
+.lf-btn-fill svg { opacity: .7; }
+.lf-btn-line {
+  display: inline-flex; align-items: center;
+  padding: 14px 28px;
+  font-size: 10px; font-weight: 400; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--lf-mid); border: 1px solid var(--lf-border);
+  transition: color .2s, border-color .2s;
+}
+.lf-btn-line:hover { color: var(--lf-navy); border-color: rgba(154,120,64,.4); }
+
+/* 하단 기술 주석 */
+.lf-close-note {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  font-family: 'Courier New', monospace; font-size: 8.5px;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding-top: 28px;
+  border-top: 1px solid var(--lf-border);
+}
+.lf-close-note-item {
+  display: flex; align-items: center; gap: 5px;
+  color: var(--lf-muted);
+}
+.lf-close-note-item svg { color: var(--lf-gold); opacity: .6; }
+.lf-close-sep { color: var(--lf-border); }
+
+/* ════════ FOOTER ════════════════════════════════════ */
+.lf-footer { background: var(--lf-bg3); border-top: 1px solid var(--lf-border); padding-top: 72px; }
+.lf-footer-top {
+  display: grid; grid-template-columns: 280px 1fr; gap: 80px;
+  padding-bottom: 60px; border-bottom: 1px solid var(--lf-border);
+}
+.lf-footer-logo {
+  font-family: var(--lf-serif); font-size: 14px; font-weight: 400;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--lf-gold); opacity: .5; display: block; margin-bottom: 14px;
+}
+.lf-footer-tagline { font-size: 11px; font-weight: 300; color: var(--lf-mid); line-height: 2; letter-spacing: .2px; }
+.lf-footer-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 48px; }
+.lf-footer-col { display: flex; flex-direction: column; gap: 10px; }
+.lf-footer-hd {
+  font-size: 8.5px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65; margin-bottom: 8px;
+}
+.lf-footer-link {
+  font-size: 12px; font-weight: 300; color: var(--lf-mid);
+  text-decoration: none; transition: color .2s; letter-spacing: .1px;
+}
+a.lf-footer-link:hover { color: var(--lf-navy); }
+.lf-footer-bottom {
+  padding: 28px 0;
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+}
+.lf-footer-copy, .lf-footer-disc {
+  font-size: 10px; letter-spacing: .3px; color: var(--lf-muted);
+}
+.lf-footer-disc { max-width: 460px; text-align: right; line-height: 1.6; }
+
+/* ════════ RESPONSIVE ════════════════════════════════ */
+@media (max-width: 1024px) {
+  .lf-container, .lf-cred-wrap, .lf-nav { padding: 0 40px; }
+  .lf-about-l { position: static; }
+  .lf-footer-top { grid-template-columns: 1fr; gap: 36px; }
+  .lf-team-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 800px) {
+  .lf-container, .lf-cred-wrap, .lf-nav { padding: 0 24px; }
+  .lf-gnb { display: none; }
+  .lf-about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .lf-feat-grid { grid-template-columns: 1fr; }
+  .lf-team-grid { grid-template-columns: 1fr; }
+  .lf-footer-cols { grid-template-columns: 1fr 1fr; }
+  .lf-cred-wrap { flex-wrap: wrap; height: auto; padding: 24px; gap: 20px; }
+  .lf-cred-sep { display: none; }
+  .lf-cred-item { min-width: 40%; }
+}
+@media (max-width: 560px) {
+  .lf-hero-body { padding: 0 20px; }
+  .lf-agent { grid-template-columns: 56px 1fr; padding: 28px 0 28px 20px; }
+  .lf-closing-actions { flex-direction: column; }
+  .lf-footer-bottom { flex-direction: column; text-align: center; }
+  .lf-footer-disc { text-align: center; }
+}
+
+/* ════════════════════════════════════════════════════
+   Sketch → Patent Gear Animation
+════════════════════════════════════════════════════ */
+.lf-hero-body { position: relative; z-index: 5; }
+
+.sk-layer { animation: skLayerVis 5.5s cubic-bezier(.25,.46,.45,.94) forwards; }
+@keyframes skLayerVis {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  55%  { opacity: 1; }
+  74%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+.sk-path { stroke-linecap: round; stroke-linejoin: round; }
+.sk-p0 { stroke-dasharray: 600; stroke-dashoffset: 600; animation: skDraw 1.2s 0.3s ease forwards; }
+.sk-p1 { stroke-dasharray: 400; stroke-dashoffset: 400; animation: skDraw 0.9s 1.4s ease forwards; }
+.sk-p2 { stroke-dasharray: 400; stroke-dashoffset: 400; animation: skDraw 0.9s 1.9s ease forwards; }
+.sk-p4 { stroke-dasharray: 200; stroke-dashoffset: 200; animation: skDraw 0.5s 2.4s ease forwards; }
+.sk-p5 { stroke-dasharray: 150; stroke-dashoffset: 150; animation: skDraw 0.4s 2.7s ease forwards; }
+@keyframes skDraw { to { stroke-dashoffset: 0; } }
+.sk-g-text { opacity: 0; animation: skTextShow 5.5s ease forwards; }
+@keyframes skTextShow {
+  0%, 35% { opacity: 0; }
+  48%      { opacity: 1; }
+  62%      { opacity: 1; }
+  74%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+.pt-g-frame  { opacity: 0; animation: ptFade 1.0s 3.6s ease forwards; }
+.pt-g-title  { opacity: 0; animation: ptFade 0.7s 3.8s ease forwards; }
+.pt-g-cline  { opacity: 0; animation: ptFade 0.7s 4.0s ease forwards; }
+.pt-g-main   { opacity: 0; animation: ptFade 1.2s 4.2s ease forwards; }
+.pt-g-dim    { opacity: 0; animation: ptFade 0.8s 5.4s ease forwards; }
+.pt-g-ref    { opacity: 0; animation: ptFade 0.6s 5.8s ease forwards; }
+@keyframes ptFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ════════ LEFT / RIGHT SIDE BLUEPRINT STRIPS ═══════ */
+.lf-side-strip {
+  position: absolute; top: 0; bottom: 0;
+  width: 88px; pointer-events: none; z-index: 2;
+  opacity: 0; animation: sideFade 1.6s 1.2s ease forwards;
+}
+.lf-side-strip--left  { left: 0; }
+.lf-side-strip--right { right: 0; }
+@keyframes sideFade { to { opacity: 1; } }
+
+.lf-side-strip svg { width: 100%; height: 100%; }
+
+/* scan dot */
+@keyframes scanDown { 0%{transform:translateY(0)} 100%{transform:translateY(70vh)} }
+@keyframes scanUp   { 0%{transform:translateY(70vh)} 100%{transform:translateY(0)} }
+.scan-dot-down { animation: scanDown 5s 1.5s ease-in-out infinite alternate; }
+.scan-dot-up   { animation: scanUp   5s 2s   ease-in-out infinite alternate; }
+
+/* data flow pulse on side strips */
+@keyframes pulseDot { 0%,100%{opacity:.1} 50%{opacity:.7} }
+.side-pulse { animation: pulseDot 2.4s ease-in-out infinite; }
+.side-pulse:nth-child(2) { animation-delay:.8s; }
+.side-pulse:nth-child(3) { animation-delay:1.6s; }
+
+@media (max-width: 1100px) { .lf-side-strip { width: 56px; } }
+@media (max-width: 768px)  { .lf-side-strip { display: none; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="lf">
+
+  <!-- ══ TOP CREDENTIAL BAR ══════════════════════════════ -->
+  <div class="lf-top-bar">
+    <div class="lf-container">
+      <div class="lf-top-bar-inner">
+        <span class="lf-top-bar-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          등록 변리사 자문 시스템
+        </span>
+        <span class="lf-top-bar-sep">|</span>
+        <span class="lf-top-bar-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          AI 기반 특허 명세서 자동 작성
+        </span>
+        <span class="lf-top-bar-sep">|</span>
+        <span class="lf-top-bar-item">GPT-4o · LangGraph 파이프라인</span>
+        <span class="lf-top-bar-sep">|</span>
+        <span class="lf-top-bar-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          KO · EN · JA · ZH
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <header class="lf-header">
+    <div class="lf-nav">
+      <a href="{% url 'accounts:landing' %}" class="lf-logo">
+        <span class="lf-logo-mark">Pi</span>
+        <span class="lf-logo-name">PYPI</span>
+      </a>
+      <!-- 드롭다운 nav — 올리면 열리고, 클릭하면 페이지 이동 -->
+      <nav class="lf-gnb" aria-label="Main navigation">
+
+        <!-- PYPI 소개 -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:about' %}" class="lf-gnb-a">
+            <span>PYPI 소개</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:about' %}"    class="lf-drop-a">서비스 소개</a>
+            <a href="{% url 'accounts:features' %}" class="lf-drop-a">특징 및 원칙</a>
+            <div class="lf-drop-sep"></div>
+            <a href="{% url 'accounts:team' %}"     class="lf-drop-a">팀 소개</a>
+          </div></div>
+        </div>
+
+        <!-- 서비스 -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:agents_overview' %}" class="lf-gnb-a">
+            <span>서비스</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a">AI 에이전트 파이프라인</a>
+            <a href="{% url 'accounts:drawing' %}"         class="lf-drop-a">도면 자동 생성</a>
+            <a href="{% url 'accounts:chat' %}"            class="lf-drop-a">AI 어시스턴트</a>
+            <div class="lf-drop-sep"></div>
+            <a href="{% url 'accounts:pipeline' %}" class="lf-drop-a lf-drop-a--cta">파이프라인 실행 →</a>
+          </div></div>
+        </div>
+
+        <!-- 에이전트 -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:agents_overview' %}" class="lf-gnb-a">
+            <span data-i18n="nav_agents">에이전트</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:agent_summary' %}"       class="lf-drop-a"><span class="lf-drop-num">II</span><span data-i18n="agent_II">요약 에이전트</span></a>
+            <a href="{% url 'accounts:agent_prior_art' %}"     class="lf-drop-a"><span class="lf-drop-num">III</span><span data-i18n="agent_III">선행기술조사 에이전트</span></a>
+            <a href="{% url 'accounts:agent_claim' %}"         class="lf-drop-a"><span class="lf-drop-num">IV</span><span data-i18n="agent_IV">청구항 에이전트</span></a>
+            <a href="{% url 'accounts:agent_drawing' %}"       class="lf-drop-a"><span class="lf-drop-num">V</span><span data-i18n="agent_V">도면 에이전트</span></a>
+            <a href="{% url 'accounts:agent_specification' %}" class="lf-drop-a"><span class="lf-drop-num">VI</span><span data-i18n="agent_VI">명세서 에이전트</span></a>
+            <a href="{% url 'accounts:agent_composer' %}"      class="lf-drop-a"><span class="lf-drop-num">VII</span><span data-i18n="agent_VII">컴포저 에이전트</span></a>
+          </div></div>
+        </div>
+
+        <!-- 특허법 Q&A -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:qna' %}" class="lf-gnb-a">
+            <span data-i18n="nav_qna">특허법 Q&amp;A</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:qna' %}#basics" class="lf-drop-a">출원 기초</a>
+            <a href="{% url 'accounts:qna' %}#claims" class="lf-drop-a">청구항 작성</a>
+            <a href="{% url 'accounts:qna' %}#exam"   class="lf-drop-a">심사·등록</a>
+            <a href="{% url 'accounts:qna' %}#ai"     class="lf-drop-a lf-drop-a--hl">AI 특허 Q&amp;A</a>
+          </div></div>
+        </div>
+
+        <!-- 특허 자료 -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:insights' %}" class="lf-gnb-a">
+            <span>특허 자료</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:insights' %}" class="lf-drop-a">특허 인사이트</a>
+            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a">에이전트 소개</a>
+            <a href="{% url 'accounts:features' %}"        class="lf-drop-a">기술 원칙</a>
+          </div></div>
+        </div>
+
+        <!-- 이용하기 -->
+        <div class="lf-gnb-item">
+          <a href="{% url 'accounts:login' %}" class="lf-gnb-a">
+            <span data-i18n="nav_use">이용하기</span>
+            <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+          </a>
+          <div class="lf-drop"><div class="lf-drop-inner">
+            {% if user.is_authenticated %}
+            <a href="{% url 'accounts:dashboard' %}" class="lf-drop-a" data-i18n="nav_dashboard">대시보드</a>
+            <a href="{% url 'accounts:chat' %}"      class="lf-drop-a lf-drop-a--hl" data-i18n="nav_ai">AI 어시스턴트</a>
+            <a href="{% url 'accounts:pipeline' %}"  class="lf-drop-a" data-i18n="nav_pipeline_run">파이프라인 실행</a>
+            <a href="{% url 'accounts:drawing' %}"   class="lf-drop-a" data-i18n="nav_drawing">도면 생성</a>
+            <div class="lf-drop-sep"></div>
+            <form method="POST" action="{% url 'accounts:logout' %}" style="margin:0;">
+              {% csrf_token %}
+              <button type="submit" class="lf-drop-a lf-drop-logout" data-i18n="nav_logout">로그아웃</button>
+            </form>
+            {% else %}
+            <a href="{% url 'accounts:login' %}"  class="lf-drop-a" data-i18n="nav_login">로그인</a>
+            <a href="{% url 'accounts:signup' %}" class="lf-drop-a lf-drop-a--cta" data-i18n="nav_signup">서비스 신청</a>
+            {% endif %}
+          </div></div>
+        </div>
+
+      </nav>
+      <div class="lf-util">
+        <div class="lang-switcher">
+          <button class="lang-btn" type="button" aria-label="Language">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span data-lang-display>KO</span>
+          </button>
+          <div class="lang-dropdown">
+            <a href="#" class="lang-option" data-lang="ko"><span class="lang-flag">🇰🇷</span><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+            <a href="#" class="lang-option" data-lang="en"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+            <a href="#" class="lang-option" data-lang="ja"><span class="lang-flag">🇯🇵</span><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+            <a href="#" class="lang-option" data-lang="zh"><span class="lang-flag">🇨🇳</span><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+          </div>
+        </div>
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:dashboard' %}" class="lf-login" data-i18n="nav_dashboard">대시보드</a>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="lf-login" data-i18n="nav_login">로그인</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ HERO ════════════════════════════════════════════ -->
+  <section class="lf-hero">
+    <div class="lf-hero-stamp" aria-hidden="true">VII</div>
+
+    <!-- ── LEFT BLUEPRINT STRIP ─────────────────────── -->
+    <div class="lf-side-strip lf-side-strip--left" aria-hidden="true">
+      <svg viewBox="0 0 88 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <!-- spine line -->
+        <line x1="72" y1="0" x2="72" y2="800" stroke="#9a7840" stroke-width="0.6" opacity="0.18"/>
+        <line x1="68" y1="60" x2="68" y2="740" stroke="#9a7840" stroke-width="0.3" opacity="0.08"/>
+        <!-- major tick marks + labels (every 100px) -->
+        <line x1="56" y1="100" x2="72" y2="100" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="103" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">100</text>
+        <line x1="56" y1="200" x2="72" y2="200" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="203" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">200</text>
+        <line x1="56" y1="300" x2="72" y2="300" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="303" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">300</text>
+        <line x1="56" y1="400" x2="72" y2="400" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="403" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">400</text>
+        <line x1="56" y1="500" x2="72" y2="500" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="503" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">500</text>
+        <line x1="56" y1="600" x2="72" y2="600" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="603" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">600</text>
+        <line x1="56" y1="700" x2="72" y2="700" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="52" y="703" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">700</text>
+        <!-- minor ticks every 20px -->
+        <line x1="64" y1="120" x2="72" y2="120" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="140" x2="72" y2="140" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="160" x2="72" y2="160" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="180" x2="72" y2="180" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="220" x2="72" y2="220" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="240" x2="72" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="260" x2="72" y2="260" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="280" x2="72" y2="280" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="320" x2="72" y2="320" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="340" x2="72" y2="340" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="360" x2="72" y2="360" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="380" x2="72" y2="380" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="420" x2="72" y2="420" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="440" x2="72" y2="440" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="460" x2="72" y2="460" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="64" y1="480" x2="72" y2="480" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <!-- dimension bracket (hero content zone) -->
+        <line x1="28" y1="180" x2="28" y2="560" stroke="#9a7840" stroke-width="0.55" opacity="0.25"/>
+        <line x1="28" y1="180" x2="40" y2="180" stroke="#9a7840" stroke-width="0.55" opacity="0.25"/>
+        <line x1="28" y1="560" x2="40" y2="560" stroke="#9a7840" stroke-width="0.55" opacity="0.25"/>
+        <text x="22" y="374" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.28" letter-spacing="1.5" transform="rotate(-90,22,374)">HERO ZONE — 380px</text>
+        <!-- cross-ref circles -->
+        <circle cx="72" cy="160" r="9" stroke="#9a7840" stroke-width="0.6" opacity="0.32" fill="none"/>
+        <text x="72" y="164" text-anchor="middle" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.42">A</text>
+        <circle cx="72" cy="580" r="9" stroke="#9a7840" stroke-width="0.6" opacity="0.32" fill="none"/>
+        <text x="72" y="584" text-anchor="middle" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.42">B</text>
+        <!-- small hexagon bolt -->
+        <polygon points="72,368 80,373 80,383 72,388 64,383 64,373" stroke="#9a7840" stroke-width="0.7" opacity="0.28" fill="none"/>
+        <!-- animated scan dot -->
+        <circle class="scan-dot-down" cx="72" cy="60" r="2.5" fill="#9a7840" opacity="0.55"/>
+        <!-- data flow pulses -->
+        <circle class="side-pulse" cx="72" cy="200" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <circle class="side-pulse" cx="72" cy="400" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <circle class="side-pulse" cx="72" cy="600" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <!-- vertical label -->
+        <text x="10" y="400" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.22" letter-spacing="2" transform="rotate(-90,10,400)">PIPY — PATENT INTELLIGENCE SYSTEM</text>
+      </svg>
+    </div>
+
+    <!-- ── RIGHT BLUEPRINT STRIP ──────────────────────── -->
+    <div class="lf-side-strip lf-side-strip--right" aria-hidden="true">
+      <svg viewBox="0 0 88 800" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <!-- spine line -->
+        <line x1="16" y1="0" x2="16" y2="800" stroke="#9a7840" stroke-width="0.6" opacity="0.18"/>
+        <line x1="20" y1="60" x2="20" y2="740" stroke="#9a7840" stroke-width="0.3" opacity="0.08"/>
+        <!-- major tick marks (mirrored) -->
+        <line x1="16" y1="100" x2="32" y2="100" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="103" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">100</text>
+        <line x1="16" y1="200" x2="32" y2="200" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="203" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">200</text>
+        <line x1="16" y1="300" x2="32" y2="300" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="303" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">300</text>
+        <line x1="16" y1="400" x2="32" y2="400" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="403" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">400</text>
+        <line x1="16" y1="500" x2="32" y2="500" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="503" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">500</text>
+        <line x1="16" y1="600" x2="32" y2="600" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="603" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">600</text>
+        <line x1="16" y1="700" x2="32" y2="700" stroke="#9a7840" stroke-width="0.7" opacity="0.35"/>
+        <text x="36" y="703" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.38">700</text>
+        <!-- minor ticks -->
+        <line x1="16" y1="120" x2="24" y2="120" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="140" x2="24" y2="140" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="160" x2="24" y2="160" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="180" x2="24" y2="180" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="220" x2="24" y2="220" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="240" x2="24" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="260" x2="24" y2="260" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="280" x2="24" y2="280" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="320" x2="24" y2="320" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="340" x2="24" y2="340" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="360" x2="24" y2="360" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="380" x2="24" y2="380" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="420" x2="24" y2="420" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="440" x2="24" y2="440" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="460" x2="24" y2="460" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <line x1="16" y1="480" x2="24" y2="480" stroke="#9a7840" stroke-width="0.4" opacity="0.18"/>
+        <!-- spec callout arrows (pointing left = toward content) -->
+        <path d="M 60 220 L 36 220" stroke="#9a7840" stroke-width="0.55" opacity="0.3" stroke-dasharray="3 2"/>
+        <path d="M 40 217 L 36 220 L 40 223" stroke="#9a7840" stroke-width="0.55" opacity="0.3" fill="none"/>
+        <text x="62" y="223" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.35">AI AGENT</text>
+        <path d="M 60 340 L 36 340" stroke="#9a7840" stroke-width="0.55" opacity="0.3" stroke-dasharray="3 2"/>
+        <path d="M 40 337 L 36 340 L 40 343" stroke="#9a7840" stroke-width="0.55" opacity="0.3" fill="none"/>
+        <text x="62" y="343" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.35">PATENT</text>
+        <path d="M 60 460 L 36 460" stroke="#9a7840" stroke-width="0.55" opacity="0.3" stroke-dasharray="3 2"/>
+        <path d="M 40 457 L 36 460 L 40 463" stroke="#9a7840" stroke-width="0.55" opacity="0.3" fill="none"/>
+        <text x="62" y="463" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.35">DRAWING</text>
+        <!-- cross-ref circles -->
+        <circle cx="16" cy="160" r="9" stroke="#9a7840" stroke-width="0.6" opacity="0.32" fill="none"/>
+        <text x="16" y="164" text-anchor="middle" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.42">A</text>
+        <circle cx="16" cy="580" r="9" stroke="#9a7840" stroke-width="0.6" opacity="0.32" fill="none"/>
+        <text x="16" y="584" text-anchor="middle" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.42">B</text>
+        <!-- small schematic fragment: resistor-like symbol -->
+        <line x1="16" y1="360" x2="16" y2="375" stroke="#9a7840" stroke-width="0.6" opacity="0.25"/>
+        <rect x="10" y="375" width="12" height="22" stroke="#9a7840" stroke-width="0.6" opacity="0.25" fill="none"/>
+        <line x1="16" y1="397" x2="16" y2="412" stroke="#9a7840" stroke-width="0.6" opacity="0.25"/>
+        <!-- animated scan dot (upward) -->
+        <circle class="scan-dot-up" cx="16" cy="680" r="2.5" fill="#9a7840" opacity="0.55"/>
+        <!-- data flow pulses -->
+        <circle class="side-pulse" cx="16" cy="200" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <circle class="side-pulse" cx="16" cy="400" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <circle class="side-pulse" cx="16" cy="600" r="3" fill="none" stroke="#9a7840" stroke-width="0.6" opacity="0.4"/>
+        <!-- vertical label -->
+        <text x="78" y="400" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.22" letter-spacing="2" transform="rotate(90,78,400)">PIPY — INTELLECTUAL PROPERTY SYSTEM</text>
+      </svg>
+    </div>
+    <div class="lf-hero-lines" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- ── 부유 기술 요소들 (패럴랙스) ──────────────── -->
+    <div class="lf-floats" aria-hidden="true">
+      <!-- 특허 문서 아이콘 -->
+      <svg class="lf-float lf-float--doc" viewBox="0 0 60 72" fill="none">
+        <rect x="2" y="2" width="56" height="68" rx="1" stroke="#9a7840" stroke-width="0.8"/>
+        <line x1="12" y1="18" x2="48" y2="18" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="12" y1="26" x2="48" y2="26" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="12" y1="34" x2="38" y2="34" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="12" y1="46" x2="48" y2="46" stroke="#9a7840" stroke-width="0.5"/>
+        <line x1="12" y1="54" x2="40" y2="54" stroke="#9a7840" stroke-width="0.5"/>
+        <rect x="12" y="58" width="8" height="8" stroke="#9a7840" stroke-width="0.5"/>
+      </svg>
+      <!-- 회로 노드 -->
+      <svg class="lf-float lf-float--node" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="12" stroke="#9a7840" stroke-width="0.8"/>
+        <circle cx="40" cy="40" r="4"  fill="#9a7840" fill-opacity="0.3"/>
+        <line x1="40" y1="0"  x2="40" y2="28" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="40" y1="52" x2="40" y2="80" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="0"  y1="40" x2="28" y2="40" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="52" y1="40" x2="80" y2="40" stroke="#9a7840" stroke-width="0.6"/>
+        <circle cx="40" cy="0"  r="2.5" fill="#9a7840" fill-opacity="0.4"/>
+        <circle cx="40" cy="80" r="2.5" fill="#9a7840" fill-opacity="0.4"/>
+        <circle cx="0"  cy="40" r="2.5" fill="#9a7840" fill-opacity="0.4"/>
+        <circle cx="80" cy="40" r="2.5" fill="#9a7840" fill-opacity="0.4"/>
+      </svg>
+      <!-- 저울 아이콘 -->
+      <svg class="lf-float lf-float--scale" viewBox="0 0 56 64" fill="none">
+        <!-- static: post + base + pivot -->
+        <line x1="28" y1="10" x2="28" y2="56" stroke="#9a7840" stroke-width="0.8"/>
+        <line x1="8"  y1="56" x2="48" y2="56" stroke="#9a7840" stroke-width="0.8"/>
+        <circle cx="28" cy="10" r="3" stroke="#9a7840" stroke-width="0.8"/>
+        <!-- animated: beam + arms + pans -->
+        <g class="scale-beam">
+          <line x1="8"  y1="22" x2="48" y2="22" stroke="#9a7840" stroke-width="0.8"/>
+          <line x1="8"  y1="22" x2="8"  y2="34" stroke="#9a7840" stroke-width="0.6" stroke-dasharray="2 2"/>
+          <line x1="48" y1="22" x2="48" y2="34" stroke="#9a7840" stroke-width="0.6" stroke-dasharray="2 2"/>
+          <path d="M4 34 Q8 40 12 34"  stroke="#9a7840" stroke-width="0.8" fill="none"/>
+          <path d="M44 36 Q48 42 52 36" stroke="#9a7840" stroke-width="0.8" fill="none"/>
+        </g>
+      </svg>
+      <!-- 파이프라인 아이콘 -->
+      <svg class="lf-float lf-float--pipe" viewBox="0 0 36 120" fill="none">
+        <circle cx="18" cy="12"  r="8" stroke="#9a7840" stroke-width="0.8" fill="#9a7840" fill-opacity="0.04"/>
+        <circle cx="18" cy="40"  r="8" stroke="#9a7840" stroke-width="0.8"/>
+        <circle cx="18" cy="68"  r="8" stroke="#9a7840" stroke-width="1.2" fill="#9a7840" fill-opacity="0.08"/>
+        <circle cx="18" cy="96"  r="8" stroke="#9a7840" stroke-width="0.8"/>
+        <circle cx="18" cy="108" r="4" fill="#9a7840" fill-opacity="0.3"/>
+        <line x1="18" y1="20" x2="18" y2="32" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="18" y1="48" x2="18" y2="60" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="18" y1="76" x2="18" y2="88" stroke="#9a7840" stroke-width="0.6"/>
+      </svg>
+      <!-- 좌표 축 -->
+      <svg class="lf-float lf-float--axis" viewBox="0 0 80 80" fill="none">
+        <line x1="10" y1="70" x2="75" y2="70" stroke="#9a7840" stroke-width="0.8"/>
+        <line x1="10" y1="70" x2="10" y2="5"  stroke="#9a7840" stroke-width="0.8"/>
+        <polygon points="75,66 80,70 75,74" fill="#9a7840" fill-opacity="0.4"/>
+        <polygon points="6,5 10,0 14,5"     fill="#9a7840" fill-opacity="0.4"/>
+        <line x1="22" y1="70" x2="22" y2="50" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="34" y1="70" x2="34" y2="35" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="46" y1="70" x2="46" y2="45" stroke="#9a7840" stroke-width="0.6"/>
+        <line x1="58" y1="70" x2="58" y2="20" stroke="#9a7840" stroke-width="0.6"/>
+        <circle cx="22" cy="50" r="2" fill="#9a7840" fill-opacity="0.5"/>
+        <circle cx="34" cy="35" r="2" fill="#9a7840" fill-opacity="0.5"/>
+        <circle cx="46" cy="45" r="2" fill="#9a7840" fill-opacity="0.5"/>
+        <circle cx="58" cy="20" r="3" fill="#9a7840" fill-opacity="0.6"/>
+      </svg>
+    </div>
+
+    <!-- ── 하단 기술 마퀴 ──────────────────────────── -->
+    <div class="lf-hero-ticker" aria-hidden="true">
+      <div class="lf-ticker-track">
+        <span>PATENT APPLICATION</span><span class="lf-ticker-dot">◆</span>
+        <span>CLAIM DRAFTING</span><span class="lf-ticker-dot">◆</span>
+        <span>PRIOR ART SEARCH</span><span class="lf-ticker-dot">◆</span>
+        <span>AI SPECIFICATION</span><span class="lf-ticker-dot">◆</span>
+        <span>SVG DRAWING</span><span class="lf-ticker-dot">◆</span>
+        <span>LANGGRAPH PIPELINE</span><span class="lf-ticker-dot">◆</span>
+        <span>GPT-4o ENGINE</span><span class="lf-ticker-dot">◆</span>
+        <span>DOCX OUTPUT</span><span class="lf-ticker-dot">◆</span>
+        <span>ATTORNEY REVIEWED</span><span class="lf-ticker-dot">◆</span>
+        <!-- 반복 -->
+        <span>PATENT APPLICATION</span><span class="lf-ticker-dot">◆</span>
+        <span>CLAIM DRAFTING</span><span class="lf-ticker-dot">◆</span>
+        <span>PRIOR ART SEARCH</span><span class="lf-ticker-dot">◆</span>
+        <span>AI SPECIFICATION</span><span class="lf-ticker-dot">◆</span>
+        <span>SVG DRAWING</span><span class="lf-ticker-dot">◆</span>
+        <span>LANGGRAPH PIPELINE</span><span class="lf-ticker-dot">◆</span>
+        <span>GPT-4o ENGINE</span><span class="lf-ticker-dot">◆</span>
+        <span>DOCX OUTPUT</span><span class="lf-ticker-dot">◆</span>
+        <span>ATTORNEY REVIEWED</span><span class="lf-ticker-dot">◆</span>
+      </div>
+    </div>
+
+    <!-- 우측 — 7에이전트 원형 네트워크 -->
+    <div class="lf-hero-deco" aria-hidden="true">
+      <svg class="lf-deco-svg" viewBox="0 0 640 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ══ SKETCH LAYER — rough hand-drawn gears ══ -->
+        <g class="sk-layer">
+          <!-- main gear rough circle (~r93, center 300,270) -->
+          <path class="sk-path sk-p0"
+                d="M 300 177 C 400 170 402 268 394 274 C 400 372 312 367 300 367 C 196 367 196 274 204 270 C 194 168 300 182 300 177 Z"
+                stroke="#9a7840" stroke-width="1.8" opacity="0.5" fill="none"/>
+          <!-- top-right gear rough circle (~r58, center 415,178) -->
+          <path class="sk-path sk-p1"
+                d="M 415 120 C 477 115 477 176 475 180 C 479 242 422 243 415 243 C 350 245 350 180 350 178 C 346 115 413 123 415 120 Z"
+                stroke="#9a7840" stroke-width="1.4" opacity="0.45" fill="none"/>
+          <!-- bottom-left gear rough circle (~r58, center 185,362) -->
+          <path class="sk-path sk-p2"
+                d="M 185 304 C 247 299 247 360 245 364 C 249 426 192 426 185 426 C 120 428 120 364 120 362 C 116 299 183 307 185 304 Z"
+                stroke="#9a7840" stroke-width="1.4" opacity="0.45" fill="none"/>
+          <!-- mesh connection hint lines -->
+          <line x1="300" y1="270" x2="415" y2="178" stroke="#9a7840" stroke-width="0.8" opacity="0.22" stroke-dasharray="6 4"/>
+          <line x1="300" y1="270" x2="185" y2="362" stroke="#9a7840" stroke-width="0.8" opacity="0.22" stroke-dasharray="6 4"/>
+          <!-- CW rotation arrow (main gear) -->
+          <path class="sk-path sk-p4"
+                d="M 390 218 A 93 93 0 0 1 352 358"
+                stroke="#9a7840" stroke-width="1.3" opacity="0.42" fill="none" stroke-linecap="round"/>
+          <path d="M 347 352 L 352 358 L 359 352" stroke="#9a7840" stroke-width="1.3" opacity="0.42" fill="none" stroke-linecap="round"/>
+          <!-- CCW arrow (top gear) -->
+          <path class="sk-path sk-p5"
+                d="M 416 121 A 58 58 0 0 0 473 190"
+                stroke="#9a7840" stroke-width="1.0" opacity="0.38" fill="none" stroke-linecap="round"/>
+          <path d="M 467 196 L 473 190 L 467 186" stroke="#9a7840" stroke-width="1.0" opacity="0.38" fill="none" stroke-linecap="round"/>
+          <!-- rough teeth ticks (main gear, 12 marks) -->
+          <g stroke="#9a7840" stroke-width="1.1" opacity="0.28">
+            <line x1="300" y1="177" x2="300" y2="162"/><line x1="347" y1="191" x2="355" y2="178"/>
+            <line x1="378" y1="224" x2="388" y2="215"/><line x1="393" y1="270" x2="408" y2="270"/>
+            <line x1="378" y1="316" x2="388" y2="325"/><line x1="347" y1="349" x2="355" y2="362"/>
+            <line x1="300" y1="363" x2="300" y2="378"/><line x1="253" y1="349" x2="245" y2="362"/>
+            <line x1="222" y1="316" x2="212" y2="325"/><line x1="207" y1="270" x2="192" y2="270"/>
+            <line x1="222" y1="224" x2="212" y2="215"/><line x1="253" y1="191" x2="245" y2="178"/>
+          </g>
+          <!-- scribble annotations -->
+          <g class="sk-g-text">
+            <text x="208" y="254" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.38" transform="rotate(-4,208,254)">teeth: 12</text>
+            <text x="436" y="165" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.35" transform="rotate(7,436,165)">N=8</text>
+            <text x="106" y="348" font-family="'Courier New',monospace" font-size="8" fill="#9a7840" opacity="0.35" transform="rotate(-5,106,348)">N=8</text>
+            <text x="312" y="258" font-family="'Courier New',monospace" font-size="8.5" fill="#9a7840" opacity="0.3" transform="rotate(2,312,258)">mesh?</text>
+          </g>
+        </g>
+
+        <!-- ══ PATENT LAYER — clean technical drawing ══ -->
+
+        <!-- Drawing border -->
+        <g class="pt-g-frame">
+          <rect x="10" y="10" width="620" height="540" stroke="#9a7840" stroke-width="0.5" opacity="0.18" fill="none"/>
+          <!-- title block -->
+          <rect x="10" y="488" width="620" height="62" stroke="#9a7840" stroke-width="0.5" opacity="0.26" fill="none"/>
+          <line x1="10" y1="503" x2="630" y2="503" stroke="#9a7840" stroke-width="0.4" opacity="0.2"/>
+          <line x1="220" y1="503" x2="220" y2="550" stroke="#9a7840" stroke-width="0.4" opacity="0.16"/>
+          <line x1="430" y1="503" x2="430" y2="550" stroke="#9a7840" stroke-width="0.4" opacity="0.16"/>
+        </g>
+
+        <!-- Title block text -->
+        <g class="pt-g-title">
+          <text x="26" y="499" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.56">PIPY PATENT AI</text>
+          <text x="26" y="514" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.36">TITLE: GEAR ASSEMBLY MECHANISM</text>
+          <text x="26" y="525" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">DWG.NO: 002-A   SCALE: 1:1</text>
+          <text x="26" y="536" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">DATE: 2025.06   REV: A</text>
+          <text x="234" y="514" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">DRAWN: PIPY AI</text>
+          <text x="234" y="525" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">MATERIAL: STEEL</text>
+          <text x="234" y="536" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">TOLERANCE: ±0.02mm</text>
+          <text x="444" y="514" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">CHECKED: —</text>
+          <text x="444" y="525" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">SURFACE: HARDENED</text>
+          <text x="444" y="536" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.33">APPROVED: —</text>
+          <text x="28" y="46" font-family="'Courier New',monospace" font-size="10" fill="#9a7840" opacity="0.52">FIG. 1  —  GEAR ASSEMBLY</text>
+        </g>
+
+        <!-- Center lines (dash-dot) -->
+        <g class="pt-g-cline">
+          <line x1="300" y1="235" x2="300" y2="305" stroke="#9a7840" stroke-width="0.5" opacity="0.3" stroke-dasharray="7 3 1 3"/>
+          <line x1="264" y1="270" x2="336" y2="270" stroke="#9a7840" stroke-width="0.5" opacity="0.3" stroke-dasharray="7 3 1 3"/>
+          <line x1="415" y1="152" x2="415" y2="204" stroke="#9a7840" stroke-width="0.5" opacity="0.26" stroke-dasharray="5 2 1 2"/>
+          <line x1="388" y1="178" x2="442" y2="178" stroke="#9a7840" stroke-width="0.5" opacity="0.26" stroke-dasharray="5 2 1 2"/>
+          <line x1="185" y1="336" x2="185" y2="388" stroke="#9a7840" stroke-width="0.5" opacity="0.26" stroke-dasharray="5 2 1 2"/>
+          <line x1="158" y1="362" x2="212" y2="362" stroke="#9a7840" stroke-width="0.5" opacity="0.26" stroke-dasharray="5 2 1 2"/>
+        </g>
+
+        <!-- Gear drawings (rotating via animateTransform) -->
+        <g class="pt-g-main">
+
+          <!-- MAIN GEAR — 12 teeth, clockwise, 16s -->
+          <g transform="translate(300, 270)">
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="16s" repeatCount="indefinite"/>
+              <circle r="72" stroke="#9a7840" stroke-width="1.3" opacity="0.65" fill="none"/>
+              <circle r="35" stroke="#9a7840" stroke-width="0.6" opacity="0.28" fill="none" stroke-dasharray="4 3"/>
+              <circle r="13" stroke="#9a7840" stroke-width="1.0" opacity="0.55" fill="none"/>
+              <rect x="-3.5" y="-24" width="7" height="14" stroke="#9a7840" stroke-width="0.7" opacity="0.38" fill="none"/>
+              <!-- spokes -->
+              <line x1="0" y1="-35" x2="0" y2="-72" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <line x1="30.3" y1="-17.5" x2="62.4" y2="-36" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <line x1="30.3" y1="17.5" x2="62.4" y2="36" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <line x1="0" y1="35" x2="0" y2="72" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <line x1="-30.3" y1="17.5" x2="-62.4" y2="36" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <line x1="-30.3" y1="-17.5" x2="-62.4" y2="-36" stroke="#9a7840" stroke-width="0.5" opacity="0.22"/>
+              <!-- 12 teeth at 30° each -->
+              <g transform="rotate(0)">  <rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(30)"> <rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(60)"> <rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(90)"> <rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(120)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(150)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(180)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(210)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(240)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(270)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(300)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+              <g transform="rotate(330)"><rect x="-6.5" y="-93" width="13" height="22" stroke="#9a7840" stroke-width="0.9" opacity="0.62" fill="none" rx="1"/></g>
+            </g>
+          </g>
+
+          <!-- TOP-RIGHT GEAR — 8 teeth, counterclockwise, 10.67s -->
+          <g transform="translate(415, 178)">
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="10.67s" repeatCount="indefinite"/>
+              <circle r="44" stroke="#9a7840" stroke-width="1.1" opacity="0.60" fill="none"/>
+              <circle r="20" stroke="#9a7840" stroke-width="0.5" opacity="0.26" fill="none" stroke-dasharray="3 2"/>
+              <circle r="9" stroke="#9a7840" stroke-width="0.9" opacity="0.50" fill="none"/>
+              <!-- 8 teeth at 45° each -->
+              <g transform="rotate(0)">  <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(45)"> <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(90)"> <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(135)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(180)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(225)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(270)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(315)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+            </g>
+          </g>
+
+          <!-- BOTTOM-LEFT GEAR — 8 teeth, counterclockwise, offset phase -->
+          <g transform="translate(185, 362)">
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="22.5" to="-337.5" dur="10.67s" repeatCount="indefinite"/>
+              <circle r="44" stroke="#9a7840" stroke-width="1.1" opacity="0.60" fill="none"/>
+              <circle r="20" stroke="#9a7840" stroke-width="0.5" opacity="0.26" fill="none" stroke-dasharray="3 2"/>
+              <circle r="9" stroke="#9a7840" stroke-width="0.9" opacity="0.50" fill="none"/>
+              <g transform="rotate(0)">  <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(45)"> <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(90)"> <rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(135)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(180)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(225)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(270)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+              <g transform="rotate(315)"><rect x="-5" y="-57" width="10" height="18" stroke="#9a7840" stroke-width="0.85" opacity="0.58" fill="none" rx="1"/></g>
+            </g>
+          </g>
+        </g>
+
+        <!-- Dimension annotations -->
+        <g class="pt-g-dim">
+          <!-- main gear Ø width -->
+          <line x1="200" y1="444" x2="400" y2="444" stroke="#9a7840" stroke-width="0.55" opacity="0.4"/>
+          <path d="M 207 441 L 200 444 L 207 447" stroke="#9a7840" stroke-width="0.55" opacity="0.4" fill="none"/>
+          <path d="M 393 441 L 400 444 L 393 447" stroke="#9a7840" stroke-width="0.55" opacity="0.4" fill="none"/>
+          <line x1="200" y1="363" x2="200" y2="448" stroke="#9a7840" stroke-width="0.4" opacity="0.25"/>
+          <line x1="400" y1="363" x2="400" y2="448" stroke="#9a7840" stroke-width="0.4" opacity="0.25"/>
+          <text x="300" y="460" text-anchor="middle" font-family="'Courier New',monospace" font-size="7.5" fill="#9a7840" opacity="0.42">Ø 186mm  (MAIN GEAR)</text>
+          <!-- top-right gear Ø -->
+          <line x1="472" y1="135" x2="590" y2="135" stroke="#9a7840" stroke-width="0.45" opacity="0.34"/>
+          <text x="530" y="128" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.36">Ø 114mm</text>
+          <!-- height dim (main) -->
+          <line x1="568" y1="177" x2="568" y2="363" stroke="#9a7840" stroke-width="0.55" opacity="0.4"/>
+          <path d="M 565 183 L 568 177 L 571 183" stroke="#9a7840" stroke-width="0.55" opacity="0.4" fill="none"/>
+          <path d="M 565 357 L 568 363 L 571 357" stroke="#9a7840" stroke-width="0.55" opacity="0.4" fill="none"/>
+          <line x1="393" y1="177" x2="572" y2="177" stroke="#9a7840" stroke-width="0.4" opacity="0.25"/>
+          <line x1="393" y1="363" x2="572" y2="363" stroke="#9a7840" stroke-width="0.4" opacity="0.25"/>
+          <text x="586" y="274" text-anchor="middle" font-family="'Courier New',monospace" font-size="7.5" fill="#9a7840" opacity="0.42" transform="rotate(90,586,274)">186mm</text>
+        </g>
+
+        <!-- Reference numbers -->
+        <g class="pt-g-ref">
+          <!-- 1: main gear hub -->
+          <line x1="372" y1="270" x2="510" y2="270" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <line x1="510" y1="270" x2="510" y2="308" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <circle cx="510" cy="318" r="10" stroke="#9a7840" stroke-width="0.7" opacity="0.56" fill="none"/>
+          <text x="510" y="322" text-anchor="middle" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.7">1</text>
+          <!-- 2: top-right gear -->
+          <line x1="415" y1="122" x2="415" y2="88" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <line x1="415" y1="88" x2="456" y2="88" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <circle cx="466" cy="88" r="10" stroke="#9a7840" stroke-width="0.7" opacity="0.56" fill="none"/>
+          <text x="466" y="92" text-anchor="middle" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.7">2</text>
+          <!-- 3: bottom-left gear -->
+          <line x1="185" y1="418" x2="185" y2="452" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <line x1="185" y1="452" x2="146" y2="452" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <circle cx="136" cy="452" r="10" stroke="#9a7840" stroke-width="0.7" opacity="0.56" fill="none"/>
+          <text x="136" y="456" text-anchor="middle" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.7">3</text>
+          <!-- 4: tooth -->
+          <line x1="300" y1="177" x2="300" y2="138" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <line x1="300" y1="138" x2="260" y2="138" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <circle cx="250" cy="138" r="10" stroke="#9a7840" stroke-width="0.7" opacity="0.56" fill="none"/>
+          <text x="250" y="142" text-anchor="middle" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.7">4</text>
+          <!-- 5: shaft hole -->
+          <line x1="308" y1="276" x2="348" y2="314" stroke="#9a7840" stroke-width="0.55" opacity="0.5"/>
+          <circle cx="356" cy="322" r="10" stroke="#9a7840" stroke-width="0.7" opacity="0.56" fill="none" class="ref-pulse"/>
+          <text x="356" y="326" text-anchor="middle" font-family="'Courier New',monospace" font-size="9" fill="#9a7840" opacity="0.7">5</text>
+        </g>
+
+        <!-- ══ FIG.2 — SECTION A-A (cross-section view) ══ -->
+        <g class="pt-g-fig2">
+          <text x="28" y="66" font-family="'Courier New',monospace" font-size="8.5" fill="#9a7840" opacity="0.55">FIG. 2  —  SECTION A-A</text>
+          <!-- cut line on main gear -->
+          <line x1="206" y1="270" x2="160" y2="270" stroke="#9a7840" stroke-width="0.6" opacity="0.4" stroke-dasharray="10 3 2 3"/>
+          <text x="152" y="267" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.45">A</text>
+          <text x="152" y="276" text-anchor="end" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.45">A</text>
+          <!-- outer rim -->
+          <circle cx="82" cy="120" r="52" stroke="#9a7840" stroke-width="1.2" opacity="0.62" fill="none"/>
+          <!-- inner bore -->
+          <circle cx="82" cy="120" r="16" stroke="#9a7840" stroke-width="1.0" opacity="0.58" fill="none"/>
+          <!-- keyway slot -->
+          <rect x="78" y="66" width="8" height="10" stroke="#9a7840" stroke-width="0.8" opacity="0.5" fill="none"/>
+          <!-- section hatching (angled lines for material) -->
+          <g opacity="0.2" stroke="#9a7840" stroke-width="0.55" stroke-linecap="round">
+            <line x1="42" y1="88"  x2="60"  y2="70"/>
+            <line x1="50" y1="96"  x2="72"  y2="74"/>
+            <line x1="58" y1="104" x2="82"  y2="80"/>
+            <line x1="64" y1="114" x2="90"  y2="88"/>
+            <line x1="68" y1="124" x2="97"  y2="95"/>
+            <line x1="70" y1="136" x2="104" y2="102"/>
+            <line x1="70" y1="148" x2="110" y2="108"/>
+            <line x1="68" y1="160" x2="116" y2="112"/>
+            <line x1="62" y1="168" x2="118" y2="112"/>
+            <line x1="54" y1="172" x2="116" y2="110"/>
+            <line x1="44" y1="170" x2="108" y2="106"/>
+            <line x1="36" y1="164" x2="98"  y2="102"/>
+            <line x1="32" y1="154" x2="88"  y2="98"/>
+            <line x1="30" y1="142" x2="78"  y2="94"/>
+            <line x1="32" y1="130" x2="70"  y2="92"/>
+            <line x1="36" y1="118" x2="64"  y2="90"/>
+          </g>
+          <!-- center lines -->
+          <line x1="82" y1="60"  x2="82"  y2="180" stroke="#9a7840" stroke-width="0.5" opacity="0.3" stroke-dasharray="7 3 1 3"/>
+          <line x1="22" y1="120" x2="142" y2="120" stroke="#9a7840" stroke-width="0.5" opacity="0.3" stroke-dasharray="7 3 1 3"/>
+          <!-- dim: outer -->
+          <line x1="82" y1="172" x2="82"  y2="192" stroke="#9a7840" stroke-width="0.4" opacity="0.28"/>
+          <line x1="30" y1="187" x2="134" y2="187" stroke="#9a7840" stroke-width="0.45" opacity="0.38"/>
+          <path d="M 37 184 L 30 187 L 37 190" stroke="#9a7840" stroke-width="0.45" opacity="0.38" fill="none"/>
+          <path d="M 127 184 L 134 187 L 127 190" stroke="#9a7840" stroke-width="0.45" opacity="0.38" fill="none"/>
+          <text x="82" y="200" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.42">Ø 104mm</text>
+          <!-- dim: bore -->
+          <line x1="98" y1="120" x2="148" y2="120" stroke="#9a7840" stroke-width="0.4" opacity="0.3"/>
+          <text x="152" y="123" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.38">Ø 32mm BORE</text>
+        </g>
+
+        <!-- ══ AI AGENT PIPELINE SCHEMATIC ══ -->
+        <g class="pt-g-pipeline">
+          <text x="28" y="376" font-family="'Courier New',monospace" font-size="7.5" fill="#9a7840" opacity="0.5">AGENT PIPELINE — PATENT AI</text>
+          <!-- Row 1: SUM → ART → CLM -->
+          <rect x="28"  y="382" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.55" fill="none" rx="2"/>
+          <text x="50"  y="396" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">SUM</text>
+          <line x1="72" y1="392" x2="80" y2="392" stroke="#9a7840" stroke-width="0.6" opacity="0.45"/>
+          <path d="M 78 389 L 80 392 L 78 395" stroke="#9a7840" stroke-width="0.6" opacity="0.45" fill="none"/>
+          <rect x="80"  y="382" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.55" fill="none" rx="2"/>
+          <text x="102" y="396" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">ART</text>
+          <line x1="124" y1="392" x2="132" y2="392" stroke="#9a7840" stroke-width="0.6" opacity="0.45"/>
+          <path d="M 130 389 L 132 392 L 130 395" stroke="#9a7840" stroke-width="0.6" opacity="0.45" fill="none"/>
+          <rect x="132" y="382" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.55" fill="none" rx="2"/>
+          <text x="154" y="396" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">CLM</text>
+          <!-- connector down from CLM -->
+          <line x1="154" y1="402" x2="154" y2="410" stroke="#9a7840" stroke-width="0.6" opacity="0.45"/>
+          <path d="M 151 408 L 154 410 L 157 408" stroke="#9a7840" stroke-width="0.6" opacity="0.45" fill="none"/>
+          <!-- Row 2: COMP ← SPEC ← DWG -->
+          <rect x="132" y="410" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.7" fill="none" rx="2"/>
+          <text x="154" y="424" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.8">DWG</text>
+          <line x1="132" y1="420" x2="124" y2="420" stroke="#9a7840" stroke-width="0.6" opacity="0.45"/>
+          <path d="M 126 417 L 124 420 L 126 423" stroke="#9a7840" stroke-width="0.6" opacity="0.45" fill="none"/>
+          <rect x="80"  y="410" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.55" fill="none" rx="2"/>
+          <text x="102" y="424" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">SPEC</text>
+          <line x1="80"  y1="420" x2="72"  y2="420" stroke="#9a7840" stroke-width="0.6" opacity="0.45"/>
+          <path d="M 74 417 L 72 420 L 74 423" stroke="#9a7840" stroke-width="0.6" opacity="0.45" fill="none"/>
+          <rect x="28"  y="410" width="44" height="20" stroke="#9a7840" stroke-width="0.8" opacity="0.55" fill="none" rx="2"/>
+          <text x="50"  y="424" text-anchor="middle" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">COMP</text>
+          <!-- animated dot traveling through pipeline -->
+          <circle r="2.5" fill="#9a7840" opacity="0.7">
+            <animateMotion dur="3.6s" repeatCount="indefinite" calcMode="linear">
+              <mpath href="#pipeline-path"/>
+            </animateMotion>
+          </circle>
+          <defs>
+            <path id="pipeline-path" d="M 50,392 L 80,392 L 102,392 L 132,392 L 154,392 L 154,410 L 154,420 L 132,420 L 102,420 L 72,420 L 50,420 L 50,410 L 50,392"/>
+          </defs>
+        </g>
+
+        <!-- ══ DETAIL CALLOUT CIRCLE — tooth magnification ══ -->
+        <g class="pt-g-detail">
+          <circle cx="300" cy="177" r="22" stroke="#9a7840" stroke-width="0.8" opacity="0.38" fill="none" stroke-dasharray="5 3"/>
+          <line x1="289" y1="157" x2="108" y2="80" stroke="#9a7840" stroke-width="0.5" opacity="0.3"/>
+          <!-- enlarged tooth view -->
+          <rect x="30" y="220" width="20" height="40" stroke="#9a7840" stroke-width="1.0" opacity="0.55" fill="none" rx="1.5"/>
+          <line x1="30" y1="240" x2="20" y2="240" stroke="#9a7840" stroke-width="0.45" opacity="0.35"/>
+          <line x1="50" y1="240" x2="60" y2="240" stroke="#9a7840" stroke-width="0.45" opacity="0.35"/>
+          <path d="M 23 237 L 20 240 L 23 243" stroke="#9a7840" stroke-width="0.45" opacity="0.35" fill="none"/>
+          <path d="M 57 237 L 60 240 L 57 243" stroke="#9a7840" stroke-width="0.45" opacity="0.35" fill="none"/>
+          <text x="40" y="253" text-anchor="middle" font-family="'Courier New',monospace" font-size="5.5" fill="#9a7840" opacity="0.4">20mm</text>
+          <text x="40" y="215" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.45">DETAIL B</text>
+          <text x="40" y="222" text-anchor="middle" font-family="'Courier New',monospace" font-size="5" fill="#9a7840" opacity="0.35">SCALE 2:1</text>
+        </g>
+
+        <!-- ══ PATENT SCALE — 특허 저울 (우측 하단) ══ -->
+        <g class="pt-g-scale">
+          <!-- static: post, base, pivot -->
+          <line x1="540" y1="330" x2="540" y2="400" stroke="#9a7840" stroke-width="1.0" opacity="0.6"/>
+          <line x1="500" y1="400" x2="580" y2="400" stroke="#9a7840" stroke-width="1.0" opacity="0.6"/>
+          <circle cx="540" cy="330" r="5" stroke="#9a7840" stroke-width="1.0" opacity="0.65" fill="none"/>
+          <circle cx="540" cy="330" r="1.5" fill="#9a7840" opacity="0.5"/>
+          <!-- label -->
+          <text x="540" y="415" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.4">PATENT SCALE</text>
+          <!-- dimension line to scale -->
+          <line x1="472" y1="362" x2="498" y2="370" stroke="#9a7840" stroke-width="0.4" opacity="0.25" stroke-dasharray="4 3"/>
+          <!-- animated: beam + arms + pans -->
+          <g style="transform-origin:540px 330px; animation:scale-sway 2.8s ease-in-out infinite;">
+            <!-- beam -->
+            <line x1="500" y1="350" x2="580" y2="350" stroke="#9a7840" stroke-width="1.1" opacity="0.65"/>
+            <!-- left arm -->
+            <line x1="500" y1="350" x2="500" y2="378" stroke="#9a7840" stroke-width="0.7" opacity="0.5" stroke-dasharray="3 2"/>
+            <!-- right arm -->
+            <line x1="580" y1="350" x2="580" y2="378" stroke="#9a7840" stroke-width="0.7" opacity="0.5" stroke-dasharray="3 2"/>
+            <!-- left pan -->
+            <path d="M488 378 Q500 390 512 378" stroke="#9a7840" stroke-width="1.0" opacity="0.62" fill="none"/>
+            <!-- right pan -->
+            <path d="M568 378 Q580 390 592 378" stroke="#9a7840" stroke-width="1.0" opacity="0.62" fill="none"/>
+            <!-- pan chain lines -->
+            <line x1="490" y1="378" x2="488" y2="374" stroke="#9a7840" stroke-width="0.5" opacity="0.35"/>
+            <line x1="510" y1="378" x2="512" y2="374" stroke="#9a7840" stroke-width="0.5" opacity="0.35"/>
+            <line x1="570" y1="378" x2="568" y2="374" stroke="#9a7840" stroke-width="0.5" opacity="0.35"/>
+            <line x1="590" y1="378" x2="592" y2="374" stroke="#9a7840" stroke-width="0.5" opacity="0.35"/>
+          </g>
+        </g>
+
+        <!-- ══ ANIMATED SCAN LINE ══ -->
+        <rect x="10" width="620" height="1.5" fill="url(#scan-grad)" opacity="0.0">
+          <animateTransform attributeName="transform" type="translate" from="0,10" to="0,540" dur="4.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.18;0.18;0" keyTimes="0;0.05;0.95;1" dur="4.5s" repeatCount="indefinite"/>
+        </rect>
+        <defs>
+          <linearGradient id="scan-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#9a7840" stop-opacity="0"/>
+            <stop offset="30%"  stop-color="#9a7840" stop-opacity="1"/>
+            <stop offset="70%"  stop-color="#9a7840" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#9a7840" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+      </svg>
+    </div>
+    <div class="lf-hero-body">
+
+      <!-- ══ 왼쪽 배경 동적 도면 레이어 ══ -->
+      <svg class="lf-hero-left-bg" viewBox="0 0 480 560" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <!-- 흐르는 회로/배선 라인 -->
+        <g stroke="#9a7840" stroke-width="0.5" opacity="0.18">
+          <path d="M 0 80 H 60 V 140 H 180 V 100 H 280"/>
+          <path d="M 0 200 H 40 V 260 H 140 V 220 H 320 V 260 H 400"/>
+          <path d="M 0 340 H 80 V 300 H 200 V 360 H 340 V 320 H 480"/>
+          <path d="M 100 0 V 50 H 60 V 160 H 100 V 240"/>
+          <path d="M 240 0 V 30 H 280 V 90 H 240 V 180 H 300 V 220"/>
+          <path d="M 380 0 V 70 H 420 V 130 H 380 V 200 H 440 V 280"/>
+        </g>
+        <!-- 회로 노드 (작은 사각형) -->
+        <g stroke="#9a7840" stroke-width="0.7" opacity="0.22" fill="none">
+          <rect x="57" y="137" width="6" height="6"/>
+          <rect x="177" y="97"  width="6" height="6"/>
+          <rect x="137" y="257" width="6" height="6"/>
+          <rect x="317" y="257" width="6" height="6"/>
+          <rect x="77"  y="297" width="6" height="6"/>
+          <rect x="237" y="177" width="6" height="6"/>
+          <rect x="377" y="127" width="6" height="6"/>
+          <rect x="417" y="277" width="6" height="6"/>
+          <rect x="337" y="317" width="6" height="6"/>
+        </g>
+        <!-- 치수선 스타일 수평/수직 라인 (기술 도면 느낌) -->
+        <g stroke="#9a7840" stroke-width="0.4" opacity="0.12" stroke-dasharray="8 4">
+          <line x1="0"   y1="420" x2="480" y2="420"/>
+          <line x1="0"   y1="480" x2="480" y2="480"/>
+          <line x1="160" y1="0"   x2="160" y2="560"/>
+          <line x1="320" y1="0"   x2="320" y2="560"/>
+        </g>
+        <!-- 좌측 수직 치수 표시 -->
+        <g stroke="#9a7840" stroke-width="0.5" opacity="0.2">
+          <line x1="20" y1="80"  x2="20" y2="340"/>
+          <path d="M 17 87 L 20 80 L 23 87" fill="none"/>
+          <path d="M 17 333 L 20 340 L 23 333" fill="none"/>
+          <text x="10" y="215" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.5" transform="rotate(-90,10,215)">260mm</text>
+        </g>
+        <!-- 하단 수평 치수 표시 -->
+        <g stroke="#9a7840" stroke-width="0.5" opacity="0.2">
+          <line x1="40"  y1="530" x2="440" y2="530"/>
+          <path d="M 47 527 L 40 530 L 47 533" fill="none"/>
+          <path d="M 433 527 L 440 530 L 433 533" fill="none"/>
+          <text x="240" y="545" text-anchor="middle" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.5">400mm</text>
+        </g>
+        <!-- 도면 번호 텍스트 -->
+        <text x="30" y="30" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.2">FIG. 0 — SYSTEM LAYOUT</text>
+        <text x="30" y="42" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.15">PATENT AI PIPELINE v8 · SCALE 1:2</text>
+        <!-- 우상단 제목 블록 라인 -->
+        <rect x="340" y="14" width="130" height="40" stroke="#9a7840" stroke-width="0.4" opacity="0.15" fill="none"/>
+        <line x1="340" y1="26" x2="470" y2="26" stroke="#9a7840" stroke-width="0.3" opacity="0.12"/>
+        <text x="350" y="23" font-family="'Courier New',monospace" font-size="5.5" fill="#9a7840" opacity="0.2">DRAWN: PYPI AI</text>
+        <text x="350" y="34" font-family="'Courier New',monospace" font-size="5.5" fill="#9a7840" opacity="0.18">DATE: 2025.06</text>
+        <text x="350" y="45" font-family="'Courier New',monospace" font-size="5.5" fill="#9a7840" opacity="0.18">REV: B · DWG 001</text>
+        <!-- 애니메이션 흐르는 점 (회로 신호) -->
+        <circle r="2" fill="#9a7840" opacity="0.5">
+          <animateMotion dur="5s" repeatCount="indefinite">
+            <mpath href="#circuit-path-1"/>
+          </animateMotion>
+        </circle>
+        <circle r="2" fill="#9a7840" opacity="0.4">
+          <animateMotion dur="7s" repeatCount="indefinite" begin="2s">
+            <mpath href="#circuit-path-2"/>
+          </animateMotion>
+        </circle>
+        <circle r="1.5" fill="#9a7840" opacity="0.35">
+          <animateMotion dur="6s" repeatCount="indefinite" begin="1s">
+            <mpath href="#circuit-path-3"/>
+          </animateMotion>
+        </circle>
+        <defs>
+          <path id="circuit-path-1" d="M 0,80 H 60 V 140 H 180 V 100 H 280 V 80 H 400 V 200 H 480"/>
+          <path id="circuit-path-2" d="M 0,200 H 40 V 260 H 140 V 220 H 320 V 260 H 400 V 340 H 480"/>
+          <path id="circuit-path-3" d="M 100,0 V 50 H 60 V 160 H 100 V 240 H 240 V 180 H 300 V 340"/>
+        </defs>
+      </svg>
+
+      <p class="lf-eyebrow reveal" data-i18n="lf_eyebrow">Patent Intelligence · AI 특허 자동화 플랫폼</p>
+
+      <h1 class="lf-hero-h1 reveal reveal-d1" data-i18n="lf_h1" data-i18n-html>Protect your patent<br><em>and intellectual property</em><br>with PYPI</h1>
+
+      <div class="lf-hero-rule reveal reveal-d2"></div>
+
+      <p class="lf-hero-sub reveal reveal-d2" data-i18n="lf_hero_sub" data-i18n-html>7개 전문 AI 에이전트가 특허청 제출 가능한 완성 명세서를 체계적으로 완성합니다</p>
+
+      <div class="lf-hero-cta reveal reveal-d3">
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:pipeline' %}" class="lf-hero-btn-fill">특허 출원 업무 시작 →</a>
+        <a href="{% url 'accounts:chat' %}" class="lf-hero-btn-line">AI 어시스턴트</a>
+        {% else %}
+        <a href="{% url 'accounts:signup' %}" class="lf-hero-btn-fill">업무 의뢰 신청하기 →</a>
+        <a href="#about" class="lf-hero-btn-line">서비스 소개</a>
+        {% endif %}
+      </div>
+
+      <!-- 기술 도면 스타일 섹션 전환 인디케이터 -->
+      <a href="#about" class="lf-section-nav reveal reveal-d4" aria-label="다음 섹션">
+        <div class="lf-section-nav-inner">
+          <span class="lf-section-nav-label">§ 01</span>
+          <div class="lf-section-nav-line"></div>
+          <span class="lf-section-nav-text">서비스 소개</span>
+          <div class="lf-section-nav-line"></div>
+          <span class="lf-section-nav-label">§ 02</span>
+        </div>
+        <div class="lf-section-nav-arrow">
+          <svg width="10" height="16" viewBox="0 0 10 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M5 2v20M1 17l4 5 4-5"/></svg>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ CREDENTIAL BAR ══════════════════════════════════ -->
+  <div class="lf-cred">
+    <div class="lf-cred-wrap">
+      <div class="lf-cred-item">
+        <span class="lf-cred-n"><span data-count="7">7</span></span>
+        <span class="lf-cred-label" data-i18n="lf_cred_agents">전문 AI 에이전트</span>
+      </div>
+      <div class="lf-cred-sep"></div>
+      <div class="lf-cred-item">
+        <span class="lf-cred-n"><span data-count="4">4</span></span>
+        <span class="lf-cred-label" data-i18n="lf_cred_lang">지원 언어</span>
+      </div>
+      <div class="lf-cred-sep"></div>
+      <div class="lf-cred-item">
+        <span class="lf-cred-n"><span data-count="100">100</span><span class="lf-cred-pct">%</span></span>
+        <span class="lf-cred-label" data-i18n="lf_cred_auto">AI 자동 생성</span>
+      </div>
+      <div class="lf-cred-sep"></div>
+      <div class="lf-cred-item lf-cred-item--attorney" style="background:rgba(201,168,76,0.12);border:1.5px solid rgba(201,168,76,0.5);border-radius:8px;padding:10px 14px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--lf-gold);opacity:.7;margin-bottom:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="lf-cred-phrase" style="font-size:13px;">변리사 자문 완료</span>
+        <span class="lf-cred-label">Patent Attorney Reviewed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ABOUT ════════════════════════════════════════════ -->
+  <section class="lf-about" id="about">
+    <div class="lf-container">
+      <div class="lf-about-grid">
+        <div class="lf-about-l reveal">
+          <!-- 저울 장식 SVG -->
+          <div class="lf-about-deco" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- 저울대 기둥 -->
+              <line x1="60" y1="20" x2="60" y2="95" stroke="#9a7840" stroke-width="1" opacity="0.5"/>
+              <!-- 받침대 -->
+              <line x1="40" y1="95" x2="80" y2="95" stroke="#9a7840" stroke-width="1.2" opacity="0.5"/>
+              <line x1="48" y1="95" x2="48" y2="100" stroke="#9a7840" stroke-width="1" opacity="0.4"/>
+              <line x1="72" y1="95" x2="72" y2="100" stroke="#9a7840" stroke-width="1" opacity="0.4"/>
+              <line x1="44" y1="100" x2="76" y2="100" stroke="#9a7840" stroke-width="1.2" opacity="0.4"/>
+              <!-- 저울대 가로 -->
+              <line x1="20" y1="38" x2="100" y2="38" stroke="#9a7840" stroke-width="1" opacity="0.5"/>
+              <!-- 중심 원 -->
+              <circle cx="60" cy="38" r="4" stroke="#9a7840" stroke-width="0.8" opacity="0.5" fill="#9a7840" fill-opacity="0.1"/>
+              <!-- 왼쪽 접시 체인 -->
+              <line x1="20" y1="38" x2="20" y2="55" stroke="#9a7840" stroke-width="0.7" opacity="0.4" stroke-dasharray="2 2"/>
+              <line x1="14" y1="55" x2="26" y2="55" stroke="#9a7840" stroke-width="0.6" opacity="0.3"/>
+              <!-- 왼쪽 접시 -->
+              <path d="M14 55 Q20 62 26 55" stroke="#9a7840" stroke-width="1" opacity="0.45" fill="none"/>
+              <!-- 오른쪽 접시 체인 -->
+              <line x1="100" y1="38" x2="100" y2="58" stroke="#9a7840" stroke-width="0.7" opacity="0.4" stroke-dasharray="2 2"/>
+              <line x1="94" y1="58" x2="106" y2="58" stroke="#9a7840" stroke-width="0.6" opacity="0.3"/>
+              <!-- 오른쪽 접시 (살짝 내려감 — 균형) -->
+              <path d="M94 58 Q100 65 106 58" stroke="#9a7840" stroke-width="1" opacity="0.45" fill="none"/>
+              <!-- 상단 다이아몬드 장식 -->
+              <path d="M60 10 L64 18 L60 22 L56 18 Z" stroke="#9a7840" stroke-width="0.8" fill="#9a7840" fill-opacity="0.12" opacity="0.6"/>
+            </svg>
+          </div>
+          <p class="lf-tag" data-i18n="lf_about_tag">서비스 소개</p>
+          <h2 class="lf-h2" data-i18n="lf_about_h2" data-i18n-html>지식재산 보호의<br><em>새로운 기준</em></h2>
+        </div>
+        <div class="lf-about-r">
+          <blockquote class="lf-pullquote reveal" data-i18n="lf_about_quote" data-i18n-html>"발명자의 아이디어에 담긴 가치를<br>PYPI가 권리로 완성합니다"</blockquote>
+          <p class="lf-body reveal reveal-d1" data-i18n="lf_about_body1">PYPI는 발명자의 아이디어를 입력받아 7개 전문 AI 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 수준의 완성 명세서를 자동으로 생성합니다. 요약·선행기술조사·청구항 구성·도면 생성·명세서 초안·최종 통합까지 전 과정이 단일 파이프라인 안에서 완결됩니다.</p>
+          <p class="lf-body reveal reveal-d2" data-i18n="lf_about_body2">변리사 수준의 특허 작성 품질을 AI로 구현하여, 개인 발명가부터 기업 연구개발팀까지 특허 출원에 소요되는 비용과 시간을 획기적으로 절감합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ATTORNEY TRUST BAR ═══════════════════════════════ -->
+  <div class="lf-attorney-bar">
+    <div class="lf-container">
+      <div class="lf-atty-inner">
+        <div class="lf-atty-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="lf-atty-body">
+          <p class="lf-atty-title">변리사 자문 참여 시스템</p>
+          <p class="lf-atty-desc">PYPI의 에이전트 설계 및 청구항·명세서 작성 기준은 등록 변리사의 실무 자문을 통해 검증되었습니다. AI 생성 결과물의 특허청 규정 적합성 및 품질 기준은 전문가 검토를 거쳤으며, 최종 출원 전 변리사 확인을 권장합니다.</p>
+        </div>
+        <div class="lf-atty-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Patent Attorney<br>Reviewed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PIPELINE ══════════════════════════════════════════ -->
+  <section class="lf-pipeline" id="pipeline">
+    <div class="lf-container">
+      <div class="lf-section-hd">
+        <p class="lf-tag reveal" data-i18n="lf_pipe_tag">전문 서비스 영역</p>
+        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_pipe_h2" data-i18n-html>7개 전문 에이전트의<br><em>체계적인 협력 구조</em></h2>
+      </div>
+      <div class="lf-agents">
+        <div class="lf-agent reveal"><div class="lf-agent-num">I</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_I">상담 에이전트</h3><span class="lf-agent-en" data-i18n="en_consultation">Consultation</span></div><p class="lf-agent-desc" data-i18n="desc_I">발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석하고, 후속 에이전트에 전달할 구조화된 발명 정보를 추출합니다.</p></div></div>
+        <div class="lf-agent reveal"><div class="lf-agent-num">II</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_II">요약 에이전트</h3><span class="lf-agent-en" data-i18n="en_summary">Summary</span></div><p class="lf-agent-desc" data-i18n="desc_II">5개 발명 필드를 사람이 확인할 수 있는 요약본과 후속 에이전트용 구조화 발명 JSON으로 정리합니다.</p></div></div>
+        <div class="lf-agent reveal"><div class="lf-agent-num">III</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_III">선행기술조사 에이전트</h3><span class="lf-agent-en" data-i18n="en_prior_art">Prior Art</span></div><p class="lf-agent-desc" data-i18n="desc_III">특허 DB에서 text-embedding-3-small 임베딩 유사도 검색으로 선행문헌을 탐색하고, GPT-4o로 신규성·진보성 리스크를 분석해 보고합니다.</p></div></div>
+        <div class="lf-agent reveal"><div class="lf-agent-num">IV</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_IV">청구항 에이전트</h3><span class="lf-agent-en" data-i18n="en_claim">Claim</span></div><p class="lf-agent-desc" data-i18n="desc_IV">발명 구조를 분석해 독립항·종속항·방법항·시스템항을 특허청 작성 규정에 맞게 자동 생성합니다.</p></div></div>
+        <div class="lf-agent lf-agent--hl reveal"><div class="lf-agent-num">V</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_V">도면 에이전트</h3><span class="lf-agent-en" data-i18n="en_drawing">Drawing</span></div><p class="lf-agent-desc" data-i18n="desc_V">블록도·흐름도·시퀀스 다이어그램을 SVG로 자동 렌더링하고, 품질 점수 검수 및 자동 보정 후 파일을 제공합니다.</p></div></div>
+        <div class="lf-agent reveal"><div class="lf-agent-num">VI</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_VI">명세서 에이전트</h3><span class="lf-agent-en" data-i18n="en_specification">Specification</span></div><p class="lf-agent-desc" data-i18n="desc_VI">기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체에 맞게 초안 작성합니다.</p></div></div>
+        <div class="lf-agent reveal"><div class="lf-agent-num">VII</div><div class="lf-agent-body"><div class="lf-agent-hd"><h3 class="lf-agent-name" data-i18n="agent_VII">컴포저 에이전트</h3><span class="lf-agent-en" data-i18n="en_composer">Composer</span></div><p class="lf-agent-desc" data-i18n="desc_VII">전 에이전트 산출물을 병합·통일하고, 용어·참조부호를 일관화해 DOCX 완성 명세서를 출력합니다.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 업무 절차 ══════════════════════════════════════════ -->
+  <section class="lf-process">
+    <div class="lf-container">
+      <div class="lf-section-hd">
+        <p class="lf-tag reveal">업무 절차</p>
+        <h2 class="lf-h2 reveal reveal-d1">특허 출원 대행의<br><em>4단계 프로세스</em></h2>
+      </div>
+      <div class="lf-proc-grid">
+
+        <div class="lf-proc-item reveal">
+          <div class="lf-proc-step">
+            <span class="lf-proc-n">01</span>
+            <div class="lf-proc-line"></div>
+          </div>
+          <div class="lf-proc-body">
+            <h3 class="lf-proc-name">발명 정보 제출</h3>
+            <p class="lf-proc-sub">Invention Disclosure</p>
+            <p class="lf-proc-desc">발명의 명칭·기술적 과제·해결 수단·기대 효과를 5개 필드에 입력합니다. 자연어로 작성하면 AI가 구조화된 발명 정보로 자동 변환합니다.</p>
+          </div>
+        </div>
+
+        <div class="lf-proc-item reveal reveal-d1">
+          <div class="lf-proc-step">
+            <span class="lf-proc-n">02</span>
+            <div class="lf-proc-line"></div>
+          </div>
+          <div class="lf-proc-body">
+            <h3 class="lf-proc-name">선행기술 조사 및 분석</h3>
+            <p class="lf-proc-sub">Prior Art Search & Analysis</p>
+            <p class="lf-proc-desc">특허 데이터베이스에서 임베딩 유사도 검색으로 관련 선행문헌을 탐색하고, 신규성·진보성 리스크를 분석하여 청구항 전략 수립의 기초로 활용합니다.</p>
+          </div>
+        </div>
+
+        <div class="lf-proc-item reveal reveal-d2">
+          <div class="lf-proc-step">
+            <span class="lf-proc-n">03</span>
+            <div class="lf-proc-line"></div>
+          </div>
+          <div class="lf-proc-body">
+            <h3 class="lf-proc-name">명세서 및 청구항 작성</h3>
+            <p class="lf-proc-sub">Specification & Claim Drafting</p>
+            <p class="lf-proc-desc">특허청 작성 규정에 따라 독립항·종속항·방법항을 구성하고, 기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체로 초안 작성합니다.</p>
+          </div>
+        </div>
+
+        <div class="lf-proc-item reveal reveal-d3">
+          <div class="lf-proc-step">
+            <span class="lf-proc-n">04</span>
+          </div>
+          <div class="lf-proc-body">
+            <h3 class="lf-proc-name">최종 명세서 완성 및 납품</h3>
+            <p class="lf-proc-sub">Final Specification Delivery</p>
+            <p class="lf-proc-desc">전 단계 산출물을 통합·교열하여 용어·참조부호·문체를 일관화한 완성 명세서를 DOCX 형식으로 납품합니다. 제출 전 등록 변리사 최종 검토를 권장합니다.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES ══════════════════════════════════════════ -->
+  <section class="lf-features" id="features">
+    <div class="lf-container">
+      <div class="lf-section-hd">
+        <p class="lf-tag reveal" data-i18n="lf_feat_tag">PYPI의 원칙</p>
+        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_feat_h2" data-i18n-html>왜 <em>PYPI</em>인가</h2>
+      </div>
+      <div class="lf-feat-grid">
+        <article class="lf-feat reveal">
+          <div class="lf-feat-line"></div>
+          <div class="lf-feat-no">01</div>
+          <div class="lf-feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <!-- 방패 + 체크 -->
+              <path d="M24 6L8 13v10c0 9.6 6.8 18.6 16 21 9.2-2.4 16-11.4 16-21V13L24 6z" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <path d="M17 24l5 5 9-10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="lf-feat-name" data-i18n="feat1_name">변리사 수준의 품질</h3>
+          <p class="lf-feat-desc" data-i18n="feat1_desc">특허청 작성 규정을 기반으로 독립항·종속항·방법항을 체계적으로 구성하고, AI 품질 점수(0–100점) 자동 검수를 통해 전문 변리사 수준의 명세서 품질을 보장합니다.</p>
+        </article>
+        <article class="lf-feat reveal reveal-d1">
+          <div class="lf-feat-line"></div>
+          <div class="lf-feat-no">02</div>
+          <div class="lf-feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <!-- 번개 / 속도 -->
+              <path d="M26 6L12 26h14l-4 16 18-24H26L30 6z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+            </svg>
+          </div>
+          <h3 class="lf-feat-name" data-i18n="feat2_name">획기적인 처리 속도</h3>
+          <p class="lf-feat-desc" data-i18n="feat2_desc">아이디어 입력 한 번으로 7개 에이전트가 순차적으로 협력하여, 수일이 소요되던 특허 명세서 작성을 수십 분 이내에 자동으로 완성합니다.</p>
+        </article>
+        <article class="lf-feat reveal reveal-d2">
+          <div class="lf-feat-line"></div>
+          <div class="lf-feat-no">03</div>
+          <div class="lf-feat-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <!-- 연결된 노드 파이프라인 -->
+              <circle cx="12" cy="24" r="4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <circle cx="24" cy="24" r="5" stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.08" opacity="0.7"/>
+              <circle cx="36" cy="24" r="4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <line x1="16" y1="24" x2="19" y2="24" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+              <line x1="29" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+              <!-- 상단 노드 -->
+              <circle cx="24" cy="12" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+              <line x1="24" y1="15" x2="24" y2="19" stroke="currentColor" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 1"/>
+              <!-- 하단 노드 -->
+              <circle cx="24" cy="36" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+              <line x1="24" y1="29" x2="24" y2="33" stroke="currentColor" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 1"/>
+            </svg>
+          </div>
+          <h3 class="lf-feat-name" data-i18n="feat3_name">완결형 파이프라인</h3>
+          <p class="lf-feat-desc" data-i18n="feat3_desc">상담 단계부터 선행기술조사·청구항·도면·명세서·최종 통합까지, 단일 파이프라인 내에서 전 과정이 완결되어 특허청에 바로 제출 가능한 문서를 출력합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CARD NEWS ════════════════════════════════════════ -->
+  <section class="lf-news" id="insights">
+    <div class="lf-container">
+      <div class="lf-news-hd">
+        <div class="lf-news-hd-l reveal">
+          <p class="lf-tag">특허 인사이트</p>
+          <h2 class="lf-h2">알아두면 유용한<br><em>특허 출원 지식</em></h2>
+        </div>
+        <a href="{% url 'accounts:insights' %}" class="lf-news-more reveal">
+          모든 인사이트 보기 →
+        </a>
+      </div>
+      <div class="lf-news-grid">
+        {% for card in insights_preview %}
+        <a href="{% url 'accounts:insights' %}" class="lf-news-card reveal {% if forloop.counter == 2 %}reveal-d1{% elif forloop.counter == 3 %}reveal-d2{% endif %}">
+          <div class="lf-news-card-top">
+            <span class="lf-news-no">{{ card.no }}</span>
+            <span class="lf-news-tag">{{ card.tag }}</span>
+          </div>
+          <h3 class="lf-news-title">{{ card.title }}</h3>
+          <p class="lf-news-summary">{{ card.summary }}</p>
+          <ul class="lf-news-points">
+            {% for pt in card.points %}<li>{{ pt }}</li>{% endfor %}
+          </ul>
+          <span class="lf-news-link">자세히 보기 →</span>
+          <div class="lf-news-accent"></div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TEAM ══════════════════════════════════════════════ -->
+  <section class="lf-team" id="team">
+    <div class="lf-container">
+      <div class="lf-section-hd">
+        <p class="lf-tag reveal" data-i18n="lf_team_tag">팀 소개</p>
+        <h2 class="lf-h2 reveal reveal-d1" data-i18n="lf_team_h2" data-i18n-html>PYPI를<br><em>만든 사람들</em></h2>
+      </div>
+      <div class="lf-team-grid">
+
+        {% load static %}
+        <div class="lf-member reveal">
+          <div class="lf-member-avatar"><img src="{% static 'team/kwon-gayoung.jpg' %}" alt="권가영" onerror="this.parentElement.innerHTML='권'"></div>
+          <div class="lf-member-name">권가영</div>
+          <div class="lf-member-role">Consultation · Summary Agent</div>
+          <p class="lf-member-desc">상담 에이전트 및 요약 에이전트의 LLM 프롬프트 설계와 발명 정보 구조화 로직을 담당했습니다.</p>
+        </div>
+
+        <div class="lf-member reveal reveal-d1">
+          <div class="lf-member-avatar"><img src="{% static 'team/kim-seohyun.jpg' %}" alt="김서현" onerror="this.parentElement.innerHTML='김'"></div>
+          <div class="lf-member-name">김서현</div>
+          <div class="lf-member-role">Drawing Agent · Web UI</div>
+          <p class="lf-member-desc">도면 에이전트 SVG 자동 생성 시스템과 Django 기반 웹 인터페이스 전체를 개발했습니다.</p>
+        </div>
+
+        <div class="lf-member reveal reveal-d2">
+          <div class="lf-member-avatar"><img src="{% static 'team/kim-hongik.jpg' %}" alt="김홍익" onerror="this.parentElement.innerHTML='김'"></div>
+          <div class="lf-member-name">김홍익</div>
+          <div class="lf-member-role">Prior Art Agent</div>
+          <p class="lf-member-desc">선행기술조사 에이전트의 특허 DB 임베딩 검색 및 신규성·진보성 리스크 분석 시스템을 구현했습니다.</p>
+        </div>
+
+        <div class="lf-member reveal">
+          <div class="lf-member-avatar"><img src="{% static 'team/park-beomsoo.jpg' %}" alt="박범수" onerror="this.parentElement.innerHTML='박'"></div>
+          <div class="lf-member-name">박범수</div>
+          <div class="lf-member-role">Claim Agent</div>
+          <p class="lf-member-desc">청구항 에이전트 설계 및 특허청 규정 기반 독립항·종속항·방법항 자동 생성 로직을 구현했습니다.</p>
+        </div>
+
+        <div class="lf-member reveal reveal-d1">
+          <div class="lf-member-avatar"><img src="{% static 'team/jo-eunseok.jpg' %}" alt="조은석" onerror="this.parentElement.innerHTML='조'"></div>
+          <div class="lf-member-name">조은석</div>
+          <div class="lf-member-role">Specification Agent</div>
+          <p class="lf-member-desc">명세서 에이전트의 기술분야·배경기술·해결수단·발명의 효과 섹션 자동 초안 생성 시스템을 개발했습니다.</p>
+        </div>
+
+        <div class="lf-member reveal reveal-d2">
+          <div class="lf-member-avatar"><img src="{% static 'team/choi-hyunwoo.jpg' %}" alt="최현우" onerror="this.parentElement.innerHTML='최'"></div>
+          <div class="lf-member-name">최현우</div>
+          <div class="lf-member-role">Project Lead · Composer Agent</div>
+          <p class="lf-member-desc">전체 멀티에이전트 아키텍처 설계 및 컴포저 에이전트의 최종 명세서 통합 파이프라인을 구성했습니다.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLOSING ════════════════════════════════════════════ -->
+  <section class="lf-closing">
+    <div class="lf-container">
+      <div class="lf-closing-inner reveal">
+
+        <!-- 도면 프레임 코너 브래킷 -->
+        <svg class="lf-close-bracket lf-close-bracket--tl" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
+        <svg class="lf-close-bracket lf-close-bracket--tr" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
+        <svg class="lf-close-bracket lf-close-bracket--bl" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
+        <svg class="lf-close-bracket lf-close-bracket--br" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
+
+        <!-- 상단 레이블 -->
+        <div class="lf-close-ref">
+          <span class="lf-close-ref-line"></span>
+          <span class="lf-close-ref-label">PATENT APPLICATION · AI-ASSISTED</span>
+          <span class="lf-close-ref-line"></span>
+        </div>
+
+        <h2 class="lf-closing-h2 reveal reveal-d1" data-i18n="lf_close_h2" data-i18n-html>발명의 가치를<br>지금 보호하십시오</h2>
+
+        <p class="lf-closing-sub reveal reveal-d2" data-i18n="lf_close_sub">발명 정보를 입력하면 7개 전문 에이전트가<br>특허청 제출 가능한 완성 명세서를 자동으로 완성합니다</p>
+
+        <!-- CTA 버튼 -->
+        <div class="lf-closing-actions reveal reveal-d3">
+          {% if user.is_authenticated %}
+          <a href="{% url 'accounts:pipeline' %}" class="lf-btn-fill" data-i18n="lf_close_primary_auth">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            파이프라인 실행하기
+          </a>
+          <a href="{% url 'accounts:dashboard' %}" class="lf-btn-line" data-i18n="lf_close_secondary_auth">포털 대시보드 →</a>
+          {% else %}
+          <a href="{% url 'accounts:signup' %}" class="lf-btn-fill" data-i18n="lf_close_primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            업무 의뢰 신청하기
+          </a>
+          <a href="{% url 'accounts:login' %}" class="lf-btn-line" data-i18n="lf_close_secondary">기존 의뢰인 로그인 →</a>
+          {% endif %}
+        </div>
+
+        <!-- 하단 기술 주석 -->
+        <div class="lf-close-note">
+          <span class="lf-close-note-item">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            변리사 자문 시스템
+          </span>
+          <span class="lf-close-sep">·</span>
+          <span class="lf-close-note-item">7 Agent Pipeline</span>
+          <span class="lf-close-sep">·</span>
+          <span class="lf-close-note-item">GPT-4o · LangGraph</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══════════════════════════════════════════════ -->
+  <footer class="lf-footer">
+    <div class="lf-container">
+      <div class="lf-footer-top">
+        <div class="lf-footer-brand">
+          <span class="lf-footer-logo">PYPI</span>
+          <p class="lf-footer-tagline" data-i18n="lf_foot_tag">AI 기반 특허 자동화 시스템</p>
+        </div>
+        <div class="lf-footer-cols">
+          <div class="lf-footer-col">
+            <p class="lf-footer-hd" data-i18n="lf_foot_h1">서비스</p>
+            <a href="{% url 'accounts:about' %}"          class="lf-footer-link" data-i18n="lf_foot_about">서비스 소개</a>
+            <a href="{% url 'accounts:agents_overview' %}" class="lf-footer-link" data-i18n="lf_foot_pipe">에이전트 파이프라인</a>
+            <a href="{% url 'accounts:features' %}"        class="lf-footer-link" data-i18n="lf_foot_feat">특징</a>
+          </div>
+          <div class="lf-footer-col">
+            <p class="lf-footer-hd" data-i18n="lf_foot_h2">계정</p>
+            <a href="{% url 'accounts:signup' %}" class="lf-footer-link" data-i18n="lf_foot_signup">서비스 신청</a>
+            <a href="{% url 'accounts:login' %}"  class="lf-footer-link" data-i18n="lf_foot_login">로그인</a>
+          </div>
+          <div class="lf-footer-col">
+            <p class="lf-footer-hd" data-i18n="lf_foot_h3">지원 언어</p>
+            <span class="lf-footer-link">한국어</span>
+            <span class="lf-footer-link">English</span>
+            <span class="lf-footer-link">日本語</span>
+            <span class="lf-footer-link">中文</span>
+          </div>
+        </div>
+      </div>
+      <div class="lf-footer-bottom">
+        <span class="lf-footer-copy" data-i18n="lf_foot_copy">© 2025 꽃보다 특허 · PYPI · 꽃보다 특허. All rights reserved.</span>
+        <span class="lf-footer-disc" data-i18n="lf_foot_disc">【법적 고지】본 시스템이 생성하는 특허 명세서는 AI 초안이며 법적 효력을 보장하지 않습니다. 최종 특허 출원 전 반드시 등록 변리사의 검토·확인을 받으시기 바랍니다.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ── 0. 패럴랙스 스크롤 ─────────────────────────── */
+(function parallax() {
+  var stamp  = document.querySelector('.lf-hero-stamp');
+  var deco   = document.querySelector('.lf-hero-deco');
+  var floats = document.querySelector('.lf-floats');
+  var body   = document.querySelector('.lf-hero-body');
+  var ticker = document.querySelector('.lf-hero-ticker');
+
+  function onScroll() {
+    var y = window.scrollY;
+    var vh = window.innerHeight;
+    if (y > vh) return;  // 히어로 벗어나면 멈춤
+    var p = y / vh;
+
+    if (stamp)  stamp.style.transform  = 'translateY(' + (y * 0.25) + 'px)';
+    if (deco)   deco.style.transform   = 'translateY(-50%) translateY(' + (y * -0.12) + 'px)';
+    if (floats) floats.style.transform = 'translateY(' + (y * 0.18) + 'px)';
+    if (body)   body.style.transform   = 'translateY(' + (y * 0.06) + 'px)';
+    if (ticker) ticker.style.transform = 'translateY(' + (y * 0.3) + 'px)';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+/* ── 1. Scroll reveal ────────────────────────────── */
+(function() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+})();
+
+/* ── 2. Count-up 애니메이션 (Cred bar) ────────────── */
+function countUp(el, target, duration) {
+  var start = performance.now();
+  function step(now) {
+    var p = Math.min((now - start) / duration, 1);
+    var ease = 1 - Math.pow(1-p, 3);
+    el.textContent = (target < 10) ? Math.round(ease*target) : Math.round(ease*target);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+var credObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('[data-count]').forEach(function(el) {
+      countUp(el, parseInt(el.dataset.count), 1600);
+    });
+    credObs.unobserve(e.target);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.lf-cred').forEach(function(el) { credObs.observe(el); });
+
+/* ── 3. Magnetic tilt (Feature & Team 카드) ────────── */
+document.querySelectorAll('.lf-feat, .lf-member').forEach(function(card) {
+  card.addEventListener('mousemove', function(e) {
+    var r = card.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width  - 0.5;
+    var y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = 'perspective(600px) rotateY('+(x*6)+'deg) rotateX('+(-y*6)+'deg) scale(1.02)';
+    card.style.transition = 'transform .1s ease';
+    card.style.zIndex = '2';
+  });
+  card.addEventListener('mouseleave', function() {
+    card.style.transform = '';
+    card.style.transition = 'transform .4s ease, background .25s';
+    card.style.zIndex = '';
+  });
+});
+
+/* ── 4. Language switcher ────────────────────────── */
+var PM_I18N_LANG = { ko:'ko', en:'en', ja:'ja', zh:'zh-Hans' };
+function pmApplyLang(code) {
+  var d = document.querySelector('[data-lang-display]');
+  if (d) d.textContent = code.toUpperCase();
+  document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
+    o.classList.toggle('active', o.dataset.lang === code);
+  });
+  document.documentElement.lang = PM_I18N_LANG[code] || 'ko';
+  try { localStorage.setItem('pm-lang', code); } catch(e) {}
+}
+/* lang-btn 클릭 토글 */
+document.querySelectorAll('.lang-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    btn.closest('.lang-switcher').classList.toggle('open');
+  });
+});
+document.addEventListener('click', function() {
+  document.querySelectorAll('.lang-switcher.open').forEach(function(s) { s.classList.remove('open'); });
+});
+document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
+  o.addEventListener('click', function(e) {
+    e.preventDefault();
+    pmApplyLang(o.dataset.lang);
+    o.closest('.lang-switcher').classList.remove('open');
+  });
+});
+var saved; try { saved = localStorage.getItem('pm-lang'); } catch(e) {}
+pmApplyLang(saved || 'ko');
+</script>
+{% endblock %}
