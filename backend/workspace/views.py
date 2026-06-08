@@ -286,7 +286,8 @@ def generate_claims_api(request, project_id):
         "summary_data": None,
         "claims_data": None,
         "examiner_data": None,
-        "drawing_spec": None
+        "drawing_spec": None,
+        "prior_art_data": None
     }
 
     def event_stream():
@@ -308,6 +309,8 @@ def generate_claims_api(request, project_id):
                         yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
                     elif node_name == "examiner_node":
                         examiner_data = state_update.get("examiner_data")
+                        if not examiner_data:
+                            pass
                         if examiner_data and not examiner_data.is_approved:
                             yield json.dumps({"step": "rewrite", "message": f"심사관 반려! ({examiner_data.revision_count}차 보정 진행)"}) + "\n"
                         else:
@@ -341,10 +344,30 @@ def generate_claims_api(request, project_id):
 
             ChatMessage.objects.create(project=project, role='assistant', content=claim_result_text)
 
+            yield json.dumps({"step": "prior_art_start", "message": "AWS RDS 벡터DB 연결 및 선행기술조사 가동..."}) + "\n"
+
+            try:
+                from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
+                
+                prior_art_result = run_prior_art_agent(final_state, top_n=3)
+                
+                pa_data = prior_art_result["prior_art_data"].model_dump()
+                
+                yield json.dumps({
+                    "step": "prior_art_done", 
+                    "message": "선행기술조사 완료! 리포트를 생성했습니다.",
+                    "prior_art_data": pa_data
+                }) + "\n"
+                
+            except Exception as e:
+                logger.error(f"선기조 에러: {e}")
+                yield json.dumps({"step": "error", "message": f"선기조 중 오류 발생: {str(e)}"}) + "\n"
+
             yield json.dumps({
                 "step": "done",
                 "message_content": claim_result_text,
-                "claims": claims_list_for_frontend
+                "claims": claims_list_for_frontend,
+                "prior_art_data": pa_data
             }) + "\n"
 
         except Exception as e:
