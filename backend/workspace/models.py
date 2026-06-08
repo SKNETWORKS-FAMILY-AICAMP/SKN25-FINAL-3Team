@@ -70,3 +70,22 @@ class PatentDrawingFile(models.Model):
 
     def __str__(self):
         return f"{self.project.title} - {self.title}"
+
+class PriorArtReport(models.Model):
+    project = models.OneToOneField('PatentProject', on_delete=models.CASCADE, related_name='prior_art_report')
+    risk_level = models.CharField(max_length=50)  # low, medium, high
+    analysis_summary = models.TextField()
+    full_json_data = models.JSONField()          
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project.title} - 선기조 리포트"
+
+class SpecificationDocument(models.Model):
+    project = models.OneToOneField('PatentProject', on_delete=models.CASCADE, related_name='specification_doc')
+    markdown_content = models.TextField()        
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.project.title} - 명세서 본문"
