@@ -1,9 +1,8 @@
 import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import PatentProject, InventionInput
 from django.shortcuts import get_object_or_404
-from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, PatentClaim, PatentClaim, PatentDrawingFile
+from .models import PatentProject, InventionInput, ConsultationState, ChatMessage, PatentClaim, PatentClaim, PatentDrawingFile, PriorArtReport, SpecificationDocument
 from django.http import JsonResponse
 from .ai_agent import DjangoPatentConsultant
 from django.contrib import messages
@@ -350,8 +349,17 @@ def generate_claims_api(request, project_id):
                 from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
                 
                 prior_art_result = run_prior_art_agent(final_state, top_n=3)
-                
                 pa_data = prior_art_result["prior_art_data"].model_dump()
+
+                PriorArtReport.objects.update_or_create(
+                    project=project,
+                    defaults={
+                        'risk_level': pa_data.get('overall_risk', {}).get('level', 'unknown'),
+                        'analysis_summary': pa_data.get('analysis_summary', ''),
+                        'full_json_data': pa_data
+                    }
+                )
+                
                 
                 yield json.dumps({
                     "step": "prior_art_done", 
@@ -601,6 +609,13 @@ def generate_specification_api(request, project_id):
             raise Exception(f"명세서 생성 실패: {result.get('warnings', ['알 수 없는 오류'])}")
 
         md_content = convert_to_markdown_format(project.title, result)
+
+        SpecificationDocument.objects.update_or_create(
+            project=project,
+            defaults={
+                'markdown_content': md_content
+            }
+        )
 
         chat_message = "📝 **[AI 발명의 설명(명세서 본문) 작성 완료]**\n명세서 초안 작성이 완료되었습니다. 아래 마크다운 내용을 확인해 주세요!\n\n"
         ChatMessage.objects.create(project=project, role='assistant', content=chat_message)
