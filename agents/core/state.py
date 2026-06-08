@@ -87,6 +87,33 @@ class PatentDrawingSpecification(BaseModel):
     drawings: List[PatentDrawing]
     reference_numerals: List[ReferenceMapping]
 
+
+# ---------------------------------------------------------
+# 4. 선행기술 조사(Prior Art) 관련 State
+# ---------------------------------------------------------
+class PriorArtCandidate(BaseModel):
+    patent_id : int 
+    rank: int = Field(ge=1)
+    register_number: str = ""
+    title: str = ""
+    summary: str = ""
+    score: float = Field(default=0.0, ge=0.0, le=1.0)
+
+    overlap_points: list[str] = Field(default_factory=list)
+    difference_points: list[str] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+
+    risk_level: str = "unknown" 
+    risk_reasons: list[str] = Field(default_factory=list)
+    recommendation: str = ""
+    pdf_s3_url: str | None = None
+    
+class PriorArtResult(BaseModel):
+    candidates: list[PriorArtCandidate] = Field(default_factory=list)
+    overall_risk: dict = Field(default_factory=dict)
+    analysis_summary: str = ""
+
 # ---------------------------------------------------------
 # Master Graph State
 # ---------------------------------------------------------
@@ -94,4 +121,5 @@ class PatentState(TypedDict):
     mock_input_data: Dict[str, Any]
     summary_data: Optional[ParsedInvention]
     claims_data: Optional[ClaimResult]  
+    prior_art_data: Optional[PriorArtResult]
     examiner_data: Optional[ExaminerResult]

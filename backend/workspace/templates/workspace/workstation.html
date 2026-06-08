@@ -84,6 +84,18 @@
                         style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
                     명세서 작성
                 </button>
+                <button type="button" id="main-pa-report-btn" 
+                        style="display: none; background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); align-items: center; gap: 8px;">
+                    🚨 선행기술 리포트 보기
+                </button>
+
+                <style>
+                    @keyframes pulse-red {
+                        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+                    }
+                </style>
             </div>
             <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
         </div>
