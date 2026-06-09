@@ -30,7 +30,7 @@
 
 #### 1. Prerequisites
 
-* [Docker](https://www.docker.com/) 및 [Docker Compose](https://docs.docker.com/compose/) 설치
+* [Docker](https://www.docker.com/) 및 [Docker Compose](https://docs.docker.com/compose/) 설치 (또는 Docker Desktop)
 * uv 패키지 매니저 설치 (`pip install uv`)
 
 #### 2. Installation
