@@ -28,12 +28,12 @@
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
+#### 1. Prerequisites
 
 * [Docker](https://www.docker.com/) 및 [Docker Compose](https://docs.docker.com/compose/) 설치
 * uv 패키지 매니저 설치 (`pip install uv`)
 
-### 2. Installation
+#### 2. Installation
 
 ```bash
 # Repository Clone
@@ -44,7 +44,7 @@ cd skn25-final-3team
 cp .env.example .env
 ```
 
-### 3. Run the Application
+#### 3. Run the Application
 
 Docker를 이용해 시스템을 빌드하고 실행합니다.
 
@@ -70,3 +70,8 @@ skn25-final-3team/
 ├── Dockerfile          # 배포 및 실행 환경 정의
 └── docker-compose.yml  # 컨테이너 오케스트레이션
 ```
+
+## 🔃 Future Work
+
+- FastAPI
+- Agent logic 고도화
