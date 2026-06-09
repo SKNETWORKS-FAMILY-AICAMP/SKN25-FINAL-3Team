@@ -8,9 +8,14 @@ services:
     container_name: pypi_agent_backend
     ports:
       - "8000:8000"
+    environment:
+      - PYTHONPATH=/app/backend
     volumes:
-      # 로컬 코드를 컨테이너에 마운트하여 코드 수정 시 즉시 반영(Hot Reload)되도록 함
+      # 로컬 코드를 컨테이너에 마운트 (Hot Reload)
       - .:/app
     env_file:
       - .env
-    # 백그라운드 워커나 DB가 추가될 경우 여기에 depends_on 등으로 연결합니다.
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
