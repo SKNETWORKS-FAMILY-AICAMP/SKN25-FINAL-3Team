@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pypi_agent_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app/backend
+    volumes:
+      # 로컬 코드를 컨테이너에 마운트 (Hot Reload)
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
