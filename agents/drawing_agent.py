@@ -26,7 +26,7 @@ class SmartDrawingAgent:
     def __init__(self):
         self.output_dir = os.path.join(settings.MEDIA_ROOT, "drawings")
         os.makedirs(self.output_dir, exist_ok=True)
-        self.font_name = 'Malgun Gothic' # (윈도우용)
+        self.font_name = 'NanumGothic' # (윈도우용)
 
     def run(self, state: dict) -> dict:
         parsed_data: ParsedInvention = state.get("summary_data")

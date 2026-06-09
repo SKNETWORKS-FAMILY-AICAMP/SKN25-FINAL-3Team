@@ -8,13 +8,15 @@ ENV PYTHONUNBUFFERED=1 \
     # 핵심 1: 가상환경을 /app 폴더 밖인 /venv 에 만들도록 지시
     UV_PROJECT_ENVIRONMENT=/venv \
     # 핵심 2: 시스템 파이썬 대신 /venv 안의 파이썬을 기본으로 사용하도록 PATH 변경
-    PATH="/venv/bin:$PATH"
+    PATH="/venv/bin:$PATH" \
+    GRAPHVIZ_DOT="/usr/bin/dot"
 
 RUN apt-get update && apt-get install -y \
     build-essential \
     graphviz \
     libgraphviz-dev \
     pkg-config \
+    fonts-nanum \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. 최신 uv 설치 (공식 권장 방식)
