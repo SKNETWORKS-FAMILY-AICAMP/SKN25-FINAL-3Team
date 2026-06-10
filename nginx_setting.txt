@@ -3,7 +3,7 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/patent_app /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo service nginx restart
-----------------------------------------
+-------------------------------------------
 
 server {
     listen 80;

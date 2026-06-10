@@ -76,6 +76,9 @@ def workstation(request, project_id):
     #    agent = DjangoPatentConsultant(project)
     #    agent.generate_welcome_message()
 
+    prior_art_report = getattr(project, 'prior_art_report', None)
+    pa_json_string = json.dumps(prior_art_report.full_json_data) if prior_art_report else "null"
+
     # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
     algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
     details = project.details.all()
@@ -88,6 +91,7 @@ def workstation(request, project_id):
         'algorithm_steps': algorithm_steps,
         'details': details,
         'chat_messages': chat_messages,
+        'prior_art_json': pa_json_string
     }
     
     return render(request, 'workspace/workstation.html', context)
@@ -486,13 +490,17 @@ def patent_report_view(request, project_id):
     invention_input = getattr(project, 'inventioninput', None)
     claims = project.claims.all().order_by('claim_no')
     consultation_state = getattr(project, 'consultationstate', None)
+    specification = getattr(project, 'specification_doc', None)
+    drawings = PatentDrawingFile.objects.filter(project=project)
 
     context = {
         'project': project,
         'state': state,
         'invention_input': invention_input,
         'consultation_state': consultation_state,
-        'claims': claims
+        'claims': claims,
+        'specification': specification,
+        'drawings': drawings
     }
     return render(request, 'workspace/report.html', context)
 
