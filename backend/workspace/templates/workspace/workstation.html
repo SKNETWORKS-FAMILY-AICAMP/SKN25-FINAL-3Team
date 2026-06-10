@@ -86,7 +86,7 @@
                 </button>
                 <button type="button" id="main-pa-report-btn" 
                         style="display: none; background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); align-items: center; gap: 8px;">
-                    🚨 선행기술 리포트 보기
+                    선행기술 리포트
                 </button>
 
                 <style>
@@ -507,6 +507,27 @@
     document.addEventListener('DOMContentLoaded', function() {
     // 장고 템플릿 변수를 활용해 현재 방의 기존 메시지 개수를 파악합니다.
         const messageCount = parseInt("{{ chat_messages.count }}") || 0;
+
+        let savedPaData = null;
+        try {
+            savedPaData = JSON.parse('{{ prior_art_json|escapejs }}');
+        } catch (e) {
+            console.error("선기조 데이터 파싱 에러:", e);
+        }
+
+        // 데이터가 잘 넘어왔다면 버튼 살리기
+        if (savedPaData && savedPaData !== null) {
+            window.latestPriorArtData = savedPaData; // 전역 변수 복구
+            
+            const mainPaBtn = document.getElementById('main-pa-report-btn');
+            if (mainPaBtn) {
+                mainPaBtn.style.display = 'flex'; // 숨겨진 버튼 등장!
+                
+                mainPaBtn.onclick = function() {
+                    openPriorArtModal(window.latestPriorArtData);
+                };
+            }
+        }
     
         // 만약 메시지가 하나도 없는 완전 새 프로젝트 방이라면
         if (messageCount === 0) {
