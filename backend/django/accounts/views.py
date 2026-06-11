@@ -131,58 +131,37 @@ def about_view(request):
     return render(request, 'pages/about.html')
 
 
+_PIPELINE_AGENTS = [
+    {'num': 'I',   'name': '상담 에이전트',        'en': 'Consultation',  'en_key': 'en_consultation', 'active': False,
+     'desc': '발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석합니다.',
+     'url_name': 'accounts:agent_summary'},
+    {'num': 'II',  'name': '요약 에이전트',         'en': 'Summary',       'en_key': 'en_summary', 'active': True,
+     'desc': '5개 발명 필드를 사람이 확인할 수 있는 요약본과 구조화 발명 JSON으로 정리합니다.',
+     'url_name': 'accounts:agent_summary'},
+    {'num': 'III', 'name': '선행기술조사 에이전트',  'en': 'Prior Art',     'en_key': 'en_prior_art', 'active': False,
+     'desc': '특허 DB에서 임베딩 유사도 검색으로 선행문헌을 탐색하고 리스크를 분석합니다.',
+     'url_name': 'accounts:agent_prior_art'},
+    {'num': 'IV',  'name': '청구항 에이전트',       'en': 'Claim',         'en_key': 'en_claim', 'active': True,
+     'desc': '발명 구조를 분석해 독립항·종속항·방법항·시스템항을 자동 생성합니다.',
+     'url_name': 'accounts:agent_claim'},
+    {'num': 'V',   'name': '도면 에이전트',         'en': 'Drawing',       'en_key': 'en_drawing', 'active': True,
+     'desc': '블록도·흐름도를 SVG로 자동 렌더링하고 품질 점수 검수 및 보정 후 파일을 제공합니다.',
+     'url_name': 'accounts:agent_drawing'},
+    {'num': 'VI',  'name': '명세서 에이전트',       'en': 'Specification', 'en_key': 'en_specification', 'active': True,
+     'desc': '기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체로 초안 작성합니다.',
+     'url_name': 'accounts:agent_specification'},
+    {'num': 'VII', 'name': '컴포저 에이전트',       'en': 'Composer',      'en_key': 'en_composer', 'active': True,
+     'desc': '전 에이전트 산출물을 병합·통일하고 제출 가능한 완성 명세서를 출력합니다.',
+     'url_name': 'accounts:agent_composer'},
+]
+
+
 def features_view(request):
-    agents = [
-        {'num': 'I',   'name': '상담 에이전트',        'en': 'Consultation',  'active': False,
-         'desc': '발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석합니다.',
-         'url_name': 'accounts:agent_summary'},
-        {'num': 'II',  'name': '요약 에이전트',         'en': 'Summary',       'active': True,
-         'desc': '5개 발명 필드를 사람이 확인할 수 있는 요약본과 구조화 발명 JSON으로 정리합니다.',
-         'url_name': 'accounts:agent_summary'},
-        {'num': 'III', 'name': '선행기술조사 에이전트',  'en': 'Prior Art',     'active': False,
-         'desc': '특허 DB에서 임베딩 유사도 검색으로 선행문헌을 탐색하고 리스크를 분석합니다.',
-         'url_name': 'accounts:agent_prior_art'},
-        {'num': 'IV',  'name': '청구항 에이전트',       'en': 'Claim',         'active': True,
-         'desc': '발명 구조를 분석해 독립항·종속항·방법항·시스템항을 자동 생성합니다.',
-         'url_name': 'accounts:agent_claim'},
-        {'num': 'V',   'name': '도면 에이전트',         'en': 'Drawing',       'active': True,
-         'desc': '블록도·흐름도를 SVG로 자동 렌더링하고 품질 점수 검수 및 보정 후 파일을 제공합니다.',
-         'url_name': 'accounts:agent_drawing'},
-        {'num': 'VI',  'name': '명세서 에이전트',       'en': 'Specification', 'active': True,
-         'desc': '기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체로 초안 작성합니다.',
-         'url_name': 'accounts:agent_specification'},
-        {'num': 'VII', 'name': '컴포저 에이전트',       'en': 'Composer',      'active': True,
-         'desc': '전 에이전트 산출물을 병합·통일하고 제출 가능한 완성 명세서를 출력합니다.',
-         'url_name': 'accounts:agent_composer'},
-    ]
-    return render(request, 'pages/features.html', {'agents': agents})
+    return render(request, 'pages/features.html', {'agents': _PIPELINE_AGENTS})
 
 
 def agents_overview_view(request):
-    agents = [
-        {'num': 'I',   'name': '상담 에이전트',        'en': 'Consultation',  'active': False,
-         'desc': '발명 아이디어를 자연어로 입력받아 특허 가능성과 기술 구성을 분석합니다.',
-         'url_name': 'accounts:agent_summary'},
-        {'num': 'II',  'name': '요약 에이전트',         'en': 'Summary',       'active': True,
-         'desc': '5개 발명 필드를 사람이 확인할 수 있는 요약본과 구조화 발명 JSON으로 정리합니다.',
-         'url_name': 'accounts:agent_summary'},
-        {'num': 'III', 'name': '선행기술조사 에이전트',  'en': 'Prior Art',     'active': False,
-         'desc': '특허 DB에서 임베딩 유사도 검색으로 선행문헌을 탐색하고 리스크를 분석합니다.',
-         'url_name': 'accounts:agent_prior_art'},
-        {'num': 'IV',  'name': '청구항 에이전트',       'en': 'Claim',         'active': True,
-         'desc': '발명 구조를 분석해 독립항·종속항·방법항·시스템항을 자동 생성합니다.',
-         'url_name': 'accounts:agent_claim'},
-        {'num': 'V',   'name': '도면 에이전트',         'en': 'Drawing',       'active': True,
-         'desc': '블록도·흐름도를 SVG로 자동 렌더링하고 품질 점수 검수 및 보정 후 파일을 제공합니다.',
-         'url_name': 'accounts:agent_drawing'},
-        {'num': 'VI',  'name': '명세서 에이전트',       'en': 'Specification', 'active': True,
-         'desc': '기술분야·배경기술·해결수단·발명의 효과·상세설명 섹션을 특허 문체로 초안 작성합니다.',
-         'url_name': 'accounts:agent_specification'},
-        {'num': 'VII', 'name': '컴포저 에이전트',       'en': 'Composer',      'active': True,
-         'desc': '전 에이전트 산출물을 병합·통일하고 제출 가능한 완성 명세서를 출력합니다.',
-         'url_name': 'accounts:agent_composer'},
-    ]
-    return render(request, 'pages/agents_overview.html', {'agents': agents})
+    return render(request, 'pages/agents_overview.html', {'agents': _PIPELINE_AGENTS})
 
 
 _TEAM_DATA = {

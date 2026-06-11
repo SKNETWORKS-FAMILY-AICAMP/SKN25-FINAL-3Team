@@ -10,7 +10,7 @@
     {% include "pages/_hero_deco.html" %}
     <div class="pg-container">
       <span class="pg-hero-tag" data-i18n="ov_tag">Agent Pipeline</span>
-      <h1 class="pg-hero-h1"><span data-i18n="ov_h1_1">7개의 전문 에이전트가</span><br><em data-i18n="ov_h1_2">순차적으로 협력</em>합니다</h1>
+      <h1 class="pg-hero-h1"><span data-i18n="ov_h1_1">7개의 전문 에이전트가</span><br><em data-i18n="ov_h1_2">순차적으로 협력합니다</em></h1>
       <div class="pg-hero-rule"></div>
       <p class="pg-hero-desc" data-i18n="ov_desc">각 에이전트는 이전 단계의 산출물을 공유 State로 받아 처리하고, 최종적으로 특허청 제출 가능한 완성 명세서를 생성합니다.</p>
     </div>
@@ -25,10 +25,10 @@
           <div class="ov-num">{{ item.num }}</div>
           <div class="ov-body">
             <div class="ov-hd">
-              <h3 class="ov-name">{{ item.name }}</h3>
-              <span class="ov-en">{{ item.en }}</span>
+              <h3 class="ov-name" data-i18n="agent_{{ item.num }}">{{ item.name }}</h3>
+              <span class="ov-en" data-i18n="{{ item.en_key }}">{{ item.en }}</span>
             </div>
-            <p class="ov-desc">{{ item.desc }}</p>
+            <p class="ov-desc" data-i18n="agent_{{ item.num }}_desc">{{ item.desc }}</p>
           </div>
           <div class="ov-arrow">→</div>
         </a>
@@ -42,7 +42,7 @@
     <div class="pg-container">
       <div class="pg-footer-inner">
         <span class="pg-footer-logo">PYPI</span>
-        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
       </div>
     </div>
   </footer>

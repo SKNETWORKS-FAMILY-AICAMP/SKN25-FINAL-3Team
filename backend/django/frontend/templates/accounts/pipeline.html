@@ -11,16 +11,28 @@
       <span>PYPI</span>
     </a>
     <div class="nav-links">
-      <a href="{% url 'accounts:dashboard' %}" class="nav-link">AI 어시스턴트 대시보드</a>
+      <a href="{% url 'accounts:dashboard' %}" class="nav-link" data-i18n="nav_ai_dashboard">AI 어시스턴트 대시보드</a>
       <span class="nav-link-divider"></span>
-      <a href="{% url 'accounts:pipeline' %}"  class="nav-link active">파이프라인</a>
+      <a href="{% url 'accounts:pipeline' %}"  class="nav-link active" data-i18n="nav_pipeline_label">파이프라인</a>
     </div>
     <div class="nav-user">
+      <div class="lang-switcher">
+        <button class="lang-btn" type="button">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span data-lang-display>KO</span>
+        </button>
+        <div class="lang-dropdown">
+          <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+          <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+          <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+          <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+        </div>
+      </div>
       <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
       <span class="user-email">{{ user.username }}</span>
       <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
         {% csrf_token %}
-        <button type="submit" class="btn-logout">로그아웃</button>
+        <button type="submit" class="btn-logout" data-i18n="nav_logout">로그아웃</button>
       </form>
     </div>
   </nav>
@@ -32,11 +44,11 @@
       <!-- 페이지 헤더 -->
       <div class="pl-page-hd">
         <div>
-          <p class="pl-page-tag">AI Patent Pipeline</p>
-          <h1 class="pl-page-title">특허 파이프라인</h1>
+          <p class="pl-page-tag" data-i18n="pipe_eyebrow">AI Patent Pipeline</p>
+          <h1 class="pl-page-title" data-i18n="pipe_title">특허 파이프라인</h1>
         </div>
         {% if result %}
-        <a href="{% url 'accounts:pipeline' %}" class="pl-btn-rerun">↺ 다시 실행</a>
+        <a href="{% url 'accounts:pipeline' %}" class="pl-btn-rerun" data-i18n="pipe_rerun">↺ 다시 실행</a>
         {% endif %}
       </div>
 
@@ -44,22 +56,22 @@
       <div class="pl-steps">
         <div class="pl-step {% if result %}pl-step--done{% endif %}">
           <div class="pl-step-dot">II</div>
-          <span class="pl-step-name">요약</span>
+          <span class="pl-step-name" data-i18n="pipe_step_summary">요약</span>
         </div>
         <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
         <div class="pl-step {% if result %}pl-step--done{% endif %}">
           <div class="pl-step-dot">IV</div>
-          <span class="pl-step-name">청구항</span>
+          <span class="pl-step-name" data-i18n="pipe_step_claim">청구항</span>
         </div>
         <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
         <div class="pl-step {% if result %}pl-step--done{% endif %}">
           <div class="pl-step-dot">VI</div>
-          <span class="pl-step-name">명세서</span>
+          <span class="pl-step-name" data-i18n="pipe_step_spec">명세서</span>
         </div>
         <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
         <div class="pl-step {% if result %}pl-step--done{% endif %}">
           <div class="pl-step-dot">VII</div>
-          <span class="pl-step-name">통합</span>
+          <span class="pl-step-name" data-i18n="pipe_step_compose">통합</span>
         </div>
       </div>
 
@@ -75,8 +87,8 @@
       {% if not result %}
       <div class="pl-card">
         <div class="pl-card-hd">
-          <span class="pl-card-label">발명 정보 입력</span>
-          <p class="pl-card-sub">5개 항목을 입력하면 요약 → 청구항 → 명세서 → 통합 순서로 자동 생성합니다.</p>
+          <span class="pl-card-label" data-i18n="pipe_card_label">발명 정보 입력</span>
+          <p class="pl-card-sub" data-i18n="pipe_sub">5개 항목을 입력하면 요약 → 청구항 → 명세서 → 통합 순서로 자동 생성합니다.</p>
         </div>
 
         <form method="POST" id="pipeline-form">
@@ -84,37 +96,37 @@
           <div class="pl-fields">
 
             <div class="pl-field">
-              <label class="pl-label">발명(프로젝트) 명칭</label>
+              <label class="pl-label" data-i18n="pipe_f1">발명(프로젝트) 명칭</label>
               <input class="pl-input" type="text" name="project_name"
-                placeholder="예: AI 기반 특허 도면 자동 생성 시스템"
+                placeholder="예: AI 기반 특허 도면 자동 생성 시스템" data-i18n="pipe_ph1"
                 value="{{ form_data.project_name }}" required>
             </div>
 
             <div class="pl-field">
-              <label class="pl-label">해결하고자 하는 문제</label>
+              <label class="pl-label" data-i18n="pipe_f2">해결하고자 하는 문제</label>
               <textarea class="pl-textarea" name="problem_to_solve" rows="3"
-                placeholder="예: 특허 도면 작성에 전문 지식이 필요하고 비용이 많이 든다."
+                placeholder="예: 특허 도면 작성에 전문 지식이 필요하고 비용이 많이 든다." data-i18n="pipe_ph2"
                 required>{{ form_data.problem_to_solve }}</textarea>
             </div>
 
             <div class="pl-field">
-              <label class="pl-label">기존 기술의 문제점</label>
+              <label class="pl-label" data-i18n="pipe_f3">기존 기술의 문제점</label>
               <textarea class="pl-textarea" name="prior_art_problem" rows="3"
-                placeholder="예: 기존 CAD 툴은 특허 규격을 자동으로 맞춰주지 않아 수작업이 필요하다."
+                placeholder="예: 기존 CAD 툴은 특허 규격을 자동으로 맞춰주지 않아 수작업이 필요하다." data-i18n="pipe_ph3"
                 required>{{ form_data.prior_art_problem }}</textarea>
             </div>
 
             <div class="pl-field">
-              <label class="pl-label">핵심 기술 구성 (해결 수단)</label>
+              <label class="pl-label" data-i18n="pipe_f4">핵심 기술 구성 (해결 수단)</label>
               <textarea class="pl-textarea" name="core_technology" rows="4"
-                placeholder="예: LLM이 명세서 텍스트를 파싱하여 블록도·흐름도 구조를 추출하고, SVG 렌더러가 특허청 규격에 맞는 도면을 자동 생성한다."
+                placeholder="예: LLM이 명세서 텍스트를 파싱하여 블록도·흐름도 구조를 추출하고, SVG 렌더러가 특허청 규격에 맞는 도면을 자동 생성한다." data-i18n="pipe_ph4"
                 required>{{ form_data.core_technology }}</textarea>
             </div>
 
             <div class="pl-field">
-              <label class="pl-label">발명의 효과</label>
+              <label class="pl-label" data-i18n="pipe_f5">발명의 효과</label>
               <textarea class="pl-textarea" name="expected_effect" rows="3"
-                placeholder="예: 도면 작성 시간을 90% 단축하고 특허청 규격 준수율을 높인다."
+                placeholder="예: 도면 작성 시간을 90% 단축하고 특허청 규격 준수율을 높인다." data-i18n="pipe_ph5"
                 required>{{ form_data.expected_effect }}</textarea>
             </div>
 
@@ -123,9 +135,9 @@
           <div class="pl-submit-row">
             <button type="submit" class="pl-submit-btn" id="submit-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span id="btn-text">파이프라인 실행</span>
+              <span id="btn-text" data-i18n="pipe_run">파이프라인 실행</span>
             </button>
-            <span class="pl-submit-note">약 30초~1분 소요됩니다</span>
+            <span class="pl-submit-note" data-i18n="pipe_note">약 30초~1분 소요됩니다</span>
           </div>
         </form>
       </div>
@@ -134,8 +146,8 @@
       <div class="pl-loading" id="loading-card" style="display:none;">
         <div class="pl-spinner"></div>
         <div>
-          <p class="pl-loading-title">AI 에이전트 실행 중…</p>
-          <p class="pl-loading-sub">요약 → 청구항 → 명세서 → 통합 순서로 처리합니다</p>
+          <p class="pl-loading-title" data-i18n="pipe_loading_title">AI 에이전트 실행 중…</p>
+          <p class="pl-loading-sub" data-i18n="pipe_loading_sub">요약 → 청구항 → 명세서 → 통합 순서로 처리합니다</p>
         </div>
       </div>
       {% endif %}
@@ -149,22 +161,22 @@
         <div class="pl-result-hd">
           <span class="pl-result-num">II</span>
           <div>
-            <h3 class="pl-result-title">요약 에이전트 <em>Summary</em></h3>
+            <h3 class="pl-result-title"><span data-i18n="agent_II">요약 에이전트</span> <em data-i18n="en_summary">Summary</em></h3>
             <span class="pl-badge pl-badge--ok">{{ result.summary.status }}</span>
           </div>
         </div>
         <div class="pl-result-body">
           {% if result.summary.readable_summary %}
-          <div class="pl-block"><p class="pl-block-lbl">요약본</p><p class="pl-block-txt">{{ result.summary.readable_summary }}</p></div>
+          <div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_summary">요약본</p><p class="pl-block-txt">{{ result.summary.readable_summary }}</p></div>
           {% endif %}
           {% if result.summary.structured_invention %}
           <div class="pl-grid2">
-            <div class="pl-block"><p class="pl-block-lbl">발명 명칭</p><p class="pl-block-txt">{{ result.summary.structured_invention.title|default:"—" }}</p></div>
-            <div class="pl-block"><p class="pl-block-lbl">해결 과제</p><p class="pl-block-txt">{{ result.summary.structured_invention.problem|default:"—" }}</p></div>
-            <div class="pl-block" style="grid-column:1/-1;"><p class="pl-block-lbl">해결 수단</p><p class="pl-block-txt">{{ result.summary.structured_invention.solution|default:"—" }}</p></div>
+            <div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_title">발명 명칭</p><p class="pl-block-txt">{{ result.summary.structured_invention.title|default:"—" }}</p></div>
+            <div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_problem">해결 과제</p><p class="pl-block-txt">{{ result.summary.structured_invention.problem|default:"—" }}</p></div>
+            <div class="pl-block" style="grid-column:1/-1;"><p class="pl-block-lbl" data-i18n="pipe_r_solution">해결 수단</p><p class="pl-block-txt">{{ result.summary.structured_invention.solution|default:"—" }}</p></div>
             {% if result.summary.structured_invention.expected_effects %}
             <div class="pl-block" style="grid-column:1/-1;">
-              <p class="pl-block-lbl">기대 효과</p>
+              <p class="pl-block-lbl" data-i18n="pipe_r_effects">기대 효과</p>
               <ul class="pl-list">{% for e in result.summary.structured_invention.expected_effects %}<li>{{ e }}</li>{% endfor %}</ul>
             </div>
             {% endif %}
@@ -183,7 +195,7 @@
         <div class="pl-result-hd">
           <span class="pl-result-num">IV</span>
           <div>
-            <h3 class="pl-result-title">청구항 에이전트 <em>Claim</em></h3>
+            <h3 class="pl-result-title"><span data-i18n="agent_IV">청구항 에이전트</span> <em data-i18n="en_claim">Claim</em></h3>
             <span class="pl-badge pl-badge--ok">{{ result.claims.status }}</span>
           </div>
         </div>
@@ -198,7 +210,7 @@
           {% endif %}
           {% if result.claims.claim_strategy_notes %}
           <div class="pl-block">
-            <p class="pl-block-lbl">청구항 전략 메모</p>
+            <p class="pl-block-lbl" data-i18n="pipe_r_strategy">청구항 전략 메모</p>
             <ul class="pl-list">{% for n in result.claims.claim_strategy_notes %}<li>{{ n }}</li>{% endfor %}</ul>
           </div>
           {% endif %}
@@ -212,17 +224,17 @@
         <div class="pl-result-hd">
           <span class="pl-result-num">VI</span>
           <div>
-            <h3 class="pl-result-title">명세서 에이전트 <em>Specification</em></h3>
-            <span class="pl-badge pl-badge--ok">완료</span>
+            <h3 class="pl-result-title"><span data-i18n="agent_VI">명세서 에이전트</span> <em data-i18n="en_specification">Specification</em></h3>
+            <span class="pl-badge pl-badge--ok" data-i18n="pipe_status_done">완료</span>
           </div>
         </div>
         <div class="pl-result-body">
           {% with s=result.specification %}
-          {% if s.technical_field %}<div class="pl-block"><p class="pl-block-lbl">기술 분야</p><p class="pl-block-txt">{{ s.technical_field }}</p></div>{% endif %}
-          {% if s.background_art %}<div class="pl-block"><p class="pl-block-lbl">배경 기술</p><p class="pl-block-txt">{{ s.background_art }}</p></div>{% endif %}
-          {% if s.means_for_solving %}<div class="pl-block"><p class="pl-block-lbl">과제의 해결 수단</p><p class="pl-block-txt">{{ s.means_for_solving }}</p></div>{% endif %}
-          {% if s.effects %}<div class="pl-block"><p class="pl-block-lbl">발명의 효과</p><p class="pl-block-txt">{{ s.effects }}</p></div>{% endif %}
-          {% if s.detailed_description %}<div class="pl-block"><p class="pl-block-lbl">발명을 실시하기 위한 구체적인 내용</p><p class="pl-block-txt pl-block-txt--scroll">{{ s.detailed_description }}</p></div>{% endif %}
+          {% if s.technical_field %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_field">기술 분야</p><p class="pl-block-txt">{{ s.technical_field }}</p></div>{% endif %}
+          {% if s.background_art %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_background">배경 기술</p><p class="pl-block-txt">{{ s.background_art }}</p></div>{% endif %}
+          {% if s.means_for_solving %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_means">과제의 해결 수단</p><p class="pl-block-txt">{{ s.means_for_solving }}</p></div>{% endif %}
+          {% if s.effects %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_f5">발명의 효과</p><p class="pl-block-txt">{{ s.effects }}</p></div>{% endif %}
+          {% if s.detailed_description %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_detail">발명을 실시하기 위한 구체적인 내용</p><p class="pl-block-txt pl-block-txt--scroll">{{ s.detailed_description }}</p></div>{% endif %}
           {% endwith %}
         </div>
       </div>
@@ -234,16 +246,16 @@
         <div class="pl-result-hd">
           <span class="pl-result-num">VII</span>
           <div>
-            <h3 class="pl-result-title">컴포저 에이전트 <em>Composer</em></h3>
-            <span class="pl-badge pl-badge--final">완성</span>
+            <h3 class="pl-result-title"><span data-i18n="agent_VII">컴포저 에이전트</span> <em data-i18n="en_composer">Composer</em></h3>
+            <span class="pl-badge pl-badge--final" data-i18n="pipe_status_final">완성</span>
           </div>
         </div>
         <div class="pl-result-body">
           {% with c=result.composer %}
-          {% if c.abstract %}<div class="pl-block"><p class="pl-block-lbl">요약서 (Abstract)</p><p class="pl-block-txt">{{ c.abstract }}</p></div>{% endif %}
-          {% if c.final_claims_text %}<div class="pl-block"><p class="pl-block-lbl">최종 청구항</p><pre class="pl-pre">{{ c.final_claims_text }}</pre></div>{% endif %}
-          {% if c.output_file_path %}<div class="pl-block"><p class="pl-block-lbl">출력 파일</p><p class="pl-block-txt pl-block-txt--gold">{{ c.output_file_path }}</p></div>{% endif %}
-          {% if c.composer_notes %}<div class="pl-block"><p class="pl-block-lbl">컴포저 메모</p><ul class="pl-list">{% for n in c.composer_notes %}<li>{{ n }}</li>{% endfor %}</ul></div>{% endif %}
+          {% if c.abstract %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_abstract">요약서 (Abstract)</p><p class="pl-block-txt">{{ c.abstract }}</p></div>{% endif %}
+          {% if c.final_claims_text %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_final_claims">최종 청구항</p><pre class="pl-pre">{{ c.final_claims_text }}</pre></div>{% endif %}
+          {% if c.output_file_path %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_output_file">출력 파일</p><p class="pl-block-txt pl-block-txt--gold">{{ c.output_file_path }}</p></div>{% endif %}
+          {% if c.composer_notes %}<div class="pl-block"><p class="pl-block-lbl" data-i18n="pipe_r_composer_notes">컴포저 메모</p><ul class="pl-list">{% for n in c.composer_notes %}<li>{{ n }}</li>{% endfor %}</ul></div>{% endif %}
           {% endwith %}
         </div>
       </div>
@@ -255,8 +267,8 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="12" cy="12" r="4"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
         </div>
         <div>
-          <p class="pl-tip-title">도면도 자동 생성하세요</p>
-          <p class="pl-tip-sub">명세서 내용을 기반으로 SVG 블록도·흐름도를 자동으로 만들 수 있습니다.</p>
+          <p class="pl-tip-title" data-i18n="pipe_tip_title">도면도 자동 생성하세요</p>
+          <p class="pl-tip-sub" data-i18n="pipe_tip_sub">명세서 내용을 기반으로 SVG 블록도·흐름도를 자동으로 만들 수 있습니다.</p>
         </div>
       </div>
 
@@ -503,7 +515,7 @@
 <script>
 document.getElementById('pipeline-form')?.addEventListener('submit', function() {
   const btn = document.getElementById('submit-btn');
-  if (btn) { btn.disabled = true; document.getElementById('btn-text').textContent = '실행 중…'; }
+  if (btn) { btn.disabled = true; document.getElementById('btn-text').textContent = window.pmT('pipe_running'); }
   const loading = document.getElementById('loading-card');
   if (loading) loading.style.display = 'flex';
 });

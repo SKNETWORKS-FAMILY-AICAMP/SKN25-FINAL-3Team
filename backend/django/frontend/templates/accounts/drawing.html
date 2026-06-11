@@ -12,17 +12,29 @@
             <span>PYPI</span>
         </a>
         <div class="nav-links">
-            <a href="{% url 'accounts:dashboard' %}" class="nav-link">AI 어시스턴트 대시보드</a>
+            <a href="{% url 'accounts:dashboard' %}" class="nav-link" data-i18n="nav_ai_dashboard">AI 어시스턴트 대시보드</a>
             <span class="nav-link-divider"></span>
-            <a href="{% url 'accounts:pipeline' %}"  class="nav-link">파이프라인</a>
-            <a href="{% url 'accounts:drawing' %}"    class="nav-link active">도면 분석</a>
+            <a href="{% url 'accounts:pipeline' %}"  class="nav-link" data-i18n="nav_pipeline_label">파이프라인</a>
+            <a href="{% url 'accounts:drawing' %}"    class="nav-link active" data-i18n="nav_drawing_label">도면 분석</a>
         </div>
         <div class="nav-user">
+            <div class="lang-switcher">
+                <button class="lang-btn" type="button">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span data-lang-display>KO</span>
+                </button>
+                <div class="lang-dropdown">
+                    <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+                    <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+                    <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+                    <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+                </div>
+            </div>
             <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
             <span class="user-email">{{ user.username }}</span>
             <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn-logout">로그아웃</button>
+                <button type="submit" class="btn-logout" data-i18n="nav_logout">로그아웃</button>
             </form>
         </div>
     </nav>
@@ -32,8 +44,8 @@
         <!-- 헤더 -->
         <div class="welcome-card" style="margin-bottom:2rem;">
             <div class="welcome-text">
-                <h2>AI 특허 <span class="highlight">도면 생성</span></h2>
-                <p>특허 명세서 텍스트를 입력하면 블록도·흐름도 SVG 도면을 자동으로 생성합니다.</p>
+                <h2><span data-i18n="drawing_title_prefix">AI 특허</span> <span class="highlight" data-i18n="nav_drawing">도면 생성</span></h2>
+                <p data-i18n="drawing_sub">특허 명세서 텍스트를 입력하면 블록도·흐름도 SVG 도면을 자동으로 생성합니다.</p>
             </div>
         </div>
 
@@ -43,31 +55,33 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label class="form-label">출원 번호 (선택)</label>
+                    <label class="form-label" data-i18n="drawing_f_appnum">출원 번호 (선택)</label>
                     <div class="input-wrapper">
                         <span class="input-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg></span>
                         <input
                             type="text"
                             name="app_num"
                             placeholder="예: 10-2024-0001234"
+                            data-i18n="drawing_ph_appnum"
                             value="{{ app_num }}"
                         >
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-top:1.25rem;">
-                    <label class="form-label">특허 명세서 텍스트</label>
+                    <label class="form-label" data-i18n="drawing_f_text">특허 명세서 텍스트</label>
                     <textarea
                         name="invention_text"
                         class="drawing-textarea"
                         rows="12"
                         placeholder="특허 명세서 내용을 여기에 붙여넣으세요.&#10;&#10;예) [청구범위] / [발명의 설명] / [도면의 간단한 설명] ..."
+                        data-i18n="drawing_ph_text"
                         required
                     >{{ invention_text }}</textarea>
                 </div>
 
                 <button type="submit" class="btn-primary" id="submit-btn" style="width:auto; padding:14px 36px; margin-top:1.5rem;">
-                    <span class="btn-text">도면 생성하기</span>
+                    <span class="btn-text" data-i18n="drawing_run">도면 생성하기</span>
                     <span class="btn-arrow">→</span>
                 </button>
             </form>
@@ -76,7 +90,7 @@
         <!-- 로딩 -->
         <div class="loading-banner" id="loading-card" style="display:none;">
             <span class="spinner"></span>
-            <span>AI가 도면을 생성하고 있습니다… (30초~1분 소요)</span>
+            <span data-i18n="drawing_loading">AI가 도면을 생성하고 있습니다… (30초~1분 소요)</span>
         </div>
 
         <!-- 에러 -->
@@ -84,7 +98,7 @@
         <div class="info-card" style="display:flex; gap:1rem; border-color:rgba(239,68,68,0.35); background:rgba(239,68,68,0.06); margin-bottom:1.5rem;">
             <span style="font-size:1.4rem; flex-shrink:0;">⚠️</span>
             <div>
-                <p style="font-weight:700; color:#fca5a5; margin-bottom:.25rem;">도면 생성 실패</p>
+                <p style="font-weight:700; color:#fca5a5; margin-bottom:.25rem;" data-i18n="drawing_error_title">도면 생성 실패</p>
                 <p style="color:var(--text-secondary); font-size:.9rem;">{{ error }}</p>
             </div>
         </div>
@@ -92,7 +106,7 @@
 
         <!-- 결과 -->
         {% if drawings %}
-        <p class="section-label">생성된 도면 · {{ drawings|length }}개</p>
+        <p class="section-label"><span data-i18n="drawing_result_label">생성된 도면</span> · {{ drawings|length }}<span data-i18n="drawing_unit">개</span></p>
         <div class="drawings-grid">
             {% for d in drawings %}
             <div class="info-card drawing-result-card">
@@ -103,7 +117,7 @@
                             <span style="font-size:.8rem; color:var(--text-muted);">{{ d.diagram_type }}</span>
                         </div>
                         <span class="quality-chip quality-{{ d.quality_grade|lower }}">
-                            {{ d.quality_score }}점 · {{ d.quality_grade }}등급
+                            {{ d.quality_score }}<span data-i18n="drawing_score_unit">점</span> · {{ d.quality_grade }}<span data-i18n="drawing_grade_unit">등급</span>
                         </span>
                     </div>
                     <p style="font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:1rem;">{{ d.title }}</p>
@@ -125,7 +139,7 @@
     document.getElementById('drawing-form').addEventListener('submit', function() {
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> 생성 중...';
+        btn.innerHTML = '<span class="spinner"></span> ' + window.pmT('drawing_running');
         document.getElementById('loading-card').style.display = 'flex';
     });
 </script>
