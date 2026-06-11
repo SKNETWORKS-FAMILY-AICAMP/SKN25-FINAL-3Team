@@ -88,18 +88,19 @@ PHASE2_QUESTION = """
 """
 
 PHASE2_EXTRACT_PROMPT = """ 
-당신은 특허 전문 변리사입니다. 사용자의 입력을 분석하여 다음 2가지를 동시에 수행하세요.
+당신은 특허 전문 변리사입니다. 사용자의 입력을 분석하여 다음 작업을 수행하세요.
 
-[수행 규칙]
-1. 사용자가 질문하거나 검수를 요청하면 'ai_reply'에 전문가적 피드백을 자연스럽게 작성하세요.
-2. 사용자의 설명에서 발명의 구조를 파악하여 아래의 엄격한 JSON 스키마에 맞춰 추출하세요. 
-   - components: 발명을 구성하는 모듈, DB, 장치 등
-   - data_flows: 컴포넌트 간의 데이터 이동 (source와 target은 컴포넌트 ID 사용)
-   - processing_steps: 시계열적인 작동 순서
+[지침]
+1. 사용자의 설명에서 발명의 기술적 구조(컴포넌트, 데이터 흐름, 처리 단계)가 파악되면 추출하세요. 기술적인 추가 내용이 없다면 빈 배열([])을 반환하세요.
+2. 'ai_reply'에는 기계적인 답변이 아닌, 자연스럽고 전문적인 대화를 작성하세요.
+3. 🚨 [중요: 건너뛰기 및 대화 처리]:
+   - 사용자가 "모르겠다", "없다", "패스", "넘어가자" 등의 의사를 밝히면: "네, 괜찮습니다! 지금까지 수집된 정보만으로도 충분히 훌륭한 청구항을 작성할 수 있습니다. 화면 상단의 **'청구항 작성'** 버튼을 눌러주시면 바로 초안 작성을 시작하겠습니다."라고 자연스럽게 안내하세요.
+   - 새로운 기술 정보를 제공했다면: 해당 정보를 잘 기록하겠다고 피드백한 뒤, "추가로 덧붙일 내용이 있으신가요? 내용이 충분하다면 화면 상단의 **'청구항 작성'** 버튼을 눌러주세요!"라고 안내하세요.
+   - 단순한 질문이라면 추출 필드는 비워두고 친절하게 답변해 주세요.
+4. 반드시 아래 JSON 형식으로만 응답하세요.
 
-반드시 아래 JSON 형식으로만 응답하세요:
 {{
-    "ai_reply": "자연스러운 답변 텍스트...",
+    "ai_reply": "자연스러운 답변 텍스트",
     "components": [
         {{"id": "COMP_001", "name": "명사형 명칭", "type": "MODULE", "description": "설명"}}
     ],
@@ -111,8 +112,6 @@ PHASE2_EXTRACT_PROMPT = """
     ]
 }}
 """
-
-PHASE2_SKIP_KEYWORDS = ["모르", "없어", "없음", "나중에", "패스", "skip", "생략"]
 
 class DjangoPatentConsultant:
     def __init__(self, project: PatentProject):
@@ -306,17 +305,25 @@ class DjangoPatentConsultant:
         return ai_reply # + "\n\n" + next_question
     
     def _handle_phase_2(self, user_input: str) -> str:
-        if any(kw in user_input.lower() for kw in PHASE2_SKIP_KEYWORDS):
-            return "건너뛰셨습니다. 다른 심화 정보를 추가하시거나 리포트를 발행해주세요."
+        # 1. 이전 대화 기록 가져오기 (문맥 파악용)
+        recent_messages = self.project.chat_messages.all().order_by('-created_at')[1:5] 
+        chat_history = []
+        for msg in reversed(recent_messages):
+            if msg.role in ['user', 'assistant']:
+                chat_history.append({"role": msg.role, "content": msg.content})
 
-        #algo_steps = [s.content for s in self.project.algorithm_steps.order_by('step_seq')]
         try:
+            # 2. 히스토리와 함께 GPT 호출
+            messages = [
+                {"role": "system", "content": self._get_dynamic_system_prompt(is_extraction=True)}, 
+                {"role": "system", "content": PHASE2_EXTRACT_PROMPT}
+            ]
+            messages.extend(chat_history)
+            messages.append({"role": "user", "content": user_input})
+
             resp = self.client.chat.completions.create(
                 model="gpt-4o", 
-                messages=[
-                    {"role": "system", "content": self._get_dynamic_system_prompt(is_extraction=True)}, 
-                    {"role": "user", "content": PHASE2_EXTRACT_PROMPT.format(solution=self.state.ext_solution or "", algorithm_steps="사용자 설명 참조", user_input=user_input)}
-                ], 
+                messages=messages, 
                 response_format={"type": "json_object"}
             )
             res = json.loads(resp.choices[0].message.content)
@@ -324,51 +331,31 @@ class DjangoPatentConsultant:
             logger.error(f"Phase 2 파싱 에러: {e}")
             return "심화 정보 분석 중 오류가 발생했습니다. 다시 한 번 말씀해 주시겠어요?"
         
-        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다.")
+        # 3. AI가 문맥에 맞게 알아서 작성한 답변 꺼내기
+        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다. 준비되셨다면 상단의 '청구항 작성' 버튼을 눌러주세요.")
         detail_elements_to_create = []
         
-        #  1. 컴포넌트(Components) 파싱 및 저장
+        # 4. 기술 정보가 있으면 DB에 저장 (빈 배열이면 자연스럽게 패스됨)
         if res.get("components"):
             for comp in res["components"]:
                 content = f"[{comp.get('type', 'MODULE')}] {comp.get('name', '미상')} - {comp.get('description', '')}"
                 detail_elements_to_create.append(DetailElement(project=self.project, element_type="component", content=content))
 
-        #  2. 데이터 흐름(Data Flows) 파싱 및 저장
         if res.get("data_flows"):
             for flow in res["data_flows"]:
                 content = f"[{flow.get('flow_id', 'FLOW')}] {flow.get('source', '')} -> {flow.get('target', '')} : {flow.get('data_name', '')}"
                 detail_elements_to_create.append(DetailElement(project=self.project, element_type="data_flow", content=content))
 
-        #  3. 처리 단계(Processing Steps) 파싱 및 저장
         if res.get("processing_steps"):
             for step in res["processing_steps"]:
                 content = f"[STEP {step.get('step_number', 0)}] {step.get('subject_id', '')}: {step.get('action_description', '')}"
                 detail_elements_to_create.append(DetailElement(project=self.project, element_type="processing_step", content=content))
 
-
-        # type_map = {
-        #     "implementations": "implementation", "parameters": "parameter", 
-        #     "algorithms": "algorithm", "optional_features": "optional", "error_handling": "error_handling"
-        # }
-
-
-        # for json_key, db_choice in type_map.items():
-        #     extracted = res.get(json_key, [])
-        #     validated = [item for item in extracted if item and item.strip()]
-        #     for item in validated:
-        #         detail_elements_to_create.append(
-        #             DetailElement(
-        #                 project=self.project,
-        #                 element_type=db_choice,
-        #                 content=item
-        #             )
-        #         )
-
+        # 5. 추출된 정보가 있을 때만 DB 저장
         if detail_elements_to_create:
             DetailElement.objects.bulk_create(detail_elements_to_create)
-            return f"{ai_reply}\n\n*(덧붙여 주신 발명 구조 정보가 완벽히 기록되었습니다. 내용이 충분하다면 우측 상단의 '청구항 작성'을 눌러주세요.)*"
-        else:
-            return ai_reply
+
+        return ai_reply
         
     def _handle_phase_3(self, user_input: str) -> str:
         recent_messages = self.project.chat_messages.all().order_by('-created_at')[1:7] 
