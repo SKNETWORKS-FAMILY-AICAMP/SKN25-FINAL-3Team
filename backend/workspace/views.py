@@ -21,7 +21,8 @@ from agents.drawing_agent import SmartDrawingAgent
 from django.conf import settings
 from agents.specification.specification_agent import run_specification_agent
 from agents.specification.specification_storage import convert_to_markdown_format
-
+from pydantic import BaseModel
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -305,6 +306,13 @@ def generate_claims_api(request, project_id):
             for output in compiled_graph.stream(initial_state):
                 for node_name, state_update in output.items():
                     final_state.update(state_update)
+
+                    safe_state = {k: safe_serialize(v) for k, v in state_update.items()}
+                    yield json.dumps({
+                        "step": "log_and_state",
+                        "log_msg": f"[{node_name.upper()}] 에이전트 노드 처리 완료 및 State 업데이트",
+                        "state_data": safe_state
+                    }) + "\n"
 
                     if node_name == "summary_node":
                         yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
@@ -640,3 +648,12 @@ def generate_specification_api(request, project_id):
     except Exception as e:
         logger.error(f"명세서 생성 에러: {e}")
         return JsonResponse({"status": "error", "message": str(e)})
+    
+def safe_serialize(obj):
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    elif hasattr(obj, '__dict__'):
+        return obj.__dict__
+    return str(obj)
+
+

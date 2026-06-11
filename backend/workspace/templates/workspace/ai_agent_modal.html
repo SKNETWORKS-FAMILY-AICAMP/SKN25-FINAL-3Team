@@ -33,15 +33,34 @@
                     <span style="font-size: 13px; color: #94a3b8;">명확성 심사 및 거절 사유 생성 대기 중...</span>
                 </div>
 
+                <div id="node-prior-art" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #475569; color: #cbd5e1; margin-top: 5px;">
+                    <strong style="display: block; font-size: 16px;">4. Prior Art Agent</strong>
+                    <span style="font-size: 13px; color: #94a3b8;">기존 특허 유사도 검색 및 리스크 분석 대기 중...</span>
+                </div>
+
                 <div id="node-rewrite" class="agent-node" style="padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #ef4444; color: #cbd5e1; display: none;">
                     <strong style="display: block; font-size: 16px; color: #fca5a5;">⚠️ Claim Rewrite Agent</strong>
                     <span id="rewrite-status" style="font-size: 13px; color: #f87171;">심사관 반려에 의한 보정 진행 중...</span>
                 </div>
             </div>
 
-            <div style="flex: 2; background: #000; padding: 20px; overflow-y: auto; font-family: 'Courier New', Courier, monospace;" id="live-terminal">
+            <!-- <div style="flex: 2; background: #000; padding: 20px; overflow-y: auto; font-family: 'Courier New', Courier, monospace;" id="live-terminal">
                 <div style="color: #10b981; font-size: 14px; margin-bottom: 10px;">> 시스템 연결 완료. 에이전트 작업을 대기합니다...</div>
+                </div> -->
+            <div style="flex: 2; display: flex; flex-direction: column; gap: 10px; padding: 15px; background: #000;">
+                
+                <div style="flex: 1; overflow-y: auto; font-family: 'Courier New', Courier, monospace; background: #0a0a0a; border: 1px solid #334155; border-radius: 8px; padding: 15px;" id="live-terminal">
+                    <div style="color: #38bdf8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px dashed #334155; padding-bottom: 5px;">> Agent Execution Terminal</div>
+                    <div class="terminal-log log-info">[${new Date().toLocaleTimeString()}] > 시스템 연결 완료. 에이전트 작업을 대기합니다...</div>
                 </div>
+
+                <div style="flex: 1; overflow-y: auto; font-family: 'Courier New', Courier, monospace; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 15px;">
+                    <div style="color: #94a3b8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px dashed #475569; padding-bottom: 5px;">// Current State (JSON)</div>
+                    <pre id="state-json-content" style="margin: 0; font-size: 12px; color: #e2e8f0; white-space: pre-wrap; word-break: break-all;">{
+  "status": "waiting_for_agent..."
+}</pre>
+                </div>
+            </div>
             
         </div>
     </div>
@@ -97,6 +116,14 @@
         if (status === 'done') node.classList.add('node-done');
     }
 
+    // JSON State 뷰어 업데이트 함수
+    function updateStateViewer(stateObj) {
+        const stateContent = document.getElementById('state-json-content');
+        if (stateContent) {
+            stateContent.textContent = JSON.stringify(stateObj, null, 2);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const generateClaimsBtn = document.getElementById('generate-claims-btn');
         
@@ -141,8 +168,11 @@
                             if (!line.trim()) continue; 
                             const data = JSON.parse(line); 
 
-                            // 상태에 따른 뷰직 분기
-                            if (data.step === 'summary') {
+                            if (data.step === 'log_and_state') {
+                                appendTerminalLog('info', data.log_msg);
+                                    if (data.state_data) updateStateViewer(data.state_data);
+                            }
+                            else if (data.step === 'summary') {
                                 updateNodeStatus('node-summary', 'done');
                                 appendTerminalLog('success', data.message);
                                 appendTerminalLog('info', 'Claim Agent로 제어권 전환...');
@@ -173,6 +203,17 @@
                                 updateNodeStatus('node-rewrite', 'done');
                                 appendTerminalLog('info', '보정 완료. 심사관에게 재심사 요청 중...');
                                 updateNodeStatus('node-examiner', 'running');
+                            }
+                            else if (data.step === 'prior_art_start') {
+                                updateNodeStatus('node-prior-art', 'running');
+                                appendTerminalLog('info', '[PRIOR_ART] AWS RDS 벡터DB 연결 및 선행기술 검색 가동...');
+                            }
+                            else if (data.step === 'prior_art_done') {
+                                updateNodeStatus('node-prior-art', 'done');
+                                appendTerminalLog('success', '[PRIOR_ART] 유사 특허 Top-3 후보 분석 완료 및 리스크 평가 종료');
+                                if (data.prior_art_data) {
+                                    updateStateViewer({ "prior_art_result": data.prior_art_data });
+                                }
                             }
                             else if (data.step === 'error') {
                                 appendTerminalLog('error', '에러 발생: ' + data.message);
