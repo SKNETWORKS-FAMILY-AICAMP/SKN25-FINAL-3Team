@@ -42,3 +42,7 @@ pytest_cache/
 
 # Node
 node_modules/
+
+# SQLite
+*.sqlite3
+db.sqlite3
