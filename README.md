@@ -80,4 +80,4 @@ skn25-final-3team/
 
 ## 📅 프로젝트 진행 상황
 
-- **최종 발표 자료:** [Canva PPT 링크](https://canva.link/ht639zufailry5n)
+- **최종 발표 자료:** [Canva PPT 링크](https://canva.link/7tgiu30dzu4k638)
