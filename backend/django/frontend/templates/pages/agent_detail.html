@@ -1,0 +1,613 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}{{ agent.name }} | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <!-- Hero -->
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag">Agent {{ agent.num }} · {{ agent.en }}</span>
+      <h1 class="pg-hero-h1"><em>{{ agent.name }}</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc">{{ agent.desc }}</p>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <div class="pg-body">
+    <div class="pg-container">
+      <div class="ag-layout">
+
+        <!-- Left: Detail -->
+        <div class="ag-main">
+          <div class="ag-section">
+            <p class="ag-section-label">에이전트 상세 설명</p>
+            <p class="ag-section-body">{{ agent.detail }}</p>
+          </div>
+
+          <div class="ag-section">
+            <p class="ag-section-label">입력 (Input)</p>
+            <ul class="ag-list">
+              {% for item in agent.inputs %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="ag-section">
+            <p class="ag-section-label">출력 (Output)</p>
+            <ul class="ag-list">
+              {% for item in agent.outputs %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right: Meta card -->
+        <aside class="ag-aside">
+          <div class="ag-meta-card">
+            <div class="ag-meta-num">{{ agent.num }}</div>
+            <div class="ag-meta-name">{{ agent.name }}</div>
+            <div class="ag-meta-en">{{ agent.en }}</div>
+            <div class="ag-meta-sep"></div>
+            {% if agent.active and agent.action_url %}
+            <a href="{% url agent.action_url %}" class="ag-meta-btn">
+              {{ agent.action_label }} →
+            </a>
+            {% endif %}
+            {% if slug == 'drawing' %}
+            <a href="{% url 'accounts:drawing_gallery' %}" class="ag-gallery-btn">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="vertical-align:-1px;margin-right:5px;opacity:.8;"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+              도면 갤러리 보기 (300+)
+            </a>
+            {% endif %}
+          </div>
+
+          <!-- 파이프라인 위치 -->
+          <div class="ag-pipeline-card">
+            <p class="ag-section-label" style="margin-bottom:1rem;">파이프라인 위치</p>
+            {% for pipe_slug, info in agents_order %}
+            <div class="ag-pipe-item {% if info.num == agent.num %}ag-pipe-item--current{% endif %}">
+              <span class="ag-pipe-num">{{ info.num }}</span>
+              <span class="ag-pipe-name">{{ info.name }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+
+  {% if slug == 'drawing' %}
+
+  <!-- ══ 도면 비교 섹션 ══ -->
+  <section class="dc-section">
+    <div class="pg-container">
+
+      <p class="dc-label">BEFORE / AFTER</p>
+      <h2 class="dc-h2">기존 수작업 도면과<br><em>PYPI AI 도면 비교</em></h2>
+      <p class="dc-desc">CAD·수작업으로 평균 3~8시간 걸리던 특허 도면을, PYPI 도면 에이전트는 47초 안에 특허청 기준으로 자동 생성합니다.</p>
+
+      <div class="dc-grid">
+
+        <!-- BEFORE -->
+        <div class="dc-col">
+          <div class="dc-badge dc-badge--before">기존 수작업 도면</div>
+          <div class="dc-frame">
+            <svg viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="bp" patternUnits="userSpaceOnUse" width="5" height="5">
+                  <line x1="0" y1="5" x2="5" y2="0" stroke="#888" stroke-width="0.65"/>
+                </pattern>
+                <pattern id="bp2" patternUnits="userSpaceOnUse" width="5" height="5">
+                  <line x1="0" y1="0" x2="5" y2="5" stroke="#aaa" stroke-width="0.55"/>
+                </pattern>
+              </defs>
+              <!-- Drawing border -->
+              <rect x="1" y="1" width="298" height="258" stroke="#555" stroke-width="1.0" fill="white"/>
+              <!-- Body fill (45° hatch) -->
+              <rect x="20" y="36" width="260" height="128" fill="url(#bp)" stroke="none"/>
+              <!-- Port A channel through top wall (white) -->
+              <rect x="72" y="36" width="22" height="28" fill="white" stroke="none"/>
+              <!-- Port B channel through bottom wall (white) -->
+              <rect x="188" y="136" width="22" height="28" fill="white" stroke="none"/>
+              <!-- Bore cavity (white) -->
+              <rect x="50" y="64" width="200" height="72" fill="white" stroke="none"/>
+              <!-- Piston (-45° hatch = different material) -->
+              <rect x="108" y="65" width="52" height="70" fill="url(#bp2)" stroke="none"/>
+              <!-- Piston rod (-45° hatch) -->
+              <rect x="160" y="85" width="90" height="30" fill="url(#bp2)" stroke="none"/>
+              <!-- Body outline with port notches -->
+              <line x1="20" y1="36" x2="72" y2="36" stroke="#111" stroke-width="1.6"/>
+              <line x1="94" y1="36" x2="280" y2="36" stroke="#111" stroke-width="1.6"/>
+              <line x1="20" y1="36" x2="20" y2="164" stroke="#111" stroke-width="1.6"/>
+              <line x1="280" y1="36" x2="280" y2="164" stroke="#111" stroke-width="1.6"/>
+              <line x1="20" y1="164" x2="188" y2="164" stroke="#111" stroke-width="1.6"/>
+              <line x1="210" y1="164" x2="280" y2="164" stroke="#111" stroke-width="1.6"/>
+              <!-- Port channel walls -->
+              <line x1="72" y1="36" x2="72" y2="64" stroke="#222" stroke-width="0.9"/>
+              <line x1="94" y1="36" x2="94" y2="64" stroke="#222" stroke-width="0.9"/>
+              <line x1="188" y1="136" x2="188" y2="164" stroke="#222" stroke-width="0.9"/>
+              <line x1="210" y1="136" x2="210" y2="164" stroke="#222" stroke-width="0.9"/>
+              <!-- Bore outline -->
+              <rect x="50" y="64" width="200" height="72" fill="none" stroke="#222" stroke-width="0.9"/>
+              <!-- Port A pipe (above body) -->
+              <rect x="72" y="10" width="22" height="26" fill="none" stroke="#222" stroke-width="0.9"/>
+              <!-- Port B pipe (below body) -->
+              <rect x="188" y="164" width="22" height="26" fill="none" stroke="#222" stroke-width="0.9"/>
+              <!-- Piston outline -->
+              <rect x="108" y="65" width="52" height="70" fill="none" stroke="#111" stroke-width="1.2"/>
+              <!-- Rod outline -->
+              <rect x="160" y="85" width="90" height="30" fill="none" stroke="#111" stroke-width="1.0"/>
+              <!-- Center line H -->
+              <line x1="6" y1="100" x2="294" y2="100" stroke="#555" stroke-width="0.55" stroke-dasharray="12 3 2 3"/>
+              <!-- Center line V (through piston) -->
+              <line x1="134" y1="22" x2="134" y2="196" stroke="#555" stroke-width="0.55" stroke-dasharray="12 3 2 3"/>
+              <!-- Ref 1: Housing body -->
+              <circle cx="282" cy="50" r="8.5" stroke="#111" stroke-width="0.9" fill="white"/>
+              <text x="282" y="54.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#111">1</text>
+              <line x1="273" y1="50" x2="258" y2="50" stroke="#222" stroke-width="0.7"/>
+              <!-- Ref 2: Piston -->
+              <circle cx="282" cy="100" r="8.5" stroke="#111" stroke-width="0.9" fill="white"/>
+              <text x="282" y="104.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#111">2</text>
+              <line x1="273" y1="100" x2="160" y2="100" stroke="#222" stroke-width="0.7"/>
+              <!-- Ref 3: Piston rod -->
+              <circle cx="282" cy="146" r="8.5" stroke="#111" stroke-width="0.9" fill="white"/>
+              <text x="282" y="150.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#111">3</text>
+              <line x1="273" y1="144" x2="250" y2="100" stroke="#222" stroke-width="0.7"/>
+              <!-- Ref 4: Port A inlet -->
+              <circle cx="46" cy="14" r="8.5" stroke="#111" stroke-width="0.9" fill="white"/>
+              <text x="46" y="18.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#111">4</text>
+              <line x1="54" y1="14" x2="72" y2="18" stroke="#222" stroke-width="0.7"/>
+              <!-- Dimension: overall width -->
+              <line x1="20" y1="200" x2="280" y2="200" stroke="#444" stroke-width="0.7"/>
+              <line x1="20" y1="195" x2="20" y2="205" stroke="#444" stroke-width="0.7"/>
+              <line x1="280" y1="195" x2="280" y2="205" stroke="#444" stroke-width="0.7"/>
+              <polygon points="25,197.5 20,200 25,202.5" fill="#444"/>
+              <polygon points="275,197.5 280,200 275,202.5" fill="#444"/>
+              <text x="150" y="212" text-anchor="middle" font-family="Arial" font-size="7.5" fill="#444">260 mm</text>
+              <!-- Title block -->
+              <line x1="1" y1="228" x2="299" y2="228" stroke="#333" stroke-width="0.9"/>
+              <line x1="178" y1="228" x2="178" y2="259" stroke="#555" stroke-width="0.55"/>
+              <line x1="238" y1="228" x2="238" y2="259" stroke="#555" stroke-width="0.55"/>
+              <text x="7" y="240" font-family="Arial" font-size="7.5" fill="#111" font-weight="bold">유압 실린더 단면도</text>
+              <text x="7" y="252" font-family="Arial" font-size="6.5" fill="#555">도번: HYD-2024-003  REV.C</text>
+              <text x="7" y="258.5" font-family="Arial" font-size="5.8" fill="#999">특허출원 10-2024-0031245</text>
+              <text x="183" y="240" font-family="Arial" font-size="7" fill="#555">척도: N.T.S</text>
+              <text x="183" y="251" font-family="Arial" font-size="6.5" fill="#777">단위: mm</text>
+              <text x="243" y="240" font-family="Arial" font-size="7" fill="#555">제도: 홍길동</text>
+              <text x="243" y="252" font-family="Arial" font-size="6.5" fill="#888">2024.03.15</text>
+            </svg>
+          </div>
+          <ul class="dc-list dc-list--cons">
+            <li>CAD·수작업으로 평균 <strong>3~8시간</strong> 소요</li>
+            <li>참조번호 체계 수동 관리 → 오탈자 빈번</li>
+            <li>수정 요청 시 <strong>전체 재작업</strong> 필요</li>
+            <li>작성자 스타일·숙련도에 따라 품질 편차</li>
+            <li>특허청 서식 오류로 반려 사례 발생</li>
+          </ul>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="dc-divider">
+          <div class="dc-vs">VS</div>
+          <div class="dc-arrow">→</div>
+        </div>
+
+        <!-- AFTER -->
+        <div class="dc-col">
+          <div class="dc-badge dc-badge--after">PYPI AI 자동 생성</div>
+          <div class="dc-frame dc-frame--ai">
+            <svg viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="ap1" patternUnits="userSpaceOnUse" width="5" height="5">
+                  <line x1="0" y1="5" x2="5" y2="0" stroke="#b89858" stroke-width="0.7"/>
+                </pattern>
+                <pattern id="ap2" patternUnits="userSpaceOnUse" width="5" height="5">
+                  <line x1="0" y1="0" x2="5" y2="5" stroke="#c8a860" stroke-width="0.55"/>
+                </pattern>
+              </defs>
+              <!-- Double border (patent style) -->
+              <rect x="1" y="1" width="298" height="258" stroke="#9a7840" stroke-width="0.9" fill="white"/>
+              <rect x="5" y="5" width="290" height="250" stroke="#c8a860" stroke-width="0.3" fill="none"/>
+              <!-- Section A-A indicator -->
+              <text x="12" y="22" font-family="Arial" font-size="8" font-weight="bold" fill="#9a7840">A</text>
+              <line x1="12" y1="23" x2="20" y2="23" stroke="#9a7840" stroke-width="1.0"/>
+              <text x="150" y="21" text-anchor="middle" font-family="'Courier New',monospace" font-size="7" font-weight="600" fill="#9a7840">SECTION  A — A</text>
+              <line x1="280" y1="23" x2="288" y2="23" stroke="#9a7840" stroke-width="1.0"/>
+              <text x="288" y="22" font-family="Arial" font-size="8" font-weight="bold" fill="#9a7840">A</text>
+              <!-- Body fill (45° gold hatch) -->
+              <rect x="20" y="36" width="260" height="128" fill="url(#ap1)" stroke="none"/>
+              <!-- Port A channel (white) -->
+              <rect x="72" y="36" width="22" height="28" fill="white" stroke="none"/>
+              <!-- Port B channel (white) -->
+              <rect x="188" y="136" width="22" height="28" fill="white" stroke="none"/>
+              <!-- Bore cavity (white) -->
+              <rect x="50" y="64" width="200" height="72" fill="white" stroke="none"/>
+              <!-- Piston (-45° gold hatch = different material) -->
+              <rect x="108" y="65" width="52" height="70" fill="url(#ap2)" stroke="none"/>
+              <!-- Rod (-45° gold hatch) -->
+              <rect x="160" y="85" width="90" height="30" fill="url(#ap2)" stroke="none"/>
+              <!-- Body outline with port notches -->
+              <line x1="20" y1="36" x2="72" y2="36" stroke="#9a7840" stroke-width="1.5"/>
+              <line x1="94" y1="36" x2="280" y2="36" stroke="#9a7840" stroke-width="1.5"/>
+              <line x1="20" y1="36" x2="20" y2="164" stroke="#9a7840" stroke-width="1.5"/>
+              <line x1="280" y1="36" x2="280" y2="164" stroke="#9a7840" stroke-width="1.5"/>
+              <line x1="20" y1="164" x2="188" y2="164" stroke="#9a7840" stroke-width="1.5"/>
+              <line x1="210" y1="164" x2="280" y2="164" stroke="#9a7840" stroke-width="1.5"/>
+              <!-- Port channel walls -->
+              <line x1="72" y1="36" x2="72" y2="64" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="94" y1="36" x2="94" y2="64" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="188" y1="136" x2="188" y2="164" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="210" y1="136" x2="210" y2="164" stroke="#9a7840" stroke-width="0.85"/>
+              <!-- Bore outline -->
+              <rect x="50" y="64" width="200" height="72" fill="none" stroke="#9a7840" stroke-width="0.85"/>
+              <!-- Port A pipe + thread marks -->
+              <rect x="72" y="10" width="22" height="26" fill="none" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="72" y1="31" x2="94" y2="31" stroke="#9a7840" stroke-width="0.4" stroke-dasharray="2 1"/>
+              <line x1="72" y1="33" x2="94" y2="33" stroke="#9a7840" stroke-width="0.4" stroke-dasharray="2 1"/>
+              <!-- Port B pipe + thread marks -->
+              <rect x="188" y="164" width="22" height="26" fill="none" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="188" y1="168" x2="210" y2="168" stroke="#9a7840" stroke-width="0.4" stroke-dasharray="2 1"/>
+              <line x1="188" y1="170" x2="210" y2="170" stroke="#9a7840" stroke-width="0.4" stroke-dasharray="2 1"/>
+              <!-- Piston outline -->
+              <rect x="108" y="65" width="52" height="70" fill="none" stroke="#9a7840" stroke-width="1.1"/>
+              <!-- O-ring grooves on piston OD (top + bottom) -->
+              <rect x="120" y="65" width="10" height="3" fill="white" stroke="#9a7840" stroke-width="0.55"/>
+              <rect x="138" y="65" width="10" height="3" fill="white" stroke="#9a7840" stroke-width="0.55"/>
+              <rect x="120" y="132" width="10" height="3" fill="white" stroke="#9a7840" stroke-width="0.55"/>
+              <rect x="138" y="132" width="10" height="3" fill="white" stroke="#9a7840" stroke-width="0.55"/>
+              <!-- Rod outline -->
+              <rect x="160" y="85" width="90" height="30" fill="none" stroke="#9a7840" stroke-width="0.95"/>
+              <!-- Rod seal/gland at bore exit -->
+              <rect x="246" y="82" width="8" height="36" fill="white" stroke="#9a7840" stroke-width="0.55"/>
+              <!-- Return spring (left bore, x=50-108, y=64-136) -->
+              <path d="M 52,100 L 57,68 L 65,132 L 73,68 L 81,132 L 89,68 L 97,132 L 105,68 L 108,100" stroke="#9a7840" stroke-width="0.75" fill="none" opacity="0.7"/>
+              <!-- Center line H -->
+              <line x1="6" y1="100" x2="294" y2="100" stroke="#9a7840" stroke-width="0.5" stroke-dasharray="12 3 2 3" opacity="0.55"/>
+              <!-- Center line V -->
+              <line x1="134" y1="22" x2="134" y2="200" stroke="#9a7840" stroke-width="0.5" stroke-dasharray="12 3 2 3" opacity="0.55"/>
+              <!-- Ref 1: Housing body -->
+              <circle cx="283" cy="50" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="283" y="54.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">1</text>
+              <line x1="274" y1="50" x2="260" y2="50" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 2: Piston -->
+              <circle cx="283" cy="80" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="283" y="84.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">2</text>
+              <line x1="274" y1="80" x2="160" y2="80" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 3: Piston rod -->
+              <circle cx="283" cy="110" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="283" y="114.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">3</text>
+              <line x1="274" y1="110" x2="205" y2="100" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 4: Port A -->
+              <circle cx="44" cy="14" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="44" y="18.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">4</text>
+              <line x1="52" y1="14" x2="72" y2="18" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 5: Return spring -->
+              <circle cx="16" cy="100" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="16" y="104.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">5</text>
+              <line x1="24" y1="100" x2="52" y2="100" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 6: O-ring seal -->
+              <circle cx="16" cy="66" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="16" y="70.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">6</text>
+              <line x1="24" y1="68" x2="120" y2="68" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Ref 7: Rod seal gland -->
+              <circle cx="283" cy="148" r="8.5" stroke="#9a7840" stroke-width="0.85" fill="white"/>
+              <text x="283" y="152.5" text-anchor="middle" font-family="Arial" font-size="9" font-weight="500" fill="#9a7840">7</text>
+              <line x1="274" y1="146" x2="252" y2="100" stroke="#9a7840" stroke-width="0.65"/>
+              <!-- Dimension: overall width -->
+              <line x1="20" y1="206" x2="280" y2="206" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <line x1="20" y1="201" x2="20" y2="211" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <line x1="280" y1="201" x2="280" y2="211" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <polygon points="25,203.5 20,206 25,208.5" fill="#9a7840" opacity="0.7"/>
+              <polygon points="275,203.5 280,206 275,208.5" fill="#9a7840" opacity="0.7"/>
+              <text x="150" y="217" text-anchor="middle" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" opacity="0.7">Ø 260 mm</text>
+              <!-- Dimension: bore height -->
+              <line x1="292" y1="64" x2="292" y2="136" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <line x1="287" y1="64" x2="297" y2="64" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <line x1="287" y1="136" x2="297" y2="136" stroke="#9a7840" stroke-width="0.65" opacity="0.7"/>
+              <polygon points="289.5,69 292,64 294.5,69" fill="#9a7840" opacity="0.7"/>
+              <polygon points="289.5,131 292,136 294.5,131" fill="#9a7840" opacity="0.7"/>
+              <text x="296" y="97" text-anchor="start" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.6">72</text>
+              <text x="296" y="106" text-anchor="start" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.6">mm</text>
+              <!-- Title block -->
+              <line x1="1" y1="228" x2="299" y2="228" stroke="#9a7840" stroke-width="0.85"/>
+              <line x1="178" y1="228" x2="178" y2="259" stroke="#9a7840" stroke-width="0.5" opacity="0.6"/>
+              <line x1="238" y1="228" x2="238" y2="259" stroke="#9a7840" stroke-width="0.5" opacity="0.6"/>
+              <text x="7" y="240" font-family="'Courier New',monospace" font-size="7" fill="#9a7840" font-weight="bold">유압 실린더 단면도</text>
+              <text x="7" y="252" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.65">SECTION A-A · PYPI AI GEN</text>
+              <text x="7" y="258.5" font-family="'Courier New',monospace" font-size="5.8" fill="#9a7840" opacity="0.4">DWG-HYD-AI-001</text>
+              <text x="183" y="240" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.7">SCALE: N.T.S</text>
+              <text x="183" y="251" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.5">UNIT: mm</text>
+              <text x="243" y="240" font-family="'Courier New',monospace" font-size="6.5" fill="#9a7840" opacity="0.7">특허청 기준</text>
+              <text x="243" y="252" font-family="'Courier New',monospace" font-size="6" fill="#9a7840" opacity="0.45">2024.03.15 AUTO</text>
+            </svg>
+          </div>
+          <ul class="dc-list dc-list--pros">
+            <li>입력 후 평균 <strong>47초</strong> 안에 자동 생성</li>
+            <li>참조번호 체계 자동 구성·동기화</li>
+            <li>명세서 수정 즉시 <strong>도면 자동 갱신</strong></li>
+            <li>특허청 서식 100% 자동 준수</li>
+            <li>SVG 벡터 출력 → 무한 확대·인쇄 가능</li>
+          </ul>
+        </div>
+
+      </div><!-- /dc-grid -->
+
+      <!-- 소요시간 비교 -->
+      <div class="dc-stat-compare">
+        <div class="dc-stat-card dc-stat-card--old">
+          <span class="dc-stat-badge">수작업 도면사</span>
+          <div class="dc-stat-num">4~8<span class="dc-stat-unit">시간</span></div>
+          <p class="dc-stat-sub">CAD 작업 + 참조번호 수동 입력 + 반복 수정</p>
+        </div>
+        <div class="dc-stat-mid">
+          <div class="dc-stat-arrow">→</div>
+          <div class="dc-stat-ratio">×640 빠름</div>
+        </div>
+        <div class="dc-stat-card dc-stat-card--ai">
+          <span class="dc-stat-badge dc-stat-badge--ai">PYPI AI</span>
+          <div class="dc-stat-num dc-stat-num--ai">47<span class="dc-stat-unit">초</span></div>
+          <p class="dc-stat-sub">명세서 입력 한 줄 → 특허청 기준 자동 완성</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {% endif %}
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── 비교 섹션 ── */
+.dc-section {
+  padding: 80px 0 72px;
+  background: var(--lf-bg);
+  border-top: 1px solid var(--lf-border);
+}
+.dc-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); margin-bottom: 14px;
+}
+.dc-h2 {
+  font-family: var(--lf-serif); font-size: clamp(26px,3.5vw,40px);
+  font-weight: 400; color: var(--lf-navy); line-height: 1.2; margin-bottom: 14px;
+}
+.dc-h2 em { font-style: italic; color: var(--lf-gold); font-weight: 300; }
+.dc-desc {
+  font-size: 14px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.8; max-width: 580px; margin-bottom: 52px;
+}
+.dc-grid {
+  display: grid; grid-template-columns: 1fr 56px 1fr; gap: 0;
+  align-items: start; margin-bottom: 48px;
+}
+.dc-col { display: flex; flex-direction: column; gap: 20px; }
+.dc-badge {
+  display: inline-block; font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; padding: 5px 14px; border-radius: 2px; align-self: flex-start;
+}
+.dc-badge--before { background: #f0f0f0; color: #888; }
+.dc-badge--after  { background: rgba(154,120,64,.1); color: var(--lf-gold); border: 1px solid rgba(154,120,64,.2); }
+.dc-frame {
+  border: 1px solid #e0e0e0; overflow: hidden; background: #fafafa;
+}
+.dc-frame svg { width: 100%; height: auto; display: block; }
+.dc-frame--ai { border-color: rgba(154,120,64,.3); background: #fff; }
+.dc-list {
+  list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0;
+}
+.dc-list li {
+  font-size: 13px; font-weight: 300; line-height: 1.6; padding-left: 18px; position: relative;
+}
+.dc-list li::before {
+  position: absolute; left: 0; top: 0; font-size: 13px;
+}
+.dc-list--cons li { color: #999; }
+.dc-list--cons li::before { content: '✕'; color: #ccc; }
+.dc-list--pros li { color: var(--lf-body); }
+.dc-list--pros li::before { content: '✓'; color: var(--lf-gold); }
+.dc-list strong { color: var(--lf-gold); font-weight: 600; }
+.dc-divider {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px; padding-top: 48px;
+}
+.dc-vs {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--lf-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: var(--lf-muted);
+}
+.dc-arrow { font-size: 18px; color: var(--lf-gold); opacity: .5; }
+
+/* ── 소요시간 비교 ── */
+.dc-stat-compare {
+  border-top: 1px solid var(--lf-border); padding-top: 40px;
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 0;
+  align-items: center;
+}
+.dc-stat-card { padding: 28px 32px; background: #f8f8f8; }
+.dc-stat-card--ai {
+  background: rgba(154,120,64,.04);
+  border: 1px solid rgba(154,120,64,.14);
+}
+.dc-stat-badge {
+  display: block; font-size: 8px; font-weight: 700; letter-spacing: 1.8px;
+  text-transform: uppercase; color: #aaa; margin-bottom: 10px;
+}
+.dc-stat-badge--ai { color: var(--lf-gold); }
+.dc-stat-num {
+  font-family: var(--lf-serif);
+  font-size: clamp(30px, 4vw, 46px);
+  color: var(--lf-navy); line-height: 1; margin-bottom: 8px;
+}
+.dc-stat-num--ai { color: var(--lf-gold); }
+.dc-stat-unit {
+  font-size: .42em; font-weight: 300;
+  color: var(--lf-mid); margin-left: 3px;
+}
+.dc-stat-sub {
+  font-size: 11px; font-weight: 300;
+  color: var(--lf-muted); line-height: 1.6;
+}
+.dc-stat-mid {
+  padding: 0 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.dc-stat-arrow { font-size: 26px; color: var(--lf-gold); opacity: .45; }
+.dc-stat-ratio {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--lf-gold);
+}
+@media (max-width: 768px) {
+  .dc-grid { grid-template-columns: 1fr; }
+  .dc-divider { flex-direction: row; padding: 16px 0; }
+  .dc-stat-compare { grid-template-columns: 1fr; }
+  .dc-stat-mid { flex-direction: row; padding: 16px 0; }
+}
+
+/* ── CTA strip ── */
+.ag-cta-strip {
+  background: #12100e;
+  padding: 56px 0;
+}
+.ag-cta-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+  flex-wrap: wrap;
+}
+.ag-cta-label {
+  display: block; font-size: 9px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); margin-bottom: 10px;
+  opacity: .85;
+}
+.ag-cta-msg {
+  font-size: 17px; font-weight: 300; color: rgba(255,255,255,.82); line-height: 1.7;
+}
+.ag-cta-btn {
+  flex-shrink: 0; display: inline-block; padding: .9rem 2.4rem;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.8px;
+  text-transform: uppercase; text-decoration: none;
+  color: #12100e; background: #fff; transition: background .2s, color .2s;
+  white-space: nowrap;
+}
+.ag-cta-btn:hover { background: var(--lf-gold); color: #fff; }
+
+/* 갤러리 버튼 — 메타 카드 안 secondary 버튼 */
+.ag-gallery-btn {
+  display: block; text-align: center; margin-top: .6rem;
+  padding: .62rem 1rem;
+  font-size: 9.5px; font-weight: 600; letter-spacing: 1.4px;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--lf-gold);
+  border: 1px solid rgba(154,120,64,.35);
+  background: transparent;
+  transition: background .2s, border-color .2s;
+}
+.ag-gallery-btn:hover {
+  background: rgba(154,120,64,.07); border-color: var(--lf-gold);
+}
+
+.ag-layout {
+  display: grid; grid-template-columns: 1fr 300px; gap: 4rem; align-items: start;
+}
+.ag-section { margin-bottom: 3rem; }
+.ag-section-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); margin-bottom: 16px;
+}
+.ag-section-body {
+  font-size: 16px; font-weight: 300; color: var(--lf-body);
+  line-height: 1.95; letter-spacing: .1px;
+}
+.ag-list {
+  list-style: none; display: flex; flex-direction: column; gap: 14px;
+}
+.ag-list li {
+  font-size: 15px; font-weight: 300; color: var(--lf-body);
+  padding-left: 20px; position: relative; line-height: 1.75;
+}
+.ag-list li::before {
+  content: ''; position: absolute; left: 0; top: 10px;
+  width: 8px; height: 1px; background: var(--lf-gold);
+}
+
+/* Meta card */
+.ag-meta-card {
+  background: var(--lf-bg); border: 1px solid var(--lf-border);
+  border-top: 3px solid var(--lf-gold);
+  padding: 2rem; margin-bottom: 1.5rem;
+}
+.ag-meta-num {
+  font-family: var(--lf-serif); font-size: 48px; font-weight: 300;
+  font-style: italic; color: var(--lf-gold); opacity: .4; line-height: 1; margin-bottom: 8px;
+}
+.ag-meta-name {
+  font-family: var(--lf-serif); font-size: 20px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 4px;
+}
+.ag-meta-en {
+  font-size: 9px; font-weight: 500; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lf-muted); margin-bottom: 20px;
+}
+.ag-meta-sep { width: 32px; height: 1px; background: var(--lf-border); margin-bottom: 20px; }
+.ag-meta-badge {
+  display: inline-block; font-size: .65rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .2rem .65rem; border-radius: 3px; margin-bottom: 20px;
+}
+.ag-meta-badge--on  { background: rgba(154,120,64,.12); color: var(--lf-gold); }
+.ag-meta-badge--off { background: rgba(0,0,0,.06); color: var(--lf-muted); }
+.ag-meta-btn {
+  display: block; text-align: center;
+  padding: .75rem 1rem;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.8px;
+  text-transform: uppercase; text-decoration: none;
+  color: #fff; background: var(--lf-gold);
+  transition: background .2s;
+}
+.ag-meta-btn:hover { background: var(--lf-gold-lt); }
+
+/* Pipeline sidebar */
+.ag-pipeline-card {
+  background: var(--lf-bg); border: 1px solid var(--lf-border);
+  padding: 1.5rem;
+}
+.ag-pipe-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: .6rem 0; border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.ag-pipe-item:last-child { border-bottom: none; }
+.ag-pipe-item--current { background: rgba(154,120,64,.04); margin: 0 -.75rem; padding: .6rem .75rem; }
+.ag-pipe-num {
+  font-family: var(--lf-serif); font-size: 13px; font-style: italic;
+  color: var(--lf-muted); width: 28px; flex-shrink: 0;
+}
+.ag-pipe-item--current .ag-pipe-num { color: var(--lf-gold); }
+.ag-pipe-name { font-size: 11.5px; font-weight: 300; color: var(--lf-mid); }
+.ag-pipe-item--current .ag-pipe-name { color: var(--lf-navy); font-weight: 500; }
+
+@media (max-width: 768px) {
+  .ag-layout { grid-template-columns: 1fr; }
+}
+
+</style>
+
+{% endblock %}

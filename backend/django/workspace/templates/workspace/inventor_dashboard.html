@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% block title %}내 프로젝트 | PYPI{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- ══ NAV ═══════════════════════════════════════════════ -->
+  <nav class="dashboard-nav">
+    <a href="{% url 'accounts:landing' %}" class="nav-brand">
+      <span class="brand-icon-sm">Pi</span>
+      <span>PYPI</span>
+    </a>
+    <div class="nav-links">
+      <a href="{% url 'dashboard' %}"          class="nav-link active">내 프로젝트</a>
+      <span class="nav-link-divider"></span>
+      <a href="{% url 'accounts:pipeline' %}"  class="nav-link">파이프라인</a>
+      <a href="{% url 'accounts:chat' %}"       class="nav-link">AI 어시스턴트</a>
+    </div>
+    <div class="nav-user">
+      <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+      <span class="user-email">{{ user.username }}</span>
+      <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-logout">로그아웃</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- ══ 콘텐츠 ════════════════════════════════════════════ -->
+  <div class="ws-scroll">
+    <div class="ws-wrap">
+
+      <!-- 페이지 헤더 -->
+      <div class="ws-page-hd">
+        <div>
+          <p class="ws-page-tag">Workspace · {{ projects|length }}개 프로젝트</p>
+          <h1 class="ws-page-title">내 특허 프로젝트</h1>
+        </div>
+        <div class="ws-action-btns">
+          <button id="toggle-delete-mode-btn" class="ws-btn ws-btn--ghost">삭제 선택</button>
+          <button id="confirm-delete-btn"  style="display:none;" class="ws-btn ws-btn--danger">삭제 (0개)</button>
+          <button id="cancel-delete-btn"   style="display:none;" class="ws-btn ws-btn--ghost">취소</button>
+          <a href="{% url 'create_project' %}" class="ws-btn ws-btn--primary">+ 새 프로젝트</a>
+        </div>
+      </div>
+
+      <!-- 전체 선택 -->
+      <div id="select-all-container" style="display:none;" class="ws-select-all">
+        <input type="checkbox" id="select-all-checkbox">
+        <label for="select-all-checkbox">전체 선택</label>
+      </div>
+
+      <!-- 프로젝트 목록 -->
+      {% if projects %}
+      <div class="ws-project-list">
+        {% for project in projects %}
+        <div class="ws-project-card">
+          <div class="delete-checkbox-cell" style="display:none;">
+            <input type="checkbox" class="project-checkbox" value="{{ project.id }}">
+          </div>
+          <div class="ws-project-info">
+            <div class="ws-project-status ws-status--{{ project.status }}">{{ project.get_status_display }}</div>
+            <h2 class="ws-project-title">
+              <a href="{% url 'workstation' project.id %}">{{ project.title }}</a>
+            </h2>
+            <p class="ws-project-date">생성일 · {{ project.created_at|date:"Y. m. d" }}</p>
+          </div>
+          <div class="ws-project-actions">
+            <a href="{% url 'workstation' project.id %}" class="ws-btn ws-btn--primary" style="font-size:11px;">워크스테이션 →</a>
+            <form action="{% url 'delete_project' project.id %}" method="POST"
+                  onsubmit="return confirm('삭제하면 복구할 수 없습니다. 계속할까요?');" style="margin:0;">
+              {% csrf_token %}
+              <button type="submit" class="ws-btn ws-btn--ghost" style="font-size:11px;color:var(--text-muted);">삭제</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% else %}
+      <div class="ws-empty">
+        <div class="ws-empty-icon">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+            <rect x="10" y="6" width="28" height="36" rx="2"/>
+            <line x1="16" y1="15" x2="32" y2="15"/>
+            <line x1="16" y1="22" x2="32" y2="22"/>
+            <line x1="16" y1="29" x2="24" y2="29"/>
+            <circle cx="36" cy="36" r="8"/>
+            <line x1="34" y1="36" x2="38" y2="36"/>
+            <line x1="36" y1="34" x2="36" y2="38"/>
+          </svg>
+        </div>
+        <p class="ws-empty-title">아직 프로젝트가 없습니다</p>
+        <p class="ws-empty-desc">새 특허 프로젝트를 시작해보세요.</p>
+        <a href="{% url 'create_project' %}" class="ws-btn ws-btn--primary" style="margin-top:24px;display:inline-flex;">+ 첫 프로젝트 만들기</a>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── 레이아웃 ─────────────────────────────────── */
+.dashboard-wrapper { background: #f0f4f9; min-height: 100vh; }
+.ws-scroll {
+  flex: 1; overflow-y: auto;
+  background: #f0f4f9;
+  min-height: calc(100vh - 60px);
+}
+.ws-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 52px 32px 80px;
+}
+
+/* ── 페이지 헤더 ──────────────────────────────── */
+.ws-page-hd {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 36px; padding-bottom: 28px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.ws-page-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--color-primary); margin-bottom: 8px; opacity: .85;
+}
+.ws-page-title {
+  font-size: 26px; font-weight: 300; color: var(--text-primary);
+  letter-spacing: -.3px; margin: 0;
+}
+
+/* ── 버튼 ─────────────────────────────────────── */
+.ws-action-btns { display: flex; gap: 8px; align-items: center; }
+.ws-btn {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 8px 18px; border-radius: 3px; border: none; cursor: pointer;
+  text-decoration: none; display: inline-flex; align-items: center; transition: all .2s;
+  white-space: nowrap;
+}
+.ws-btn--primary { background: var(--color-primary); color: #fff; }
+.ws-btn--primary:hover { opacity: .88; }
+.ws-btn--ghost {
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+.ws-btn--ghost:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.ws-btn--danger { background: #dc2626; color: #fff; }
+.ws-btn--danger:hover { background: #b91c1c; }
+
+/* ── 전체 선택 ────────────────────────────────── */
+.ws-select-all {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; font-size: 13px; color: var(--text-secondary);
+}
+
+/* ── 프로젝트 리스트 ──────────────────────────── */
+.ws-project-list {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+}
+.ws-project-card {
+  background: #fff; padding: 26px 28px;
+  display: flex; align-items: center; gap: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.ws-project-card:last-child { border-bottom: none; }
+.ws-project-card:hover { background: #fdfcfa; }
+
+.ws-project-info { flex: 1; min-width: 0; }
+.ws-project-status {
+  display: inline-block; font-size: 8.5px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 2px; margin-bottom: 10px;
+}
+.ws-status--draft            { background: rgba(201,168,76,.12); color: var(--color-primary); }
+.ws-status--agent_processing { background: rgba(59,130,246,.12); color: #60a5fa; }
+.ws-status--review           { background: rgba(245,158,11,.12); color: #f59e0b; }
+.ws-status--done             { background: rgba(16,185,129,.12); color: #34d399; }
+
+.ws-project-title {
+  font-size: 17px; font-weight: 400; margin: 0 0 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ws-project-title a { color: var(--text-primary); text-decoration: none; transition: color .2s; }
+.ws-project-title a:hover { color: var(--color-primary); }
+.ws-project-date {
+  font-size: 11px; color: var(--text-muted); margin: 0; letter-spacing: .3px;
+}
+.ws-project-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+/* ── 빈 상태 ──────────────────────────────────── */
+.ws-empty {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80px 20px; text-align: center;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: #fff;
+}
+.ws-empty-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(201,168,76,.08); border: 1px solid rgba(201,168,76,.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-primary); margin-bottom: 20px;
+}
+.ws-empty-title {
+  font-size: 18px; font-weight: 400; color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.ws-empty-desc { font-size: 13px; color: var(--text-muted); }
+
+@media (max-width: 640px) {
+  .ws-wrap { padding: 32px 16px 60px; }
+  .ws-page-hd { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .ws-project-card { flex-direction: column; align-items: flex-start; }
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn   = document.getElementById('toggle-delete-mode-btn');
+  const confirmBtn  = document.getElementById('confirm-delete-btn');
+  const cancelBtn   = document.getElementById('cancel-delete-btn');
+  const selectAllWrap = document.getElementById('select-all-container');
+  const selectAllCb = document.getElementById('select-all-checkbox');
+  const projectCbs  = document.querySelectorAll('.project-checkbox');
+  const checkboxCells = document.querySelectorAll('.delete-checkbox-cell');
+
+  function setDeleteMode(on) {
+    toggleBtn.style.display = on ? 'none' : '';
+    confirmBtn.style.display = on ? '' : 'none';
+    cancelBtn.style.display  = on ? '' : 'none';
+    selectAllWrap.style.display = on ? 'flex' : 'none';
+    checkboxCells.forEach(c => c.style.display = on ? '' : 'none');
+    if (!on) { projectCbs.forEach(c => c.checked = false); selectAllCb.checked = false; updateCount(); }
+  }
+
+  function updateCount() {
+    const n = document.querySelectorAll('.project-checkbox:checked').length;
+    confirmBtn.innerText = `삭제 (${n}개)`;
+  }
+
+  toggleBtn.addEventListener('click', () => setDeleteMode(true));
+  cancelBtn.addEventListener('click',  () => setDeleteMode(false));
+
+  selectAllCb && selectAllCb.addEventListener('change', function() {
+    projectCbs.forEach(c => c.checked = this.checked);
+    updateCount();
+  });
+
+  projectCbs.forEach(cb => {
+    cb.addEventListener('change', function() {
+      if (!this.checked) selectAllCb.checked = false;
+      else if (document.querySelectorAll('.project-checkbox:checked').length === projectCbs.length) selectAllCb.checked = true;
+      updateCount();
+    });
+  });
+
+  confirmBtn && confirmBtn.addEventListener('click', function() {
+    const ids = Array.from(document.querySelectorAll('.project-checkbox:checked')).map(c => c.value);
+    if (!ids.length) return;
+    if (!confirm(`${ids.length}개 프로젝트를 삭제하시겠습니까? 되돌릴 수 없습니다.`)) return;
+    confirmBtn.innerText = '삭제 중...';
+    confirmBtn.disabled = true;
+    fetch("{% url 'bulk_delete_projects_api' %}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+      body: JSON.stringify({ project_ids: ids })
+    }).then(r => r.json()).then(d => {
+      if (d.status === 'success') window.location.reload();
+      else { alert('삭제 실패: ' + d.message); setDeleteMode(false); }
+    }).catch(() => { alert('오류가 발생했습니다.'); setDeleteMode(false); });
+  });
+});
+</script>
+{% endblock %}

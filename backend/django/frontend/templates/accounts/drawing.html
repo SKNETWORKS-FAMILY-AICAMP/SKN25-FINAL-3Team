@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}도면 생성 | PYPI{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+    <!-- Navbar -->
+    <nav class="dashboard-nav" id="main-nav">
+        <a href="{% url 'accounts:landing' %}" class="nav-brand">
+            <span class="brand-icon-sm">Pi</span>
+            <span>PYPI</span>
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'accounts:dashboard' %}" class="nav-link">AI 어시스턴트 대시보드</a>
+            <span class="nav-link-divider"></span>
+            <a href="{% url 'accounts:pipeline' %}"  class="nav-link">파이프라인</a>
+            <a href="{% url 'accounts:drawing' %}"    class="nav-link active">도면 분석</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+            <span class="user-email">{{ user.username }}</span>
+            <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">로그아웃</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="dashboard-content" style="max-width:1100px;">
+
+        <!-- 헤더 -->
+        <div class="welcome-card" style="margin-bottom:2rem;">
+            <div class="welcome-text">
+                <h2>AI 특허 <span class="highlight">도면 생성</span></h2>
+                <p>특허 명세서 텍스트를 입력하면 블록도·흐름도 SVG 도면을 자동으로 생성합니다.</p>
+            </div>
+        </div>
+
+        <!-- 입력 폼 -->
+        <div class="info-card" style="display:block; padding:2rem; margin-bottom:1.5rem;">
+            <form method="POST" id="drawing-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">출원 번호 (선택)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg></span>
+                        <input
+                            type="text"
+                            name="app_num"
+                            placeholder="예: 10-2024-0001234"
+                            value="{{ app_num }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:1.25rem;">
+                    <label class="form-label">특허 명세서 텍스트</label>
+                    <textarea
+                        name="invention_text"
+                        class="drawing-textarea"
+                        rows="12"
+                        placeholder="특허 명세서 내용을 여기에 붙여넣으세요.&#10;&#10;예) [청구범위] / [발명의 설명] / [도면의 간단한 설명] ..."
+                        required
+                    >{{ invention_text }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submit-btn" style="width:auto; padding:14px 36px; margin-top:1.5rem;">
+                    <span class="btn-text">도면 생성하기</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- 로딩 -->
+        <div class="loading-banner" id="loading-card" style="display:none;">
+            <span class="spinner"></span>
+            <span>AI가 도면을 생성하고 있습니다… (30초~1분 소요)</span>
+        </div>
+
+        <!-- 에러 -->
+        {% if error %}
+        <div class="info-card" style="display:flex; gap:1rem; border-color:rgba(239,68,68,0.35); background:rgba(239,68,68,0.06); margin-bottom:1.5rem;">
+            <span style="font-size:1.4rem; flex-shrink:0;">⚠️</span>
+            <div>
+                <p style="font-weight:700; color:#fca5a5; margin-bottom:.25rem;">도면 생성 실패</p>
+                <p style="color:var(--text-secondary); font-size:.9rem;">{{ error }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 결과 -->
+        {% if drawings %}
+        <p class="section-label">생성된 도면 · {{ drawings|length }}개</p>
+        <div class="drawings-grid">
+            {% for d in drawings %}
+            <div class="info-card drawing-result-card">
+                <div style="width:100%;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem;">
+                        <div style="display:flex; align-items:center; gap:.5rem;">
+                            <span class="fig-badge">{{ d.fig_number }}</span>
+                            <span style="font-size:.8rem; color:var(--text-muted);">{{ d.diagram_type }}</span>
+                        </div>
+                        <span class="quality-chip quality-{{ d.quality_grade|lower }}">
+                            {{ d.quality_score }}점 · {{ d.quality_grade }}등급
+                        </span>
+                    </div>
+                    <p style="font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:1rem;">{{ d.title }}</p>
+                    <div class="svg-box">
+                        {{ d.svg_content|safe }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('drawing-form').addEventListener('submit', function() {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> 생성 중...';
+        document.getElementById('loading-card').style.display = 'flex';
+    });
+</script>
+
+<style>
+/* 뒤로가기 버튼 */
+.btn-back-nav {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: .82rem;
+    font-weight: 600;
+    padding: .38rem .9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    transition: var(--transition);
+    letter-spacing: 0.3px;
+}
+.btn-back-nav:hover {
+    color: var(--color-primary);
+    border-color: rgba(201, 168, 76, 0.4);
+}
+
+/* 텍스트에어리어 */
+.drawing-textarea {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    font-size: .9rem;
+    line-height: 1.75;
+    resize: vertical;
+    transition: var(--transition);
+    outline: none;
+}
+.drawing-textarea:focus {
+    background: var(--bg-input-focus);
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+.drawing-textarea::placeholder { color: var(--text-muted); font-size: .87rem; }
+
+/* 로딩 배너 */
+.loading-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-size: .95rem;
+    backdrop-filter: blur(16px);
+}
+
+/* 섹션 레이블 */
+.section-label {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+/* 도면 그리드 */
+.drawings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.drawing-result-card {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    padding: 1.5rem !important;
+}
+
+/* 뱃지 */
+.fig-badge {
+    background: rgba(201, 168, 76, .13);
+    color: var(--color-primary);
+    font-size: .78rem;
+    font-weight: 700;
+    padding: .22rem .6rem;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+}
+
+.quality-chip {
+    font-size: .75rem;
+    font-weight: 700;
+    padding: .22rem .6rem;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+}
+.quality-s, .quality-a { background: rgba(201,168,76,.14); color: var(--color-primary); }
+.quality-b             { background: rgba(212,183,106,.12); color: var(--color-secondary); }
+.quality-c, .quality-d { background: rgba(239,68,68,.12);  color: #f87171; }
+
+/* SVG 컨테이너 */
+.svg-box {
+    background: #ffffff;
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    overflow: auto;
+    max-height: 560px;
+}
+.svg-box svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,344 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}특허법 Q&A | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag">Patent Law · FAQ</span>
+      <h1 class="pg-hero-h1">특허법 Q&amp;A<br><em>자주 묻는 질문</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc">특허 출원부터 AI 특허까지 — 실무에서 가장 많이 묻는 질문과 답변을 정리했습니다.</p>
+    </div>
+  </section>
+
+  <!-- ── 카테고리 필터 탭 ─────────────────────── -->
+  <div class="qna-filter-wrap">
+    <div class="pg-container">
+      <div class="qna-filter-bar">
+        <button class="qna-filter-btn active" data-cat="전체">
+          전체
+          <span class="qna-filter-count">{{ total_count }}</span>
+        </button>
+        {% for sec in qna_sections %}
+        <button class="qna-filter-btn" data-cat="{{ sec.id }}">
+          {{ sec.section }}
+          <span class="qna-filter-count">{{ sec.items|length }}</span>
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 검색 ────────────────────────────────── -->
+  <div class="pg-body" style="padding-top:0;">
+    <div class="pg-container">
+
+      <div class="qna-search-row">
+        <div class="qna-search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="qnaSearch" placeholder="질문 또는 키워드 검색…" class="qna-search-input">
+        </div>
+        <span class="qna-result-count" id="qnaResultCount">{{ total_count }}개</span>
+      </div>
+
+      <!-- ── Q&A 목록 ─────────────────────────── -->
+      <div id="qnaList">
+        {% for sec in qna_sections %}
+        <div class="qna-section-block" data-sec="{{ sec.id }}">
+          <div class="qna-section-hd">
+            <span class="qna-section-tag">{{ sec.en }}</span>
+            <h2 class="qna-section-title">{{ sec.section }}</h2>
+          </div>
+          <div class="qna-list">
+            {% for q, a in sec.items %}
+            <div class="qna-item" data-sec="{{ sec.id }}" onclick="qnaToggle(this)">
+              <div class="qna-q">
+                <span class="qna-q-num">{{ forloop.counter }}</span>
+                <span class="qna-q-text">{{ q }}</span>
+                <svg class="qna-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+              <div class="qna-a-wrap">
+                <div class="qna-a">
+                  <span class="qna-a-label">A</span>
+                  <p class="qna-a-text">{{ a }}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="qna-empty" id="qnaEmpty" style="display:none;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="opacity:.3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>검색 결과가 없습니다.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── 카테고리 필터 ─────────────────────────────── */
+.qna-filter-wrap {
+  position: sticky; top: 64px; z-index: 200;
+  background: var(--lf-bg);
+  border-bottom: 1px solid var(--lf-border);
+}
+.qna-filter-bar {
+  display: flex; align-items: center; gap: 6px;
+  overflow-x: auto; padding: 14px 0;
+  scrollbar-width: none;
+}
+.qna-filter-bar::-webkit-scrollbar { display: none; }
+
+.qna-filter-btn {
+  flex-shrink: 0;
+  font-size: 11.5px; font-weight: 500;
+  padding: 6px 14px; border-radius: 20px;
+  border: 1px solid var(--lf-border);
+  background: transparent; color: var(--lf-mid);
+  cursor: pointer; white-space: nowrap;
+  transition: all .18s;
+  display: flex; align-items: center; gap: 6px;
+}
+.qna-filter-btn:hover {
+  border-color: var(--lf-gold); color: var(--lf-gold);
+  background: rgba(154,120,64,.05);
+}
+.qna-filter-btn.active {
+  background: var(--lf-navy); color: #fff;
+  border-color: var(--lf-navy);
+}
+.qna-filter-count {
+  font-size: 10px; font-weight: 700;
+  background: rgba(0,0,0,.08); color: var(--lf-muted);
+  border-radius: 8px; padding: 1px 7px; line-height: 1.4;
+}
+.qna-filter-btn.active .qna-filter-count {
+  background: rgba(255,255,255,.2); color: #fff;
+}
+
+/* ── 검색 ─────────────────────────────────────── */
+.qna-search-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 32px 0 24px;
+}
+.qna-search-box {
+  display: flex; align-items: center; gap: 10px;
+  flex: 1; max-width: 400px;
+  padding: 10px 16px;
+  border: 1px solid var(--lf-border); border-radius: 4px;
+  background: var(--lf-bg2);
+  transition: border-color .2s, box-shadow .2s;
+}
+.qna-search-box:focus-within {
+  border-color: var(--lf-gold);
+  box-shadow: 0 0 0 3px rgba(154,120,64,.08);
+}
+.qna-search-box svg { flex-shrink: 0; color: var(--lf-muted); }
+.qna-search-input {
+  flex: 1; border: none; background: none; outline: none;
+  font-size: 13px; color: var(--lf-navy); font-family: var(--lf-sans);
+}
+.qna-search-input::placeholder { color: var(--lf-muted); }
+.qna-result-count {
+  font-size: 12px; color: var(--lf-muted); white-space: nowrap; font-weight: 500;
+}
+
+/* ── 섹션 블록 ─────────────────────────────────── */
+.qna-section-block {
+  margin-bottom: 64px;
+}
+.qna-section-hd {
+  padding-bottom: 20px; margin-bottom: 4px;
+  border-bottom: 2px solid var(--lf-navy);
+  display: flex; align-items: baseline; gap: 16px;
+}
+.qna-section-tag {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-gold);
+  flex-shrink: 0; opacity: .8;
+}
+.qna-section-title {
+  font-family: var(--lf-serif); font-size: 26px; font-weight: 400;
+  color: var(--lf-navy); line-height: 1.2;
+}
+
+/* ── Q&A 아이템 ─────────────────────────────────── */
+.qna-list { display: flex; flex-direction: column; }
+.qna-item {
+  border-bottom: 1px solid var(--lf-border);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  padding-left: 20px;
+  transition: border-color .2s, background .2s;
+}
+.qna-item[style*="display:none"] { display: none !important; }
+.qna-item:hover { background: rgba(154,120,64,.025); border-left-color: rgba(154,120,64,.25); }
+.qna-item.open { background: rgba(154,120,64,.03); border-left-color: var(--lf-gold); }
+
+.qna-q {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 26px 16px 26px 0;
+}
+.qna-q-num {
+  flex-shrink: 0;
+  font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  color: var(--lf-gold); opacity: .6; width: 22px; padding-top: 4px;
+}
+.qna-q-text {
+  flex: 1; font-size: 15.5px; font-weight: 500; color: var(--lf-navy);
+  line-height: 1.6; letter-spacing: -.2px;
+}
+.qna-chev {
+  flex-shrink: 0; color: var(--lf-muted);
+  transition: transform .28s cubic-bezier(.4,0,.2,1); margin-top: 5px;
+}
+.qna-item.open .qna-chev { transform: rotate(180deg); color: var(--lf-gold); }
+
+/* 아코디언 슬라이드 */
+.qna-a-wrap {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .3s cubic-bezier(.4,0,.2,1);
+}
+.qna-a-wrap > .qna-a { overflow: hidden; }
+.qna-item.open .qna-a-wrap { grid-template-rows: 1fr; }
+
+.qna-a {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 0 16px 28px 0;
+}
+.qna-a-label {
+  flex-shrink: 0; font-family: var(--lf-serif); font-size: 13px;
+  font-style: italic; color: var(--lf-gold); font-weight: 400;
+  width: 22px; padding-top: 3px; opacity: .9;
+}
+.qna-a-text {
+  flex: 1; font-size: 14.5px; font-weight: 300; color: var(--lf-body);
+  line-height: 2.05; letter-spacing: .04px;
+}
+
+/* ── 검색 키워드 하이라이트 ─────────────────────── */
+mark {
+  background: rgba(154,120,64,.18); color: var(--lf-navy);
+  border-radius: 2px; padding: 0 1px;
+}
+
+/* ── 빈 결과 ────────────────────────────────────── */
+.qna-empty {
+  padding: 80px 0; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  color: var(--lf-muted); font-size: 15px;
+}
+
+/* ── 반응형 ─────────────────────────────────────── */
+@media (max-width: 600px) {
+  .qna-section-title { font-size: 22px; }
+  .qna-q-text { font-size: 14px; }
+  .qna-a-text { font-size: 13.5px; }
+}
+</style>
+
+<script>
+(function () {
+  const filterBtns  = Array.from(document.querySelectorAll('.qna-filter-btn'));
+  const searchEl    = document.getElementById('qnaSearch');
+  const resultEl    = document.getElementById('qnaResultCount');
+  const emptyEl     = document.getElementById('qnaEmpty');
+  const qnaList     = document.getElementById('qnaList');
+  const items       = Array.from(document.querySelectorAll('.qna-item'));
+  const blocks      = Array.from(document.querySelectorAll('.qna-section-block'));
+
+  let activeCat = '전체';
+  let searchQ   = '';
+
+  function stripMark(el) {
+    el.querySelectorAll('mark').forEach(m => {
+      m.outerHTML = m.textContent;
+    });
+  }
+
+  function highlight(el, q) {
+    if (!q) return;
+    ['.qna-q-text', '.qna-a-text'].forEach(sel => {
+      const node = el.querySelector(sel);
+      if (!node) return;
+      const raw = node.textContent;
+      const regex = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      node.innerHTML = raw.replace(regex, '<mark>$1</mark>');
+    });
+  }
+
+  function update() {
+    let visible = 0;
+
+    items.forEach(item => {
+      const sec    = item.dataset.sec;
+      const text   = item.textContent.toLowerCase();
+      const catOk  = activeCat === '전체' || sec === activeCat;
+      const searchOk = searchQ === '' || text.includes(searchQ);
+      const show   = catOk && searchOk;
+
+      // 하이라이트 초기화
+      stripMark(item);
+      if (show) {
+        item.style.display = '';
+        if (searchQ) highlight(item, searchQ);
+        visible++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // 섹션 블록 헤더: 보이는 항목이 없으면 숨김
+    blocks.forEach(block => {
+      const secId    = block.dataset.sec;
+      const secMatch = activeCat === '전체' || secId === activeCat;
+      const hasVisible = block.querySelectorAll('.qna-item:not([style*="display:none"])').length > 0;
+      block.style.display = (secMatch && hasVisible) ? '' : 'none';
+    });
+
+    resultEl.textContent = visible + '개';
+    emptyEl.style.display = visible === 0 ? 'flex' : 'none';
+    qnaList.style.display = visible === 0 ? 'none' : '';
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      update();
+    });
+  });
+
+  searchEl.addEventListener('input', () => {
+    searchQ = searchEl.value.trim().toLowerCase();
+    update();
+  });
+
+  update();
+})();
+
+function qnaToggle(el) { el.classList.toggle('open'); }
+</script>
+{% endblock %}

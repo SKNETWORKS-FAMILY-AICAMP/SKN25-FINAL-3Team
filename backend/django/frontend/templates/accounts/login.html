@@ -9,6 +9,19 @@
     <span></span><span></span><span></span><span></span>
   </div>
 
+  <div class="lf-auth-lang lang-switcher">
+    <button class="lang-btn" type="button">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span data-lang-display>KO</span>
+    </button>
+    <div class="lang-dropdown">
+      <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+      <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+      <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+      <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+    </div>
+  </div>
+
   <div class="lf-auth-wrap">
 
     <!-- 좌측 브랜드 패널 -->
@@ -18,16 +31,16 @@
         <span class="lf-auth-firmname">PYPI</span>
       </a>
       <div class="lf-auth-vline"></div>
-      <p class="lf-auth-brand-desc">PYPI는 발명 아이디어를 입력받아 7개 전문 AI 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 완성 명세서를 자동으로 생성하는 AI 기반 특허 자동화 플랫폼입니다.</p>
+      <p class="lf-auth-brand-desc" data-i18n="auth_brand_desc">PYPI는 발명 아이디어를 입력받아 7개 전문 AI 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 완성 명세서를 자동으로 생성하는 AI 기반 특허 자동화 플랫폼입니다.</p>
       <div class="lf-auth-sep"></div>
       <ul class="lf-auth-list">
-        <li>I. 상담 에이전트 — Consultation</li>
-        <li>II. 요약 에이전트 — Summary</li>
-        <li>III. 선행기술조사 — Prior Art</li>
-        <li>IV. 청구항 에이전트 — Claim</li>
-        <li>V. 도면 에이전트 — Drawing</li>
-        <li>VI. 명세서 에이전트 — Specification</li>
-        <li>VII. 컴포저 에이전트 — Composer</li>
+        <li>I. <span data-i18n="agent_I">상담 에이전트</span> — <span data-i18n="en_consultation">Consultation</span></li>
+        <li>II. <span data-i18n="agent_II">요약 에이전트</span> — <span data-i18n="en_summary">Summary</span></li>
+        <li>III. <span data-i18n="agent_III">선행기술조사 에이전트</span> — <span data-i18n="en_prior_art">Prior Art</span></li>
+        <li>IV. <span data-i18n="agent_IV">청구항 에이전트</span> — <span data-i18n="en_claim">Claim</span></li>
+        <li>V. <span data-i18n="agent_V">도면 에이전트</span> — <span data-i18n="en_drawing">Drawing</span></li>
+        <li>VI. <span data-i18n="agent_VI">명세서 에이전트</span> — <span data-i18n="en_specification">Specification</span></li>
+        <li>VII. <span data-i18n="agent_VII">컴포저 에이전트</span> — <span data-i18n="en_composer">Composer</span></li>
       </ul>
     </aside>
 
@@ -51,7 +64,7 @@
           <label class="lf-field-label" data-i18n="login_id">아이디</label>
           <div class="lf-field-wrap">
             <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            <input type="text" name="username" placeholder="아이디" required autofocus autocomplete="username">
+            <input type="text" name="username" placeholder="아이디" required autofocus autocomplete="username" data-i18n="login_id">
           </div>
         </div>
 
@@ -59,7 +72,7 @@
           <label class="lf-field-label" data-i18n="login_pw">비밀번호</label>
           <div class="lf-field-wrap">
             <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password">
+            <input type="password" name="password" placeholder="비밀번호" required autocomplete="current-password" data-i18n="login_pw">
           </div>
         </div>
 
@@ -68,9 +81,9 @@
 
       <p class="lf-auth-switch">
         <span data-i18n="login_no_account">계정이 없으신가요?</span>
-        <a href="{% url 'accounts:signup' %}" data-i18n="login_signup_link">서비스 신청</a>
+        <a href="{% url 'accounts:signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" data-i18n="login_signup_link">회원가입</a>
         &nbsp;·&nbsp;
-        <a href="{% url 'accounts:landing' %}">홈으로</a>
+        <a href="{% url 'accounts:landing' %}" data-i18n="login_home_link">홈으로</a>
       </p>
 
     </main>
@@ -115,6 +128,18 @@
 }
 
 .lf-auth-wrap { display: flex; width: 100%; position: relative; z-index: 1; }
+
+/* 언어 스위처 */
+.lf-auth-lang {
+  position: absolute; top: 24px; right: 32px; z-index: 20;
+}
+.lf-auth-lang .lang-btn { border-color: rgba(0,0,0,.12); color: var(--la-mid); }
+.lf-auth-lang .lang-btn:hover { border-color: rgba(154,120,64,.4); color: var(--la-gold); }
+.lf-auth-lang .lang-dropdown { background: #fff; border-color: rgba(0,0,0,.08); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
+.lf-auth-lang .lang-option { color: var(--la-body); }
+.lf-auth-lang .lang-option:hover, .lf-auth-lang .lang-option.active { background: var(--la-bg2); color: var(--la-navy); }
+.lf-auth-lang .lang-code { color: var(--la-muted); }
+.lf-auth-lang .lang-option.active .lang-code { color: var(--la-gold); }
 
 /* ── 좌측 브랜드 ─────────────────────────────────── */
 .lf-auth-brand {

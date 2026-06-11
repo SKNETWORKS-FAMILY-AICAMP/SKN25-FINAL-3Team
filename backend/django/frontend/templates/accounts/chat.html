@@ -1,0 +1,1129 @@
+{% extends 'base.html' %}
+{% block title %}AI 어시스턴트 | PYPI{% endblock %}
+
+{% block content %}
+<div class="nb-app">
+
+  <!-- ══ TOP NAV ══════════════════════════════════════════ -->
+  <header class="nb-topbar">
+    <div class="nb-topbar-l">
+      <a href="{% url 'accounts:landing' %}" class="nb-logo">
+        <span class="nb-logo-mark">Pi</span>
+        <span class="nb-logo-name">PYPI</span>
+      </a>
+      <span class="nb-topbar-sep"></span>
+      <span class="nb-notebook-title" data-i18n="nb_title">특허 AI 어시스턴트</span>
+    </div>
+    <div class="nb-topbar-r">
+      <div class="lang-switcher">
+        <button class="lang-btn" type="button">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span data-lang-display>KO</span>
+        </button>
+        <div class="lang-dropdown">
+          <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+          <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+          <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+          <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+        </div>
+      </div>
+      {% if user.is_authenticated %}
+      <div class="nb-user-chip" id="nbUserChip">
+        <div class="nb-avatar" id="nbAvatarBtn">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+        <div class="nb-user-dropdown" id="nbUserDropdown">
+          <div class="nb-user-dropdown-hd">
+            <div class="nb-user-dropdown-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+            <div>
+              <p class="nb-user-dropdown-name">{{ user.name|default:user.username }}</p>
+              <p class="nb-user-dropdown-email">{{ user.email }}</p>
+            </div>
+          </div>
+          <div class="nb-user-dropdown-divider"></div>
+          <a href="{% url 'accounts:logout' %}" class="nb-user-dropdown-item nb-user-dropdown-item--danger">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span data-i18n="nav_logout">로그아웃</span>
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="nb-guest-login" data-i18n="nav_login">로그인</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- ══ 3단 레이아웃 ════════════════════════════════════ -->
+  <div class="nb-layout" id="nbLayout">
+
+    <!-- ── 좌: 소스 패널 ─────────────────────────────── -->
+    <aside class="nb-col nb-col--source" id="nbColSource">
+      <div class="nb-col-hd">
+        <span class="nb-col-title" data-i18n="chat_src_label">소스</span>
+        <button class="nb-col-icon-btn" id="nbCollapseSource" title="접기" data-i18n="nb_collapse" data-i18n-attr="title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+      </div>
+
+      <label class="nb-add-source-btn" for="nbFileInput">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span data-i18n="chat_add_src">소스 추가</span>
+      </label>
+      <input type="file" id="nbFileInput" accept=".pdf,.docx,.txt,.md,.csv" style="display:none;" multiple>
+
+      <div class="nb-source-search">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="nb-source-search-input" id="nbSourceSearch" placeholder="소스 검색…" data-i18n="nb_source_search">
+      </div>
+
+      <div class="nb-source-list" id="nbSourceList">
+        <div class="nb-source-empty" id="nbSourceEmpty">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:.22"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+          <p data-i18n="nb_source_empty">저장된 소스가 없습니다</p>
+          <p class="nb-source-empty-sub" data-i18n="nb_source_empty_sub">위 버튼으로 PDF·DOCX·TXT 파일을 추가하면 AI가 참고합니다.</p>
+        </div>
+      </div>
+
+      <div class="nb-source-footer">
+        <span id="nbSourceCount">소스 0개</span>
+      </div>
+    </aside>
+
+    <!-- ── 소스 접힘 복원 버튼 -->
+    <button class="nb-col-restore nb-col-restore--source" id="nbRestoreSource" title="소스 패널 열기" data-i18n="nb_source_open" data-i18n-attr="title" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      <span data-i18n="chat_src_label">소스</span>
+    </button>
+
+    <!-- ── 중: 채팅 패널 ─────────────────────────────── -->
+    <main class="nb-col nb-col--chat">
+      <div class="nb-col-hd">
+        <span class="nb-col-title" data-i18n="nb_chat">채팅</span>
+        <button class="nb-col-icon-btn" id="nbClearChat" title="대화 초기화" data-i18n="nb_clear_chat" data-i18n-attr="title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>
+        </button>
+      </div>
+
+      <div class="nb-msgs" id="nbMsgs">
+        <!-- 웰컴 카드 -->
+        <div class="nb-welcome" id="nbWelcome">
+          <div class="nb-welcome-logo">Pi</div>
+          <h2 class="nb-welcome-h">{% if user.is_authenticated %}<span data-i18n="nb_hello">안녕하세요</span>, {{ user.name|default:user.username }}<span data-i18n="nb_hello_suffix">님</span> 👋{% else %}<span data-i18n="nb_hello">안녕하세요</span> 👋{% endif %}</h2>
+          <p class="nb-welcome-sub" data-i18n="nb_welcome_sub">특허 AI 어시스턴트에게 무엇이든 물어보세요.</p>
+          <div class="nb-tool-grid">
+            <div class="nb-tool-card nb-tool-card--feature" data-q="특허 용어 번역기 모드로 전환해줘. 내가 어려운 특허 용어를 입력하면 ① 한 줄 쉬운 정의 ② 일상 비유 ③ 관련 용어 1~2개를 정리해서 알려줘. 먼저 어떤 용어가 궁금한지 나에게 물어봐줘.">
+              <span class="nb-tool-badge">NEW</span>
+              <div class="nb-tool-icon nb-tool-icon--violet">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool1_title">특허 용어 번역기</h3>
+              <p class="nb-tool-desc" data-i18n="nb_tool1_desc">어려운 특허 용어를 쉬운 말과 비유로 풀어드려요</p>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool1_chip1" data-q="특허 용어 '균등론'을 한 줄 쉬운 정의, 일상 비유, 관련 용어와 함께 설명해줘">균등론</button>
+                <button class="nb-chip" data-i18n="nb_tool1_chip2" data-q="특허 용어 '신규성·진보성'을 한 줄 쉬운 정의, 일상 비유, 관련 용어와 함께 설명해줘">신규성·진보성</button>
+                <button class="nb-chip" data-i18n="nb_tool1_chip3" data-q="특허 용어 '우선권 주장'을 한 줄 쉬운 정의, 일상 비유, 관련 용어와 함께 설명해줘">우선권 주장</button>
+                <button class="nb-chip" data-i18n="nb_tool1_chip4" data-q="특허 용어 'PCT 출원'을 한 줄 쉬운 정의, 일상 비유, 관련 용어와 함께 설명해줘">PCT 출원</button>
+              </div>
+            </div>
+
+            <div class="nb-tool-card nb-tool-card--feature" data-q="아이디어 진단 모드로 전환해줘. 내가 아이디어를 한두 문장으로 설명하면, 특허 가능성을 상/중/하로 평가하고 ① 평가 이유 ② 부족한 정보 ③ 다음 단계를 정리해서 알려줘. 먼저 내 아이디어를 설명해달라고 요청해줘.">
+              <span class="nb-tool-badge">NEW</span>
+              <div class="nb-tool-icon nb-tool-icon--amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.6.6 1.17 1.16 1.41 2.5"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool2_title">아이디어 진단</h3>
+              <p class="nb-tool-desc" data-i18n="nb_tool2_desc">내 아이디어, 특허로 가능할지 빠르게 진단해줘요</p>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool2_chip1" data-q="AI·소프트웨어 아이디어 진단 모드로 전환해줘. 내가 아이디어를 설명하면 특허 가능성을 상/중/하로 평가하고 평가 이유, 부족한 정보, 다음 단계를 알려줘. 먼저 아이디어를 설명해달라고 요청해줘.">AI·SW 아이디어</button>
+                <button class="nb-chip" data-i18n="nb_tool2_chip2" data-q="하드웨어·기계 장치 아이디어 진단 모드로 전환해줘. 내가 아이디어를 설명하면 특허 가능성을 상/중/하로 평가하고 평가 이유, 부족한 정보, 다음 단계를 알려줘. 먼저 아이디어를 설명해달라고 요청해줘.">하드웨어·기계</button>
+                <button class="nb-chip" data-i18n="nb_tool2_chip3" data-q="비즈니스 모델/서비스 아이디어 진단 모드로 전환해줘. 내가 아이디어를 설명하면 특허 가능성을 상/중/하로 평가하고 평가 이유, 부족한 정보, 다음 단계를 알려줘. 먼저 아이디어를 설명해달라고 요청해줘.">비즈니스 모델</button>
+                <button class="nb-chip" data-i18n="nb_tool2_chip4" data-q="내 아이디어와 비슷한 기존 특허가 있을지 빠르게 점검해줘. 먼저 아이디어를 설명해달라고 요청해줘.">유사 특허 있을까?</button>
+              </div>
+            </div>
+
+            <div class="nb-tool-card">
+              <div class="nb-tool-icon nb-tool-icon--navy">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool3_title">청구항 &amp; 명세서</h3>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool3_chip1" data-q="독립항과 종속항의 차이점을 설명해줘">독립항 vs 종속항</button>
+                <button class="nb-chip" data-i18n="nb_tool3_chip2" data-q="소스 문서를 기반으로 청구항을 작성해줘">청구항 초안 작성</button>
+                <button class="nb-chip" data-i18n="nb_tool3_chip3" data-q="특허 명세서에서 발명의 상세한 설명을 어떻게 작성해야 해?">명세서 작성법</button>
+                <button class="nb-chip" data-i18n="nb_tool3_chip4" data-q="청구항 보정은 언제, 어떻게 하는 거야?">청구항 보정</button>
+                <button class="nb-chip" data-i18n="nb_tool3_chip5" data-q="명세서에서 도면 부호는 어떤 규칙으로 작성해야 해?">도면 부호 작성법</button>
+              </div>
+            </div>
+
+            <div class="nb-tool-card">
+              <div class="nb-tool-icon nb-tool-icon--teal">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool4_title">조사 &amp; 분석</h3>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool4_chip1" data-q="이 발명의 신규성과 진보성을 분석해줘">신규성 분석</button>
+                <button class="nb-chip" data-i18n="nb_tool4_chip2" data-q="선행기술 조사를 어떻게 효율적으로 하는지 설명해줘">선행기술 조사</button>
+                <button class="nb-chip" data-i18n="nb_tool4_chip3" data-q="AI·소프트웨어 발명의 특허 적격성 요건을 설명해줘">AI·SW 특허 전략</button>
+                <button class="nb-chip" data-i18n="nb_tool4_chip4" data-q="특허맵 분석이 뭐고 왜 필요한지 설명해줘">특허맵 분석</button>
+                <button class="nb-chip" data-i18n="nb_tool4_chip5" data-q="경쟁사 특허를 효과적으로 분석하는 방법을 알려줘">경쟁사 특허 분석</button>
+              </div>
+            </div>
+
+            <div class="nb-tool-card">
+              <div class="nb-tool-icon nb-tool-icon--gold">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool5_title">출원 &amp; 절차</h3>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool5_chip1" data-q="특허 출원 절차를 단계별로 설명해줘">출원 절차 안내</button>
+                <button class="nb-chip" data-i18n="nb_tool5_chip2" data-q="PCT 국제출원 절차와 비용을 설명해줘">PCT 국제출원</button>
+                <button class="nb-chip" data-i18n="nb_tool5_chip3" data-q="특허 심사관의 거절이유를 어떻게 대응해야 해?">거절이유 대응</button>
+                <button class="nb-chip" data-i18n="nb_tool5_chip4" data-q="특허와 실용신안의 차이점과 선택 기준을 알려줘">특허 vs 실용신안</button>
+                <button class="nb-chip" data-i18n="nb_tool5_chip5" data-q="우선심사 제도는 어떤 경우에 신청할 수 있어?">우선심사 신청</button>
+              </div>
+            </div>
+
+            <div class="nb-tool-card">
+              <div class="nb-tool-icon nb-tool-icon--rose">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+              </div>
+              <h3 class="nb-tool-title" data-i18n="nb_tool6_title">권리 &amp; 전략</h3>
+              <div class="nb-tool-chips">
+                <button class="nb-chip" data-i18n="nb_tool6_chip1" data-q="특허권 존속기간과 연차료에 대해 설명해줘">존속기간·연차료</button>
+                <button class="nb-chip" data-i18n="nb_tool6_chip2" data-q="직무발명 보상 제도를 설명해줘">직무발명 보상</button>
+                <button class="nb-chip" data-i18n="nb_tool6_chip3" data-q="특허 침해 판단 기준과 대응 전략을 알려줘">특허 침해 대응</button>
+                <button class="nb-chip" data-i18n="nb_tool6_chip4" data-q="특허 라이선싱 계약 시 주의할 점을 알려줘">라이선싱 전략</button>
+                <button class="nb-chip" data-i18n="nb_tool6_chip5" data-q="영업비밀로 보호하는 것과 특허 출원하는 것의 장단점을 비교해줘">영업비밀 vs 특허</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 아래로 스크롤 버튼 -->
+      <button class="nb-scroll-btn" id="nbScrollBtn" style="display:none;" title="최신 메시지로" data-i18n="nb_scroll_latest" data-i18n-attr="title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9" transform="scale(1,-1) translate(0,-24)"/></svg>
+      </button>
+
+      <div class="nb-input-area">
+        <div class="nb-input-box" id="nbInputBox">
+          <textarea class="nb-textarea" id="nbInput" placeholder="질문하거나 창작하세요" rows="1" maxlength="3000" data-i18n="nb_input_placeholder"></textarea>
+          <div class="nb-input-footer">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="nb-source-badge" id="nbSourceBadge">소스 0개</span>
+              <span class="nb-char-count" id="nbCharCount">0 / 3000</span>
+            </div>
+            <button class="nb-send" id="nbSend" aria-label="전송" disabled data-i18n="nb_send" data-i18n-attr="aria-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="nb-input-hint" data-i18n="nb_input_hint">Enter로 전송 · Shift+Enter로 줄바꿈</p>
+      </div>
+    </main>
+
+    <!-- ── 우: 스튜디오 패널 ─────────────────────────── -->
+    <aside class="nb-col nb-col--studio" id="nbColStudio">
+      <div class="nb-col-hd">
+        <span class="nb-col-title" data-i18n="nb_studio">스튜디오</span>
+        <button class="nb-col-icon-btn" id="nbCollapseStudio" title="접기" data-i18n="nb_collapse" data-i18n-attr="title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+        </button>
+      </div>
+
+      <!-- 파이프라인 실행 -->
+      <div class="nb-studio-section">
+        <a href="{% url 'accounts:pipeline' %}" class="nb-action-card nb-action-card--hl">
+          <div class="nb-action-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <span class="nb-action-name" data-i18n="nav_pipeline_run">파이프라인 실행</span>
+          <svg class="nb-action-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="nb-studio-divider"></div>
+
+      <!-- 프로젝트 목록 -->
+      <div class="nb-studio-section nb-studio-projects">
+        <div class="nb-studio-label-row">
+          <p class="nb-studio-label">
+            <span data-i18n="nb_my_projects">내 프로젝트</span>
+            {% if projects %}<span class="nb-project-badge">{{ projects|length }}</span>{% endif %}
+          </p>
+          <a href="/workspace/create/" class="nb-memo-add" data-i18n="nb_new_project">+ 새 프로젝트</a>
+        </div>
+
+        <div class="nb-project-list">
+          {% if projects %}
+            {% for p in projects %}
+            <a href="/workspace/workstation/{{ p.id }}/" class="nb-project-card">
+              <div class="nb-project-card-hd">
+                <span class="nb-project-num">{{ forloop.counter }}</span>
+                <span class="nb-project-title">{{ p.title|truncatechars:28 }}</span>
+              </div>
+              <p class="nb-project-date">{{ p.created_at|date:"Y.m.d" }}</p>
+            </a>
+            {% endfor %}
+          {% else %}
+            <div class="nb-memo-empty">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.25"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <p data-i18n="nb_no_projects_html" data-i18n-html>아직 프로젝트가 없습니다<br>새 프로젝트를 시작해보세요</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="nb-studio-note" data-i18n="nb_studio_note">
+        프로젝트를 선택하면 해당 작업실로 이동합니다
+      </div>
+    </aside>
+
+    <!-- ── 스튜디오 접힘 복원 버튼 -->
+    <button class="nb-col-restore nb-col-restore--studio" id="nbRestoreStudio" title="스튜디오 패널 열기" data-i18n="nb_studio_open" data-i18n-attr="title" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+      <span data-i18n="nb_studio">스튜디오</span>
+    </button>
+
+  </div><!-- /nb-layout -->
+</div><!-- /nb-app -->
+
+<!-- ── 토스트 -->
+<div class="nb-toast-wrap" id="nbToastWrap"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ════════════════════════════════════════════════
+   전체 레이아웃
+════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
+.nb-app {
+  display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden;
+  background: #f0eee9;
+  font-family: inherit;
+}
+
+/* ── TOP BAR ───────────────────────────────── */
+.nb-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  flex-shrink: 0; z-index: 50;
+}
+.nb-topbar-l { display: flex; align-items: center; gap: 12px; }
+.nb-topbar-sep { width: 1px; height: 18px; background: rgba(0,0,0,.12); }
+.nb-notebook-title { font-size: 14px; font-weight: 500; color: #444; }
+.nb-topbar-r { display: flex; align-items: center; gap: 10px; position: relative; }
+
+/* 유저 드롭다운 */
+.nb-user-chip { position: relative; }
+.nb-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #9a7840; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: box-shadow .15s;
+}
+.nb-avatar:hover { box-shadow: 0 0 0 3px rgba(154,120,64,.25); }
+.nb-guest-login {
+  font-size: 12.5px; font-weight: 600; color: #fff;
+  background: #9a7840; padding: 7px 16px; border-radius: 8px;
+  text-decoration: none; transition: background .15s;
+}
+.nb-guest-login:hover { background: #7e6433; }
+.nb-user-dropdown {
+  position: absolute; right: 0; top: calc(100% + 10px);
+  width: 220px; background: #fff;
+  border: 1px solid rgba(0,0,0,.1); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  opacity: 0; pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .18s, transform .18s;
+  z-index: 200;
+}
+.nb-user-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+.nb-user-dropdown-hd {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 16px 12px;
+}
+.nb-user-dropdown-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #9a7840; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.nb-user-dropdown-name { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.nb-user-dropdown-email { font-size: 11px; color: #aaa; margin-top: 1px; }
+.nb-user-dropdown-divider { height: 1px; background: rgba(0,0,0,.07); margin: 0 12px; }
+.nb-user-dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 16px; font-size: 13px; font-weight: 500;
+  color: #444; text-decoration: none;
+  transition: background .15s; border-radius: 0 0 10px 10px;
+}
+.nb-user-dropdown-item:hover { background: #f5f5f5; }
+.nb-user-dropdown-item--danger { color: #dc2626; }
+.nb-user-dropdown-item--danger:hover { background: rgba(220,38,38,.05); }
+
+/* ── 3단 레이아웃 ────────────────────────── */
+.nb-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  flex: 1; overflow: hidden;
+  gap: 0; transition: grid-template-columns .25s ease;
+}
+.nb-layout.source-collapsed { grid-template-columns: 0 1fr 280px; }
+.nb-layout.studio-collapsed { grid-template-columns: 280px 1fr 0; }
+.nb-layout.source-collapsed.studio-collapsed { grid-template-columns: 0 1fr 0; }
+
+.nb-col {
+  display: flex; flex-direction: column;
+  background: #fff; overflow: hidden;
+  transition: opacity .2s;
+}
+.nb-col--source { border-right: 1px solid rgba(0,0,0,.07); }
+.nb-col--chat   { background: #faf8f4; border-right: 1px solid rgba(0,0,0,.07); }
+
+.nb-col-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px 10px; flex-shrink: 0;
+}
+.nb-col-title {
+  font-size: 13px; font-weight: 700; color: #1a1a1a; letter-spacing: .2px;
+}
+.nb-col-icon-btn {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: #999; border-radius: 5px; display: flex;
+  transition: color .15s, background .15s;
+}
+.nb-col-icon-btn:hover { color: #333; background: rgba(0,0,0,.05); }
+
+/* 패널 복원 버튼 */
+.nb-col-restore {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  width: 28px; background: #fff;
+  border: none; border-right: 1px solid rgba(0,0,0,.07);
+  color: #bbb; cursor: pointer; font-size: 9px; font-weight: 600;
+  letter-spacing: .3px; text-transform: uppercase;
+  transition: color .15s, background .15s;
+  writing-mode: vertical-lr; padding: 16px 0;
+}
+.nb-col-restore--studio { border-right: none; border-left: 1px solid rgba(0,0,0,.07); }
+.nb-col-restore:hover { color: #9a7840; background: rgba(154,120,64,.04); }
+.nb-col-restore span { writing-mode: vertical-lr; }
+
+/* ── 소스 패널 ─────────────────────────── */
+.nb-add-source-btn {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin: 0 14px 10px;
+  padding: 9px 0; border-radius: 20px;
+  border: 1px solid rgba(0,0,0,.14); background: #fff;
+  font-size: 13px; font-weight: 500; color: #222;
+  cursor: pointer; transition: background .15s, border-color .15s;
+}
+.nb-add-source-btn:hover { background: #f5f5f5; border-color: rgba(0,0,0,.22); }
+
+.nb-source-search {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 14px 10px;
+  padding: 7px 12px;
+  border: 1px solid rgba(0,0,0,.1); border-radius: 8px;
+  background: #f7f7f5;
+}
+.nb-source-search svg { flex-shrink: 0; color: #aaa; }
+.nb-source-search-input {
+  flex: 1; border: none; background: none; outline: none;
+  font-size: 12.5px; color: #333;
+}
+.nb-source-search-input::placeholder { color: #bbb; }
+
+.nb-source-list { flex: 1; overflow-y: auto; padding: 0 14px 12px; }
+.nb-source-empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 44px 16px; text-align: center; color: #888;
+}
+.nb-source-empty p { font-size: 12.5px; line-height: 1.6; font-weight: 500; }
+.nb-source-empty-sub { font-size: 11.5px; color: #bbb; font-weight: 400 !important; line-height: 1.7; }
+
+/* 업로드 진행 */
+.nb-source-item-uploading {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 11px; border-radius: 8px; margin-bottom: 6px;
+  border: 1px solid rgba(154,120,64,.25); background: rgba(154,120,64,.04);
+}
+.nb-source-upload-bar {
+  flex: 1; height: 3px; background: rgba(0,0,0,.07); border-radius: 2px; overflow: hidden;
+}
+.nb-source-upload-fill {
+  height: 100%; background: #9a7840; border-radius: 2px;
+  animation: nb-upload-pulse 1.2s ease-in-out infinite;
+}
+@keyframes nb-upload-pulse { 0%,100%{width:25%} 50%{width:75%} }
+
+.nb-source-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 11px; border-radius: 8px; margin-bottom: 6px;
+  border: 1px solid rgba(0,0,0,.07); background: #fff;
+  transition: border-color .15s;
+}
+.nb-source-item:hover { border-color: rgba(0,0,0,.15); }
+.nb-source-item-icon { flex-shrink: 0; color: #9a7840; margin-top: 1px; }
+.nb-source-item-body { flex: 1; min-width: 0; }
+.nb-source-item-name {
+  font-size: 12.5px; font-weight: 500; color: #1a1a1a;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.nb-source-item-meta { font-size: 11px; color: #aaa; margin-top: 2px; }
+.nb-source-del {
+  flex-shrink: 0; background: none; border: none; cursor: pointer;
+  color: #ccc; padding: 3px; border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.nb-source-del:hover { color: #dc2626; background: rgba(220,38,38,.06); }
+
+.nb-source-footer {
+  padding: 10px 18px; border-top: 1px solid rgba(0,0,0,.06);
+  font-size: 11px; color: #aaa; flex-shrink: 0;
+}
+
+/* ── 채팅 패널 ─────────────────────────── */
+.nb-msgs {
+  flex: 1; overflow-y: auto; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  scroll-behavior: smooth; position: relative;
+}
+.nb-msgs::-webkit-scrollbar { width: 4px; }
+.nb-msgs::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px; }
+
+/* 웰컴 */
+.nb-welcome {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; flex: 1; text-align: center;
+  padding: 32px 16px 16px;
+}
+.nb-welcome-logo {
+  width: 52px; height: 52px;
+  border: 1.5px solid rgba(154,120,64,.5);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 18px; color: #9a7840;
+  margin-bottom: 20px; border-radius: 14px;
+  background: rgba(154,120,64,.05);
+}
+.nb-welcome-h {
+  font-size: clamp(18px, 2.4vw, 24px); font-weight: 600;
+  color: #1a1a1a; line-height: 1.35; margin-bottom: 8px;
+}
+.nb-welcome-sub {
+  font-size: 13.5px; color: #888; margin-bottom: 28px;
+}
+/* 도구 카드 그리드 */
+.nb-tool-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; width: 100%; max-width: 760px; text-align: left;
+}
+.nb-tool-card {
+  position: relative; display: flex; flex-direction: column;
+  padding: 16px; border-radius: 16px;
+  border: 1px solid rgba(0,0,0,.08); background: #fff;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.nb-tool-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(18,16,14,.08);
+  border-color: rgba(154,120,64,.3);
+}
+.nb-tool-card--feature { cursor: pointer; }
+.nb-tool-card--feature:hover {
+  box-shadow: 0 14px 32px rgba(154,120,64,.16);
+  border-color: rgba(154,120,64,.45);
+}
+.nb-tool-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  color: #fff; background: linear-gradient(135deg, #9a7840, #c9a876);
+  padding: 2px 7px; border-radius: 999px;
+}
+.nb-tool-icon {
+  width: 38px; height: 38px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; margin-bottom: 10px;
+}
+.nb-tool-icon--violet { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.nb-tool-icon--amber  { background: linear-gradient(135deg, #f59e0b, #f97316); }
+.nb-tool-icon--navy   { background: linear-gradient(135deg, #1d2a52, #3b4a7a); }
+.nb-tool-icon--teal   { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.nb-tool-icon--gold   { background: linear-gradient(135deg, #9a7840, #c9a876); }
+.nb-tool-icon--rose   { background: linear-gradient(135deg, #9f1239, #be185d); }
+.nb-tool-title {
+  font-size: 13.5px; font-weight: 600; color: #1a1a1a;
+  margin-bottom: 4px; letter-spacing: -.1px;
+}
+.nb-tool-desc {
+  font-size: 12px; color: #999; line-height: 1.45; margin-bottom: 0;
+}
+.nb-tool-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.nb-chip {
+  font-size: 12px; font-weight: 500; color: #444;
+  padding: 7px 13px; border-radius: 20px;
+  border: 1px solid rgba(0,0,0,.1); background: #fff;
+  cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.nb-chip:hover { background: #f0ebe0; border-color: #9a7840; color: #9a7840; }
+
+/* 자동 스크롤 버튼 */
+.nb-scroll-btn {
+  position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #fff; border: 1px solid rgba(0,0,0,.12);
+  border-radius: 20px; padding: 6px 14px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #555; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  transition: background .15s, box-shadow .15s;
+  z-index: 20;
+}
+.nb-scroll-btn:hover { background: #f5f5f5; box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+
+/* 메시지 */
+.nb-msg { display: flex; gap: 10px; align-items: flex-end; }
+.nb-msg--user { justify-content: flex-end; }
+.nb-msg--ai   { justify-content: flex-start; }
+
+/* AI 아바타 */
+.nb-ai-avatar {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border: 1px solid rgba(154,120,64,.4);
+  border-radius: 8px; background: rgba(154,120,64,.08);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 9.5px; color: #9a7840;
+  margin-bottom: 2px;
+}
+
+.nb-bubble-wrap { display: flex; flex-direction: column; gap: 4px; max-width: 76%; }
+.nb-msg--user .nb-bubble-wrap { align-items: flex-end; }
+.nb-msg--ai  .nb-bubble-wrap { align-items: flex-start; }
+
+.nb-bubble {
+  padding: 12px 16px;
+  font-size: 14px; line-height: 1.8; border-radius: 14px;
+}
+.nb-msg--user .nb-bubble {
+  background: #12100e; color: #fff;
+  border-radius: 14px 14px 3px 14px;
+}
+.nb-msg--ai .nb-bubble {
+  background: #fff; color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px 14px 14px 3px;
+}
+.nb-bubble strong { font-weight: 600; }
+.nb-bubble a { color: #9a7840; text-decoration: underline; }
+
+/* 메시지 메타 (타임스탬프 + 복사) */
+.nb-bubble-meta {
+  display: flex; align-items: center; gap: 8px;
+  opacity: 0; transition: opacity .15s;
+}
+.nb-msg:hover .nb-bubble-meta { opacity: 1; }
+.nb-bubble-time { font-size: 10.5px; color: #ccc; }
+.nb-copy-btn {
+  background: none; border: 1px solid rgba(0,0,0,.1); border-radius: 6px;
+  padding: 3px 8px; font-size: 10.5px; color: #bbb; cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.nb-copy-btn:hover { color: #9a7840; border-color: rgba(154,120,64,.4); background: rgba(154,120,64,.05); }
+.nb-copy-btn.copied { color: #22c55e; border-color: rgba(34,197,94,.4); }
+
+.nb-dots { display: inline-flex; align-items: center; gap: 4px; }
+.nb-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: #9a7840;
+  animation: nb-bounce .9s infinite;
+}
+.nb-dots span:nth-child(2) { animation-delay: .15s; }
+.nb-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes nb-bounce { 0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1} }
+
+/* 입력창 */
+.nb-input-area {
+  padding: 12px 20px 14px; flex-shrink: 0;
+  background: #faf8f4;
+}
+.nb-input-box {
+  background: #fff; border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px; overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.nb-input-box:focus-within {
+  border-color: rgba(154,120,64,.5);
+  box-shadow: 0 0 0 3px rgba(154,120,64,.08);
+}
+.nb-textarea {
+  width: 100%; padding: 14px 16px 8px;
+  background: none; border: none; outline: none; resize: none;
+  font-family: inherit; font-size: 14px; color: #1a1a1a;
+  line-height: 1.6; max-height: 160px; overflow-y: auto;
+}
+.nb-textarea::placeholder { color: #ccc; }
+.nb-input-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 14px 10px;
+}
+.nb-source-badge { font-size: 11px; color: #aaa; font-weight: 500; }
+.nb-char-count {
+  font-size: 10.5px; color: #ddd; font-weight: 400;
+  transition: color .15s;
+}
+.nb-char-count.warn { color: #f59e0b; }
+.nb-char-count.over { color: #ef4444; }
+.nb-send {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #12100e; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; transition: background .15s, transform .15s, opacity .15s;
+  flex-shrink: 0;
+}
+.nb-send:hover:not(:disabled) { background: #9a7840; transform: scale(1.05); }
+.nb-send:disabled { opacity: .3; cursor: not-allowed; }
+.nb-input-hint { font-size: 10.5px; color: #ccc; margin-top: 6px; text-align: right; }
+
+/* ── 스튜디오 패널 ─────────────────────── */
+.nb-studio-section { padding: 0 16px 16px; }
+.nb-studio-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: #9a7840;
+  display: flex; align-items: center; gap: 6px;
+}
+.nb-project-badge {
+  font-size: 9.5px; font-weight: 700;
+  background: rgba(154,120,64,.12); color: #9a7840;
+  border-radius: 8px; padding: 1px 7px; line-height: 1.5;
+}
+.nb-studio-label-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.nb-memo-add {
+  font-size: 11px; font-weight: 600; color: #9a7840;
+  background: none; border: 1px solid rgba(154,120,64,.3);
+  border-radius: 12px; padding: 4px 10px; cursor: pointer;
+  text-decoration: none; transition: background .15s;
+}
+.nb-memo-add:hover { background: rgba(154,120,64,.07); }
+
+.nb-action-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: 10px;
+  border: 1px solid #12100e; background: #12100e;
+  text-decoration: none; color: #fff;
+  transition: background .15s;
+}
+.nb-action-card:hover { background: #2a2623; color: #fff; }
+.nb-action-icon {
+  color: #9a7840; width: 32px; height: 32px;
+  border-radius: 8px; background: rgba(154,120,64,.15);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nb-action-name { font-size: 13px; font-weight: 600; flex: 1; }
+.nb-action-chev { color: rgba(255,255,255,.4); flex-shrink: 0; }
+
+/* 프로젝트 카드 */
+.nb-project-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 340px; }
+.nb-project-card {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px; border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.08); background: #faf8f4;
+  text-decoration: none; color: inherit;
+  transition: background .15s, border-color .15s;
+}
+.nb-project-card:hover { background: #f0ebe0; border-color: rgba(154,120,64,.3); }
+.nb-project-card-hd { display: flex; align-items: center; gap: 8px; }
+.nb-project-num {
+  font-size: 10px; font-weight: 700; font-family: 'Courier New', monospace;
+  color: #9a7840; opacity: .7; flex-shrink: 0;
+}
+.nb-project-title { font-size: 12.5px; font-weight: 600; color: #1a1a1a; }
+.nb-project-date { font-size: 10.5px; color: #bbb; padding-left: 20px; }
+
+.nb-studio-divider { height: 1px; background: rgba(0,0,0,.07); margin: 0 16px 16px; }
+.nb-memo-empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 20px 10px; text-align: center; color: #bbb;
+  font-size: 11.5px; line-height: 1.6;
+}
+.nb-studio-note {
+  margin-top: auto; padding: 14px 18px;
+  font-size: 11px; color: #bbb; line-height: 1.8; text-align: center;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* ── 토스트 ────────────────────────────── */
+.nb-toast-wrap {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px; z-index: 999;
+}
+.nb-toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: 10px;
+  background: #1a1a1a; color: #fff;
+  font-size: 13px; font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  animation: nb-toast-in .25s ease;
+  max-width: 320px;
+}
+.nb-toast--success .nb-toast-icon { color: #22c55e; }
+.nb-toast--error   .nb-toast-icon { color: #ef4444; }
+.nb-toast--info    .nb-toast-icon { color: #9a7840; }
+@keyframes nb-toast-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes nb-toast-out{ from{opacity:1} to{opacity:0;transform:translateX(10px)} }
+
+/* ── 반응형 ────────────────────────────── */
+@media (max-width: 1024px) {
+  .nb-layout { grid-template-columns: 240px 1fr 240px; }
+}
+@media (max-width: 900px) {
+  .nb-tool-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .nb-layout { grid-template-columns: 1fr !important; }
+  .nb-col--source, .nb-col--studio { display: none; }
+  .nb-tool-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+const STREAM_URL = '{% url "accounts:chat_stream" %}';
+const UPLOAD_URL = '{% url "accounts:chat_upload" %}';
+
+const msgsEl      = document.getElementById('nbMsgs');
+const welcomeEl   = document.getElementById('nbWelcome');
+const inputEl     = document.getElementById('nbInput');
+const sendBtn     = document.getElementById('nbSend');
+const fileInput   = document.getElementById('nbFileInput');
+const sourceList  = document.getElementById('nbSourceList');
+const sourceEmpty = document.getElementById('nbSourceEmpty');
+const sourceBadge = document.getElementById('nbSourceBadge');
+const sourceCount = document.getElementById('nbSourceCount');
+const charCount   = document.getElementById('nbCharCount');
+const scrollBtn   = document.getElementById('nbScrollBtn');
+const layout      = document.getElementById('nbLayout');
+
+let history = [];
+let sources = [];
+let busy    = false;
+
+/* ── 유틸 ─────────────────────────────── */
+function getCsrf() {
+  const m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : '';
+}
+function mdToHtml(t) {
+  return t
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+|\/[^)]*)\)/g, '<a href="$2">$1</a>')
+    .replace(/\n/g, '<br>');
+}
+function nowStr() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+/* ── 토스트 ────────────────────────────── */
+function toast(msg, type = 'info', duration = 3000) {
+  const icons = {
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info:    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+  };
+  const wrap = document.getElementById('nbToastWrap');
+  const el = document.createElement('div');
+  el.className = `nb-toast nb-toast--${type}`;
+  el.innerHTML = `<span class="nb-toast-icon">${icons[type]||icons.info}</span>${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'nb-toast-out .25s ease forwards';
+    setTimeout(() => el.remove(), 260);
+  }, duration);
+}
+
+/* ── 메시지 렌더 ───────────────────────── */
+function addMsg(html, role) {
+  if (welcomeEl) welcomeEl.style.display = 'none';
+  const div = document.createElement('div');
+  div.className = 'nb-msg nb-msg--' + role;
+
+  if (role === 'ai') {
+    const av = document.createElement('div');
+    av.className = 'nb-ai-avatar';
+    av.textContent = 'Pi';
+    div.appendChild(av);
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'nb-bubble-wrap';
+
+  const bub = document.createElement('div');
+  bub.className = 'nb-bubble';
+  bub.innerHTML = html;
+  wrap.appendChild(bub);
+
+  const meta = document.createElement('div');
+  meta.className = 'nb-bubble-meta';
+  meta.innerHTML = `
+    <span class="nb-bubble-time">${nowStr()}</span>
+    ${role === 'ai' ? `<button class="nb-copy-btn" onclick="copyBubble(this)">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      ${pmT('nb_copy')}
+    </button>` : ''}`;
+  wrap.appendChild(meta);
+
+  div.appendChild(wrap);
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  return bub;
+}
+
+function copyBubble(btn) {
+  const bub = btn.closest('.nb-bubble-wrap').querySelector('.nb-bubble');
+  navigator.clipboard.writeText(bub.textContent.trim()).then(() => {
+    btn.classList.add('copied');
+    btn.querySelector('svg + *') ? null : null;
+    btn.innerHTML = btn.innerHTML.replace(pmT('nb_copy'), pmT('nb_copied'));
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = btn.innerHTML.replace(pmT('nb_copied'), pmT('nb_copy'));
+    }, 2000);
+  });
+}
+
+/* ── 전송 ─────────────────────────────── */
+function getSourceText() {
+  return sources.map(s => `[${s.name}]\n${s.text}`).join('\n\n---\n\n');
+}
+
+function sendMessage(q) {
+  q = q || inputEl.value.trim();
+  if (!q || busy) return;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  charCount.textContent = '0 / 3000';
+  charCount.className = 'nb-char-count';
+  sendBtn.disabled = true;
+  addMsg(q, 'user');
+  history.push({ role: 'user', content: q });
+  busy = true;
+
+  const aiBub = addMsg('<span class="nb-dots"><span></span><span></span><span></span></span>', 'ai');
+  let text = '';
+
+  fetch(STREAM_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+    body: JSON.stringify({ messages: history, source: getSourceText() })
+  }).then(res => {
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    function pump() {
+      reader.read().then(({ done, value }) => {
+        if (done) { finalize(); return; }
+        buf += dec.decode(value, { stream: true });
+        const parts = buf.split('\n\n'); buf = parts.pop();
+        parts.forEach(part => {
+          if (!part.startsWith('data:')) return;
+          const data = part.slice(5).trim();
+          if (data === '[DONE]') return;
+          try {
+            const p = JSON.parse(data);
+            if (p.content) { text += p.content; aiBub.innerHTML = mdToHtml(text); msgsEl.scrollTop = msgsEl.scrollHeight; }
+          } catch(e) {}
+        });
+        pump();
+      });
+    }
+    pump();
+    function finalize() {
+      if (!text) aiBub.innerHTML = pmT('nb_no_response');
+      history.push({ role: 'assistant', content: text });
+      busy = false; sendBtn.disabled = false; inputEl.focus();
+    }
+  }).catch(() => {
+    aiBub.innerHTML = pmT('nb_conn_error');
+    toast(pmT('nb_conn_error'), 'error');
+    busy = false; sendBtn.disabled = false;
+  });
+}
+
+sendBtn.addEventListener('click', () => sendMessage());
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
+  const len = inputEl.value.length;
+  charCount.textContent = len + ' / 3000';
+  charCount.className = 'nb-char-count' + (len > 2800 ? ' over' : len > 2400 ? ' warn' : '');
+  sendBtn.disabled = len === 0 || busy;
+});
+
+/* 칩 버튼 */
+document.querySelectorAll('.nb-chip').forEach(btn => {
+  btn.addEventListener('click', () => sendMessage(btn.dataset.q));
+});
+
+/* 도구 카드 (특허 용어 번역기 / 아이디어 진단) */
+document.querySelectorAll('.nb-tool-card--feature').forEach(card => {
+  card.addEventListener('click', () => sendMessage(card.dataset.q));
+});
+
+/* 대화 초기화 */
+document.getElementById('nbClearChat').addEventListener('click', () => {
+  history = [];
+  msgsEl.querySelectorAll('.nb-msg').forEach(el => el.remove());
+  if (welcomeEl) welcomeEl.style.display = '';
+  toast(pmT('nb_chat_cleared'), 'info', 2000);
+});
+
+/* 스크롤 관찰 */
+msgsEl.addEventListener('scroll', () => {
+  const atBottom = msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < 60;
+  scrollBtn.style.display = atBottom ? 'none' : 'flex';
+});
+scrollBtn.addEventListener('click', () => {
+  msgsEl.scrollTo({ top: msgsEl.scrollHeight, behavior: 'smooth' });
+});
+
+/* ── 유저 드롭다운 ─────────────────────── */
+document.getElementById('nbAvatarBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('nbUserDropdown').classList.toggle('open');
+});
+document.addEventListener('click', () => {
+  document.getElementById('nbUserDropdown').classList.remove('open');
+});
+
+/* ── 패널 접기/열기 ────────────────────── */
+document.getElementById('nbCollapseSource').addEventListener('click', () => {
+  layout.classList.toggle('source-collapsed');
+  const collapsed = layout.classList.contains('source-collapsed');
+  document.getElementById('nbColSource').style.opacity = collapsed ? '0' : '1';
+  document.getElementById('nbRestoreSource').style.display = collapsed ? 'flex' : 'none';
+  setTimeout(() => {
+    if (collapsed) document.getElementById('nbColSource').style.display = 'none';
+  }, 250);
+});
+document.getElementById('nbRestoreSource').addEventListener('click', () => {
+  document.getElementById('nbColSource').style.display = '';
+  setTimeout(() => {
+    layout.classList.remove('source-collapsed');
+    document.getElementById('nbColSource').style.opacity = '1';
+    document.getElementById('nbRestoreSource').style.display = 'none';
+  }, 10);
+});
+
+document.getElementById('nbCollapseStudio').addEventListener('click', () => {
+  layout.classList.toggle('studio-collapsed');
+  const collapsed = layout.classList.contains('studio-collapsed');
+  document.getElementById('nbColStudio').style.opacity = collapsed ? '0' : '1';
+  document.getElementById('nbRestoreStudio').style.display = collapsed ? 'flex' : 'none';
+  setTimeout(() => {
+    if (collapsed) document.getElementById('nbColStudio').style.display = 'none';
+  }, 250);
+});
+document.getElementById('nbRestoreStudio').addEventListener('click', () => {
+  document.getElementById('nbColStudio').style.display = '';
+  setTimeout(() => {
+    layout.classList.remove('studio-collapsed');
+    document.getElementById('nbColStudio').style.opacity = '1';
+    document.getElementById('nbRestoreStudio').style.display = 'none';
+  }, 10);
+});
+
+/* ── 소스 ─────────────────────────────── */
+function renderSources() {
+  sourceList.querySelectorAll('.nb-source-item').forEach(el => el.remove());
+  sourceEmpty.style.display = sources.length ? 'none' : 'flex';
+  const countText = pmT('nb_source_count_fmt').replace('{n}', sources.length);
+  sourceBadge.textContent = countText;
+  sourceCount.textContent = countText;
+
+  sources.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'nb-source-item';
+    el.innerHTML = `
+      <div class="nb-source-item-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="nb-source-item-body">
+        <p class="nb-source-item-name" title="${s.name}">${s.name}</p>
+        <p class="nb-source-item-meta">${pmT('nb_kchars_fmt').replace('{n}', (s.chars/1000).toFixed(1))}</p>
+      </div>
+      <button class="nb-source-del" data-i="${i}" title="${pmT('nb_delete')}">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>`;
+    sourceList.appendChild(el);
+  });
+  sourceList.querySelectorAll('.nb-source-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sources.splice(+btn.dataset.i, 1);
+      renderSources();
+      toast(pmT('nb_source_deleted'), 'info', 2000);
+    });
+  });
+}
+
+fileInput.addEventListener('change', () => {
+  const files = Array.from(fileInput.files); fileInput.value = '';
+  files.forEach(file => {
+    /* 업로드 중 임시 항목 */
+    const uploading = document.createElement('div');
+    uploading.className = 'nb-source-item-uploading';
+    uploading.innerHTML = `
+      <div class="nb-source-item-icon" style="opacity:.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:12px;color:#aaa;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${file.name}</p>
+        <div class="nb-source-upload-bar"><div class="nb-source-upload-fill"></div></div>
+      </div>`;
+    sourceList.insertBefore(uploading, sourceList.firstChild);
+    sourceEmpty.style.display = 'none';
+
+    const fd = new FormData(); fd.append('file', file);
+    fetch(UPLOAD_URL, { method: 'POST', headers: { 'X-CSRFToken': getCsrf() }, body: fd })
+      .then(r => r.json()).then(data => {
+        uploading.remove();
+        if (data.error) { toast(data.error, 'error'); renderSources(); return; }
+        sources.push({ name: data.filename, text: data.text, chars: data.char_count });
+        renderSources();
+        toast(pmT('nb_upload_done_fmt').replace('{f}', data.filename), 'success');
+      }).catch(() => {
+        uploading.remove();
+        toast(pmT('nb_upload_error'), 'error');
+        renderSources();
+      });
+  });
+});
+
+document.getElementById('nbSourceSearch').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  sourceList.querySelectorAll('.nb-source-item').forEach(el => {
+    const name = el.querySelector('.nb-source-item-name').textContent.toLowerCase();
+    el.style.display = name.includes(q) ? '' : 'none';
+  });
+});
+
+renderSources();
+
+/* 언어 전환 시 동적으로 생성된 텍스트(소스 카운트 등) 재렌더링 */
+document.addEventListener('pm:i18n', renderSources);
+</script>
+{% endblock %}

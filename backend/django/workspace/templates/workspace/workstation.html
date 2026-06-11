@@ -1,0 +1,710 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}{{ project.title }} | PYPI 워크스테이션{% endblock %}
+
+{% block content %}
+<div class="ws-app">
+
+  <!-- ══ TOP NAV ══════════════════════════════════════════ -->
+  <header class="ws-topbar">
+    <div class="ws-topbar-l">
+      <a href="{% url 'accounts:landing' %}" class="ws-logo">
+        <span class="nb-logo-mark">Pi</span>
+        <span class="nb-logo-name">PYPI</span>
+      </a>
+      <span class="ws-topbar-sep"></span>
+      <a href="/workspace/dashboard/" class="ws-back-link">← 대시보드</a>
+      <span class="ws-topbar-sep"></span>
+      <span class="ws-project-title">{{ project.title }}</span>
+      <span class="ws-status-badge ws-status--{{ project.status }}">{{ project.get_status_display }}</span>
+    </div>
+    <div class="ws-topbar-r">
+      <div class="ws-user-chip">
+        <div class="ws-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ 3단 레이아웃 ════════════════════════════════════ -->
+  <div class="ws-layout">
+
+    <!-- ── 좌: 발명 데이터 패널 ──────────────────────── -->
+    <aside class="ws-col ws-col--source">
+      <div class="ws-col-hd">
+        <span class="ws-col-title">발명 데이터</span>
+        <span class="ws-verified-badge">검증됨</span>
+      </div>
+
+      <div class="ws-source-body">
+        <div class="ws-data-card">
+          <div class="ws-data-label">1. 해결하고자 하는 과제</div>
+          <div class="ws-data-body">{{ invention_input.problem_to_solve|linebreaksbr }}</div>
+        </div>
+        <div class="ws-data-card">
+          <div class="ws-data-label">2. 종래 기술의 문제점</div>
+          <div class="ws-data-body">{{ invention_input.prior_art_problem|linebreaksbr }}</div>
+        </div>
+        <div class="ws-data-card">
+          <div class="ws-data-label">3. 핵심 기술 구성</div>
+          <div class="ws-data-body">{{ invention_input.core_tech|linebreaksbr }}</div>
+        </div>
+        <div class="ws-data-card">
+          <div class="ws-data-label">4. 기대 효과</div>
+          <div class="ws-data-body">{{ invention_input.expected_effect|default:"(입력되지 않음)"|linebreaksbr }}</div>
+        </div>
+
+        <div class="ws-divider"></div>
+        <p class="ws-analysis-section-title">AI 분석 요약</p>
+
+        <div class="ws-analysis-card">
+          <div class="ws-analysis-label">추출된 핵심 문제점</div>
+          <p id="ext-problem" class="ws-analysis-body">{{ consultation_state.ext_problem|default:"분석 중..." }}</p>
+        </div>
+        <div class="ws-analysis-card">
+          <div class="ws-analysis-label">추출된 해결 방법</div>
+          <p id="ext-solution" class="ws-analysis-body">{{ consultation_state.ext_solution|default:"분석 중..." }}</p>
+        </div>
+        <div class="ws-analysis-card">
+          <div class="ws-analysis-label">추출된 차별성</div>
+          <p id="ext-differentiation" class="ws-analysis-body">{{ consultation_state.ext_differentiation|default:"분석 중..." }}</p>
+        </div>
+        <div class="ws-analysis-card">
+          <div class="ws-analysis-label">추출된 기대 효과</div>
+          <p id="ext-effect" class="ws-analysis-body">{{ consultation_state.ext_effect|default:"분석 중..." }}</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── 중: 채팅 패널 ─────────────────────────────── -->
+    <main class="ws-col ws-col--chat">
+      <div class="ws-col-hd">
+        <span class="ws-col-title">AI 변리사 채팅</span>
+        <button class="ws-col-icon-btn" id="wsClearChat" title="대화 초기화">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>
+        </button>
+      </div>
+
+      <div id="chat-box" class="ws-msgs">
+        {% for msg in chat_messages %}
+          {% if msg.role == 'assistant' %}
+            <div class="ws-msg ws-msg--ai"><p style="margin:0;line-height:1.65;white-space:pre-wrap;">{{ msg.content }}</p></div>
+          {% elif msg.role == 'user' %}
+            <div class="ws-msg ws-msg--user"><p style="margin:0;line-height:1.65;white-space:pre-wrap;">{{ msg.content }}</p></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ws-input-area">
+        <input type="file" id="file-upload" style="display:none;" accept=".pdf,.docx,.hwp">
+        <form id="chat-form" class="ws-input-box">
+          {% csrf_token %}
+          <button type="button" id="file-btn" class="ws-attach-btn" title="문서 업로드">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <textarea id="chat-input" class="ws-textarea" placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." rows="1" maxlength="3000"></textarea>
+          <button type="submit" class="ws-send-btn" aria-label="전송">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </form>
+        <p class="ws-input-hint">Enter로 전송 · Shift+Enter로 줄바꿈</p>
+      </div>
+    </main>
+
+    <!-- ── 우: 스튜디오 패널 ─────────────────────────── -->
+    <aside class="ws-col ws-col--studio">
+      <div class="ws-col-hd">
+        <span class="ws-col-title">스튜디오</span>
+      </div>
+
+      <!-- 액션 버튼들 -->
+      <div class="ws-studio-section">
+        <p class="ws-studio-label">특허 작업</p>
+
+        <button id="generate-claims-btn" class="ws-action-card ws-action-card--hl">
+          <div class="ws-action-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <span class="ws-action-name">청구항 작성</span>
+          <svg class="ws-action-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button id="edit-claims-btn" class="ws-action-card">
+          <div class="ws-action-icon ws-action-icon--muted">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <span class="ws-action-name">청구항 수정</span>
+          <svg class="ws-action-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button id="view-process-btn" class="ws-action-card">
+          <div class="ws-action-icon ws-action-icon--muted">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <span class="ws-action-name">파이프라인 현황</span>
+          <svg class="ws-action-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <a href="{% url 'patent_report' project.id %}" target="_blank" class="ws-action-card ws-action-card--gold">
+          <div class="ws-action-icon ws-action-icon--gold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <span class="ws-action-name">리포트 보기</span>
+          <svg class="ws-action-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="ws-studio-divider"></div>
+
+      <!-- 프로젝트 정보 -->
+      <div class="ws-studio-section">
+        <p class="ws-studio-label">프로젝트 정보</p>
+        <div class="ws-info-box">
+          <div class="ws-info-row">
+            <span class="ws-info-key">프로젝트명</span>
+            <span class="ws-info-val">{{ project.title }}</span>
+          </div>
+          <div class="ws-info-row">
+            <span class="ws-info-key">상태</span>
+            <span class="ws-status-badge ws-status--{{ project.status }}">{{ project.get_status_display }}</span>
+          </div>
+          <div class="ws-info-row">
+            <span class="ws-info-key">생성일</span>
+            <span class="ws-info-val">{{ project.created_at|date:"Y.m.d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-studio-note">
+        AI 변리사와 대화하며 발명을 정리하고<br>청구항을 자동으로 작성해보세요
+      </div>
+    </aside>
+
+  </div><!-- /ws-layout -->
+</div><!-- /ws-app -->
+
+
+<!-- 청구항 수정 모달 -->
+<div id="claim-edit-modal" class="ws-modal-bg" style="display:none;">
+  <div class="ws-modal">
+    <div class="ws-modal-hd">
+      <span>특허 청구범위 직접 수정</span>
+      <button id="close-modal-btn" class="ws-modal-close">&times;</button>
+    </div>
+    <div id="modal-claims-container" class="ws-modal-body">
+      <p style="color:var(--lf-muted);text-align:center;">데이터를 불러오는 중입니다...</p>
+    </div>
+    <div class="ws-modal-ft">
+      <button id="modal-save-btn" class="ws-action-btn ws-action-btn--primary">수정된 내용 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 파이프라인 진행도 모달 -->
+<div id="process-map-modal" class="ws-modal-bg" style="display:none;">
+  <div class="ws-modal" style="max-width:720px;">
+    <div class="ws-modal-hd">
+      <span>특허 출원 파이프라인 진행도</span>
+      <button id="close-process-modal" class="ws-modal-close">&times;</button>
+    </div>
+    <div class="process-graph-container" id="dag-container"></div>
+    <div class="ws-modal-ft" style="text-align:center;">
+      <p id="process-message" style="margin:0;color:var(--lf-mid);font-size:14px;">현재 <strong style="color:var(--lf-gold);">청구항 작성</strong> 단계를 진행 중입니다.</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ════════════════════════════════════════════════
+   워크스테이션 — NotebookLM 3분할 레이아웃
+════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
+.ws-app {
+  display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden;
+  background: #f0eee9;
+  font-family: inherit;
+}
+
+/* ── TOP BAR ───────────────────────────────── */
+.ws-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 20px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  flex-shrink: 0; z-index: 10;
+}
+.ws-topbar-l { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.ws-topbar-sep { width: 1px; height: 18px; background: rgba(0,0,0,.12); flex-shrink: 0; }
+.ws-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.ws-back-link {
+  font-size: 11px; color: #999; text-decoration: none;
+  transition: color .15s; flex-shrink: 0;
+}
+.ws-back-link:hover { color: #9a7840; }
+.ws-project-title {
+  font-size: 13px; font-weight: 600; color: #1a1a1a;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ws-topbar-r { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.ws-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #9a7840; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── 3단 레이아웃 ────────────────────────── */
+.ws-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr 280px;
+  flex: 1; overflow: hidden;
+}
+.ws-col {
+  display: flex; flex-direction: column;
+  background: #fff; overflow: hidden;
+}
+.ws-col--source { border-right: 1px solid rgba(0,0,0,.07); background: #faf8f4; }
+.ws-col--chat   { background: #faf8f4; border-right: 1px solid rgba(0,0,0,.07); }
+.ws-col--studio { background: #fff; }
+
+.ws-col-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+.ws-col-title {
+  font-size: 13px; font-weight: 700; color: #1a1a1a; letter-spacing: .2px;
+}
+.ws-col-icon-btn {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: #999; border-radius: 5px; display: flex;
+  transition: color .15s, background .15s;
+}
+.ws-col-icon-btn:hover { color: #333; background: rgba(0,0,0,.05); }
+
+/* ── 발명 데이터 패널 ──────────────────── */
+.ws-verified-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  padding: 2px 8px; border: 1px solid rgba(0,0,0,.1);
+  border-radius: 2px; color: #aaa;
+}
+.ws-source-body { flex: 1; overflow-y: auto; padding: 16px; }
+.ws-source-body::-webkit-scrollbar { width: 4px; }
+.ws-source-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px; }
+
+.ws-data-card {
+  margin-bottom: 12px; padding: 14px;
+  background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 6px;
+}
+.ws-data-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: #9a7840; margin-bottom: 8px;
+}
+.ws-data-body { font-size: 12.5px; color: #3d3830; line-height: 1.7; }
+
+.ws-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 16px 0; }
+.ws-analysis-section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: #9a7840; margin-bottom: 12px;
+}
+.ws-analysis-card {
+  margin-bottom: 10px; padding: 12px;
+  background: rgba(154,120,64,.04); border: 1px solid rgba(154,120,64,.18);
+  border-radius: 6px;
+}
+.ws-analysis-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: #9a7840; margin-bottom: 6px;
+}
+.ws-analysis-body { font-size: 12px; color: #3d3830; line-height: 1.6; margin: 0; }
+
+/* ── 채팅 패널 ─────────────────────────── */
+.ws-msgs {
+  flex: 1; overflow-y: auto; padding: 20px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth; background: #faf8f4;
+}
+.ws-msgs::-webkit-scrollbar { width: 4px; }
+.ws-msgs::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px; }
+
+.ws-msg { max-width: 78%; padding: 13px 17px; font-size: 14px; border-radius: 12px; line-height: 1.7; }
+.ws-msg--ai {
+  align-self: flex-start;
+  background: #fff; color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 12px 12px 12px 3px;
+}
+.ws-msg--user {
+  align-self: flex-end;
+  background: #12100e; color: #fff;
+  border-radius: 12px 12px 3px 12px;
+}
+
+.ws-input-area {
+  padding: 12px 16px 14px; flex-shrink: 0;
+  background: #faf8f4; border-top: 1px solid rgba(0,0,0,.07);
+}
+.ws-input-box {
+  display: flex; align-items: flex-end; gap: 8px;
+  background: #fff; border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px; padding: 8px 8px 8px 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.ws-input-box:focus-within {
+  border-color: rgba(154,120,64,.5);
+  box-shadow: 0 0 0 3px rgba(154,120,64,.08);
+}
+.ws-attach-btn {
+  flex-shrink: 0; background: none; border: none; cursor: pointer;
+  color: #bbb; padding: 6px; border-radius: 6px;
+  transition: color .15s, background .15s;
+  align-self: flex-end; margin-bottom: 2px;
+}
+.ws-attach-btn:hover { color: #9a7840; background: rgba(154,120,64,.07); }
+.ws-textarea {
+  flex: 1; border: none; background: none; outline: none; resize: none;
+  font-family: inherit; font-size: 14px; color: #1a1a1a;
+  line-height: 1.6; max-height: 140px; overflow-y: auto;
+  padding: 4px 0;
+}
+.ws-textarea::placeholder { color: #bbb; }
+.ws-send-btn {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  background: #12100e; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; transition: background .15s;
+  align-self: flex-end;
+}
+.ws-send-btn:hover { background: #9a7840; }
+.ws-input-hint {
+  font-size: 10.5px; color: #ccc; margin-top: 6px; text-align: right;
+}
+
+/* 타이핑 인디케이터 */
+.typing-indicator { display: flex; align-items: center; gap: 4px; margin-left: 4px; }
+.typing-indicator span {
+  display: inline-block; width: 5px; height: 5px;
+  background: #9a7840; border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.typing-indicator span:nth-child(1) { animation-delay: -.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -.16s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0);}40%{transform:scale(1);} }
+
+/* ── 스튜디오 패널 ─────────────────────── */
+.ws-studio-section { padding: 16px 16px 8px; }
+.ws-studio-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: #9a7840; margin-bottom: 10px;
+}
+.ws-studio-divider {
+  height: 1px; background: rgba(0,0,0,.07); margin: 4px 16px 4px;
+}
+.ws-studio-note {
+  margin-top: auto; padding: 14px 18px;
+  font-size: 11px; color: #bbb; line-height: 1.8; text-align: center;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+.ws-action-card {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 11px 13px; border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.1); background: #fff;
+  text-decoration: none; color: #1a1a1a;
+  cursor: pointer; font-family: inherit;
+  transition: background .15s, border-color .15s;
+  margin-bottom: 7px;
+}
+.ws-action-card:hover { background: #f7f5f0; border-color: rgba(0,0,0,.18); }
+.ws-action-card--hl {
+  background: #12100e; color: #fff; border-color: #12100e;
+}
+.ws-action-card--hl:hover { background: #2a2623; border-color: #2a2623; color: #fff; }
+.ws-action-card--gold {
+  background: #9a7840; color: #fff; border-color: #9a7840;
+}
+.ws-action-card--gold:hover { background: #7d6133; border-color: #7d6133; color: #fff; }
+.ws-action-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(154,120,64,.15); color: #9a7840;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ws-action-icon--muted { background: rgba(0,0,0,.05); color: #888; }
+.ws-action-icon--gold  { background: rgba(255,255,255,.2); color: #fff; }
+.ws-action-card--hl .ws-action-icon { background: rgba(255,255,255,.12); color: #c9a86c; }
+.ws-action-name { font-size: 13px; font-weight: 600; flex: 1; }
+.ws-action-chev { color: rgba(0,0,0,.25); flex-shrink: 0; }
+.ws-action-card--hl .ws-action-chev,
+.ws-action-card--gold .ws-action-chev { color: rgba(255,255,255,.4); }
+
+/* 프로젝트 정보 박스 */
+.ws-info-box {
+  background: #faf8f4; border: 1px solid rgba(0,0,0,.07);
+  border-radius: 8px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ws-info-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ws-info-key { font-size: 10.5px; color: #aaa; font-weight: 500; flex-shrink: 0; }
+.ws-info-val { font-size: 12px; color: #1a1a1a; font-weight: 500; text-align: right; }
+
+.ws-status-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+}
+.ws-status--draft { background: rgba(154,120,64,.1); color: #9a7840; }
+.ws-status--agent_processing { background: rgba(59,130,246,.1); color: #3b82f6; }
+.ws-status--review { background: rgba(245,158,11,.1); color: #d97706; }
+.ws-status--done { background: rgba(16,185,129,.1); color: #059669; }
+
+/* ── 모달 ─────────────────────────────── */
+.ws-modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(18,16,14,.6); backdrop-filter: blur(4px);
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+}
+.ws-modal {
+  background: #fff; border: 1px solid rgba(0,0,0,.08);
+  border-radius: 12px; width: 90%; max-width: 680px;
+  max-height: 88vh; display: flex; flex-direction: column;
+  box-shadow: 0 32px 80px rgba(0,0,0,.2);
+}
+.ws-modal-hd {
+  padding: 20px 24px; border-bottom: 1px solid rgba(0,0,0,.08);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; font-weight: 600; color: #1a1a1a;
+}
+.ws-modal-close {
+  background: none; border: none; font-size: 20px;
+  color: #aaa; cursor: pointer; line-height: 1;
+}
+.ws-modal-body {
+  padding: 24px; overflow-y: auto; flex: 1; background: #faf8f4;
+}
+.ws-modal-ft { padding: 16px 24px; border-top: 1px solid rgba(0,0,0,.08); text-align: right; }
+
+.ws-action-btn {
+  font-size: 12px; font-weight: 600; padding: 9px 20px;
+  border-radius: 8px; border: none; cursor: pointer;
+  transition: background .15s;
+}
+.ws-action-btn--primary {
+  background: #12100e; color: #fff;
+}
+.ws-action-btn--primary:hover { background: #9a7840; }
+
+/* 파이프라인 그래프 */
+.process-graph-container { display: flex; align-items: center; justify-content: space-between; padding: 40px 32px; }
+.graph-node-wrapper { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+.graph-node { width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; font-weight: 700; border: 2px solid rgba(0,0,0,.1); background: #fff; color: #aaa; transition: all .4s; }
+.graph-label { margin-top: 10px; font-size: 12px; font-weight: 600; color: #aaa; text-align: center; transition: all .4s; }
+.graph-edge { flex: 1; height: 2px; background: rgba(0,0,0,.1); margin: 0 -8px; position: relative; top: -18px; z-index: 1; transition: all .4s; }
+.graph-node.active { border-color: #9a7840; color: #9a7840; background: rgba(154,120,64,.05); }
+.graph-label.active { color: #9a7840; }
+.graph-edge.active { background: #9a7840; }
+@keyframes pulse-glow { 0%,100%{box-shadow:0 0 12px rgba(154,120,64,.4);border-color:#9a7840;}50%{box-shadow:0 0 22px rgba(154,120,64,.7);} }
+.graph-node.current { animation: pulse-glow 2s infinite; border-color: #9a7840; color: #9a7840; }
+.graph-label.current { color: #9a7840; }
+
+/* 청구항 편집 */
+.claim-edit-box { background: #fff; padding: 16px; border: 1px solid rgba(0,0,0,.08); border-radius: 8px; margin-bottom: 12px; }
+.claim-edit-box h4 { font-size: 13px; color: #9a7840; margin: 0 0 8px; }
+.claim-content-input { width: 100%; height: 100px; background: #faf8f4; border: 1px solid rgba(0,0,0,.1); border-radius: 6px; padding: 10px; color: #1a1a1a; font-size: 13px; font-family: inherit; outline: none; resize: vertical; line-height: 1.5; box-sizing: border-box; }
+.claim-content-input:focus { border-color: #9a7840; }
+
+/* ── 반응형 ────────────────────────────── */
+@media (max-width: 1100px) {
+  .ws-layout { grid-template-columns: 260px 1fr 260px; }
+}
+@media (max-width: 768px) {
+  .ws-layout { grid-template-columns: 1fr; }
+  .ws-col--source, .ws-col--studio { display: none; }
+}
+</style>
+
+<script>
+const chatForm  = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+const chatBox   = document.getElementById('chat-box');
+const fileBtn   = document.getElementById('file-btn');
+const fileInput = document.getElementById('file-upload');
+const generateClaimsBtn = document.getElementById('generate-claims-btn');
+
+if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+/* textarea 자동 높이 */
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 140) + 'px';
+});
+
+/* Enter 전송 */
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatForm.dispatchEvent(new Event('submit')); }
+});
+
+function showLoading() {
+  const div = document.createElement('div');
+  div.id = 'ai-loading'; div.className = 'ws-msg ws-msg--ai';
+  div.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#aaa;font-size:13px;">AI 변리사가 분석 중입니다<div class="typing-indicator"><span></span><span></span><span></span></div></div>';
+  chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
+}
+function removeLoading() { const el = document.getElementById('ai-loading'); if (el) el.remove(); }
+
+function addMessage(role, text) {
+  const div = document.createElement('div');
+  div.className = 'ws-msg ' + (role === 'assistant' ? 'ws-msg--ai' : 'ws-msg--user');
+  div.innerHTML = '<p style="margin:0;line-height:1.65;white-space:pre-wrap;">' + text + '</p>';
+  chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+if (chatForm) {
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const msg = chatInput.value.trim(); if (!msg) return;
+    addMessage('user', msg); chatInput.value = ''; chatInput.style.height = 'auto'; showLoading();
+    fetch("{% url 'chat_api' project.id %}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+      body: JSON.stringify({ message: msg })
+    }).then(r => r.json()).then(data => {
+      if (data.status === 'success') {
+        removeLoading(); addMessage('assistant', data.ai_message);
+        if (data.extracted_data) {
+          ['problem','solution','differentiation','effect'].forEach(k => {
+            if (data.extracted_data[k]) document.getElementById('ext-' + k).textContent = data.extracted_data[k];
+          });
+        }
+      } else { alert('오류가 발생했습니다.'); }
+    }).catch(err => { removeLoading(); alert('통신 오류'); });
+  });
+}
+
+if (fileBtn && fileInput) {
+  fileBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0]; if (!file) return;
+    addMessage('user', '📎 [파일 업로드] ' + file.name); showLoading();
+    const fd = new FormData(); fd.append('file', file);
+    fetch("{% url 'upload_file_api' project.id %}", { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' }, body: fd })
+      .then(r => r.json()).then(data => {
+        removeLoading();
+        if (data.status === 'success') {
+          addMessage('assistant', data.ai_message);
+          if (data.extracted_data) { ['problem','solution','differentiation','effect'].forEach(k => { const el = document.getElementById('ext-'+k); if(el) el.innerText = data.extracted_data[k]; }); }
+        } else alert('파일 처리 실패: ' + data.message);
+      }).catch(() => { removeLoading(); alert('파일 업로드 오류'); });
+    this.value = '';
+  });
+}
+
+if (generateClaimsBtn) {
+  generateClaimsBtn.addEventListener('click', function() {
+    showLoading();
+    fetch("{% url 'generate_claims_api' project.id %}", { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' } })
+      .then(r => r.json()).then(data => {
+        removeLoading();
+        if (data.status === 'success') {
+          addMessage('assistant', data.message_content);
+          const saveBtnId = 'save-btn-' + Date.now();
+          chatBox.insertAdjacentHTML('beforeend', '<div style="text-align:right;margin-bottom:12px;"><button id="' + saveBtnId + '" class="ws-action-btn ws-action-btn--primary">이 청구항 저장</button></div>');
+          chatBox.scrollTop = chatBox.scrollHeight;
+          document.getElementById(saveBtnId).addEventListener('click', function() {
+            const btn = this; btn.innerText = '저장 중...'; btn.disabled = true;
+            fetch("{% url 'save_claims_api' project.id %}", { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' }, body: JSON.stringify({ claims: data.claims }) })
+              .then(r => r.json()).then(sd => {
+                if (sd.status === 'success') { btn.innerText = '저장 완료 ✓'; btn.style.background = '#9a7840'; }
+                else { alert('저장 실패: ' + sd.message); btn.innerText = '다시 시도'; btn.disabled = false; }
+              });
+          });
+        } else if (data.status === 'warning') {
+          addMessage('assistant', '아직 발명의 요건이 충분히 수집되지 않아 청구항 작성을 시작할 수 없습니다. AI와 대화하며 남은 항목을 먼저 채워주세요!');
+        } else alert('에러: ' + data.message);
+      }).catch(() => { removeLoading(); alert('청구항 작성 요청 오류'); });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const messageCount = parseInt("{{ chat_messages.count }}") || 0;
+  if (messageCount === 0) {
+    showLoading();
+    fetch("{% url 'welcome_api' project.id %}", { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' } })
+      .then(r => r.json()).then(data => {
+        removeLoading();
+        if (data.status === 'success') {
+          addMessage('assistant', data.ai_message);
+          if (data.extracted_data) { ['problem','solution','differentiation','effect'].forEach(k => { const el = document.getElementById('ext-'+k); if(el) el.innerText = data.extracted_data[k]; }); }
+        }
+      }).catch(err => { removeLoading(); });
+  }
+});
+
+/* 대화 초기화 */
+document.getElementById('wsClearChat').addEventListener('click', () => {
+  chatBox.querySelectorAll('.ws-msg').forEach(el => el.remove());
+});
+
+/* 청구항 수정 모달 */
+const editClaimsBtn   = document.getElementById('edit-claims-btn');
+const modal           = document.getElementById('claim-edit-modal');
+const closeModalBtn   = document.getElementById('close-modal-btn');
+const modalContainer  = document.getElementById('modal-claims-container');
+const modalSaveBtn    = document.getElementById('modal-save-btn');
+
+if (editClaimsBtn) {
+  editClaimsBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    modalContainer.innerHTML = '<p style="color:#aaa;text-align:center;">데이터를 불러오는 중...</p>';
+    fetch("{% url 'manage_claims_api' project.id %}").then(r => r.json()).then(data => {
+      if (data.status === 'empty') { modalContainer.innerHTML = '<p style="color:#ef4444;text-align:center;">' + data.message + '</p>'; modalSaveBtn.style.display = 'none'; }
+      else if (data.status === 'success') {
+        modalSaveBtn.style.display = 'inline-flex'; modalContainer.innerHTML = '';
+        data.claims.forEach(c => {
+          modalContainer.insertAdjacentHTML('beforeend', '<div class="claim-edit-box" data-id="' + c.id + '"><h4>청구항 ' + c.claim_no + ' <span style="color:#aaa;font-weight:400;font-size:11px;">' + (c.is_dependent ? '종속항' : '독립항') + '</span></h4><textarea class="claim-content-input">' + c.content + '</textarea></div>');
+        });
+      }
+    });
+  });
+}
+closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+modalSaveBtn.addEventListener('click', () => {
+  const orig = modalSaveBtn.innerText; modalSaveBtn.innerText = '저장 중...'; modalSaveBtn.disabled = true;
+  const updated = [];
+  document.querySelectorAll('.claim-edit-box').forEach(box => { updated.push({ id: box.getAttribute('data-id'), content: box.querySelector('.claim-content-input').value }); });
+  fetch("{% url 'manage_claims_api' project.id %}", { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' }, body: JSON.stringify({ claims: updated }) })
+    .then(r => r.json()).then(data => {
+      if (data.status === 'success') { alert('청구항이 저장되었습니다.'); modal.style.display = 'none'; }
+      else alert('저장 실패: ' + data.message);
+    }).finally(() => { modalSaveBtn.innerText = orig; modalSaveBtn.disabled = false; });
+});
+
+/* 파이프라인 모달 */
+const processModal    = document.getElementById('process-map-modal');
+const viewProcessBtn  = document.getElementById('view-process-btn');
+const closeProcessBtn = document.getElementById('close-process-modal');
+const dagContainer    = document.getElementById('dag-container');
+const steps = [
+  { id:1, name:'AI 상담', icon:'Ⅰ' }, { id:2, name:'청구항 작성', icon:'Ⅱ' },
+  { id:3, name:'도면 작성', icon:'Ⅲ' }, { id:4, name:'발명의 설명', icon:'Ⅳ' },
+  { id:5, name:'최종 명세서', icon:'Ⅴ' }
+];
+function renderGraph(cur) {
+  dagContainer.innerHTML = '';
+  steps.forEach((s, i) => {
+    let nc = '', lc = '';
+    if (s.id < cur) { nc = 'active'; lc = 'active'; }
+    else if (s.id === cur) { nc = 'current'; lc = 'current'; document.getElementById('process-message').innerHTML = '현재 <strong style="color:#9a7840;">' + s.name + '</strong> 단계를 진행 중입니다.'; }
+    dagContainer.insertAdjacentHTML('beforeend', '<div class="graph-node-wrapper"><div class="graph-node ' + nc + '">' + s.icon + '</div><div class="graph-label ' + lc + '">' + s.name + '</div></div>');
+    if (i < steps.length - 1) dagContainer.insertAdjacentHTML('beforeend', '<div class="graph-edge ' + (s.id < cur ? 'active' : '') + '"></div>');
+  });
+}
+if (viewProcessBtn) { viewProcessBtn.addEventListener('click', () => { renderGraph(2); processModal.style.display = 'flex'; }); }
+if (closeProcessBtn) { closeProcessBtn.addEventListener('click', () => processModal.style.display = 'none'); }
+window.addEventListener('click', e => { if (e.target === processModal) processModal.style.display = 'none'; });
+</script>
+{% endblock %}

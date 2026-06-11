@@ -11,13 +11,23 @@
       <span>PYPI</span>
     </a>
     <div class="nav-links">
-      <a href="{% url 'accounts:dashboard' %}" class="nav-link active" data-i18n="nav_dashboard">대시보드</a>
+      <a href="{% url 'accounts:dashboard' %}" class="nav-link active" data-i18n="nav_dashboard_label">대시보드</a>
       <span class="nav-link-divider"></span>
-      <a href="{% url 'accounts:pipeline' %}"  class="nav-link">파이프라인</a>
-      <a href="{% url 'accounts:chat' %}"       class="nav-link">AI 어시스턴트</a>
-      <a href="{% url 'accounts:drawing' %}"    class="nav-link">도면 분석</a>
+      <a href="{% url 'accounts:pipeline' %}"  class="nav-link" data-i18n="nav_pipeline_label">파이프라인</a>
     </div>
     <div class="nav-user">
+      <div class="lang-switcher">
+        <button class="lang-btn" type="button">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span data-lang-display>KO</span>
+        </button>
+        <div class="lang-dropdown">
+          <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+          <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+          <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+          <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+        </div>
+      </div>
       <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
       <span class="user-email">{{ user.username }}</span>
       <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
@@ -38,10 +48,6 @@
         </h1>
       </div>
       <div class="portal-btn-group">
-        <a href="{% url 'accounts:chat' %}" class="portal-run-btn portal-run-btn--chat">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span class="prb-label" data-i18n="nav_ai">AI 어시스턴트</span>
-        </a>
         <a href="{% url 'accounts:pipeline' %}" class="portal-run-btn portal-run-btn--primary">
           <span class="prb-label" data-i18n="btn_pipeline">파이프라인 실행</span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -56,18 +62,6 @@
       <p class="practice-kicker" data-i18n="dash_practice_kicker">전문 서비스</p>
       <p class="practice-sub" data-i18n="dash_practice_sub">7개 에이전트가 특허 출원의 전 과정을 분담하여 처리합니다</p>
     </div>
-
-    <!-- ══ CHAT 빠른 진입 ════════════════════════════════ -->
-    <a href="{% url 'accounts:chat' %}" class="chat-entry-card">
-      <div class="chat-entry-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
-      <div class="chat-entry-body">
-        <p class="chat-entry-label">AI 특허 어시스턴트</p>
-        <p class="chat-entry-sub">소스를 추가하고 특허 전문 AI에게 질문하세요 — NotebookLM 스타일</p>
-      </div>
-      <span class="chat-entry-arrow">→</span>
-    </a>
 
     <div class="practice-list">
 
@@ -126,19 +120,18 @@
         <div class="pa-link" data-i18n="dash_pa_run">파이프라인 실행 →</div>
       </a>
 
-      <!-- V — 하이라이트 -->
-      <a href="{% url 'accounts:drawing' %}" class="pa-item pa-item--on pa-item--hl">
+      <!-- V -->
+      <div class="pa-item pa-item--on">
         <div class="pa-num">V</div>
         <div class="pa-body">
           <div class="pa-hd">
             <h3 class="pa-name" data-i18n="agent_V">도면 에이전트</h3>
             <span class="pa-en" data-i18n="en_drawing">Drawing</span>
-            <span class="pa-status pa-status--on" data-i18n="status_standalone">활성 · 단독 실행</span>
+            <span class="pa-status pa-status--on" data-i18n="status_standalone">활성</span>
           </div>
           <p class="pa-desc" data-i18n="desc_V">블록도·흐름도·시퀀스 다이어그램을 SVG로 자동 렌더링하고, 품질 점수 검수 및 자동 보정 후 파일을 제공합니다.</p>
         </div>
-        <div class="pa-link" data-i18n="dash_pa_solo">단독 실행 →</div>
-      </a>
+      </div>
 
       <!-- VI -->
       <a href="{% url 'accounts:pipeline' %}" class="pa-item pa-item--on">

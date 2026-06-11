@@ -8,6 +8,19 @@
     <span></span><span></span><span></span><span></span>
   </div>
 
+  <div class="lf-auth-lang lang-switcher">
+    <button class="lang-btn" type="button">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span data-lang-display>KO</span>
+    </button>
+    <div class="lang-dropdown">
+      <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+      <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+      <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+      <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+    </div>
+  </div>
+
   <div class="lf-auth-wrap">
 
     <!-- 좌측 브랜드 패널 -->
@@ -17,13 +30,13 @@
         <span class="lf-auth-firmname">PYPI</span>
       </a>
       <div class="lf-auth-vline"></div>
-      <p class="lf-auth-brand-desc">계정을 등록하시면 PYPI의 7개 전문 AI 에이전트 파이프라인을 통해 특허 출원 전 과정을 체계적으로 자동화하실 수 있습니다.</p>
+      <p class="lf-auth-brand-desc" data-i18n="signup_brand_desc">계정을 등록하시면 PYPI의 7개 전문 AI 에이전트 파이프라인을 통해 특허 출원 전 과정을 체계적으로 자동화하실 수 있습니다.</p>
       <div class="lf-auth-sep"></div>
       <ul class="lf-auth-steps">
-        <li><span class="lf-step-n">01</span><span>계정 등록</span></li>
-        <li><span class="lf-step-n">02</span><span>발명 정보 입력 (5개 필드)</span></li>
-        <li><span class="lf-step-n">03</span><span>AI 파이프라인 자동 실행</span></li>
-        <li><span class="lf-step-n">04</span><span>특허청 제출용 명세서 완성</span></li>
+        <li><span class="lf-step-n">01</span><span data-i18n="signup_step1">계정 등록</span></li>
+        <li><span class="lf-step-n">02</span><span data-i18n="signup_step2">발명 정보 입력 (5개 필드)</span></li>
+        <li><span class="lf-step-n">03</span><span data-i18n="signup_step3">AI 파이프라인 자동 실행</span></li>
+        <li><span class="lf-step-n">04</span><span data-i18n="signup_step4">특허청 제출용 명세서 완성</span></li>
       </ul>
     </aside>
 
@@ -49,10 +62,26 @@
         {% csrf_token %}
 
         <div class="lf-field">
+          <label class="lf-field-label" data-i18n="signup_role_label">가입 유형</label>
+          <div class="lf-role-group">
+            <label class="lf-role-label">
+              <input type="radio" name="role" value="inventor" checked>
+              <span data-i18n="signup_role_inventor">발명가</span>
+              <small data-i18n="signup_role_inventor_desc">특허 초안 작성</small>
+            </label>
+            <label class="lf-role-label">
+              <input type="radio" name="role" value="attorney">
+              <span data-i18n="signup_role_attorney">변리사</span>
+              <small data-i18n="signup_role_attorney_desc">전문가 검토</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="lf-field">
           <label class="lf-field-label" data-i18n="signup_name">이름</label>
           <div class="lf-field-wrap">
             <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            <input type="text" name="name" placeholder="이름" value="{{ form.name.value|default:'' }}" required autofocus autocomplete="name">
+            <input type="text" name="name" placeholder="이름" value="{{ form.name.value|default:'' }}" required autofocus autocomplete="name" data-i18n="signup_name">
           </div>
         </div>
 
@@ -60,7 +89,7 @@
           <label class="lf-field-label" data-i18n="signup_id">아이디</label>
           <div class="lf-field-wrap">
             <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            <input type="text" name="username" placeholder="영문·숫자 조합" value="{{ form.username.value|default:'' }}" required autocomplete="username">
+            <input type="text" name="username" placeholder="영문·숫자 조합" value="{{ form.username.value|default:'' }}" required autocomplete="username" data-i18n="signup_id_placeholder">
           </div>
         </div>
 
@@ -69,14 +98,14 @@
             <label class="lf-field-label" data-i18n="signup_pw">비밀번호</label>
             <div class="lf-field-wrap">
               <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <input type="password" name="password1" placeholder="8자 이상" required autocomplete="new-password">
+              <input type="password" name="password1" placeholder="8자 이상" required autocomplete="new-password" data-i18n="signup_pw_placeholder">
             </div>
           </div>
           <div class="lf-field">
             <label class="lf-field-label" data-i18n="signup_pw2">비밀번호 확인</label>
             <div class="lf-field-wrap">
               <svg class="lf-field-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <input type="password" name="password2" placeholder="동일하게 입력" required autocomplete="new-password">
+              <input type="password" name="password2" placeholder="동일하게 입력" required autocomplete="new-password" data-i18n="signup_pw2_placeholder">
             </div>
           </div>
         </div>
@@ -86,9 +115,9 @@
 
       <p class="lf-auth-switch">
         <span data-i18n="signup_have_account">이미 계정이 있으신가요?</span>
-        <a href="{% url 'accounts:login' %}" data-i18n="signup_login_link">로그인</a>
+        <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" data-i18n="signup_login_link">로그인</a>
         &nbsp;·&nbsp;
-        <a href="{% url 'accounts:landing' %}">홈으로</a>
+        <a href="{% url 'accounts:landing' %}" data-i18n="login_home_link">홈으로</a>
       </p>
 
     </main>
@@ -111,6 +140,15 @@
 .lf-auth-lines{position:fixed;inset:0;pointer-events:none;z-index:0;display:flex;justify-content:space-evenly;}
 .lf-auth-lines span{width:1px;background:linear-gradient(180deg,transparent 0%,rgba(154,120,64,.05) 30%,rgba(154,120,64,.05) 70%,transparent 100%);}
 .lf-auth-wrap{display:flex;width:100%;position:relative;z-index:1;}
+
+.lf-auth-lang { position: absolute; top: 24px; right: 32px; z-index: 20; }
+.lf-auth-lang .lang-btn { border-color: rgba(0,0,0,.12); color: var(--la-mid); }
+.lf-auth-lang .lang-btn:hover { border-color: rgba(154,120,64,.4); color: var(--la-gold); }
+.lf-auth-lang .lang-dropdown { background: #fff; border-color: rgba(0,0,0,.08); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
+.lf-auth-lang .lang-option { color: var(--la-body); }
+.lf-auth-lang .lang-option:hover, .lf-auth-lang .lang-option.active { background: var(--la-bg2); color: var(--la-navy); }
+.lf-auth-lang .lang-code { color: var(--la-muted); }
+.lf-auth-lang .lang-option.active .lang-code { color: var(--la-gold); }
 
 .lf-auth-brand{width:360px;flex-shrink:0;background:var(--la-bg2);border-right:1px solid var(--la-border);padding:72px 56px;display:flex;flex-direction:column;}
 .lf-auth-wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;margin-bottom:56px;}
@@ -143,6 +181,13 @@
 .lf-auth-btn{display:block;width:100%;padding:.85rem 1rem;margin-top:.5rem;background:var(--la-gold);border:none;cursor:pointer;font-family:var(--la-sans);font-size:.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;transition:background .2s,letter-spacing .2s;}
 .lf-auth-btn:hover{background:var(--la-gold-lt);letter-spacing:2.3px;}
 
+.lf-role-group{display:flex;gap:12px;margin-top:4px;}
+.lf-role-label{flex:1;display:flex;flex-direction:column;gap:2px;padding:.75rem 1rem;border:1px solid var(--la-border);cursor:pointer;transition:border-color .2s,background .2s;}
+.lf-role-label input[type=radio]{display:none;}
+.lf-role-label span{font-size:.9rem;font-weight:500;color:var(--la-navy);}
+.lf-role-label small{font-size:.75rem;color:var(--la-muted);}
+.lf-role-label:has(input:checked){border-color:rgba(154,120,64,.6);background:rgba(154,120,64,.04);}
+.lf-role-label:has(input:checked) span{color:var(--la-gold);}
 .lf-auth-switch{margin-top:1.75rem;font-size:11.5px;font-weight:300;color:var(--la-mid);}
 .lf-auth-switch a{color:var(--la-gold);text-decoration:none;}
 .lf-auth-switch a:hover{opacity:.75;}

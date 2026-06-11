@@ -8,14 +8,19 @@ class SignupForm(UserCreationForm):
         max_length=100, label='이름', required=True,
         widget=forms.TextInput(attrs={'placeholder': '이름을 입력하세요'}),
     )
+    role = forms.ChoiceField(
+        choices=[('inventor', '발명가'), ('attorney', '변리사')],
+        label='가입 유형', initial='inventor',
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'name', 'password1', 'password2')
+        fields = ('username', 'name', 'password1', 'password2', 'role')
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.name = self.cleaned_data['name']
+        user.role = self.cleaned_data['role']
         if commit:
             user.save()
         return user

@@ -828,11 +828,28 @@
   white-space: nowrap; transition: opacity .2s;
 }
 .lf-news-more:hover { opacity: .7; }
+.lf-news-h2 {
+  font-family: var(--lf-serif); font-size: clamp(26px,2.8vw,38px);
+  font-weight: 300; color: var(--lf-navy); line-height: 1.3; margin-top: 12px;
+}
+.lf-news-h2 em { font-style: italic; color: var(--lf-gold); }
+.lf-news-tag-chip {
+  font-size: 8.5px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65;
+  padding: .18rem .55rem; border: 1px solid rgba(154,120,64,.2);
+}
+.lf-news-agent {
+  font-size: 8.5px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-muted);
+  padding: .18rem .55rem; border: 1px solid var(--lf-border);
+  margin-left: auto;
+}
 
 .lf-news-grid {
   display: grid; grid-template-columns: repeat(3,1fr);
   gap: 2px; background: var(--lf-border); border: 1px solid var(--lf-border);
 }
+@media (min-width: 1100px) { .lf-news-grid { grid-template-columns: repeat(3,1fr); } }
 
 .lf-news-card {
   background: var(--lf-bg); padding: 44px 36px 40px;
@@ -1175,6 +1192,54 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
 
 @media (max-width: 1100px) { .lf-side-strip { width: 56px; } }
 @media (max-width: 768px)  { .lf-side-strip { display: none; } }
+
+/* ════════ AI 챗봇 플로팅 버튼 ═══════════════════════ */
+.lf-chat-fab {
+  position: fixed; right: 28px; bottom: 28px; z-index: 800;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--lf-navy); color: var(--lf-gold-lt);
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(18,16,14,.28);
+  animation: lf-fab-bob 3.4s ease-in-out infinite;
+  transition: transform .25s var(--lf-ease), box-shadow .25s, background .25s;
+}
+.lf-chat-fab:hover {
+  transform: translateY(-5px) scale(1.06);
+  box-shadow: 0 14px 38px rgba(154,120,64,.4);
+  background: #1e1a18;
+}
+.lf-chat-fab::before {
+  content: ''; position: absolute; inset: -7px; border-radius: 50%;
+  border: 1px solid rgba(154,120,64,.45);
+  animation: lf-fab-ping 2.8s ease-out infinite;
+}
+.lf-chat-fab-icon { width: 28px; height: 28px; }
+.lf-chat-fab-dot {
+  position: absolute; top: 2px; right: 2px;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: #4ade80; border: 2px solid var(--lf-navy);
+}
+.lf-chat-fab-tip {
+  position: absolute; right: 74px; top: 50%; transform: translateY(-50%) translateX(6px);
+  background: #fff; color: var(--lf-navy);
+  font-size: 12px; font-weight: 500; letter-spacing: .2px; white-space: nowrap;
+  padding: 9px 16px; border-radius: 22px;
+  border: 1px solid var(--lf-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+.lf-chat-fab:hover .lf-chat-fab-tip { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+@keyframes lf-fab-bob  { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-6px); } }
+@keyframes lf-fab-ping { 0%{ transform: scale(.85); opacity: .7; } 100%{ transform: scale(1.4); opacity: 0; } }
+
+@media (max-width: 768px) {
+  .lf-chat-fab { right: 18px; bottom: 18px; width: 52px; height: 52px; }
+  .lf-chat-fab-icon { width: 24px; height: 24px; }
+  .lf-chat-fab-tip { display: none; }
+}
 </style>
 {% endblock %}
 
@@ -1236,9 +1301,7 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop"><div class="lf-drop-inner">
-            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a" data-i18n="nav_agents_pipeline">AI 에이전트 파이프라인</a>
-            <a href="{% url 'accounts:chat' %}"            class="lf-drop-a" data-i18n="nav_ai">AI 어시스턴트</a>
-            <div class="lf-drop-sep"></div>
+            <a href="{% url 'accounts:chat' %}" class="lf-drop-a lf-drop-a--hl" data-i18n="nav_dashboard">AI 어시스턴트</a>
             <a href="{% url 'accounts:pipeline' %}" class="lf-drop-a lf-drop-a--cta" data-i18n="nav_pipeline_run">파이프라인 실행</a>
           </div></div>
         </div>
@@ -1250,12 +1313,15 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <svg class="lf-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
           </a>
           <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
+            <a href="{% url 'accounts:chat' %}"                class="lf-drop-a"><span class="lf-drop-num">I</span><span data-i18n="agent_I">상담 에이전트</span></a>
             <a href="{% url 'accounts:agent_summary' %}"       class="lf-drop-a"><span class="lf-drop-num">II</span><span data-i18n="agent_II">요약 에이전트</span></a>
             <a href="{% url 'accounts:agent_prior_art' %}"     class="lf-drop-a"><span class="lf-drop-num">III</span><span data-i18n="agent_III">선행기술조사 에이전트</span></a>
             <a href="{% url 'accounts:agent_claim' %}"         class="lf-drop-a"><span class="lf-drop-num">IV</span><span data-i18n="agent_IV">청구항 에이전트</span></a>
             <a href="{% url 'accounts:agent_drawing' %}"       class="lf-drop-a"><span class="lf-drop-num">V</span><span data-i18n="agent_V">도면 에이전트</span></a>
             <a href="{% url 'accounts:agent_specification' %}" class="lf-drop-a"><span class="lf-drop-num">VI</span><span data-i18n="agent_VI">명세서 에이전트</span></a>
             <a href="{% url 'accounts:agent_composer' %}"      class="lf-drop-a"><span class="lf-drop-num">VII</span><span data-i18n="agent_VII">컴포저 에이전트</span></a>
+            <div class="lf-drop-sep"></div>
+            <a href="{% url 'accounts:drawing_gallery' %}"     class="lf-drop-a" data-i18n="nav_drawing_gallery">도면 갤러리</a>
           </div></div>
         </div>
 
@@ -1281,8 +1347,6 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
           </a>
           <div class="lf-drop"><div class="lf-drop-inner">
             <a href="{% url 'accounts:insights' %}" class="lf-drop-a" data-i18n="nav_insights">특허 인사이트</a>
-            <a href="{% url 'accounts:agents_overview' %}" class="lf-drop-a" data-i18n="nav_agents">에이전트 소개</a>
-            <a href="{% url 'accounts:features' %}"        class="lf-drop-a" data-i18n="nav_features">기술 원칙</a>
           </div></div>
         </div>
 
@@ -1302,14 +1366,12 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
           </div>
         </div>
         {% if user.is_authenticated %}
-        <a href="{% url 'accounts:dashboard' %}" class="lf-login" data-i18n="nav_dashboard">대시보드</a>
         <form method="POST" action="{% url 'accounts:logout' %}" style="margin:0;">
           {% csrf_token %}
           <button type="submit" class="lf-util-logout" data-i18n="nav_logout">로그아웃</button>
         </form>
         {% else %}
         <a href="{% url 'accounts:login' %}"  class="lf-login" data-i18n="nav_login">로그인</a>
-        <a href="{% url 'accounts:signup' %}" class="lf-login lf-login--cta" data-i18n="nav_signup">서비스 신청</a>
         {% endif %}
       </div>
     </div>
@@ -2035,58 +2097,122 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
     </div>
   </div>
 
-  <!-- ══ CLOSING ════════════════════════════════════════════ -->
-  <section class="lf-closing">
+  <!-- ══ NEWS SLIDER ══════════════════════════════════════════ -->
+  <section class="lf-news-slider">
     <div class="lf-container">
-      <div class="lf-closing-inner reveal">
-
-        <!-- 도면 프레임 코너 브래킷 -->
-        <svg class="lf-close-bracket lf-close-bracket--tl" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
-        <svg class="lf-close-bracket lf-close-bracket--tr" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
-        <svg class="lf-close-bracket lf-close-bracket--bl" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
-        <svg class="lf-close-bracket lf-close-bracket--br" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M24 2 L2 2 L2 24" stroke="#9a7840" stroke-width="1"/></svg>
-
-        <!-- 상단 레이블 -->
-        <div class="lf-close-ref">
-          <span class="lf-close-ref-line"></span>
-          <span class="lf-close-ref-label">PATENT APPLICATION · AI-ASSISTED</span>
-          <span class="lf-close-ref-line"></span>
+      <div class="lf-ns-hd">
+        <div>
+          <p class="lf-ns-tag">Patent Trends</p>
+          <h2 class="lf-ns-title">특허 최신 트렌드</h2>
         </div>
-
-        <h2 class="lf-closing-h2 reveal reveal-d1" data-i18n="lf_close_h2" data-i18n-html>발명의 가치를<br>지금 보호하십시오</h2>
-
-        <p class="lf-closing-sub reveal reveal-d2" data-i18n="lf_close_sub">발명 정보를 입력하면 7개 전문 에이전트가<br>특허청 제출 가능한 완성 명세서를 자동으로 완성합니다</p>
-
-        <!-- CTA 버튼 -->
-        <div class="lf-closing-actions reveal reveal-d3">
-          {% if user.is_authenticated %}
-          <a href="{% url 'accounts:pipeline' %}" class="lf-btn-fill" data-i18n="lf_close_primary_auth">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            파이프라인 실행하기
-          </a>
-          <a href="{% url 'accounts:dashboard' %}" class="lf-btn-line" data-i18n="lf_close_secondary_auth">포털 대시보드 →</a>
-          {% else %}
-          <a href="{% url 'accounts:signup' %}" class="lf-btn-fill" data-i18n="lf_close_primary">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            업무 의뢰 신청하기
-          </a>
-          <a href="{% url 'accounts:login' %}" class="lf-btn-line" data-i18n="lf_close_secondary">기존 의뢰인 로그인 →</a>
-          {% endif %}
+        <div class="lf-ns-arrows">
+          <button class="lf-ns-arrow" id="nsArrowPrev" aria-label="이전">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="lf-ns-arrow" id="nsArrowNext" aria-label="다음">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
-
-        <!-- 하단 기술 주석 -->
-        <div class="lf-close-note">
-          <span class="lf-close-note-item">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            변리사 자문 시스템
-          </span>
-          <span class="lf-close-sep">·</span>
-          <span class="lf-close-note-item">7 Agent Pipeline</span>
-          <span class="lf-close-sep">·</span>
-          <span class="lf-close-note-item">GPT-4o · LangGraph</span>
-        </div>
-
       </div>
+
+      <div class="lf-ns-viewport">
+        <div class="lf-ns-track" id="nsTrack">
+
+          <!-- 카드 1 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">01</span>
+              <span class="lf-ns-badge">AI·특허</span>
+            </div>
+            <h3 class="lf-ns-card-title">생성형 AI 특허 출원, 전년 대비 40% 급증</h3>
+            <p class="lf-ns-card-body">GPT·Diffusion 모델 기반 발명이 폭증하며 한국·미국·유럽 특허청 모두 AI 관련 심사 지침을 긴급 개정 중입니다. 출원 전략의 재정립이 필요한 시점입니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.05</span>
+              <span class="lf-ns-source">KIPO 통계</span>
+            </div>
+          </article>
+
+          <!-- 카드 2 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">02</span>
+              <span class="lf-ns-badge">반도체</span>
+            </div>
+            <h3 class="lf-ns-card-title">HBM·PIM 특허 전쟁, 삼성 vs SK vs 마이크론</h3>
+            <p class="lf-ns-card-body">고대역폭 메모리(HBM) 및 PIM(Processing-In-Memory) 분야에서 3사의 특허 분쟁이 격화되고 있습니다. 핵심 청구항 전략이 시장 주도권을 결정합니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.04</span>
+              <span class="lf-ns-source">특허청 동향</span>
+            </div>
+          </article>
+
+          <!-- 카드 3 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">03</span>
+              <span class="lf-ns-badge">바이오</span>
+            </div>
+            <h3 class="lf-ns-card-title">mRNA 치료제 특허 만료 러시 2026~2028</h3>
+            <p class="lf-ns-card-body">코로나 백신으로 주목받은 mRNA 핵심 특허들이 2026년부터 순차 만료됩니다. 후발 바이오텍의 진입 전략과 방어 특허 구축이 중요한 과제입니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.04</span>
+              <span class="lf-ns-source">BioPharma Dive</span>
+            </div>
+          </article>
+
+          <!-- 카드 4 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">04</span>
+              <span class="lf-ns-badge">소프트웨어</span>
+            </div>
+            <h3 class="lf-ns-card-title">대법원 Alice 판결 10주년 — SW 특허 지형 변화</h3>
+            <p class="lf-ns-card-body">추상적 아이디어를 배제하는 Alice 기준 10년이 지난 지금, 미국 법원은 AI·ML 관련 청구항 적격성 판단 기준을 점차 완화하는 추세입니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.03</span>
+              <span class="lf-ns-source">USPTO 보고서</span>
+            </div>
+          </article>
+
+          <!-- 카드 5 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">05</span>
+              <span class="lf-ns-badge">전기차</span>
+            </div>
+            <h3 class="lf-ns-card-title">전고체 배터리 특허, 토요타·삼성SDI 선점 경쟁</h3>
+            <p class="lf-ns-card-body">차세대 전고체 배터리 분야에서 토요타(1,000건+)와 삼성SDI가 핵심 특허를 선점하고 있습니다. 2027년 양산 전 특허 포트폴리오 확보가 관건입니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.03</span>
+              <span class="lf-ns-source">IFI Claims</span>
+            </div>
+          </article>
+
+          <!-- 카드 6 -->
+          <article class="lf-ns-card">
+            <div class="lf-ns-card-top">
+              <span class="lf-ns-num">06</span>
+              <span class="lf-ns-badge">IP 정책</span>
+            </div>
+            <h3 class="lf-ns-card-title">WIPO AI 특허 가이드라인 2025 — 발명자 요건 명확화</h3>
+            <p class="lf-ns-card-body">WIPO는 AI가 실질적으로 기여한 발명의 출원 방법에 관한 국제 가이드라인을 2025년 상반기 발표했습니다. 국내 실무에도 즉각 영향을 미칩니다.</p>
+            <div class="lf-ns-card-ft">
+              <span class="lf-ns-date">2025.02</span>
+              <span class="lf-ns-source">WIPO</span>
+            </div>
+          </article>
+
+        </div><!-- /track -->
+      </div><!-- /viewport -->
+
+      <!-- 인디케이터 -->
+      <div class="lf-ns-dots" id="nsDots">
+        <span class="lf-ns-dot active"></span>
+        <span class="lf-ns-dot"></span>
+        <span class="lf-ns-dot"></span>
+        <span class="lf-ns-dot"></span>
+      </div>
+
     </div>
   </section>
 
@@ -2114,7 +2240,8 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
             <p class="lf-footer-hd" data-i18n="lf_foot_h3">지원 언어</p>
             <span class="lf-footer-link">한국어</span>
             <span class="lf-footer-link">English</span>
-            <span class="lf-footer-link">日本語 · 中文</span>
+            <span class="lf-footer-link">日本語</span>
+            <span class="lf-footer-link">中文</span>
           </div>
         </div>
       </div>
@@ -2125,40 +2252,19 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
     </div>
   </footer>
 
-  <!-- ══ AI CHATBOT WIDGET ══════════════════════════════ -->
-  <div class="lf-chat-widget" id="lfChatWidget">
-    <!-- 접힌 상태: 버튼 -->
-    <button class="lf-chat-fab" id="lfChatToggle" aria-label="AI 어시스턴트 열기">
-      <svg class="lf-chat-fab-icon lf-chat-fab-icon--open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-      <svg class="lf-chat-fab-icon lf-chat-fab-icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      <span class="lf-chat-fab-badge">AI</span>
-    </button>
-    <!-- 펼친 상태: 채팅 패널 -->
-    <div class="lf-chat-panel" id="lfChatPanel">
-      <div class="lf-chat-panel-hd">
-        <div class="lf-chat-panel-title">
-          <span class="lf-chat-panel-dot"></span>
-          PYPI AI 어시스턴트
-        </div>
-        <button class="lf-chat-panel-close" id="lfChatClose" aria-label="닫기">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="lf-chat-msgs" id="lfChatMsgs">
-        <div class="lf-chat-msg lf-chat-msg--ai">
-          <div class="lf-chat-bubble">특허 출원에 대해 궁금한 점이 있으신가요? 무엇이든 물어보세요.</div>
-        </div>
-      </div>
-      <div class="lf-chat-input-row">
-        <input type="text" class="lf-chat-input" id="lfChatInput" placeholder="메시지를 입력하세요…" autocomplete="off" maxlength="500">
-        <button class="lf-chat-send" id="lfChatSend" aria-label="전송">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- ── AI 챗봇 플로팅 버튼 ─────────────────────────── -->
+  <a href="{% url 'accounts:chat' %}" class="lf-chat-fab" aria-label="AI 어시스턴트와 대화하기">
+    <span class="lf-chat-fab-tip">무엇이든 물어보세요 💬</span>
+    <svg class="lf-chat-fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="2.2" x2="12" y2="4.6"/>
+      <circle cx="12" cy="2" r="1" fill="currentColor" stroke="none"/>
+      <rect x="4" y="5" width="16" height="13" rx="5"/>
+      <circle cx="9" cy="11.5" r="1.2" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="11.5" r="1.2" fill="currentColor" stroke="none"/>
+      <path d="M9 14.3 Q12 16.4 15 14.3"/>
+    </svg>
+    <span class="lf-chat-fab-dot"></span>
+  </a>
 
 </div>
 {% endblock %}
@@ -2268,238 +2374,139 @@ document.querySelectorAll('.lang-option[data-lang]').forEach(function(o) {
 var saved; try { saved = localStorage.getItem('pm-lang'); } catch(e) {}
 pmApplyLang(saved || 'ko');
 
-/* ── AI CHATBOT WIDGET ───────────────────────────── */
-(function() {
-  var toggle  = document.getElementById('lfChatToggle');
-  var panel   = document.getElementById('lfChatPanel');
-  var closeBtn = document.getElementById('lfChatClose');
-  var input   = document.getElementById('lfChatInput');
-  var sendBtn = document.getElementById('lfChatSend');
-  var msgs    = document.getElementById('lfChatMsgs');
-  var widget  = document.getElementById('lfChatWidget');
-  var open    = false;
-  var busy    = false;
-
-  function toggleWidget() {
-    open = !open;
-    widget.classList.toggle('lf-chat-widget--open', open);
-    if (open) { setTimeout(function() { input.focus(); }, 300); }
-  }
-
-  toggle.addEventListener('click', toggleWidget);
-  closeBtn.addEventListener('click', function() { open = true; toggleWidget(); });
-
-  function addMsg(text, role) {
-    var div = document.createElement('div');
-    div.className = 'lf-chat-msg lf-chat-msg--' + role;
-    var bub = document.createElement('div');
-    bub.className = 'lf-chat-bubble';
-    bub.innerHTML = text;
-    div.appendChild(bub);
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-    return bub;
-  }
-
-  function mdToHtml(t) {
-    return t
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/\[([^\]]+)\]\((\/[^)]*)\)/g, '<a href="$2" style="color:#9a7840;font-weight:600;text-decoration:underline;">$1 →</a>')
-      .replace(/\n/g, '<br>');
-  }
-
-  function sendMessage() {
-    if (busy) return;
-    var q = input.value.trim();
-    if (!q) return;
-    input.value = '';
-    addMsg(q, 'user');
-    busy = true;
-    sendBtn.disabled = true;
-
-    var aiBub = addMsg('<span class="lf-chat-dots"><span></span><span></span><span></span></span>', 'ai');
-    var text = '';
-
-    fetch('/accounts/chat/stream/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
-      body: JSON.stringify({ message: q, history: [] })
-    }).then(function(res) {
-      var reader = res.body.getReader();
-      var dec = new TextDecoder();
-      var buf = '';
-
-      function pump() {
-        reader.read().then(function(chunk) {
-          if (chunk.done) { finalize(); return; }
-          buf += dec.decode(chunk.value, { stream: true });
-          var parts = buf.split('\n\n');
-          buf = parts.pop();
-          parts.forEach(function(part) {
-            if (!part.startsWith('data:')) return;
-            var data = part.slice(5).trim();
-            if (data === '[DONE]') return;
-            try {
-              var parsed = JSON.parse(data);
-              if (parsed.content) { text += parsed.content; aiBub.innerHTML = mdToHtml(text); msgs.scrollTop = msgs.scrollHeight; }
-            } catch(e) {}
-          });
-          pump();
-        });
-      }
-      pump();
-
-      function finalize() {
-        if (!text) aiBub.innerHTML = '죄송합니다, 응답을 받지 못했습니다.';
-        busy = false;
-        sendBtn.disabled = false;
-        input.focus();
-      }
-    }).catch(function() {
-      aiBub.innerHTML = '연결 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-      busy = false;
-      sendBtn.disabled = false;
-    });
-  }
-
-  function getCsrf() {
-    var m = document.cookie.match(/csrftoken=([^;]+)/);
-    return m ? m[1] : '';
-  }
-
-  sendBtn.addEventListener('click', sendMessage);
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-})();
 </script>
 
 <style>
-/* ── Chatbot Widget ── */
-.lf-chat-widget {
-  position: fixed; bottom: 32px; right: 32px;
-  z-index: 9000; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 12px;
+/* ════ NEWS SLIDER ════════════════════════════════════ */
+.lf-news-slider {
+  padding: 80px 0 72px;
+  background: var(--lf-bg);
+  border-top: 1px solid var(--lf-border);
 }
-.lf-chat-fab {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--lf-navy, #12100e);
-  border: 1px solid rgba(154,120,64,.35);
-  box-shadow: 0 8px 32px rgba(0,0,0,.22), 0 0 0 0 rgba(154,120,64,.25);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  position: relative; transition: transform .25s, box-shadow .25s;
-  color: #fff;
+.lf-ns-hd {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 36px;
 }
-.lf-chat-fab:hover { transform: scale(1.06); box-shadow: 0 12px 40px rgba(0,0,0,.28); }
-.lf-chat-fab-icon { position: absolute; transition: opacity .2s, transform .2s; }
-.lf-chat-fab-icon--close { opacity: 0; transform: rotate(-45deg) scale(.7); }
-.lf-chat-widget--open .lf-chat-fab-icon--open { opacity: 0; transform: rotate(45deg) scale(.7); }
-.lf-chat-widget--open .lf-chat-fab-icon--close { opacity: 1; transform: rotate(0) scale(1); }
-.lf-chat-fab-badge {
-  position: absolute; top: -4px; right: -4px;
-  background: #9a7840; color: #fff;
-  font-size: 8px; font-weight: 700; letter-spacing: .5px;
-  padding: 2px 5px; border-radius: 10px;
-  transition: opacity .2s;
+.lf-ns-tag {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); margin-bottom: 8px; opacity: .85;
 }
-.lf-chat-widget--open .lf-chat-fab-badge { opacity: 0; }
-
-.lf-chat-panel {
-  width: 340px; max-height: 480px;
-  background: #fff;
-  border: 1px solid rgba(154,120,64,.2);
-  border-radius: 16px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.18);
-  display: flex; flex-direction: column; overflow: hidden;
-  transform: scale(.9) translateY(16px); transform-origin: bottom right;
-  opacity: 0; pointer-events: none;
-  transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+.lf-ns-title {
+  font-family: var(--lf-serif); font-size: clamp(22px,2.8vw,32px);
+  font-weight: 400; color: var(--lf-navy); line-height: 1.2;
 }
-.lf-chat-widget--open .lf-chat-panel {
-  transform: scale(1) translateY(0); opacity: 1; pointer-events: auto;
-}
-.lf-chat-panel-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,.06);
-  background: #faf8f4;
-}
-.lf-chat-panel-title {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 600; color: #12100e; letter-spacing: .3px;
-}
-.lf-chat-panel-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #9a7840;
-  box-shadow: 0 0 0 0 rgba(154,120,64,.5);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,100% { box-shadow: 0 0 0 0 rgba(154,120,64,.5); }
-  50% { box-shadow: 0 0 0 5px rgba(154,120,64,.0); }
-}
-.lf-chat-panel-close {
-  background: none; border: none; cursor: pointer; padding: 4px;
-  color: #aaa; display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; transition: color .15s, background .15s;
-}
-.lf-chat-panel-close:hover { color: #333; background: rgba(0,0,0,.05); }
-
-.lf-chat-msgs {
-  flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px;
-  scroll-behavior: smooth;
-}
-.lf-chat-msgs::-webkit-scrollbar { width: 4px; }
-.lf-chat-msgs::-webkit-scrollbar-track { background: transparent; }
-.lf-chat-msgs::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px; }
-
-.lf-chat-msg { display: flex; }
-.lf-chat-msg--user { justify-content: flex-end; }
-.lf-chat-msg--ai { justify-content: flex-start; }
-.lf-chat-bubble {
-  max-width: 84%; padding: 10px 14px;
-  border-radius: 16px; font-size: 13.5px; line-height: 1.6;
-}
-.lf-chat-msg--user .lf-chat-bubble {
-  background: #12100e; color: #fff;
-  border-radius: 16px 16px 4px 16px;
-}
-.lf-chat-msg--ai .lf-chat-bubble {
-  background: #f4f0e8; color: #12100e;
-  border-radius: 16px 16px 16px 4px;
-}
-
-.lf-chat-dots { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; }
-.lf-chat-dots span {
-  width: 6px; height: 6px; border-radius: 50%; background: #9a7840;
-  animation: chat-dot-bounce .9s infinite;
-}
-.lf-chat-dots span:nth-child(2) { animation-delay: .15s; }
-.lf-chat-dots span:nth-child(3) { animation-delay: .3s; }
-@keyframes chat-dot-bounce { 0%,80%,100% { transform: scale(.7); opacity:.5; } 40% { transform: scale(1); opacity:1; } }
-
-.lf-chat-input-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 14px; border-top: 1px solid rgba(0,0,0,.06);
-  background: #faf8f4;
-}
-.lf-chat-input {
-  flex: 1; background: #fff; border: 1px solid rgba(0,0,0,.1);
-  border-radius: 20px; padding: 8px 14px;
-  font-size: 13px; color: #12100e; outline: none;
-  transition: border-color .15s;
-  font-family: inherit;
-}
-.lf-chat-input:focus { border-color: rgba(154,120,64,.5); }
-.lf-chat-input::placeholder { color: #bbb; }
-.lf-chat-send {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: #9a7840; border: none; cursor: pointer;
+.lf-ns-arrows { display: flex; gap: 8px; }
+.lf-ns-arrow {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--lf-border); background: var(--lf-bg);
   display: flex; align-items: center; justify-content: center;
-  color: #fff; transition: background .15s, transform .15s;
-  flex-shrink: 0;
+  cursor: pointer; color: var(--lf-navy);
+  transition: background .18s, border-color .18s, color .18s;
 }
-.lf-chat-send:hover { background: #b8935a; transform: scale(1.05); }
-.lf-chat-send:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.lf-ns-arrow:hover { background: var(--lf-navy); border-color: var(--lf-navy); color: #fff; }
+.lf-ns-arrow:disabled { opacity: .3; cursor: not-allowed; }
+
+/* 뷰포트 — overflow hidden */
+.lf-ns-viewport { overflow: hidden; }
+.lf-ns-track {
+  display: flex; gap: 24px;
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
+}
+
+/* 카드 — 3개씩 보이도록 calc */
+.lf-ns-card {
+  flex: 0 0 calc((100% - 48px) / 3);
+  border: 1px solid var(--lf-border);
+  border-radius: 4px;
+  padding: 28px 26px 22px;
+  background: #fff;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color .2s, transform .2s;
+}
+.lf-ns-card:hover { border-color: var(--lf-gold); transform: translateY(-3px); }
+.lf-ns-card-top { display: flex; align-items: center; gap: 10px; }
+.lf-ns-num {
+  font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  color: var(--lf-gold); letter-spacing: 1px; opacity: .7;
+}
+.lf-ns-badge {
+  font-size: 9.5px; font-weight: 600; letter-spacing: 1px;
+  color: var(--lf-navy); background: var(--lf-bg2);
+  padding: 3px 9px; border-radius: 20px;
+  border: 1px solid var(--lf-border);
+}
+.lf-ns-card-title {
+  font-family: var(--lf-serif); font-size: 16px; font-weight: 400;
+  color: var(--lf-navy); line-height: 1.45; flex-shrink: 0;
+}
+.lf-ns-card-body {
+  font-size: 13px; color: var(--lf-body); line-height: 1.9;
+  font-weight: 300; flex: 1;
+}
+.lf-ns-card-ft {
+  display: flex; align-items: center; gap: 10px;
+  padding-top: 12px; border-top: 1px solid var(--lf-border);
+}
+.lf-ns-date {
+  font-size: 10px; font-weight: 600; color: var(--lf-muted);
+  font-family: 'Courier New', monospace; letter-spacing: .5px;
+}
+.lf-ns-source {
+  font-size: 10px; color: var(--lf-gold); font-weight: 500;
+}
+
+/* 인디케이터 */
+.lf-ns-dots {
+  display: flex; gap: 6px; justify-content: center; margin-top: 28px;
+}
+.lf-ns-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lf-border); transition: background .2s, transform .2s;
+}
+.lf-ns-dot.active { background: var(--lf-gold); transform: scale(1.3); }
+
+@media (max-width: 900px) {
+  .lf-ns-card { flex: 0 0 calc((100% - 24px) / 2); }
+}
+@media (max-width: 600px) {
+  .lf-ns-card { flex: 0 0 100%; }
+}
 </style>
+
+<script>
+(function() {
+  const track   = document.getElementById('nsTrack');
+  const dots    = document.querySelectorAll('.lf-ns-dot');
+  const btnPrev = document.getElementById('nsArrowPrev');
+  const btnNext = document.getElementById('nsArrowNext');
+  if (!track) return;
+
+  const TOTAL   = 6;
+  const VISIBLE = 3;
+  const MAX_IDX = TOTAL - VISIBLE; // 3 (인덱스 0~3)
+  let current   = 0;
+
+  function getCardWidth() {
+    const card = track.querySelector('.lf-ns-card');
+    const gap  = 24;
+    return card ? card.offsetWidth + gap : 0;
+  }
+
+  function update() {
+    track.style.transform = `translateX(-${current * getCardWidth()}px)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === MAX_IDX;
+  }
+
+  btnPrev.addEventListener('click', () => { if (current > 0)       { current--; update(); } });
+  btnNext.addEventListener('click', () => { if (current < MAX_IDX) { current++; update(); } });
+  dots.forEach((d, i) => d.addEventListener('click', () => { current = i; update(); }));
+
+  update();
+  window.addEventListener('resize', update);
+})();
+</script>
 
 {% endblock %}

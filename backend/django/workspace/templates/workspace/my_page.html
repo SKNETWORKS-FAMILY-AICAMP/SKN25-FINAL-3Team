@@ -1,0 +1,127 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}마이페이지 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+  <header class="pg-header">
+    <div class="pg-nav">
+      <a href="{% url 'accounts:landing' %}" class="pg-logo">
+        <span class="pg-logo-mark">Pi</span><span class="pg-logo-name">PYPI</span>
+      </a>
+      {% include "pages/_nav.html" %}
+      <div class="pg-util">
+        <a href="/workspace/dashboard/" class="pg-btn-back">← 대시보드</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="pg-hero" style="padding:80px 0 40px;">
+    <div class="pg-container">
+      <span class="pg-hero-tag">My Account</span>
+      <h1 class="pg-hero-h1" style="font-size:clamp(26px,4vw,44px);">마이페이지</h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc">내 계정 정보와 특허 프로젝트 진행 현황을 확인합니다.</p>
+    </div>
+  </section>
+
+  <div class="pg-body" style="padding-bottom:80px;">
+    <div class="pg-container">
+      <div class="mp-grid">
+
+        <!-- 왼쪽: 정보 + 통계 -->
+        <div>
+          <div class="mp-card">
+            <div class="mp-card-title">회원 기본 정보</div>
+            <div class="mp-info-row"><span class="mp-info-key">아이디</span><span class="mp-info-val">{{ user.username }}</span></div>
+            <div class="mp-info-row"><span class="mp-info-key">이름</span><span class="mp-info-val">{{ user.name|default:"(지정 안 됨)" }}</span></div>
+            <div class="mp-info-row"><span class="mp-info-key">이메일</span><span class="mp-info-val">{{ user.email|default:"(지정 안 됨)" }}</span></div>
+            <div class="mp-info-row"><span class="mp-info-key">가입일</span><span class="mp-info-val">{{ user.date_joined|date:"Y년 m월 d일" }}</span></div>
+            <div class="mp-info-row"><span class="mp-info-key">회원 유형</span><span class="mp-role-badge">{{ role_display }}</span></div>
+          </div>
+
+          <div class="mp-card" style="margin-top:16px;">
+            <div class="mp-card-title">특허 프로젝트 현황</div>
+            <div class="mp-total">
+              <span class="mp-total-num">{{ project_stats.total }}</span>
+              <span class="mp-total-label">개 프로젝트</span>
+            </div>
+            <div class="mp-stats-grid">
+              <div class="mp-stat mp-stat--draft"><span class="mp-stat-label">초안 작성중</span><span class="mp-stat-num">{{ project_stats.draft }}</span></div>
+              <div class="mp-stat mp-stat--processing"><span class="mp-stat-label">AI 처리중</span><span class="mp-stat-num">{{ project_stats.agent_processing }}</span></div>
+              <div class="mp-stat mp-stat--review"><span class="mp-stat-label">검토중</span><span class="mp-stat-num">{{ project_stats.review }}</span></div>
+              <div class="mp-stat mp-stat--done"><span class="mp-stat-label">완료</span><span class="mp-stat-num">{{ project_stats.done }}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 정보 수정 -->
+        <div class="mp-card">
+          <div class="mp-card-title">회원 정보 수정</div>
+          <form method="POST" action="{% url 'my_page' %}" style="display:flex;flex-direction:column;gap:20px;">
+            {% csrf_token %}
+            <div>
+              <label class="mp-label">이름</label>
+              <input type="text" name="name" value="{{ user.name }}" placeholder="이름을 입력하세요" required class="mp-input">
+            </div>
+            <div>
+              <label class="mp-label">이메일 주소</label>
+              <input type="email" name="email" value="{{ user.email }}" placeholder="example@email.com" required class="mp-input">
+            </div>
+            <div>
+              <label class="mp-label">주력 기술 분야 (선택)</label>
+              <select class="mp-input">
+                <option value="ai">인공지능 / 소프트웨어</option>
+                <option value="bio">바이오 / 헬스케어</option>
+                <option value="mech">기계 / 하드웨어</option>
+                <option value="chem">화학 / 신소재</option>
+              </select>
+            </div>
+            <button type="submit" class="cp-btn-next" style="margin-top:8px;">수정 내용 저장하기</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% if messages %}<script>{% for message in messages %}alert("{{ message }}");{% endfor %}</script>{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+@media(max-width:768px){.mp-grid{grid-template-columns:1fr;}}
+.mp-card{background:var(--lf-bg);border:1px solid var(--lf-border);padding:28px 24px;}
+.mp-card-title{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--lf-gold);margin-bottom:20px;}
+.mp-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--lf-border);}
+.mp-info-row:last-child{border-bottom:none;}
+.mp-info-key{font-size:12px;color:var(--lf-muted);}
+.mp-info-val{font-size:13px;color:var(--lf-navy);font-weight:500;}
+.mp-role-badge{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;background:rgba(154,120,64,.1);color:var(--lf-gold);border-radius:2px;}
+.mp-total{text-align:center;padding:20px 0;border-bottom:1px solid var(--lf-border);margin-bottom:20px;}
+.mp-total-num{font-family:var(--lf-serif);font-size:48px;font-weight:400;color:var(--lf-gold);}
+.mp-total-label{font-size:13px;color:var(--lf-muted);margin-left:8px;}
+.mp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mp-stat{padding:14px;border-left:3px solid var(--lf-border);}
+.mp-stat-label{display:block;font-size:10px;color:var(--lf-muted);margin-bottom:4px;}
+.mp-stat-num{font-size:24px;font-weight:700;color:var(--lf-navy);}
+.mp-stat--draft{border-color:var(--lf-muted);}
+.mp-stat--processing{border-color:#f59e0b;}
+.mp-stat--review{border-color:var(--lf-gold);}
+.mp-stat--done{border-color:#10b981;}
+.mp-label{display:block;font-size:12px;font-weight:600;color:var(--lf-navy);margin-bottom:8px;}
+.mp-input{width:100%;padding:12px 14px;border:1px solid var(--lf-border);border-radius:2px;font-size:14px;font-family:var(--lf-sans);color:var(--lf-navy);background:var(--lf-bg);outline:none;box-sizing:border-box;transition:border-color .2s;}
+.mp-input:focus{border-color:var(--lf-gold);}
+.cp-btn-next{width:100%;padding:14px;background:var(--lf-navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
+.cp-btn-next:hover{background:var(--lf-gold);}
+</style>
+{% endblock %}

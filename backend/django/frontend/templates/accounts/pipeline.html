@@ -1,0 +1,511 @@
+{% extends 'base.html' %}
+{% block title %}특허 파이프라인 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pl-shell">
+
+  <!-- ══ NAV ═══════════════════════════════════════════════ -->
+  <nav class="dashboard-nav">
+    <a href="{% url 'accounts:landing' %}" class="nav-brand">
+      <span class="brand-icon-sm">Pi</span>
+      <span>PYPI</span>
+    </a>
+    <div class="nav-links">
+      <a href="{% url 'accounts:dashboard' %}" class="nav-link">AI 어시스턴트 대시보드</a>
+      <span class="nav-link-divider"></span>
+      <a href="{% url 'accounts:pipeline' %}"  class="nav-link active">파이프라인</a>
+    </div>
+    <div class="nav-user">
+      <div class="user-avatar">{{ user.name|default:user.username|slice:":1"|upper }}</div>
+      <span class="user-email">{{ user.username }}</span>
+      <form method="POST" action="{% url 'accounts:logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-logout">로그아웃</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- ══ SCROLL AREA ════════════════════════════════════════ -->
+  <div class="pl-scroll">
+    <div class="pl-wrap">
+
+      <!-- 페이지 헤더 -->
+      <div class="pl-page-hd">
+        <div>
+          <p class="pl-page-tag">AI Patent Pipeline</p>
+          <h1 class="pl-page-title">특허 파이프라인</h1>
+        </div>
+        {% if result %}
+        <a href="{% url 'accounts:pipeline' %}" class="pl-btn-rerun">↺ 다시 실행</a>
+        {% endif %}
+      </div>
+
+      <!-- 단계 표시 -->
+      <div class="pl-steps">
+        <div class="pl-step {% if result %}pl-step--done{% endif %}">
+          <div class="pl-step-dot">II</div>
+          <span class="pl-step-name">요약</span>
+        </div>
+        <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
+        <div class="pl-step {% if result %}pl-step--done{% endif %}">
+          <div class="pl-step-dot">IV</div>
+          <span class="pl-step-name">청구항</span>
+        </div>
+        <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
+        <div class="pl-step {% if result %}pl-step--done{% endif %}">
+          <div class="pl-step-dot">VI</div>
+          <span class="pl-step-name">명세서</span>
+        </div>
+        <div class="pl-step-line {% if result %}pl-step-line--done{% endif %}"></div>
+        <div class="pl-step {% if result %}pl-step--done{% endif %}">
+          <div class="pl-step-dot">VII</div>
+          <span class="pl-step-name">통합</span>
+        </div>
+      </div>
+
+      <!-- 에러 -->
+      {% if error %}
+      <div class="pl-error">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      <!-- ══ 입력 폼 ════════════════════════════════════════ -->
+      {% if not result %}
+      <div class="pl-card">
+        <div class="pl-card-hd">
+          <span class="pl-card-label">발명 정보 입력</span>
+          <p class="pl-card-sub">5개 항목을 입력하면 요약 → 청구항 → 명세서 → 통합 순서로 자동 생성합니다.</p>
+        </div>
+
+        <form method="POST" id="pipeline-form">
+          {% csrf_token %}
+          <div class="pl-fields">
+
+            <div class="pl-field">
+              <label class="pl-label">발명(프로젝트) 명칭</label>
+              <input class="pl-input" type="text" name="project_name"
+                placeholder="예: AI 기반 특허 도면 자동 생성 시스템"
+                value="{{ form_data.project_name }}" required>
+            </div>
+
+            <div class="pl-field">
+              <label class="pl-label">해결하고자 하는 문제</label>
+              <textarea class="pl-textarea" name="problem_to_solve" rows="3"
+                placeholder="예: 특허 도면 작성에 전문 지식이 필요하고 비용이 많이 든다."
+                required>{{ form_data.problem_to_solve }}</textarea>
+            </div>
+
+            <div class="pl-field">
+              <label class="pl-label">기존 기술의 문제점</label>
+              <textarea class="pl-textarea" name="prior_art_problem" rows="3"
+                placeholder="예: 기존 CAD 툴은 특허 규격을 자동으로 맞춰주지 않아 수작업이 필요하다."
+                required>{{ form_data.prior_art_problem }}</textarea>
+            </div>
+
+            <div class="pl-field">
+              <label class="pl-label">핵심 기술 구성 (해결 수단)</label>
+              <textarea class="pl-textarea" name="core_technology" rows="4"
+                placeholder="예: LLM이 명세서 텍스트를 파싱하여 블록도·흐름도 구조를 추출하고, SVG 렌더러가 특허청 규격에 맞는 도면을 자동 생성한다."
+                required>{{ form_data.core_technology }}</textarea>
+            </div>
+
+            <div class="pl-field">
+              <label class="pl-label">발명의 효과</label>
+              <textarea class="pl-textarea" name="expected_effect" rows="3"
+                placeholder="예: 도면 작성 시간을 90% 단축하고 특허청 규격 준수율을 높인다."
+                required>{{ form_data.expected_effect }}</textarea>
+            </div>
+
+          </div>
+
+          <div class="pl-submit-row">
+            <button type="submit" class="pl-submit-btn" id="submit-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span id="btn-text">파이프라인 실행</span>
+            </button>
+            <span class="pl-submit-note">약 30초~1분 소요됩니다</span>
+          </div>
+        </form>
+      </div>
+
+      <!-- 로딩 -->
+      <div class="pl-loading" id="loading-card" style="display:none;">
+        <div class="pl-spinner"></div>
+        <div>
+          <p class="pl-loading-title">AI 에이전트 실행 중…</p>
+          <p class="pl-loading-sub">요약 → 청구항 → 명세서 → 통합 순서로 처리합니다</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- ══ 결과 ══════════════════════════════════════════ -->
+      {% if result %}
+
+      <!-- II 요약 -->
+      {% if result.summary %}
+      <div class="pl-result">
+        <div class="pl-result-hd">
+          <span class="pl-result-num">II</span>
+          <div>
+            <h3 class="pl-result-title">요약 에이전트 <em>Summary</em></h3>
+            <span class="pl-badge pl-badge--ok">{{ result.summary.status }}</span>
+          </div>
+        </div>
+        <div class="pl-result-body">
+          {% if result.summary.readable_summary %}
+          <div class="pl-block"><p class="pl-block-lbl">요약본</p><p class="pl-block-txt">{{ result.summary.readable_summary }}</p></div>
+          {% endif %}
+          {% if result.summary.structured_invention %}
+          <div class="pl-grid2">
+            <div class="pl-block"><p class="pl-block-lbl">발명 명칭</p><p class="pl-block-txt">{{ result.summary.structured_invention.title|default:"—" }}</p></div>
+            <div class="pl-block"><p class="pl-block-lbl">해결 과제</p><p class="pl-block-txt">{{ result.summary.structured_invention.problem|default:"—" }}</p></div>
+            <div class="pl-block" style="grid-column:1/-1;"><p class="pl-block-lbl">해결 수단</p><p class="pl-block-txt">{{ result.summary.structured_invention.solution|default:"—" }}</p></div>
+            {% if result.summary.structured_invention.expected_effects %}
+            <div class="pl-block" style="grid-column:1/-1;">
+              <p class="pl-block-lbl">기대 효과</p>
+              <ul class="pl-list">{% for e in result.summary.structured_invention.expected_effects %}<li>{{ e }}</li>{% endfor %}</ul>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% if result.summary.warnings %}
+          <div class="pl-warn">{% for w in result.summary.warnings %}<p>{{ w }}</p>{% endfor %}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- IV 청구항 -->
+      {% if result.claims %}
+      <div class="pl-result">
+        <div class="pl-result-hd">
+          <span class="pl-result-num">IV</span>
+          <div>
+            <h3 class="pl-result-title">청구항 에이전트 <em>Claim</em></h3>
+            <span class="pl-badge pl-badge--ok">{{ result.claims.status }}</span>
+          </div>
+        </div>
+        <div class="pl-result-body">
+          {% if result.claims.draft_claims %}
+          {% for claim in result.claims.draft_claims %}
+          <div class="pl-claim">
+            <p class="pl-block-lbl">제{{ claim.claim_no }}항 · {{ claim.type }} · {{ claim.category }}</p>
+            <p class="pl-claim-txt">{{ claim.text }}</p>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% if result.claims.claim_strategy_notes %}
+          <div class="pl-block">
+            <p class="pl-block-lbl">청구항 전략 메모</p>
+            <ul class="pl-list">{% for n in result.claims.claim_strategy_notes %}<li>{{ n }}</li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- VI 명세서 -->
+      {% if result.specification %}
+      <div class="pl-result">
+        <div class="pl-result-hd">
+          <span class="pl-result-num">VI</span>
+          <div>
+            <h3 class="pl-result-title">명세서 에이전트 <em>Specification</em></h3>
+            <span class="pl-badge pl-badge--ok">완료</span>
+          </div>
+        </div>
+        <div class="pl-result-body">
+          {% with s=result.specification %}
+          {% if s.technical_field %}<div class="pl-block"><p class="pl-block-lbl">기술 분야</p><p class="pl-block-txt">{{ s.technical_field }}</p></div>{% endif %}
+          {% if s.background_art %}<div class="pl-block"><p class="pl-block-lbl">배경 기술</p><p class="pl-block-txt">{{ s.background_art }}</p></div>{% endif %}
+          {% if s.means_for_solving %}<div class="pl-block"><p class="pl-block-lbl">과제의 해결 수단</p><p class="pl-block-txt">{{ s.means_for_solving }}</p></div>{% endif %}
+          {% if s.effects %}<div class="pl-block"><p class="pl-block-lbl">발명의 효과</p><p class="pl-block-txt">{{ s.effects }}</p></div>{% endif %}
+          {% if s.detailed_description %}<div class="pl-block"><p class="pl-block-lbl">발명을 실시하기 위한 구체적인 내용</p><p class="pl-block-txt pl-block-txt--scroll">{{ s.detailed_description }}</p></div>{% endif %}
+          {% endwith %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- VII 컴포저 -->
+      {% if result.composer %}
+      <div class="pl-result pl-result--final">
+        <div class="pl-result-hd">
+          <span class="pl-result-num">VII</span>
+          <div>
+            <h3 class="pl-result-title">컴포저 에이전트 <em>Composer</em></h3>
+            <span class="pl-badge pl-badge--final">완성</span>
+          </div>
+        </div>
+        <div class="pl-result-body">
+          {% with c=result.composer %}
+          {% if c.abstract %}<div class="pl-block"><p class="pl-block-lbl">요약서 (Abstract)</p><p class="pl-block-txt">{{ c.abstract }}</p></div>{% endif %}
+          {% if c.final_claims_text %}<div class="pl-block"><p class="pl-block-lbl">최종 청구항</p><pre class="pl-pre">{{ c.final_claims_text }}</pre></div>{% endif %}
+          {% if c.output_file_path %}<div class="pl-block"><p class="pl-block-lbl">출력 파일</p><p class="pl-block-txt pl-block-txt--gold">{{ c.output_file_path }}</p></div>{% endif %}
+          {% if c.composer_notes %}<div class="pl-block"><p class="pl-block-lbl">컴포저 메모</p><ul class="pl-list">{% for n in c.composer_notes %}<li>{{ n }}</li>{% endfor %}</ul></div>{% endif %}
+          {% endwith %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- 도면 생성 안내 -->
+      <div class="pl-tip">
+        <div class="pl-tip-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="12" cy="12" r="4"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
+        </div>
+        <div>
+          <p class="pl-tip-title">도면도 자동 생성하세요</p>
+          <p class="pl-tip-sub">명세서 내용을 기반으로 SVG 블록도·흐름도를 자동으로 만들 수 있습니다.</p>
+        </div>
+      </div>
+
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── Shell ────────────────────────────────────────────── */
+.pl-shell {
+  min-height: 100vh; display: flex; flex-direction: column;
+  background: #f0f4f9; font-family: var(--sans);
+}
+.pl-scroll { flex: 1; overflow-y: auto; padding: 40px 0 80px; }
+.pl-wrap { max-width: 800px; margin: 0 auto; padding: 0 32px; }
+
+/* ── 페이지 헤더 ──────────────────────────────────────── */
+.pl-page-hd {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 28px;
+}
+.pl-page-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.pl-page-title {
+  font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--text-primary);
+}
+.pl-btn-rerun {
+  font-size: 10.5px; font-weight: 500; letter-spacing: .5px;
+  color: var(--text-muted); text-decoration: none;
+  padding: 6px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: #fff;
+  transition: var(--transition);
+}
+.pl-btn-rerun:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── 단계 표시 ────────────────────────────────────────── */
+.pl-steps {
+  display: flex; align-items: center; gap: 0;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 20px 28px;
+  margin-bottom: 24px;
+}
+.pl-step { display: flex; flex-direction: column; align-items: center; gap: 7px; flex: 0 0 auto; }
+.pl-step-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 12px; font-style: italic;
+  color: var(--text-muted); transition: var(--transition);
+}
+.pl-step-name { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+.pl-step--done .pl-step-dot { border-color: rgba(154,120,64,.5); color: var(--gold); background: rgba(154,120,64,.08); }
+.pl-step--done .pl-step-name { color: var(--gold); }
+.pl-step-line { flex: 1; height: 1px; background: var(--border); margin: 0 10px 18px; min-width: 30px; }
+.pl-step-line--done { background: rgba(154,120,64,.35); }
+
+/* ── 에러 ─────────────────────────────────────────────── */
+.pl-error {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; margin-bottom: 20px;
+  background: rgba(220,38,38,.05); border: 1px solid rgba(220,38,38,.2);
+  border-radius: var(--radius-sm);
+  font-size: 13px; color: #dc2626; font-weight: 400;
+}
+
+/* ── 입력 폼 카드 ─────────────────────────────────────── */
+.pl-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  margin-bottom: 16px;
+}
+.pl-card-hd {
+  padding: 24px 28px; border-bottom: 1px solid var(--border);
+  background: #fafafa;
+}
+.pl-card-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); display: block; margin-bottom: 4px;
+}
+.pl-card-sub { font-size: 13px; color: var(--text-muted); font-weight: 300; }
+.pl-fields { display: flex; flex-direction: column; gap: 22px; padding: 28px; }
+.pl-field { display: flex; flex-direction: column; gap: 7px; }
+.pl-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .8px;
+  color: var(--text-secondary);
+}
+.pl-input {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  background: var(--bg-input); color: var(--text-primary);
+  font-family: var(--sans); font-size: 14px; font-weight: 300;
+  outline: none; transition: var(--transition);
+}
+.pl-input:focus { border-color: rgba(154,120,64,.45); box-shadow: 0 0 0 3px rgba(154,120,64,.08); background: var(--bg-input-focus); }
+.pl-input::placeholder { color: var(--text-muted); }
+.pl-textarea {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  background: var(--bg-input); color: var(--text-primary);
+  font-family: var(--sans); font-size: 14px; font-weight: 300;
+  line-height: 1.75; resize: vertical; outline: none;
+  transition: var(--transition);
+}
+.pl-textarea:focus { border-color: rgba(154,120,64,.45); box-shadow: 0 0 0 3px rgba(154,120,64,.08); background: var(--bg-input-focus); }
+.pl-textarea::placeholder { color: var(--text-muted); }
+
+/* ── 제출 ─────────────────────────────────────────────── */
+.pl-submit-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 28px; border-top: 1px solid var(--border);
+  background: #fafafa;
+}
+.pl-submit-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; background: var(--gold); color: #fff;
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; border: none; border-radius: var(--radius-sm);
+  cursor: pointer; transition: background .18s;
+}
+.pl-submit-btn:hover { background: #7a5e2e; }
+.pl-submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+.pl-submit-note { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+/* ── 로딩 ─────────────────────────────────────────────── */
+.pl-loading {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px; background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-md); margin-top: 16px;
+}
+.pl-spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid rgba(154,120,64,.2); border-top-color: var(--gold);
+  animation: pl-spin .8s linear infinite; flex-shrink: 0;
+}
+@keyframes pl-spin { to { transform: rotate(360deg); } }
+.pl-loading-title { font-size: 13.5px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+.pl-loading-sub { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+/* ── 결과 카드 ────────────────────────────────────────── */
+.pl-result {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); margin-bottom: 12px; overflow: hidden;
+}
+.pl-result--final { border-top: 2px solid #059669; }
+.pl-result-hd {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+  background: #fafafa;
+}
+.pl-result-num {
+  font-family: var(--serif); font-size: 20px; font-weight: 300; font-style: italic;
+  color: var(--gold); width: 32px; text-align: center; flex-shrink: 0;
+}
+.pl-result-title {
+  font-family: var(--serif); font-size: 17px; font-weight: 400; color: var(--text-primary);
+  display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;
+}
+.pl-result-title em {
+  font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-muted); font-style: normal;
+}
+.pl-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 2px 9px; border-radius: 3px;
+}
+.pl-badge--ok    { background: rgba(154,120,64,.1); color: var(--gold); }
+.pl-badge--final { background: rgba(5,150,105,.1); color: #059669; }
+.pl-result-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 18px; }
+
+.pl-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pl-block { display: flex; flex-direction: column; gap: 6px; }
+.pl-block-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold);
+}
+.pl-block-txt {
+  font-size: 14px; font-weight: 300; color: var(--text-secondary);
+  line-height: 1.85; white-space: pre-wrap;
+}
+.pl-block-txt--scroll { max-height: 240px; overflow-y: auto; }
+.pl-block-txt--gold { color: var(--gold); font-family: var(--serif); }
+.pl-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.pl-list li {
+  font-size: 13.5px; font-weight: 300; color: var(--text-secondary);
+  padding-left: 16px; position: relative; line-height: 1.7;
+}
+.pl-list li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 7px; height: 1px; background: var(--gold);
+}
+.pl-warn {
+  padding: 12px 16px; border: 1px solid rgba(220,38,38,.2);
+  background: rgba(220,38,38,.04); font-size: 12.5px;
+  color: #b91c1c; font-weight: 300; line-height: 1.7; border-radius: var(--radius-sm);
+}
+.pl-claim {
+  padding: 14px 18px; background: #fafafa; border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.pl-claim-txt { font-size: 14px; font-weight: 300; color: var(--text-primary); line-height: 1.9; }
+.pl-pre {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--text-secondary); line-height: 1.85; white-space: pre-wrap;
+  background: #f8f9fa; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px; overflow-x: auto;
+}
+
+/* ── 도면 생성 팁 ─────────────────────────────────────── */
+.pl-tip {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 16px; padding: 18px 22px;
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md);
+}
+.pl-tip-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: rgba(154,120,64,.08); border: 1px solid rgba(154,120,64,.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); flex-shrink: 0;
+}
+.pl-tip-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+.pl-tip-sub { font-size: 12px; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+.pl-tip-btn {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 11px; font-weight: 600; letter-spacing: .8px;
+  color: var(--gold); text-decoration: none;
+  padding: 7px 16px; border: 1px solid rgba(154,120,64,.3);
+  border-radius: var(--radius-sm); white-space: nowrap;
+  transition: var(--transition);
+}
+.pl-tip-btn:hover { background: rgba(154,120,64,.06); }
+
+@media (max-width: 768px) {
+  .pl-wrap { padding: 0 16px; }
+  .pl-grid2 { grid-template-columns: 1fr; }
+  .pl-steps { overflow-x: auto; }
+}
+</style>
+<script>
+document.getElementById('pipeline-form')?.addEventListener('submit', function() {
+  const btn = document.getElementById('submit-btn');
+  if (btn) { btn.disabled = true; document.getElementById('btn-text').textContent = '실행 중…'; }
+  const loading = document.getElementById('loading-card');
+  if (loading) loading.style.display = 'flex';
+});
+</script>
+{% endblock %}

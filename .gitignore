@@ -66,9 +66,6 @@ data/tmp/**
 !data/tmp/**/.gitkeep
 !data/tmp/**/README.md
 
-# Generated review artifacts
-*.html
-
 # 도면 에이전트 생성 결과물
 drawing_analysis/
 

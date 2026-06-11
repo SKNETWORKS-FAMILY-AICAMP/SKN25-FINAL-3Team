@@ -43,6 +43,11 @@
   --transition:         all .2s cubic-bezier(.25,.46,.45,.94);
   --serif:              'DM Serif Display','Noto Serif KR',Georgia,serif;
   --sans:               'Pretendard Variable','Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  /* 페이지별 alias — 모든 변수명이 동일한 폰트를 가리킴 */
+  --lf-serif:           var(--serif);
+  --lf-sans:            var(--sans);
+  --la-serif:           var(--serif);
+  --la-sans:            var(--sans);
 }
 
 /* ── Reset ────────────────────────────────────────── */
@@ -348,6 +353,31 @@ button { font-family: var(--sans); }
   .welcome-card { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
   .auth-card { padding: 2rem 1.5rem; }
 }
+
+/* ── 공통 로고 (모든 페이지) ─────────────────────────── */
+.pg-logo, .nb-logo, .nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.pg-logo-mark, .nb-logo-mark, .brand-icon-sm {
+  width: 28px; height: 28px;
+  border: 1px solid rgba(154,120,64,.45);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 10px; color: #9a7840;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.pg-logo:hover .pg-logo-mark,
+.nb-logo:hover .nb-logo-mark,
+.nav-brand:hover .brand-icon-sm { background: rgba(154,120,64,.07); }
+.pg-logo-name, .nb-logo-name, .nav-brand > span:last-child {
+  font-family: var(--serif);
+  font-size: 14px; font-weight: 400;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: #12100e;
+}
   </style>
   {% block extra_css %}{% endblock %}
 </head>
@@ -367,9 +397,10 @@ window.PM_I18N = {
     nav_service:'서비스', nav_about:'서비스 소개', nav_features:'특징 및 원칙',
     nav_agents_pipeline:'에이전트 파이프라인', nav_agents:'에이전트', nav_team:'팀 소개',
     nav_use:'이용하기', nav_login:'로그인', nav_signup:'서비스 신청',
-    nav_dashboard:'대시보드', nav_pipeline_run:'파이프라인 실행', nav_drawing:'도면 생성',
+    nav_dashboard:'AI 어시스턴트', nav_pipeline_run:'파이프라인 실행', nav_drawing:'도면 생성',
+    nav_dashboard_label:'대시보드', nav_pipeline_label:'파이프라인',
     nav_logout:'로그아웃', nav_ai:'AI 어시스턴트', nav_home:'← 홈',
-    nav_about_top:'PYPI 소개', nav_patent_data:'특허 자료', nav_insights:'특허 인사이트', nav_qna:'특허법 Q&A', nav_qna_basics:'출원 기초', nav_qna_claims:'청구항 작성', nav_qna_exam:'심사·등록', nav_qna_ai:'AI 특허 Q&A',
+    nav_about_top:'PYPI 소개', nav_patent_data:'특허 자료', nav_insights:'특허 인사이트', nav_qna:'특허법 Q&A', nav_qna_basics:'출원 기초', nav_qna_claims:'청구항 작성', nav_qna_exam:'심사·등록', nav_qna_ai:'AI 특허 Q&A', nav_drawing_gallery:'도면 갤러리',
     /* ── Common ── */
     btn_pipeline:'파이프라인 실행', btn_start:'서비스 신청하기', btn_login_existing:'기존 회원 로그인',
     status_active:'활성', status_pending:'준비 중', status_standalone:'활성 · 단독 실행',
@@ -437,6 +468,12 @@ window.PM_I18N = {
     signup_name:'이름', signup_id:'아이디', signup_pw:'비밀번호',
     signup_pw2:'비밀번호 확인', signup_btn:'계정 생성',
     signup_have_account:'이미 계정이 있으신가요?', signup_login_link:'로그인',
+    login_home_link:'홈으로',
+    auth_brand_desc:'PYPI는 발명 아이디어를 입력받아 7개 전문 AI 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 완성 명세서를 자동으로 생성하는 AI 기반 특허 자동화 플랫폼입니다.',
+    signup_brand_desc:'계정을 등록하시면 PYPI의 7개 전문 AI 에이전트 파이프라인을 통해 특허 출원 전 과정을 체계적으로 자동화하실 수 있습니다.',
+    signup_step1:'계정 등록', signup_step2:'발명 정보 입력 (5개 필드)', signup_step3:'AI 파이프라인 자동 실행', signup_step4:'특허청 제출용 명세서 완성',
+    signup_role_label:'가입 유형', signup_role_inventor:'발명가', signup_role_inventor_desc:'특허 초안 작성', signup_role_attorney:'변리사', signup_role_attorney_desc:'전문가 검토',
+    signup_id_placeholder:'영문·숫자 조합', signup_pw_placeholder:'8자 이상', signup_pw2_placeholder:'동일하게 입력',
     /* ── Footer ── */
     foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     foot_disc:'AI 자동 생성 결과물이며, 최종 검토는 전문가와 함께 하시기 바랍니다.',
@@ -471,13 +508,44 @@ window.PM_I18N = {
     lf_foot_h3:'지원 언어',
     lf_foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     lf_foot_disc:'본 시스템이 생성하는 결과물은 참고용이며, 최종 특허 출원 전 반드시 전문 변리사의 검토를 받으시기 바랍니다.',
+    /* ── Chat page (nb_) ── */
+    nb_title:'특허 AI 어시스턴트', nb_collapse:'접기',
+    nb_source_search:'소스 검색…', nb_source_empty:'저장된 소스가 없습니다',
+    nb_source_empty_sub:'위 버튼으로 PDF·DOCX·TXT 파일을 추가하면 AI가 참고합니다.',
+    nb_source_open:'소스 패널 열기', nb_chat:'채팅', nb_clear_chat:'대화 초기화',
+    nb_hello:'안녕하세요', nb_hello_suffix:'님',
+    nb_welcome_sub:'특허 AI 어시스턴트에게 무엇이든 물어보세요.',
+    nb_tool1_title:'특허 용어 번역기', nb_tool1_desc:'어려운 특허 용어를 쉬운 말과 비유로 풀어드려요',
+    nb_tool1_chip1:'균등론', nb_tool1_chip2:'신규성·진보성', nb_tool1_chip3:'우선권 주장', nb_tool1_chip4:'PCT 출원',
+    nb_tool2_title:'아이디어 진단', nb_tool2_desc:'내 아이디어, 특허로 가능할지 빠르게 진단해줘요',
+    nb_tool2_chip1:'AI·SW 아이디어', nb_tool2_chip2:'하드웨어·기계', nb_tool2_chip3:'비즈니스 모델', nb_tool2_chip4:'유사 특허 있을까?',
+    nb_tool3_title:'청구항 & 명세서',
+    nb_tool3_chip1:'독립항 vs 종속항', nb_tool3_chip2:'청구항 초안 작성', nb_tool3_chip3:'명세서 작성법', nb_tool3_chip4:'청구항 보정', nb_tool3_chip5:'도면 부호 작성법',
+    nb_tool4_title:'조사 & 분석',
+    nb_tool4_chip1:'신규성 분석', nb_tool4_chip2:'선행기술 조사', nb_tool4_chip3:'AI·SW 특허 전략', nb_tool4_chip4:'특허맵 분석', nb_tool4_chip5:'경쟁사 특허 분석',
+    nb_tool5_title:'출원 & 절차',
+    nb_tool5_chip1:'출원 절차 안내', nb_tool5_chip2:'PCT 국제출원', nb_tool5_chip3:'거절이유 대응', nb_tool5_chip4:'특허 vs 실용신안', nb_tool5_chip5:'우선심사 신청',
+    nb_tool6_title:'권리 & 전략',
+    nb_tool6_chip1:'존속기간·연차료', nb_tool6_chip2:'직무발명 보상', nb_tool6_chip3:'특허 침해 대응', nb_tool6_chip4:'라이선싱 전략', nb_tool6_chip5:'영업비밀 vs 특허',
+    nb_scroll_latest:'최신 메시지로', nb_input_placeholder:'질문하거나 창작하세요', nb_send:'전송',
+    nb_input_hint:'Enter로 전송 · Shift+Enter로 줄바꿈',
+    nb_studio:'스튜디오', nb_studio_open:'스튜디오 패널 열기',
+    nb_my_projects:'내 프로젝트', nb_new_project:'+ 새 프로젝트',
+    nb_no_projects_html:'아직 프로젝트가 없습니다<br>새 프로젝트를 시작해보세요',
+    nb_studio_note:'프로젝트를 선택하면 해당 작업실로 이동합니다',
+    nb_source_count_fmt:'소스 {n}개', nb_kchars_fmt:'{n}k자',
+    nb_delete:'삭제', nb_copy:'복사', nb_copied:'복사됨',
+    nb_no_response:'죄송합니다, 응답을 받지 못했습니다.', nb_conn_error:'연결 오류가 발생했습니다.',
+    nb_chat_cleared:'대화가 초기화되었습니다.', nb_source_deleted:'소스가 삭제되었습니다.',
+    nb_upload_done_fmt:'"{f}" 업로드 완료', nb_upload_error:'파일 업로드 오류',
   },
   en: {
     nav_service:'Services', nav_about:'About', nav_features:'Principles', nav_agents_pipeline:'Agent Pipeline',
     nav_agents:'Agents', nav_team:'Team', nav_use:'Get Started', nav_login:'Login', nav_signup:'Apply',
-    nav_dashboard:'Dashboard', nav_pipeline_run:'Run Pipeline', nav_drawing:'Drawing Generator',
+    nav_dashboard:'AI Assistant', nav_pipeline_run:'Run Pipeline', nav_drawing:'Drawing Generator',
+    nav_dashboard_label:'Dashboard', nav_pipeline_label:'Pipeline',
     nav_logout:'Logout', nav_ai:'AI Assistant', nav_home:'← Home',
-    nav_about_top:'About PYPI', nav_patent_data:'Patent Data', nav_insights:'Patent Insights', nav_qna:'Patent Law Q&A', nav_qna_basics:'Application Basics', nav_qna_claims:'Writing Claims', nav_qna_exam:'Examination', nav_qna_ai:'AI Patent Q&A',
+    nav_about_top:'About PYPI', nav_patent_data:'Patent Data', nav_insights:'Patent Insights', nav_qna:'Patent Law Q&A', nav_qna_basics:'Application Basics', nav_qna_claims:'Writing Claims', nav_qna_exam:'Examination', nav_qna_ai:'AI Patent Q&A', nav_drawing_gallery:'Drawing Gallery',
     btn_pipeline:'Run Pipeline', btn_start:'Apply for Service', btn_login_existing:'Existing member login',
     status_active:'Active', status_pending:'Coming Soon', status_standalone:'Active · Standalone',
     portal_label:'Client Portal', client_portal:'Client Portal',
@@ -534,6 +602,12 @@ window.PM_I18N = {
     signup_name:'Name', signup_id:'Username', signup_pw:'Password',
     signup_pw2:'Confirm Password', signup_btn:'Create Account',
     signup_have_account:'Already have an account?', signup_login_link:'Log In',
+    login_home_link:'Home',
+    auth_brand_desc:'PYPI is an AI-powered patent automation platform where seven specialized AI agents work in sequence on your invention idea to automatically generate a complete specification ready for filing with the patent office.',
+    signup_brand_desc:'Once you register, you can systematically automate the entire patent filing process through PYPI\'s pipeline of 7 specialized AI agents.',
+    signup_step1:'Account Registration', signup_step2:'Invention Info Input (5 fields)', signup_step3:'AI Pipeline Auto-Execution', signup_step4:'Complete Specification for Filing',
+    signup_role_label:'Account Type', signup_role_inventor:'Inventor', signup_role_inventor_desc:'Draft patents', signup_role_attorney:'Patent Attorney', signup_role_attorney_desc:'Expert review',
+    signup_id_placeholder:'Letters and numbers', signup_pw_placeholder:'8+ characters', signup_pw2_placeholder:'Re-enter password',
     foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     foot_disc:'AI-generated results. Final review with a qualified professional is recommended.',
     lf_eyebrow:'AI Multi-Agent Patent Intelligence',
@@ -566,13 +640,44 @@ window.PM_I18N = {
     lf_foot_h3:'Languages',
     lf_foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     lf_foot_disc:'AI-generated results. Final review with a qualified professional is recommended.',
+    /* ── Chat page (nb_) ── */
+    nb_title:'AI Patent Assistant', nb_collapse:'Collapse',
+    nb_source_search:'Search sources…', nb_source_empty:'No saved sources',
+    nb_source_empty_sub:'Add PDF, DOCX, or TXT files above so the AI can reference them.',
+    nb_source_open:'Open source panel', nb_chat:'Chat', nb_clear_chat:'Clear conversation',
+    nb_hello:'Hello', nb_hello_suffix:'',
+    nb_welcome_sub:'Ask the AI patent assistant anything.',
+    nb_tool1_title:'Patent Term Translator', nb_tool1_desc:'Explains tricky patent terms in plain language with everyday analogies',
+    nb_tool1_chip1:'Doctrine of Equivalents', nb_tool1_chip2:'Novelty & Inventive Step', nb_tool1_chip3:'Priority Claim', nb_tool1_chip4:'PCT Application',
+    nb_tool2_title:'Idea Checkup', nb_tool2_desc:'Quickly checks whether your idea could be patentable',
+    nb_tool2_chip1:'AI / Software Idea', nb_tool2_chip2:'Hardware / Mechanical', nb_tool2_chip3:'Business Model', nb_tool2_chip4:'Similar patents?',
+    nb_tool3_title:'Claims & Specification',
+    nb_tool3_chip1:'Independent vs Dependent Claims', nb_tool3_chip2:'Draft Claims', nb_tool3_chip3:'How to Write a Specification', nb_tool3_chip4:'Claim Amendments', nb_tool3_chip5:'Reference Numeral Conventions',
+    nb_tool4_title:'Search & Analysis',
+    nb_tool4_chip1:'Novelty Analysis', nb_tool4_chip2:'Prior Art Search', nb_tool4_chip3:'AI/SW Patent Strategy', nb_tool4_chip4:'Patent Landscape Analysis', nb_tool4_chip5:'Competitor Patent Analysis',
+    nb_tool5_title:'Filing & Procedure',
+    nb_tool5_chip1:'Filing Procedure Guide', nb_tool5_chip2:'PCT International Application', nb_tool5_chip3:'Responding to Office Actions', nb_tool5_chip4:'Patent vs Utility Model', nb_tool5_chip5:'Accelerated Examination',
+    nb_tool6_title:'Rights & Strategy',
+    nb_tool6_chip1:'Patent Term & Annuities', nb_tool6_chip2:'Employee Invention Compensation', nb_tool6_chip3:'Infringement Response', nb_tool6_chip4:'Licensing Strategy', nb_tool6_chip5:'Trade Secret vs Patent',
+    nb_scroll_latest:'Scroll to latest', nb_input_placeholder:'Ask or create something…', nb_send:'Send',
+    nb_input_hint:'Enter to send · Shift+Enter for new line',
+    nb_studio:'Studio', nb_studio_open:'Open studio panel',
+    nb_my_projects:'My Projects', nb_new_project:'+ New Project',
+    nb_no_projects_html:'No projects yet<br>Start a new project',
+    nb_studio_note:'Selecting a project takes you to its workspace',
+    nb_source_count_fmt:'{n} sources', nb_kchars_fmt:'{n}k chars',
+    nb_delete:'Delete', nb_copy:'Copy', nb_copied:'Copied',
+    nb_no_response:'Sorry, no response was received.', nb_conn_error:'A connection error occurred.',
+    nb_chat_cleared:'Conversation cleared.', nb_source_deleted:'Source deleted.',
+    nb_upload_done_fmt:'"{f}" uploaded', nb_upload_error:'File upload error',
   },
   ja: {
     nav_service:'サービス', nav_about:'サービス概要', nav_features:'原則と特徴', nav_agents_pipeline:'エージェントパイプライン',
     nav_agents:'エージェント', nav_team:'チーム紹介', nav_use:'ご利用', nav_login:'ログイン', nav_signup:'申し込み',
-    nav_dashboard:'ダッシュボード', nav_pipeline_run:'パイプライン実行', nav_drawing:'図面生成',
+    nav_dashboard:'AIアシスタント', nav_pipeline_run:'パイプライン実行', nav_drawing:'図面生成',
+    nav_dashboard_label:'ダッシュボード', nav_pipeline_label:'パイプライン',
     nav_logout:'ログアウト', nav_ai:'AIアシスタント', nav_home:'← ホーム',
-    nav_about_top:'PYPIについて', nav_patent_data:'特許資料', nav_insights:'特許インサイト', nav_qna:'特許法 Q&A', nav_qna_basics:'出願基礎', nav_qna_claims:'請求項作成', nav_qna_exam:'審査・登録', nav_qna_ai:'AI特許 Q&A',
+    nav_about_top:'PYPIについて', nav_patent_data:'特許資料', nav_insights:'特許インサイト', nav_qna:'特許法 Q&A', nav_qna_basics:'出願基礎', nav_qna_claims:'請求項作成', nav_qna_exam:'審査・登録', nav_qna_ai:'AI特許 Q&A', nav_drawing_gallery:'図面ギャラリー',
     btn_pipeline:'パイプライン実行', btn_start:'サービスを申し込む', btn_login_existing:'会員の方はログイン',
     status_active:'稼働中', status_pending:'準備中', status_standalone:'稼働中 · 単独実行',
     portal_label:'クライアントポータル', client_portal:'クライアントポータル',
@@ -629,6 +734,12 @@ window.PM_I18N = {
     signup_name:'名前', signup_id:'ユーザー名', signup_pw:'パスワード',
     signup_pw2:'パスワード確認', signup_btn:'アカウント作成',
     signup_have_account:'すでにアカウントをお持ちの方は', signup_login_link:'ログイン',
+    login_home_link:'ホームへ',
+    auth_brand_desc:'PYPIは、発明アイデアを入力すると7つの専門AIエージェントが順番に連携し、特許庁に提出可能な完成した明細書を自動生成するAI特許自動化プラットフォームです。',
+    signup_brand_desc:'アカウント登録後、PYPIの7つの専門AIエージェントパイプラインを通じて特許出願プロセス全体を体系的に自動化できます。',
+    signup_step1:'アカウント登録', signup_step2:'発明情報の入力（5項目）', signup_step3:'AIパイプライン自動実行', signup_step4:'特許庁提出用明細書の完成',
+    signup_role_label:'登録タイプ', signup_role_inventor:'発明者', signup_role_inventor_desc:'特許草案の作成', signup_role_attorney:'弁理士', signup_role_attorney_desc:'専門家によるレビュー',
+    signup_id_placeholder:'英数字の組み合わせ', signup_pw_placeholder:'8文字以上', signup_pw2_placeholder:'同じパスワードを入力',
     foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     foot_disc:'AI自動生成結果です。最終確認は専門家とともに行うことをお勧めします。',
     lf_eyebrow:'AI マルチエージェント特許インテリジェンス',
@@ -661,13 +772,43 @@ window.PM_I18N = {
     lf_foot_h3:'対応言語',
     lf_foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     lf_foot_disc:'本サービスはAI自動生成結果を提供します。最終確認は専門家とともに行うことをお勧めします。',
+    /* ── Chat page (nb_) ── */
+    nb_title:'AI特許アシスタント', nb_collapse:'折りたたむ',
+    nb_source_search:'ソースを検索…', nb_source_empty:'保存されたソースがありません',
+    nb_source_empty_sub:'上のボタンからPDF・DOCX・TXTファイルを追加するとAIが参照します。',
+    nb_source_open:'ソースパネルを開く', nb_chat:'チャット', nb_clear_chat:'会話をリセット',
+    nb_hello:'こんにちは', nb_hello_suffix:'さん',
+    nb_welcome_sub:'AI特許アシスタントに何でも聞いてください。',
+    nb_tool1_title:'特許用語トランスレーター', nb_tool1_desc:'難しい特許用語をわかりやすい言葉とたとえで解説します',
+    nb_tool1_chip1:'均等論', nb_tool1_chip2:'新規性・進歩性', nb_tool1_chip3:'優先権主張', nb_tool1_chip4:'PCT出願',
+    nb_tool2_title:'アイデア診断', nb_tool2_desc:'あなたのアイデアが特許になり得るか素早く診断します',
+    nb_tool2_chip1:'AI・ソフトウェアアイデア', nb_tool2_chip2:'ハードウェア・機械', nb_tool2_chip3:'ビジネスモデル', nb_tool2_chip4:'似た特許はある？',
+    nb_tool3_title:'請求項＆明細書',
+    nb_tool3_chip1:'独立項 vs 従属項', nb_tool3_chip2:'請求項の草案作成', nb_tool3_chip3:'明細書の書き方', nb_tool3_chip4:'請求項の補正', nb_tool3_chip5:'図面符号の付け方',
+    nb_tool4_title:'調査＆分析',
+    nb_tool4_chip1:'新規性分析', nb_tool4_chip2:'先行技術調査', nb_tool4_chip3:'AI・ソフトウェア特許戦略', nb_tool4_chip4:'特許マップ分析', nb_tool4_chip5:'競合特許分析',
+    nb_tool5_title:'出願＆手続き',
+    nb_tool5_chip1:'出願手続き案内', nb_tool5_chip2:'PCT国際出願', nb_tool5_chip3:'拒絶理由への対応', nb_tool5_chip4:'特許 vs 実用新案', nb_tool5_chip5:'優先審査の申請',
+    nb_tool6_title:'権利＆戦略',
+    nb_tool6_chip1:'存続期間・年金', nb_tool6_chip2:'職務発明補償', nb_tool6_chip3:'特許侵害への対応', nb_tool6_chip4:'ライセンス戦略', nb_tool6_chip5:'営業秘密 vs 特許',
+    nb_scroll_latest:'最新メッセージへ', nb_input_placeholder:'質問または作成してください', nb_send:'送信',
+    nb_input_hint:'Enterで送信・Shift+Enterで改行',
+    nb_studio:'スタジオ', nb_studio_open:'スタジオパネルを開く',
+    nb_my_projects:'マイプロジェクト', nb_new_project:'+ 新規プロジェクト',
+    nb_no_projects_html:'まだプロジェクトがありません<br>新しいプロジェクトを始めましょう',
+    nb_studio_note:'プロジェクトを選択すると、該当のワークスペースに移動します',
+    nb_source_count_fmt:'ソース{n}件', nb_kchars_fmt:'{n}k文字',
+    nb_delete:'削除', nb_copy:'コピー', nb_copied:'コピー済み',
+    nb_no_response:'申し訳ありません、応答を受信できませんでした。', nb_conn_error:'接続エラーが発生しました。',
+    nb_chat_cleared:'会話がリセットされました。', nb_source_deleted:'ソースが削除されました。',
+    nb_upload_done_fmt:'"{f}"のアップロードが完了しました', nb_upload_error:'ファイルのアップロードエラー',
   },
   zh: {
     nav_service:'服务', nav_about:'服务介绍', nav_features:'原则与特色', nav_agents_pipeline:'智能体流水线',
     nav_agents:'智能体', nav_team:'团队介绍', nav_use:'开始使用', nav_login:'登录', nav_signup:'申请',
-    nav_dashboard:'控制台', nav_pipeline_run:'运行流水线', nav_drawing:'图面生成',
+    nav_dashboard:'AI助手', nav_pipeline_run:'运行流水线', nav_drawing:'图面生成',
     nav_logout:'退出登录', nav_ai:'AI助手', nav_home:'← 首页',
-    nav_about_top:'关于PYPI', nav_patent_data:'专利资料', nav_insights:'专利洞察', nav_qna:'专利法 Q&A', nav_qna_basics:'申请基础', nav_qna_claims:'权利要求撰写', nav_qna_exam:'审查·登记', nav_qna_ai:'AI专利 Q&A',
+    nav_about_top:'关于PYPI', nav_patent_data:'专利资料', nav_insights:'专利洞察', nav_qna:'专利法 Q&A', nav_qna_basics:'申请基础', nav_qna_claims:'权利要求撰写', nav_qna_exam:'审查·登记', nav_qna_ai:'AI专利 Q&A', nav_drawing_gallery:'图纸图库',
     btn_pipeline:'运行流水线', btn_start:'申请服务', btn_login_existing:'已有账号登录',
     status_active:'活跃', status_pending:'准备中', status_standalone:'活跃 · 独立运行',
     portal_label:'客户门户', client_portal:'客户门户',
@@ -724,6 +865,12 @@ window.PM_I18N = {
     signup_name:'姓名', signup_id:'用户名', signup_pw:'密码',
     signup_pw2:'确认密码', signup_btn:'创建账号',
     signup_have_account:'已有账号？', signup_login_link:'登录',
+    login_home_link:'返回首页',
+    auth_brand_desc:'PYPI是一个基于AI的专利自动化平台，输入发明创意后，7个专业AI智能体依次协作，自动生成可提交至专利局的完整说明书。',
+    signup_brand_desc:'注册账号后，您可以通过PYPI的7个专业AI智能体管道，系统化地自动完成专利申请的全过程。',
+    signup_step1:'账号注册', signup_step2:'输入发明信息（5个字段）', signup_step3:'AI管道自动执行', signup_step4:'完成可提交至专利局的说明书',
+    signup_role_label:'注册类型', signup_role_inventor:'发明人', signup_role_inventor_desc:'起草专利', signup_role_attorney:'专利代理人', signup_role_attorney_desc:'专家审核',
+    signup_id_placeholder:'字母和数字组合', signup_pw_placeholder:'8位以上', signup_pw2_placeholder:'再次输入相同密码',
     foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     foot_disc:'AI自动生成结果，建议与专业人士共同进行最终审核。',
     lf_eyebrow:'AI 多智能体专利智能系统',
@@ -756,6 +903,36 @@ window.PM_I18N = {
     lf_foot_h3:'支持语言',
     lf_foot_copy:'© 2025 꽃보다 특허 · PYPI. All rights reserved.',
     lf_foot_disc:'本服务提供AI自动生成结果，最终审核建议与专业人士共同进行。',
+    /* ── Chat page (nb_) ── */
+    nb_title:'AI专利助手', nb_collapse:'折叠',
+    nb_source_search:'搜索来源…', nb_source_empty:'暂无保存的来源',
+    nb_source_empty_sub:'通过上方按钮添加 PDF、DOCX、TXT 文件，AI 将参考其内容。',
+    nb_source_open:'打开来源面板', nb_chat:'聊天', nb_clear_chat:'清空对话',
+    nb_hello:'你好', nb_hello_suffix:'',
+    nb_welcome_sub:'向AI专利助手提出任何问题。',
+    nb_tool1_title:'专利术语翻译器', nb_tool1_desc:'用通俗易懂的语言和比喻解释晦涩的专利术语',
+    nb_tool1_chip1:'等同原则', nb_tool1_chip2:'新颖性·创造性', nb_tool1_chip3:'优先权主张', nb_tool1_chip4:'PCT申请',
+    nb_tool2_title:'创意诊断', nb_tool2_desc:'快速诊断您的创意是否具备专利可能性',
+    nb_tool2_chip1:'AI·软件创意', nb_tool2_chip2:'硬件·机械装置', nb_tool2_chip3:'商业模式', nb_tool2_chip4:'是否有类似专利？',
+    nb_tool3_title:'权利要求与说明书',
+    nb_tool3_chip1:'独立权利要求 vs 从属权利要求', nb_tool3_chip2:'起草权利要求', nb_tool3_chip3:'说明书撰写方法', nb_tool3_chip4:'权利要求修改', nb_tool3_chip5:'附图标记标注方法',
+    nb_tool4_title:'检索与分析',
+    nb_tool4_chip1:'新颖性分析', nb_tool4_chip2:'现有技术检索', nb_tool4_chip3:'AI·软件专利策略', nb_tool4_chip4:'专利地图分析', nb_tool4_chip5:'竞争对手专利分析',
+    nb_tool5_title:'申请与流程',
+    nb_tool5_chip1:'申请流程指南', nb_tool5_chip2:'PCT国际申请', nb_tool5_chip3:'答复审查意见', nb_tool5_chip4:'发明专利 vs 实用新型', nb_tool5_chip5:'优先审查申请',
+    nb_tool6_title:'权利与策略',
+    nb_tool6_chip1:'专利期限与年费', nb_tool6_chip2:'职务发明报酬', nb_tool6_chip3:'专利侵权应对', nb_tool6_chip4:'许可策略', nb_tool6_chip5:'商业秘密 vs 专利',
+    nb_scroll_latest:'滚动到最新消息', nb_input_placeholder:'提问或创作内容…', nb_send:'发送',
+    nb_input_hint:'Enter发送 · Shift+Enter换行',
+    nb_studio:'工作室', nb_studio_open:'打开工作室面板',
+    nb_my_projects:'我的项目', nb_new_project:'+ 新建项目',
+    nb_no_projects_html:'暂无项目<br>开始一个新项目吧',
+    nb_studio_note:'选择项目后将进入对应的工作区',
+    nb_source_count_fmt:'{n}个来源', nb_kchars_fmt:'{n}k字',
+    nb_delete:'删除', nb_copy:'复制', nb_copied:'已复制',
+    nb_no_response:'抱歉，未收到回复。', nb_conn_error:'发生连接错误。',
+    nb_chat_cleared:'对话已重置。', nb_source_deleted:'来源已删除。',
+    nb_upload_done_fmt:'"{f}" 上传完成', nb_upload_error:'文件上传错误',
   },
 };
 
@@ -767,7 +944,10 @@ window.pmApplyI18n = function(code) {
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) {
-      if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+      var attr = el.getAttribute('data-i18n-attr');
+      if (attr) {
+        el.setAttribute(attr, t[key]);
+      } else if (el.hasAttribute('placeholder')) {
         el.placeholder = t[key];
       } else if (el.hasAttribute('data-i18n-html')) {
         el.innerHTML = t[key];
@@ -786,6 +966,13 @@ window.pmApplyI18n = function(code) {
   });
   document.documentElement.lang = {ko:'ko',en:'en',ja:'ja',zh:'zh-Hans'}[code] || 'ko';
   try { localStorage.setItem('pm-lang', code); } catch(e) {}
+  document.dispatchEvent(new CustomEvent('pm:i18n', { detail: { code: code, t: t } }));
+};
+
+/* 현재 언어의 번역 문자열을 가져오는 헬퍼 (동적으로 생성되는 문자열용) */
+window.pmT = function(key) {
+  var t = window.PM_I18N[window.PM_LANG] || window.PM_I18N.ko;
+  return t[key] !== undefined ? t[key] : key;
 };
 
 /* ── 언어 스위처 이벤트 연결 (공통) ─────────── */

@@ -1,0 +1,181 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}새 특허 프로젝트 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+  <header class="pg-header">
+    <div class="pg-nav">
+      <a href="{% url 'accounts:landing' %}" class="pg-logo">
+        <span class="pg-logo-mark">Pi</span><span class="pg-logo-name">PYPI</span>
+      </a>
+      {% include "pages/_nav.html" %}
+      <div class="pg-util">
+        <a href="/accounts/chat/" class="pg-btn-back">← 특허 AI 어시스턴트</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="pg-hero" style="padding:80px 0 40px;">
+    <div class="pg-container" style="max-width:760px;">
+      <span class="pg-hero-tag">New Project</span>
+      <h1 class="pg-hero-h1" style="font-size:clamp(26px,4vw,44px);">새 특허 프로젝트<br><em>시작하기</em></h1>
+      <div class="pg-hero-rule"></div>
+    </div>
+  </section>
+
+  <div class="pg-body" style="padding-bottom:80px;">
+    <div class="pg-container" style="max-width:760px;">
+      <div class="cp-steps">
+        <div class="cp-step-line"></div>
+        <div class="step-indicator cp-step cp-step--active" id="ind-1">1</div>
+        <div class="step-indicator cp-step" id="ind-2">2</div>
+        <div class="step-indicator cp-step" id="ind-3">3</div>
+      </div>
+
+      <form id="project-form" method="POST" action="{% url 'create_project' %}">
+        {% csrf_token %}
+
+        <div class="form-step cp-step-body" id="step-1">
+          <div class="cp-field">
+            <div class="cp-field-hd">
+              <label class="cp-label">발명(프로젝트) 명칭</label>
+              <div class="cp-field-btns">
+                <button type="button" onclick="toggleGuide('guide-title')" class="cp-btn-guide">가이드</button>
+                <button type="button" onclick="fillDemo('title')" class="cp-btn-demo">예시 입력</button>
+              </div>
+            </div>
+            <input type="text" id="input-title" name="title" placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required class="cp-input">
+            <div id="guide-title" class="cp-guide" style="display:none;">발명의 핵심 기술 요소와 목적이 잘 드러나는 명칭을 입력해 주세요.</div>
+          </div>
+          <button type="button" class="cp-btn-next" onclick="nextStep(2)">다음 단계로 →</button>
+        </div>
+
+        <div class="form-step cp-step-body" id="step-2" style="display:none;">
+          <div class="cp-field">
+            <div class="cp-field-hd">
+              <label class="cp-label">1. 해결하고자 하는 과제</label>
+              <div class="cp-field-btns">
+                <button type="button" onclick="toggleGuide('guide-problem')" class="cp-btn-guide">가이드</button>
+                <button type="button" onclick="fillDemo('problem')" class="cp-btn-demo">예시 입력</button>
+              </div>
+            </div>
+            <textarea id="input-problem" name="problem_to_solve" rows="6" placeholder="기존 기술의 한계나 불편함을 구체적으로 서술해 주세요." class="cp-textarea"></textarea>
+            <div id="guide-problem" class="cp-guide" style="display:none;">기존 기술이 가지고 있던 명확한 한계점, 비효율성, 또는 기술적 단점을 기재해 주세요.</div>
+          </div>
+          <div class="cp-field">
+            <div class="cp-field-hd">
+              <label class="cp-label">2. 기존 기술의 문제점 (종래 기술)</label>
+              <div class="cp-field-btns">
+                <button type="button" onclick="toggleGuide('guide-prior')" class="cp-btn-guide">가이드</button>
+                <button type="button" onclick="fillDemo('prior')" class="cp-btn-demo">예시 입력</button>
+              </div>
+            </div>
+            <textarea id="input-prior" name="prior_art_problem" rows="8" placeholder="기존 기술의 구성과 그 한계를 논리적으로 작성해 주세요." class="cp-textarea"></textarea>
+            <div id="guide-prior" class="cp-guide" style="display:none;">기존 기술 구성 → 그 구성의 한계 → 그 결과 발생하는 문제 순서로 작성해 주세요.</div>
+          </div>
+          <div class="cp-btn-row">
+            <button type="button" class="cp-btn-back-step" onclick="nextStep(1)">← 이전</button>
+            <button type="button" class="cp-btn-next" onclick="nextStep(3)">다음 단계로 →</button>
+          </div>
+        </div>
+
+        <div class="form-step cp-step-body" id="step-3" style="display:none;">
+          <div class="cp-field">
+            <div class="cp-field-hd">
+              <label class="cp-label">3. 핵심 기술 구성 (Solution)</label>
+              <div class="cp-field-btns">
+                <button type="button" onclick="toggleGuide('guide-core')" class="cp-btn-guide">가이드</button>
+                <button type="button" onclick="fillDemo('core')" class="cp-btn-demo">예시 입력</button>
+              </div>
+            </div>
+            <textarea id="input-core" name="core_tech" rows="12" placeholder="발명의 대상, 구성요소, 입력값, 처리 방식, 출력값을 구체적으로 작성해 주세요." class="cp-textarea"></textarea>
+            <div id="guide-core" class="cp-guide cp-guide--highlight" style="display:none;"><strong>핵심 재료입니다.</strong> ① 발명의 대상 ② 주요 구성요소 ③ 입력값 ④ 처리 방식 ⑤ 출력값 순서로 작성해 주세요.</div>
+          </div>
+          <div class="cp-field">
+            <div class="cp-field-hd">
+              <label class="cp-label">4. 발명의 효과 (Expected Effect)</label>
+              <div class="cp-field-btns">
+                <button type="button" onclick="toggleGuide('guide-effect')" class="cp-btn-guide">가이드</button>
+                <button type="button" onclick="fillDemo('effect')" class="cp-btn-demo">예시 입력</button>
+              </div>
+            </div>
+            <textarea id="input-effect" name="expected_effect" rows="5" placeholder="발명을 통해 얻을 수 있는 기술적 효과를 적어주세요." class="cp-textarea"></textarea>
+            <div id="guide-effect" class="cp-guide" style="display:none;">속도 향상, 정확도 향상, 자원 절감 등으로 구체화해 주세요.</div>
+          </div>
+          <div class="cp-btn-row">
+            <button type="button" class="cp-btn-back-step" onclick="nextStep(2)">← 이전</button>
+            <button type="submit" class="cp-btn-submit">AI 특허 초안 생성 시작 →</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.cp-steps{display:flex;justify-content:space-between;align-items:center;position:relative;margin-bottom:48px;}
+.cp-step-line{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--lf-border);z-index:0;}
+.cp-step{z-index:1;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--lf-border);background:var(--lf-bg);color:var(--lf-muted);transition:all .3s;}
+.cp-step--active{border-color:var(--lf-gold);color:var(--lf-gold);}
+.cp-step--done{border-color:var(--lf-gold);background:var(--lf-gold);color:#fff;}
+.cp-field{margin-bottom:32px;}
+.cp-field-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.cp-label{font-size:15px;font-weight:600;color:var(--lf-navy);}
+.cp-field-btns{display:flex;gap:6px;}
+.cp-btn-guide{font-size:10px;font-weight:600;padding:5px 12px;border:1px solid var(--lf-border);background:transparent;color:var(--lf-muted);border-radius:2px;cursor:pointer;transition:all .15s;}
+.cp-btn-guide:hover{border-color:var(--lf-gold);color:var(--lf-gold);}
+.cp-btn-demo{font-size:10px;font-weight:700;padding:5px 12px;background:var(--lf-navy);color:#fff;border:none;border-radius:2px;cursor:pointer;transition:background .15s;}
+.cp-btn-demo:hover{background:var(--lf-gold);}
+.cp-input,.cp-textarea{width:100%;padding:16px 18px;background:var(--lf-bg);border:1px solid var(--lf-border);border-radius:2px;color:var(--lf-navy);font-size:14px;font-family:var(--lf-sans);box-sizing:border-box;transition:border-color .2s;}
+.cp-input:focus,.cp-textarea:focus{outline:none;border-color:var(--lf-gold);}
+.cp-textarea{resize:vertical;line-height:1.7;}
+.cp-guide{margin-top:10px;padding:14px 16px;background:var(--lf-bg2);border-left:3px solid var(--lf-gold);border-radius:0 2px 2px 0;font-size:13px;color:var(--lf-mid);line-height:1.7;}
+.cp-guide--highlight{border-color:var(--lf-navy);}
+.cp-btn-next{width:100%;padding:16px;background:var(--lf-navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
+.cp-btn-next:hover{background:var(--lf-gold);}
+.cp-btn-submit{flex:2;padding:16px 24px;background:var(--lf-gold);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
+.cp-btn-submit:hover{background:var(--lf-navy);}
+.cp-btn-back-step{flex:1;padding:16px;background:transparent;color:var(--lf-mid);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--lf-border);border-radius:2px;cursor:pointer;transition:all .2s;}
+.cp-btn-back-step:hover{border-color:var(--lf-gold);color:var(--lf-gold);}
+.cp-btn-row{display:flex;gap:12px;}
+</style>
+<script>
+function nextStep(step){
+    document.querySelectorAll('.form-step').forEach(el=>el.style.display='none');
+    document.getElementById('step-'+step).style.display='block';
+    document.querySelectorAll('.step-indicator').forEach((ind,idx)=>{
+        ind.classList.remove('cp-step--active','cp-step--done');
+        if(idx+1===step)ind.classList.add('cp-step--active');
+        else if(idx+1<step)ind.classList.add('cp-step--done');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleGuide(id){var el=document.getElementById(id);el.style.display=el.style.display==='none'?'block':'none';}
+const demoData={
+    title:"셀프 어텐션 기반 시퀀스 변환 신경망 시스템",
+    problem:"기존 모델은 RNN 또는 CNN 계층에 의존하여 입력 위치 간 장거리 의존성을 학습하므로, 병렬화가 어렵고 먼 위치 간 관계를 효과적으로 반영하기 어려움.",
+    prior:"1. 기존 기술의 구성: RNN 또는 CNN 계층을 사용하여 입력 시퀀스의 각 위치 간 관계를 학습\n\n2. 그 구성의 한계: 입력 위치 간 장거리 의존성을 효과적으로 학습하기 어렵고, 병렬화가 어려움\n\n3. 그 결과 발생하는 문제: 긴 입력 시퀀스에 대한 학습 및 추론 시간이 길어지고, 성능이 저하됨",
+    core:"1. 발명의 대상: 신경망 시스템\n2. 주요 구성요소: 디코더 네트워크\n3. 입력값: 원본 문장, 토큰 정보, 포지셔널 임베딩\n4. 처리 방식: 쿼리·키·값 결정 → 셀프 어텐션 적용 → 표현 생성\n5. 출력값: 각 위치에 대한 출력 시퀀스",
+    effect:"셀프 어텐션을 사용하여 병렬 처리가 가능해지고, 학습 및 추론 시간이 단축되며, 장거리 의존성 학습 성능이 향상됨"
+};
+function fillDemo(key){
+    var el=document.getElementById('input-'+key);
+    if(!el)return;
+    el.value=demoData[key];
+    el.style.transition='border-color .3s';
+    el.style.borderColor='var(--lf-gold)';
+    setTimeout(()=>{el.style.borderColor='';},600);
+}
+</script>
+{% endblock %}
