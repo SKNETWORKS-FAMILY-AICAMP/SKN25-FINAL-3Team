@@ -73,5 +73,7 @@ skn25-final-3team/
 
 ## 🔃 Future Work
 
-- FastAPI
+- FastAPI 추가
+- DB Migration
 - Agent logic 고도화
+- Test 디렉토리 추가
