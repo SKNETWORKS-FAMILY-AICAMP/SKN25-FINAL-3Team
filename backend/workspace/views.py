@@ -357,6 +357,7 @@ def generate_claims_api(request, project_id):
 
             yield json.dumps({"step": "prior_art_start", "message": "AWS RDS 벡터DB 연결 및 선행기술조사 가동..."}) + "\n"
 
+            pa_data = None
             try:
                 from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
                 
