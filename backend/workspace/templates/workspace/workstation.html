@@ -1,0 +1,945 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="workstation-container" style="display: flex; height: calc(100vh - 80px); margin-top: 80px; background: #0f172a; color: white;">
+
+    <div class="left-panel" style="flex: 1; border-right: 1px solid #334155; padding: 30px; overflow-y: auto; background: #111827;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; color: #38bdf8; margin: 0;">📋 원본 발명 데이터</h2>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 12px; background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #94a3b8;">무결성 검증됨 (Origin)</span>
+                <a href="{% url 'patent_report' project.id %}" target="_blank" style="text-decoration: none; background: #10b981; color: white; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: 0.2s; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">
+                    📄 리포트
+                </a>
+                <button id="view-process-btn" style="background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">
+                    현재 단계 보기
+                </button>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">1. 해결하고자 하는 과제</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.problem_to_solve|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">2. 종래 기술의 문제점</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.prior_art_problem|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">3. 핵심 기술 구성</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.core_tech|linebreaksbr }}</p>
+            </div>
+
+            <div class="data-card" style="background: #1e293b; padding: 20px; border-radius: 12px;">
+                <h3 style="font-size: 16px; color: #cbd5e1; margin-bottom: 10px;">4. 기대 효과</h3>
+                <p style="color: #f8fafc; line-height: 1.6; font-size: 15px;">{{ invention_input.expected_effect|default:"(입력되지 않음)"|linebreaksbr }}</p>
+            </div>
+        </div>
+        <div style="margin-top: 40px; border-top: 2px dashed #334155; padding-top: 20px;">
+            <h2 style="font-size: 20px; color: #10b981; margin-bottom: 20px;">AI 분석 요약</h2>
+            
+            <div id="ai-analysis-results" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 핵심 문제점</h4>
+                    <p id="ext-problem" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_problem|default:"분석 중..." }}</p>
+                </div>
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 해결 방법</h4>
+                    <p id="ext-solution" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_solution|default:"분석 중..." }}</p>
+                </div>
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 차별성</h4>
+                    <p id="ext-differentiation" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_differentiation|default:"분석 중..." }}</p>
+                </div>
+                <div class="analysis-card" style="background: #064e3b; padding: 15px; border-radius: 10px; border: 1px solid #10b981;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #34d399;">추출된 기대 효과</h4>
+                    <p id="ext-effect" style="margin: 0; font-size: 14px;">{{ consultation_state.ext_effect|default:"분석 중..." }}</p>
+                </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="right-panel" style="flex: 1.5; display: flex; flex-direction: column; position: relative;">
+        
+        
+        <div style="padding: 20px 30px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 22px; margin: 0;">{{ project.title }}</h2>
+            <div class="chat-action-bar" style="padding: 0 30px; display: flex; justify-content: flex-end; margin-bottom: 5px; gap: 10px;">
+                <button type="button" id="generate-claims-btn" 
+                        style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    청구항 작성
+                </button>
+                <button type="button" id="edit-claims-btn" 
+                        style="background: #334155; color: white; border: 1px solid #475569; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    청구항 수정
+                </button>
+                <button type="button" id="generate-drawing-btn" 
+                        style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    도면 생성
+                </button>
+                <button type="button" id="generate-spec-btn" 
+                        style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+                    명세서 작성
+                </button>
+                <button type="button" id="main-pa-report-btn" 
+                        style="display: none; background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); align-items: center; gap: 8px;">
+                    선행기술 리포트
+                </button>
+
+                <style>
+                    @keyframes pulse-red {
+                        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+                    }
+                </style>
+            </div>
+            <span style="background: #38bdf8; color: #0f172a; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 14px;">{{ project.get_status_display }}</span>
+        </div>
+
+        <div id="chat-box" style="flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+                {% for msg in chat_messages %}
+                    {% if msg.role == 'assistant' %}
+                        <div class="msg ai-msg" style="align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%;">
+                            <p style="margin: 0; line-height: 1.6;">{{ msg.content|linebreaksbr }}</p>
+                        </div>
+                    {% elif msg.role == 'user' %}
+                        <div class="msg user-msg" style="align-self: flex-end; background: #38bdf8; color: #0f172a; padding: 15px 20px; border-radius: 15px 15px 0 15px; max-width: 80%; font-weight: 500;">
+                            <p style="margin: 0; line-height: 1.6;">{{ msg.content|linebreaksbr }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+        </div>
+
+        <div style="padding: 20px; background: #111827; border-top: 1px solid #334155;">
+            <input type="file" id="file-upload" style="display: none;" accept=".pdf,.docx,.hwp">
+            <form id="chat-form" style="display: flex; gap: 10px; margin-top: 15px;">
+                {% csrf_token %}
+                <button type="button" id="file-btn" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 0 15px; font-size: 20px; cursor: pointer; transition: 0.2s;" title="문서 업로드 (PDF, DOCX, HWP)">
+                    📎📎📎
+                </button>
+                <input type="text" id="chat-input" placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
+                       style="flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 16px; outline: none;">
+                <button type="submit" class="start-btn" style="padding: 0 30px; font-size: 16px;">전송</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: 10px;
+    }
+    .typing-indicator span {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+    
+    #generate-claims-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        filter: brightness(1.1);
+    }
+    #generate-claims-btn:active {
+        transform: translateY(1px);
+    }
+</style>
+
+<script>
+    //let claimAbortController = null;
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatBox = document.getElementById('chat-box');
+    const fileBtn = document.getElementById('file-btn');
+    const fileInput = document.getElementById('file-upload');
+    const generateClaimsBtn = document.getElementById('generate-claims-btn'); // HTML에 배치된 버튼 ID
+
+    // 화면 로드 시 스크롤 하단 이동
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showLoading() {
+        const div = document.createElement('div');
+        div.id = 'ai-loading';
+        div.className = 'msg ai-msg';
+        div.style = "align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%; margin-bottom: 15px;";
+        
+        div.innerHTML = `
+            <div style="display: flex; align-items: center;">
+                <span style="color: #94a3b8; font-size: 14px; font-weight: 500;">AI 변리사가 분석 중입니다</span>
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeLoading() {
+        const loadingDiv = document.getElementById('ai-loading');
+        if (loadingDiv) {
+            loadingDiv.remove();
+        }
+    }
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 수정된 부분: .strip() -> .trim()
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // 내 메시지 즉시 추가
+            addMessage('user', message);
+            chatInput.value = '';
+
+            showLoading();
+
+            // AI 에이전트 API 호출
+            fetch("{% url 'chat_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'message': message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    removeLoading();
+                    addMessage('assistant', data.ai_message);
+                    if (data.extracted_data){
+                        if (data.extracted_data.problem) 
+                            document.getElementById('ext-problem').textContent = data.extracted_data.problem;
+                        if (data.extracted_data.solution) 
+                            document.getElementById('ext-solution').textContent = data.extracted_data.solution;
+                        if (data.extracted_data.differentiation)
+                            document.getElementById('ext-differentiation').textContent = data.extracted_data.differentiation;
+                        if (data.extracted_data.effect)
+                            document.getElementById('ext-effect').textContent = data.extracted_data.effect;
+                        }
+                    }
+                 else {
+                    alert("AI 응답을 가져오는 중 서버 오류가 발생했습니다.");
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("Error:", error);
+                alert("통신 중 문제가 발생했습니다. 브라우저 콘솔(F12)을 확인해 보세요.");
+            });
+        });
+    }
+
+    function addMessage(role, text) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (role === 'assistant' ? 'ai-msg' : 'user-msg');
+        
+        if (role === 'assistant') {
+            div.style = "align-self: flex-start; background: #334155; padding: 15px 20px; border-radius: 15px 15px 15px 0; max-width: 80%; margin-bottom: 15px; white-space: pre-wrap;";
+        } else {
+            div.style = "align-self: flex-end; background: #38bdf8; color: #0f172a; padding: 15px 20px; border-radius: 15px 15px 0 15px; max-width: 80%; font-weight: 500; margin-bottom: 15px; white-space: pre-wrap;";
+        }
+        
+        div.innerHTML = `<p style="margin: 0; line-height: 1.6;">${text}</p>`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    if (fileBtn && fileInput) {
+        fileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            addMessage('user', `📎 [파일 업로드] ${file.name}`);
+            showLoading();
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch("{% url 'upload_file_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // 파일 업로드 시엔 Content-Type을 수동으로 지정하지 않아야 합니다 (브라우저가 자동 세팅)
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeLoading(); 
+
+                if (data.status === 'success') {
+                    addMessage('assistant', data.ai_message);
+                    if (data.extracted_data) {
+                        const elProblem = document.getElementById('ext-problem');
+                        const elSolution = document.getElementById('ext-solution');
+                        const elDiff = document.getElementById('ext-differentiation');
+                        const elEffect = document.getElementById('ext-effect');
+
+                        if (elProblem) elProblem.innerText = data.extracted_data.problem;
+                        if (elSolution) elSolution.innerText = data.extracted_data.solution;
+                        if (elDiff) elDiff.innerText = data.extracted_data.differentiation;
+                        if (elEffect) elEffect.innerText = data.extracted_data.effect;
+                        
+                        //elProblem.parentElement.style.animation = "flash 1s"; 
+                    }
+                } else {
+                    alert("파일 처리 실패: " + data.message);
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("Error:", error);
+                alert("파일 업로드 중 문제가 발생했습니다.");
+            });
+
+            // 인풋창 초기화 (같은 파일 다시 올릴 수 있게)
+            this.value = '';
+        });
+    }
+
+    // if (generateClaimsBtn) {
+    //     generateClaimsBtn.addEventListener('click', async function() {
+    //         const agentModal = document.getElementById('ai-agent-modal');
+    //         const statusText = document.getElementById('agent-status-text');
+            
+    //         //  [중요] 모달창 UI 초기화 (버튼을 여러 번 누를 때를 대비)
+    //         document.getElementById('step-summary').innerText = '⏳ 1. 발명 내용 분석 및 구조화';
+    //         document.getElementById('step-summary').style.color = '#666';
+    //         document.getElementById('step-claim').innerText = '⏳ 2. 특허 청구항 초안 작성';
+    //         document.getElementById('step-claim').style.color = '#bbb';
+    //         document.getElementById('step-examiner').innerText = '⏳ 3. AI 심사관 명확성 검토';
+    //         document.getElementById('step-examiner').style.color = '#bbb';
+    //         document.getElementById('step-rewrite').style.display = 'none';
+    //         statusText.innerText = '통신을 준비하고 있습니다...';
+    //         statusText.style.color = '#0056b3';
+            
+    //         agentModal.style.display = 'block';
+    //         claimAbortController = new AbortController();
+    //         showLoading();
+
+    //         try {
+    //             // 2. Fetch로 백엔드 스트리밍 API 호출
+    //             const response = await fetch("{% url 'generate_claims_api' project.id %}", {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'X-CSRFToken': '{{ csrf_token }}' 
+    //                 },
+    //                 signal: claimAbortController.signal
+    //             });
+
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! status: ${response.status}`);
+    //             }
+
+    //             // 3. 스트리밍 데이터 읽기 준비
+    //             const reader = response.body.getReader();
+    //             const decoder = new TextDecoder("utf-8");
+    //             let buffer = "";
+
+    //             // 4. 데이터가 들어오는 족족 읽어들이는 무한 루프
+    //             while (true) {
+    //                 const { done, value } = await reader.read();
+    //                 if (done) break; // 통신이 끝나면 루프 탈출
+
+    //                 // 버퍼에 텍스트를 쌓고 줄바꿈(\n) 단위로 쪼개기
+    //                 buffer += decoder.decode(value, { stream: true });
+    //                 const lines = buffer.split("\n");
+    //                 buffer = lines.pop(); // 마지막 불완전한 줄은 다시 버퍼에 보관
+
+    //                 for (const line of lines) {
+    //                     if (!line.trim()) continue; // 빈 줄 무시
+                        
+    //                     const data = JSON.parse(line); 
+    //                     statusText.innerText = data.message; 
+    //                     statusText.style.color = '#0056b3';
+
+    //                     // 💡 백엔드 신호(step)에 따라 모달창 불 켜주기
+    //                     if (data.step === 'summary') {
+    //                         document.getElementById('step-summary').innerText = '✅ 1. 발명 내용 분석 및 구조화 완료';
+    //                         document.getElementById('step-summary').style.color = 'green';
+    //                         document.getElementById('step-claim').style.color = '#666'; // 다음 스텝 진하게
+    //                     } 
+    //                     else if (data.step === 'claim') {
+    //                         document.getElementById('step-claim').innerText = '✅ 2. 특허 청구항 초안 작성 완료';
+    //                         document.getElementById('step-claim').style.color = 'green';
+    //                         document.getElementById('step-examiner').style.color = '#666';
+    //                     } 
+    //                     else if (data.step === 'examiner') {
+    //                         document.getElementById('step-examiner').innerText = '✅ 3. AI 심사관 명확성 검토 통과';
+    //                         document.getElementById('step-examiner').style.color = 'green';
+    //                         document.getElementById('step-rewrite').style.display = 'none';
+    //                     } 
+    //                     else if (data.step === 'rewrite') {
+    //                         document.getElementById('step-examiner').innerText = '❌ 3. AI 심사관 명확성 반려';
+    //                         document.getElementById('step-examiner').style.color = 'red';
+    //                         document.getElementById('step-rewrite').style.display = 'block';
+    //                         document.getElementById('step-rewrite').innerText = `🔄 [심사관 반려] ${data.message}`;
+    //                     }
+    //                     else if (data.step === 'error') {
+    //                         alert("에러 발생: " + data.message);
+    //                         agentModal.style.display = 'none';
+    //                     }
+    //                     else if (data.step === 'done') {
+    //                         // 🏁 5. 모든 작업 완료 시: 모달 끄고 채팅방에 결과 출력
+    //                         removeLoading();
+    //                         agentModal.style.display = 'none';
+    //                         addMessage('assistant', data.message_content);
+                            
+    //                         // 💾 저장 버튼 생성 (버튼 ID를 시간값으로 고유하게 생성)
+    //                         const saveBtnId = 'save-claim-btn-' + Date.now();
+    //                         const btnHtml = `
+    //                         <div style="text-align: right; margin-top: -5px; margin-bottom: 20px; max-width: 80%;">
+    //                             <button id="${saveBtnId}" style="background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+    //                                 이 청구항 맘에 들면 저장해랏
+    //                             </button>
+    //                         </div>
+    //                         `;
+                            
+    //                         chatBox.insertAdjacentHTML('beforeend', btnHtml);
+    //                         chatBox.scrollTop = chatBox.scrollHeight;
+                            
+    //                         // 생성된 저장 버튼에 클릭 이벤트 달아주기
+    //                         document.getElementById(saveBtnId).addEventListener('click', function() {
+    //                             const btn = this;
+    //                             btn.innerText = "저장 중...";
+    //                             btn.disabled = true;
+
+    //                             fetch("{% url 'save_claims_api' project.id %}", {
+    //                                 method: 'POST',
+    //                                 headers: {
+    //                                     'Content-Type': 'application/json',
+    //                                     'X-CSRFToken': '{{ csrf_token }}'
+    //                                 },
+    //                                 body: JSON.stringify({ claims: data.claims })
+    //                             })
+    //                             .then(res => res.json())
+    //                             .then(saveData => {
+    //                                 if (saveData.status === 'success') {
+    //                                     btn.innerText = "저장 완료!";
+    //                                     btn.style.background = "#10b981"; 
+    //                                     btn.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.3)";
+    //                                 } else {
+    //                                     alert("저장 실패: " + saveData.message);
+    //                                     btn.innerText = "다시 시도";
+    //                                     btn.disabled = false;
+    //                                 }
+    //                             });
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             if (error.name === 'AbortError') {
+    //                 console.log('사용자에 의해 청구항 생성이 중단되었습니다.');
+    //             } else {
+    //                 console.error("스트리밍 에러:", error);
+    //                 statusText.innerText = "통신 중 오류가 발생했습니다.";
+    //                 statusText.style.color = "red";
+    //                 setTimeout(() => {
+    //                     agentModal.style.display = 'none';
+    //                 }, 3000);
+    //             }
+    //         }
+    //     });
+    // }
+
+    // document.addEventListener('DOMContentLoaded', function() {
+        
+    //     // [최소화 버튼] 동작
+    //     const minimizeBtn = document.getElementById('modal-minimize-btn');
+    //     if (minimizeBtn) {
+    //         minimizeBtn.addEventListener('click', () => {
+    //             document.getElementById('ai-agent-modal').style.display = 'none';
+    //             // (선택) 최소화했을 때 채팅창에 넌지시 알려주기
+    //             // addMessage('assistant', '💡 백그라운드에서 청구항 작성을 계속 진행합니다...');
+    //         });
+    //     }
+
+    //     // [취소(X) 버튼] 동작
+    //     const cancelBtn = document.getElementById('modal-cancel-btn');
+    //     if (cancelBtn) {
+    //         cancelBtn.addEventListener('click', () => {
+    //             // 통신 목줄이 있으면 끊어버리기!
+    //             if (claimAbortController) {
+    //                 claimAbortController.abort();
+    //             }
+    //             document.getElementById('ai-agent-modal').style.display = 'none';
+                
+    //             // 모달 껐을 때 로딩 애니메이션 지우고 취소 메시지 띄우기
+    //             removeLoading();
+    //             addMessage('assistant', '청구항 생성이 취소되었습니다. 다시 시도해 주세요.');
+    //         });
+    //     }
+        
+    // });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // 장고 템플릿 변수를 활용해 현재 방의 기존 메시지 개수를 파악합니다.
+        const messageCount = parseInt("{{ chat_messages.count }}") || 0;
+
+        let savedPaData = null;
+        try {
+            savedPaData = JSON.parse('{{ prior_art_json|escapejs }}');
+        } catch (e) {
+            console.error("선기조 데이터 파싱 에러:", e);
+        }
+
+        // 데이터가 잘 넘어왔다면 버튼 살리기
+        if (savedPaData && savedPaData !== null) {
+            window.latestPriorArtData = savedPaData; // 전역 변수 복구
+            
+            const mainPaBtn = document.getElementById('main-pa-report-btn');
+            if (mainPaBtn) {
+                mainPaBtn.style.display = 'flex'; // 숨겨진 버튼 등장!
+                
+                mainPaBtn.onclick = function() {
+                    openPriorArtModal(window.latestPriorArtData);
+                };
+            }
+        }
+    
+        // 만약 메시지가 하나도 없는 완전 새 프로젝트 방이라면
+        if (messageCount === 0) {
+            showLoading();
+            
+            // 2. 백엔드에 첫 원본 데이터 요약 및 질문 생성을 비동기로 요청
+            fetch("{% url 'welcome_api' project.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeLoading();
+                
+                if (data.status === 'success') {
+                    addMessage('assistant', data.ai_message);
+                    
+                    if (data.extracted_data) {
+                        if (document.getElementById('ext-problem')) document.getElementById('ext-problem').innerText = data.extracted_data.problem;
+                        if (document.getElementById('ext-solution')) document.getElementById('ext-solution').innerText = data.extracted_data.solution;
+                        if (document.getElementById('ext-differentiation')) document.getElementById('ext-differentiation').innerText = data.extracted_data.differentiation;
+                        if (document.getElementById('ext-effect')) document.getElementById('ext-effect').innerText = data.extracted_data.effect;
+                    }
+                }
+            })
+            .catch(error => {
+                removeLoading();
+                console.error("초기 웰컴 메시지 로드 오류:", error);
+            });
+        }
+    });
+</script>
+<script>
+const specBtn = document.getElementById('generate-spec-btn');
+if (specBtn) {
+    specBtn.addEventListener('click', function() {
+        showLoading(); // "AI가 분석 중입니다..." 표시
+        
+        fetch("{% url 'generate_specification_api' project.id %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeLoading();
+            if(data.status === 'success') {
+                addMessage('assistant', data.message);
+                
+                // 마크다운 내용을 보기 좋게 코드 블럭이나 별도의 박스로 렌더링
+                const mdHtml = `
+                    <div style="background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 15px; color: #f8fafc; font-family: 'Malgun Gothic', sans-serif; white-space: pre-wrap; font-size: 14px; min-height: 500px; max-height: 75vh; overflow-y: auto; line-height: 1.6; resize: vertical;">
+                        ${data.markdown}
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', mdHtml);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                alert("명세서 생성 오류: " + data.message);
+            }
+        })
+        .catch(err => {
+            removeLoading();
+            alert("통신 중 오류가 발생했습니다.");
+            console.error(err);
+        });
+    });
+}
+</script>
+<div id="claim-edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
+    
+    <div style="background: #1e293b; width: 60%; max-height: 85vh; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid #334155;">
+        
+        <div style="padding: 20px 30px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; color: #f8fafc; font-size: 18px;">✏️ 특허 청구범위 직접 수정</h3>
+            <button id="close-modal-btn" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; transition: 0.2s;">&times;</button>
+        </div>
+        
+        <div id="modal-claims-container" style="padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: #0f172a;">
+            <p style="color: #94a3b8; text-align: center;">데이터를 불러오는 중입니다...</p>
+        </div>
+        
+        <div style="padding: 20px 30px; border-top: 1px solid #334155; text-align: right; background: #1e293b;">
+            <button id="modal-save-btn" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);">
+                수정된 내용 저장
+            </button>
+        </div>
+        
+    </div>
+</div>
+<script>
+const editClaimsBtn = document.getElementById('edit-claims-btn');
+const modal = document.getElementById('claim-edit-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const modalContainer = document.getElementById('modal-claims-container');
+const modalSaveBtn = document.getElementById('modal-save-btn');
+
+if (editClaimsBtn) {
+    editClaimsBtn.addEventListener('click', () => {
+        // 모달창 띄우기 (Flex로 중앙 정렬)
+        modal.style.display = 'flex';
+        modalContainer.innerHTML = '<p style="color: #94a3b8; text-align: center;">데이터를 불러오는 중입니다...</p>';
+
+        // 백엔드(GET)에서 저장된 청구항 불러오기
+        fetch("{% url 'manage_claims_api' project.id %}")
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'empty') {
+                modalContainer.innerHTML = `<p style="color: #ef4444; text-align: center;">${data.message}</p>`;
+                modalSaveBtn.style.display = 'none'; // 저장 버튼 숨김
+            } else if (data.status === 'success') {
+                modalSaveBtn.style.display = 'inline-block';
+                modalContainer.innerHTML = ''; // 로딩 텍스트 지우기
+                
+                // 입력 폼 동적 생성
+                data.claims.forEach(c => {
+                    const badge = c.is_dependent ? '[종속항]' : '[독립항]';
+                    const boxHtml = `
+                        <div class="claim-edit-box" data-id="${c.id}" style="background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155;">
+                            <h4 style="margin: 0 0 10px 0; color: #38bdf8; font-size: 15px;">청구항 ${c.claim_no} <span style="color: #94a3b8; font-size: 13px;">${badge}</span></h4>
+                            <textarea class="claim-content-input" style="width: 100%; height: 100px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 10px; color: #f8fafc; font-size: 14px; outline: none; resize: vertical; line-height: 1.5; box-sizing: border-box;">${c.content}</textarea>
+                        </div>
+                    `;
+                    modalContainer.insertAdjacentHTML('beforeend', boxHtml);
+                });
+            }
+        });
+    });
+}
+
+// 2. 모달 닫기 버튼(X 표 또는 바깥 배경 클릭)
+closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+});
+
+// 3. 모달 안에서 [💾 수정된 내용 저장] 클릭 (POST 통신)
+modalSaveBtn.addEventListener('click', () => {
+    const originalText = modalSaveBtn.innerText;
+    modalSaveBtn.innerText = '⏳ 저장 중...';
+    modalSaveBtn.disabled = true;
+
+    // 화면의 textarea들을 순회하며 데이터 수집
+    const updatedClaims = [];
+    document.querySelectorAll('.claim-edit-box').forEach(box => {
+        const claimId = box.getAttribute('data-id');
+        const content = box.querySelector('.claim-content-input').value;
+        updatedClaims.push({ id: claimId, content: content });
+    });
+
+    fetch("{% url 'manage_claims_api' project.id %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ claims: updatedClaims })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('수정된 청구항이 성공적으로 저장되었습니다!');
+            modal.style.display = 'none'; // 성공 시 모달 닫기
+        } else {
+            alert('저장 실패: ' + data.message);
+        }
+    })
+    .finally(() => {
+        modalSaveBtn.innerText = originalText;
+        modalSaveBtn.disabled = false;
+    });
+});    
+</script>
+<style>
+    /* 노드 그래프 전용 CSS */
+    .process-graph-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 40px 20px;
+        position: relative;
+    }
+    .graph-node-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+    .graph-node {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        transition: all 0.4s ease;
+        border: 3px solid #334155;
+        background: #1e293b;
+        color: #64748b;
+    }
+    .graph-label {
+        margin-top: 12px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #64748b;
+        text-align: center;
+        transition: all 0.4s ease;
+    }
+    .graph-edge {
+        flex: 1;
+        height: 4px;
+        background: #334155;
+        margin: 0 -10px;
+        position: relative;
+        top: -15px; /* 노드 높이의 절반 즈음으로 선 맞추기 */
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+
+    /* 🔥 활성화(Active) 상태 디자인 */
+    .graph-node.active {
+        background: #0f172a;
+        border-color: #10b981; /* 에메랄드 빛 */
+        color: #10b981;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), inset 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+    .graph-label.active {
+        color: #10b981;
+    }
+    .graph-edge.active {
+        background: #10b981;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* 현재 진행 중인 펄스(Pulse) 애니메이션 */
+    @keyframes pulse-glow {
+        0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); border-color: #38bdf8; color: #38bdf8; }
+        50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.8); border-color: #7dd3fc; color: #7dd3fc; }
+        100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); border-color: #38bdf8; color: #38bdf8; }
+    }
+    .graph-node.current {
+        animation: pulse-glow 2s infinite;
+        background: #0f172a;
+    }
+    .graph-label.current {
+        color: #38bdf8;
+    }
+</style>
+
+<div id="process-map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: #0f172a; width: 800px; max-width: 90%; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); border: 1px solid #334155;">
+        
+        <div style="padding: 20px 30px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; background: #1e293b;">
+            <h3 style="margin: 0; color: #f8fafc; font-size: 18px;">특허 출원 파이프라인 진행도</h3>
+            <button id="close-process-modal" style="background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="process-graph-container" id="dag-container">
+            </div>
+
+        <div style="padding: 20px; background: #1e293b; border-top: 1px solid #334155; text-align: center;">
+            <p id="process-message" style="margin: 0; color: #cbd5e1; font-size: 14px;">현재 <strong style="color:#38bdf8;">청구항 작성</strong> 단계를 진행 중입니다.</p>
+        </div>
+    </div>
+</div>
+<script>
+    const processModal = document.getElementById('process-map-modal');
+    const viewProcessBtn = document.getElementById('view-process-btn');
+    const closeProcessBtn = document.getElementById('close-process-modal');
+    const dagContainer = document.getElementById('dag-container');
+    const processMessage = document.getElementById('process-message');
+
+    // 파이프라인 단계 정의
+    const pipelineSteps = [
+        { id: 1, name: 'AI 상담', icon: '💬' },
+        { id: 2, name: '청구항 작성', icon: '📜' },
+        { id: 3, name: '도면 작성', icon: '📐' },
+        { id: 4, name: '발명의 설명', icon: '📝' },
+        { id: 5, name: '최종 명세서', icon: '✨' }
+    ];
+
+    // 그래프를 렌더링하는 함수 (currentStep: 현재 진행 중인 단계 번호 1~5)
+    function renderGraph(currentStep) {
+        dagContainer.innerHTML = ''; // 초기화
+        
+        pipelineSteps.forEach((step, index) => {
+            let nodeClass = '';
+            let labelClass = '';
+            
+            if (step.id < currentStep) {
+                // 지나온 단계 (완료)
+                nodeClass = 'active';
+                labelClass = 'active';
+            } else if (step.id === currentStep) {
+                // 현재 진행 중인 단계 (반짝임)
+                nodeClass = 'current';
+                labelClass = 'current';
+                processMessage.innerHTML = `현재 <strong style="color:#38bdf8;">${step.name}</strong> 단계를 진행 중입니다.`;
+            }
+            
+            // 1. 노드(Node) 생성
+            const nodeHtml = `
+                <div class="graph-node-wrapper">
+                    <div class="graph-node ${nodeClass}">${step.icon}</div>
+                    <div class="graph-label ${labelClass}">${step.name}</div>
+                </div>
+            `;
+            dagContainer.insertAdjacentHTML('beforeend', nodeHtml);
+            
+            // 2. 엣지(Edge - 선) 생성 (마지막 노드가 아닐 때만)
+            if (index < pipelineSteps.length - 1) {
+                // 현재 단계보다 이전에 있는 선들만 불을 켭니다.
+                const edgeClass = (step.id < currentStep) ? 'active' : '';
+                const edgeHtml = `<div class="graph-edge ${edgeClass}"></div>`;
+                dagContainer.insertAdjacentHTML('beforeend', edgeHtml);
+            }
+        });
+    }
+
+    // 모달 열기 이벤트
+    if (viewProcessBtn) {
+        viewProcessBtn.addEventListener('click', () => {
+            // 💡 [중요] 백엔드 데이터를 기반으로 현재 단계를 계산하는 로직입니다.
+            // 임시로 하드코딩 해두었으나, 장고 템플릿 변수를 조합하여 동적으로 변경할 수 있습니다.
+            // 예시: 
+            // let currentStep = 1;
+            // if ("{{ project.has_claims }}" === "True") currentStep = 3;
+            
+            let currentStep = 2; // 현재 청구항 작성 단계라고 가정
+
+            renderGraph(currentStep);
+            processModal.style.display = 'flex';
+        });
+    }
+
+    // 모달 닫기 이벤트
+    if (closeProcessBtn) {
+        closeProcessBtn.addEventListener('click', () => processModal.style.display = 'none');
+    }
+    window.addEventListener('click', (e) => {
+        if (e.target === processModal) processModal.style.display = 'none';
+    });
+
+
+// 프론트엔드 JS 어딘가에 추가
+const drawBtn = document.getElementById('generate-drawing-btn');
+if (drawBtn) {
+    drawBtn.addEventListener('click', function() {
+        showLoading(); // "AI가 도면을 그리는 중입니다..."
+        
+        fetch("{% url 'generate_drawings_api' project.id %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeLoading();
+            if(data.status === 'success') {
+                // 1. 안내 텍스트 출력
+                addMessage('assistant', data.message);
+                
+                // 2. 채팅창에 <img> 태그로 도면 쾅쾅 꽂아주기!
+                data.drawings.forEach(dwg => {
+                    const imgHtml = `
+                        <div style="margin-bottom: 15px; text-align: center; background: white; padding: 10px; border-radius: 8px;">
+                            <strong style="color: #0f172a; display: block; margin-bottom: 5px;">${dwg.title}</strong>
+                            <img src="${dwg.url}" alt="${dwg.title}" style="max-width: 100%; border: 1px solid #e2e8f0;">
+                        </div>
+                    `;
+                    chatBox.insertAdjacentHTML('beforeend', imgHtml);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                alert("오류: " + data.message);
+            }
+        });
+    });
+}
+</script>
+
+<!-- 
+<div id="ai-agent-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+    <div style="background: white; width: 450px; margin: 15vh auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); position: relative;">
+
+        <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+            <button id="modal-minimize-btn" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #94a3b8; transition: 0.2s;" title="백그라운드에서 실행 (숨기기)">_</button>
+            <button id="modal-cancel-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #ef4444; transition: 0.2s;" title="작업 강제 취소">✕</button>
+        </div>
+
+        <h3 style="text-align: center; margin-bottom: 20px; color: #0f172a;">AI 작업 진행 중</h3>
+        
+        <ul style="list-style: none; padding: 0; font-size: 16px; line-height: 2;">
+            <li id="step-summary" style="color: #666;">⏳ 1. 발명 내용 분석 및 구조화</li>
+            <li id="step-claim" style="color: #bbb;">⏳ 2. 특허 청구항 초안 작성</li>
+            <li id="step-examiner" style="color: #bbb;">⏳ 3. AI 심사관 명확성 검토</li>
+            <li id="step-rewrite" style="color: red; display: none;">🔄 [심사관 반려] 청구항 보정 중...</li>
+        </ul>
+        
+        <div style="margin-top: 25px; text-align: center; padding: 10px; background: #f0f4f8; border-radius: 8px;">
+            <strong id="agent-status-text" style="color: #0056b3;">통신을 준비하고 있습니다...</strong>
+        </div>
+    </div>
+</div>
+모달 -->
+
+{% include "workspace/ai_agent_modal.html" %}
+
+{% endblock %}
+
+

@@ -1,7 +1,25 @@
-"""서비스형 Specification agent 패키지입니다.
+"""발명의 설명(Specification) 생성을 담당하는 에이전트 패키지.
 
-패키지 import 시 LLM/저장소 의존 구현을 자동 로드하지 않도록 가볍게 유지합니다.
-실제 명세서 생성 함수가 필요하면 하위 모듈에서 직접 가져옵니다.
+LangGraph MVP에서는 state를 통해 정보를 주고받으므로, 에이전트는 state를 
+인자로 받아 SpecificationAgentOutput 스키마에 맞는 dict를 반환합니다.
 """
 
-__all__: list[str] = []
+
+from agents.specification.spec_helpers import SpecificationAgentConfig
+from agents.specification.specification_agent import run_specification_agent
+from agents.specification.specification_storage import (
+    convert_to_markdown_format,
+    save_specification,
+    get_specification_markdown_path,
+    load_specification_markdown,
+)
+
+__all__ = [
+    "SpecificationAgentConfig",
+    "run_specification_agent",
+    "convert_to_markdown_format",
+    "save_specification",
+    "get_specification_markdown_path",
+    "load_specification_markdown",
+]
+

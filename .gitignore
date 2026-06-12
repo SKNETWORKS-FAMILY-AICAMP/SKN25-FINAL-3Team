@@ -97,3 +97,51 @@ models/**/wandb/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env/
+.venv/
+
+# Django
+media/
+staticfiles/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Cache
+.cache/
+pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+
+# SQLite
+*.sqlite3
+db.sqlite3
