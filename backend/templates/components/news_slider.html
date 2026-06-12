@@ -1,0 +1,85 @@
+{# templates/components/news_slider.html — {% include 'components/news_slider.html' %} #}
+<section class="lf-news-slider">
+  <div class="lf-container">
+    <div class="lf-ns-hd">
+      <div>
+        <p class="lf-ns-tag">Patent Trends</p>
+        <h2 class="lf-ns-title">특허 최신 트렌드</h2>
+      </div>
+      <div class="lf-ns-arrows">
+        <button class="lf-ns-arrow" id="nsArrowPrev" aria-label="이전">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="lf-ns-arrow" id="nsArrowNext" aria-label="다음">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="lf-ns-viewport">
+      <div class="lf-ns-track" id="nsTrack">
+
+        {% for card in news_cards %}
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top">
+            <span class="lf-ns-num">{{ forloop.counter|stringformat:"02d" }}</span>
+            <span class="lf-ns-badge">{{ card.badge }}</span>
+          </div>
+          <h3 class="lf-ns-card-title">{{ card.title }}</h3>
+          <p class="lf-ns-card-body">{{ card.body }}</p>
+          <div class="lf-ns-card-ft">
+            <span class="lf-ns-date">{{ card.date }}</span>
+            <span class="lf-ns-source">{{ card.source }}</span>
+          </div>
+        </article>
+        {% empty %}
+        {# 뷰에서 news_cards 컨텍스트를 넘기지 않을 경우 하드코딩 폴백 #}
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">01</span><span class="lf-ns-badge">AI·특허</span></div>
+          <h3 class="lf-ns-card-title">생성형 AI 특허 출원, 전년 대비 40% 급증</h3>
+          <p class="lf-ns-card-body">GPT·Diffusion 모델 기반 발명이 폭증하며 한국·미국·유럽 특허청 모두 AI 관련 심사 지침을 긴급 개정 중입니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.05</span><span class="lf-ns-source">KIPO 통계</span></div>
+        </article>
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">02</span><span class="lf-ns-badge">반도체</span></div>
+          <h3 class="lf-ns-card-title">HBM·PIM 특허 전쟁, 삼성 vs SK vs 마이크론</h3>
+          <p class="lf-ns-card-body">고대역폭 메모리(HBM) 및 PIM 분야에서 3사의 특허 분쟁이 격화되고 있습니다. 핵심 청구항 전략이 시장 주도권을 결정합니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.04</span><span class="lf-ns-source">특허청 동향</span></div>
+        </article>
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">03</span><span class="lf-ns-badge">바이오</span></div>
+          <h3 class="lf-ns-card-title">mRNA 치료제 특허 만료 러시 2026~2028</h3>
+          <p class="lf-ns-card-body">코로나 백신으로 주목받은 mRNA 핵심 특허들이 2026년부터 순차 만료됩니다. 후발 바이오텍의 진입 전략이 중요합니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.04</span><span class="lf-ns-source">BioPharma Dive</span></div>
+        </article>
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">04</span><span class="lf-ns-badge">소프트웨어</span></div>
+          <h3 class="lf-ns-card-title">대법원 Alice 판결 10주년 — SW 특허 지형 변화</h3>
+          <p class="lf-ns-card-body">추상적 아이디어를 배제하는 Alice 기준 10년이 지난 지금, 미국 법원은 AI·ML 청구항 적격성 판단 기준을 점차 완화하는 추세입니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.03</span><span class="lf-ns-source">USPTO 보고서</span></div>
+        </article>
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">05</span><span class="lf-ns-badge">전기차</span></div>
+          <h3 class="lf-ns-card-title">전고체 배터리 특허, 토요타·삼성SDI 선점 경쟁</h3>
+          <p class="lf-ns-card-body">차세대 전고체 배터리 분야에서 토요타(1,000건+)와 삼성SDI가 핵심 특허를 선점 중입니다. 2027년 양산 전 포트폴리오 확보가 관건입니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.03</span><span class="lf-ns-source">IFI Claims</span></div>
+        </article>
+        <article class="lf-ns-card">
+          <div class="lf-ns-card-top"><span class="lf-ns-num">06</span><span class="lf-ns-badge">IP 정책</span></div>
+          <h3 class="lf-ns-card-title">WIPO AI 특허 가이드라인 2025 — 발명자 요건 명확화</h3>
+          <p class="lf-ns-card-body">WIPO는 AI가 실질적으로 기여한 발명의 출원 방법에 관한 국제 가이드라인을 2025년 상반기 발표했습니다.</p>
+          <div class="lf-ns-card-ft"><span class="lf-ns-date">2025.02</span><span class="lf-ns-source">WIPO</span></div>
+        </article>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <div class="lf-ns-dots" id="nsDots">
+      <span class="lf-ns-dot active"></span>
+      <span class="lf-ns-dot"></span>
+      <span class="lf-ns-dot"></span>
+      <span class="lf-ns-dot"></span>
+    </div>
+  </div>
+</section>

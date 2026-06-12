@@ -1,0 +1,240 @@
+/* ════════════════════════════════════════════════════════
+   PYPI — Layout & Container
+════════════════════════════════════════════════════════ */
+
+/* ── 공통 컨테이너 ────────────────────────────────── */
+.lf-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+/* ── 섹션 공통 토큰 ────────────────────────────────── */
+.lf-tag {
+  display: block;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--lf-gold);
+  margin-bottom: 22px;
+  opacity: .75;
+}
+
+.lf-h2 {
+  font-family: var(--lf-serif);
+  font-size: clamp(26px, 2.8vw, 40px);
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--lf-navy);
+  letter-spacing: -.4px;
+  font-feature-settings: 'kern' 1;
+}
+.lf-h2 em { font-style: italic; color: var(--lf-gold); }
+
+.lf-body {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 2.05;
+  color: var(--lf-mid);
+  margin-bottom: 20px;
+  letter-spacing: .05px;
+}
+.lf-body:last-child { margin-bottom: 0; }
+
+.lf-section-hd { margin-bottom: 80px; }
+
+/* ── 공통 버튼 ──────────────────────────────────────── */
+.lf-btn-fill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: var(--lf-navy);
+  border: 1px solid var(--lf-navy);
+  transition: background .2s, border-color .2s;
+}
+.lf-btn-fill:hover { background: var(--lf-gold); border-color: var(--lf-gold); }
+.lf-btn-fill svg { opacity: .7; }
+
+.lf-btn-line {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--lf-mid);
+  border: 1px solid var(--lf-border);
+  transition: color .2s, border-color .2s;
+}
+.lf-btn-line:hover { color: var(--lf-navy); border-color: rgba(154, 120, 64, .4); }
+
+/* ── TOP CREDENTIAL BAR ─────────────────────────────── */
+.lf-top-bar {
+  background: var(--lf-navy);
+  padding: 8px 0;
+}
+.lf-top-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.lf-top-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .4);
+}
+.lf-top-bar-item svg { color: var(--lf-gold-lt); opacity: .7; }
+.lf-top-bar-sep { color: rgba(255, 255, 255, .12); font-size: 9px; }
+
+/* ── CREDENTIAL BAR ─────────────────────────────────── */
+.lf-cred {
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-cred-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 64px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+}
+.lf-cred-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.lf-cred-n {
+  font-family: var(--lf-serif);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--lf-gold);
+  line-height: 1;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+.lf-cred-pct { font-size: 18px; }
+.lf-cred-label {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--lf-muted);
+}
+.lf-cred-phrase {
+  font-family: var(--lf-serif);
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--lf-body);
+  text-align: center;
+  letter-spacing: .2px;
+}
+.lf-cred-item--attorney { gap: 4px; }
+.lf-cred-item--attorney .lf-cred-phrase { font-size: 12.5px; }
+.lf-cred-sep { width: 1px; height: 28px; background: var(--lf-border); flex-shrink: 0; }
+
+/* ── CLOSING ─────────────────────────────────────────── */
+.lf-closing {
+  padding: 120px 0;
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  text-align: center;
+}
+.lf-closing-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  padding: 56px 64px;
+  border: 1px solid rgba(154, 120, 64, .2);
+}
+.lf-close-bracket {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: .45;
+}
+.lf-close-bracket--tl { top: -1px; left: -1px; }
+.lf-close-bracket--tr { top: -1px; right: -1px; transform: scaleX(-1); }
+.lf-close-bracket--bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+.lf-close-bracket--br { bottom: -1px; right: -1px; transform: scale(-1); }
+.lf-close-ref {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.lf-close-ref-line { width: 40px; height: 1px; background: rgba(154, 120, 64, .3); flex-shrink: 0; }
+.lf-close-ref-label {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--lf-gold);
+  opacity: .55;
+  white-space: nowrap;
+}
+.lf-closing-h2 {
+  font-family: var(--lf-serif);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 300;
+  color: var(--lf-navy);
+  line-height: 1.12;
+  letter-spacing: -.5px;
+  margin-bottom: 20px;
+}
+.lf-closing-sub {
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--lf-mid);
+  line-height: 1.9;
+  letter-spacing: .2px;
+  margin-bottom: 44px;
+}
+.lf-closing-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.lf-close-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-top: 28px;
+  border-top: 1px solid var(--lf-border);
+}
+.lf-close-note-item { display: flex; align-items: center; gap: 5px; color: var(--lf-muted); }
+.lf-close-note-item svg { color: var(--lf-gold); opacity: .6; }
+.lf-close-sep { color: var(--lf-border); }

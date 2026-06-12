@@ -4,100 +4,101 @@
     <meta charset="UTF-8">
     <title>[특허 리포트] {{ project.title }}</title>
     <style>
-        /* A4 용지 스타일의 깔끔한 리포트 CSS */
+        :root {
+            --navy: #12100e;
+            --gold: #9a7840;
+            --border: #e2e8f0;
+            --bg: #f8f9fa;
+        }
         body {
-            background-color: #f1f5f9;
-            color: #1e293b;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--navy);
+            font-family: 'Times New Roman', 'Pretendard', serif; /* 문서 느낌을 위해 Serif 사용 */
             margin: 0;
             padding: 40px 20px;
         }
         .report-container {
-            max-width: 800px; /* A4 너비 느낌 */
+            max-width: 800px;
             margin: 0 auto;
             background: white;
-            padding: 50px 60px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-radius: 4px;
+            padding: 80px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 6px solid var(--gold);
         }
         .header {
             text-align: center;
-            border-bottom: 2px solid #1e293b;
-            padding-bottom: 20px;
-            margin-bottom: 40px;
+            border-bottom: 2px solid var(--navy);
+            padding-bottom: 30px;
+            margin-bottom: 50px;
         }
         .header h1 {
+            font-family: 'Georgia', serif;
+            font-size: 32px;
+            color: var(--navy);
             margin: 0;
-            font-size: 28px;
-            color: #0f172a;
         }
         .header p {
-            color: #64748b;
-            margin-top: 10px;
+            color: var(--gold);
+            font-size: 13px;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .section-title {
-            font-size: 18px;
+            font-family: 'Georgia', serif;
+            font-size: 20px;
             font-weight: bold;
-            color: #0f172a;
-            border-bottom: 1px solid #cbd5e1;
-            padding-bottom: 8px;
-            margin-top: 40px;
-            margin-bottom: 20px;
+            color: var(--navy);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-top: 50px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .content-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 20px;
-            border-radius: 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 2px;
             margin-bottom: 20px;
         }
         .content-box h4 {
-            margin: 0 0 10px 0;
-            color: #334155;
-            font-size: 15px;
+            margin: 0 0 12px 0;
+            color: var(--gold);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .content-box p {
             margin: 0;
-            line-height: 1.6;
-            font-size: 14px;
-            color: #475569;
+            line-height: 1.8;
+            font-size: 14.5px;
+            color: #334155;
             white-space: pre-wrap;
         }
         .claim-item {
-            margin-bottom: 20px;
-            padding-left: 10px;
-            border-left: 3px solid #3b82f6;
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 2px solid var(--navy);
         }
-        .claim-item.dependent {
-            border-left-color: #94a3b8;
-            margin-left: 20px;
-        }
+        .claim-item.dependent { border-left-color: var(--border); margin-left: 30px; }
         
-        /* 플로팅 인쇄 버튼 (인쇄 시에는 안 보이게 처리) */
         .print-btn {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            position: fixed; bottom: 40px; right: 40px;
+            background: var(--navy); color: white; border: none;
+            padding: 16px 30px; border-radius: 4px;
+            font-weight: 600; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             transition: 0.2s;
         }
-        .print-btn:hover { transform: translateY(-3px); }
+        .print-btn:hover { background: var(--gold); }
         
         @media print {
             body { background: white; padding: 0; }
-            .report-container { box-shadow: none; padding: 0; max-width: 100%; }
-            .print-btn { display: none; } /* 프린트 시 버튼 숨김 */
+            .report-container { box-shadow: none; padding: 0; max-width: 100%; border-top: none; }
+            .print-btn { display: none; }
         }
     </style>
 </head>
@@ -108,63 +109,57 @@
     <div class="report-container">
         <div class="header">
             <h1>{{ project.title }}</h1>
-            <p>특허 출원 요약 및 청구범위 초안 리포트 | 생성일: {% now "Y년 m월 d일" %}</p>
+            <p>특허 출원 요약 및 청구범위 리포트 | {{ project.created_at|date:"Y.m.d" }}</p>
         </div>
 
-        <div class="section-title">💡 발명 요약 (AI 분석)</div>
+        <div class="section-title">I. 발명 요약 (AI 분석)</div>
         <div class="content-box">
-            <h4>[해결하고자 하는 과제 및 문제점]</h4>
-            <p>{{ state.ext_problem|default:"내용이 없습니다." }}</p>
+            <h4>해결하고자 하는 과제</h4>
+            <p>{{ state.ext_problem|default:"입력된 데이터가 없습니다." }}</p>
         </div>
         <div class="content-box">
-            <h4>[핵심 해결 방법]</h4>
-            <p>{{ state.ext_solution|default:"내용이 없습니다." }}</p>
+            <h4>핵심 해결 방법</h4>
+            <p>{{ state.ext_solution|default:"입력된 데이터가 없습니다." }}</p>
         </div>
         <div class="content-box">
-            <h4>[발명의 차별성]</h4>
-            <p>{{ state.ext_differentiation|default:"내용이 없습니다." }}</p>
+            <h4>발명의 차별성</h4>
+            <p>{{ state.ext_differentiation|default:"입력된 데이터가 없습니다." }}</p>
         </div>
         <div class="content-box">
-            <h4>[기대 효과]</h4>
-            <p>{{ state.ext_effect|default:"내용이 없습니다." }}</p>
+            <h4>기대 효과</h4>
+            <p>{{ state.ext_effect|default:"입력된 데이터가 없습니다." }}</p>
         </div>
 
-        <div class="section-title">📜 특허 청구범위</div>
+        <div class="section-title">II. 특허 청구범위</div>
         {% if claims %}
             {% for c in claims %}
             <div class="claim-item {% if c.is_dependent %}dependent{% endif %}">
-                <h4 style="margin: 0 0 5px 0; font-size: 15px; color: {% if c.is_dependent %}#64748b{% else %}#1d4ed8{% endif %};">
+                <h4 style="margin: 0 0 8px 0; font-size: 15px; color: var(--navy);">
                     【청구항 {{ c.claim_no }}】 {% if c.is_dependent %}[종속항]{% else %}[독립항]{% endif %}
                 </h4>
-                <p style="margin: 0; line-height: 1.6; font-size: 15px;">{{ c.content }}</p>
+                <p style="margin: 0; line-height: 1.7; font-size: 15px;">{{ c.content }}</p>
             </div>
             {% endfor %}
         {% else %}
-            <div style="text-align: center; color: #94a3b8; padding: 30px;">
-                <p>아직 작성된 청구항이 없습니다.</p>
-            </div>
+            <p style="text-align: center; color: #94a3b8; padding: 30px;">아직 작성된 청구항이 없습니다.</p>
         {% endif %}
+
         {% if drawings %}
-        <div style="margin-top: 40px;">
-            <h3 style="color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 10px;">📐 첨부 도면</h3>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
-                {% for drawing in drawings %}
-                <div style="background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155; text-align: center; width: 300px;">
-                    <img src="{{ drawing.image_url }}" alt="{{ drawing.title }}" style="max-width: 100%; max-height: 250px; border-radius: 4px; border: 1px solid #475569;">
-                    <p style="color: #f8fafc; font-weight: bold; margin-top: 10px;">{{ drawing.title }}</p>
-                </div>
-                {% endfor %}
+        <div class="section-title">III. 첨부 도면</div>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            {% for drawing in drawings %}
+            <div style="background: #f8f9fa; padding: 15px; border: 1px solid var(--border); text-align: center; width: 220px;">
+                <img src="{{ drawing.image_url }}" alt="{{ drawing.title }}" style="max-width: 100%; border: 1px solid var(--border);">
+                <p style="font-size: 12px; font-weight: bold; margin-top: 10px;">{{ drawing.title }}</p>
             </div>
+            {% endfor %}
         </div>
         {% endif %}
 
         {% if specification %}
-        <div style="margin-top: 40px;">
-            <h3 style="color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 10px;">📝 발명의 설명</h3>
-            
-            <div style="background: #1e293b; padding: 25px; border-radius: 8px; border: 1px solid #334155; margin-top: 20px; color: #cbd5e1; line-height: 1.8; white-space: pre-wrap; font-size: 15px;">
-                {{ specification.markdown_content }}
-            </div>
+        <div class="section-title">IV. 발명의 설명</div>
+        <div class="content-box" style="padding: 40px; font-size: 15px; line-height: 1.8; white-space: pre-wrap;">
+            {{ specification.markdown_content }}
         </div>
         {% endif %}
     </div>
