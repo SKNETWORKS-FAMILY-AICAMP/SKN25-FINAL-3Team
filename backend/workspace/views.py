@@ -35,6 +35,7 @@ def dashboard(request):
 
     if user_role == 'attorney':
         projects = PatentProject.objects.filter(status='review')
+        projects = PatentProject.objects.filter(owner=request.user)
         template_name = 'workspace/attorney_dashboard.html'
     else:
         projects = PatentProject.objects.filter(owner=request.user)

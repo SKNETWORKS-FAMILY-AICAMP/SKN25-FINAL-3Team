@@ -1,0 +1,61 @@
+{# workspace/templates/workspace/components/_ai_agent_modal.html #}
+<div id="ai-agent-modal" class="lf-agent-overlay">
+    
+    <div class="lf-agent-window">
+        <div class="lf-agent-hd">
+            <h3 class="lf-agent-title">
+                <span class="lf-pulse-dot"></span>
+                AI 에이전트 실시간 관제 센터
+            </h3>
+            <div class="lf-agent-ctrls">
+                <button id="modal-minimize-btn" title="백그라운드에서 실행 (숨기기)">_</button>
+                <button id="modal-cancel-btn" class="lf-btn-close" title="작업 강제 취소">✕</button>
+            </div>
+        </div>
+
+        <div class="lf-agent-body">
+            <div class="lf-agent-sidebar">
+                <h4 class="lf-sidebar-title">Multi-Agent Pipeline</h4>
+                
+                <div id="node-summary" class="lf-agent-node">
+                    <strong>1. Summary Agent</strong>
+                    <span>발명 내용 분석 및 Pydantic 구조화 대기 중...</span>
+                </div>
+                
+                <div id="node-claim" class="lf-agent-node">
+                    <strong>2. Claim Draft Agent</strong>
+                    <span>독립항/종속항 초안 작성 대기 중...</span>
+                </div>
+                
+                <div id="node-examiner" class="lf-agent-node">
+                    <strong>3. AI Examiner Agent</strong>
+                    <span>명확성 심사 및 거절 사유 생성 대기 중...</span>
+                </div>
+
+                <div id="node-prior-art" class="lf-agent-node">
+                    <strong>4. Prior Art Agent</strong>
+                    <span>기존 특허 유사도 검색 및 리스크 분석 대기 중...</span>
+                </div>
+
+                <div id="node-rewrite" class="lf-agent-node lf-node-error" style="display: none;">
+                    <strong>⚠️ Claim Rewrite Agent</strong>
+                    <span id="rewrite-status">심사관 반려에 의한 보정 진행 중...</span>
+                </div>
+            </div>
+
+            <div class="lf-agent-terminal-wrap">
+                <div class="lf-terminal-log" id="live-terminal">
+                    <div class="lf-term-hd">// Agent Execution Terminal</div>
+                    </div>
+
+                <div class="lf-terminal-state">
+                    <div class="lf-term-hd">// Current State (JSON)</div>
+                    <pre id="state-json-content">{
+  "status": "waiting_for_agent..."
+}</pre>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

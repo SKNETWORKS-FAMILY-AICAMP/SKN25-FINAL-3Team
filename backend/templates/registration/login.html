@@ -1,113 +1,165 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            background: #0f172a;
-            color: white;
+{% block title %}PYPI — 로그인{% endblock %}
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   AUTH (LOGIN/SIGNUP) THEME
+════════════════════════════════════════════════════════ */
+.lf-auth-section {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--lf-bg2); /* 은은한 아이보리 바탕 */
+    padding: 40px 20px;
+}
 
-            height: 100vh;
+.lf-auth-card {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    padding: 48px 40px;
+    border: 1px solid var(--lf-border);
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(18, 16, 14, 0.04);
+    position: relative;
+    overflow: hidden;
+}
 
-            font-family: Arial;
-        }
+/* 상단 골드 라인 포인트 */
+.lf-auth-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--lf-gold);
+}
 
-        .login-box {
-            background: #1e293b;
-            padding: 40px;
-            border-radius: 20px;
-            width: 380px;
-        }
+/* ── 텍스트 ── */
+.lf-auth-title {
+    font-family: var(--lf-serif);
+    font-size: 28px;
+    color: var(--lf-navy);
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+.lf-auth-sub {
+    text-align: center;
+    color: var(--lf-mid);
+    font-size: 13px;
+    margin-bottom: 36px;
+    font-weight: 300;
+}
 
-        h1 {
-            margin-bottom: 30px;
-            text-align: center;
-        }
+/* ── 폼 & 인풋 ── */
+.lf-auth-field {
+    margin-bottom: 24px;
+}
+.lf-auth-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--lf-navy);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
 
-        .field {
-            margin-bottom: 18px;
-        }
+/* 장고가 자동으로 렌더링하는 input 태그를 CSS로 강제 스타일링 */
+.lf-auth-field input {
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--lf-bg2);
+    border: 1px solid var(--lf-border);
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--lf-navy);
+    transition: all 0.2s var(--lf-ease);
+    outline: none;
+    font-family: var(--lf-sans);
+}
+.lf-auth-field input:focus {
+    background: #fff;
+    border-color: var(--lf-gold);
+    box-shadow: 0 0 0 3px rgba(154, 120, 64, 0.1);
+}
 
-        .field label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #cbd5e1;
-        }
+/* ── 버튼 ── */
+.lf-auth-btn {
+    width: 100%;
+    padding: 18px;
+    margin-top: 8px;
+    background: var(--lf-navy);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.lf-auth-btn:hover {
+    background: var(--lf-gold);
+}
 
-        .field input {
-            width: 100%;
-            padding: 12px;
+/* ── 하단 링크 ── */
+.lf-auth-links {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 12.5px;
+}
+.lf-auth-links a {
+    color: var(--lf-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+}
+.lf-auth-links a:hover {
+    color: var(--lf-gold);
+    border-color: rgba(154, 120, 64, 0.4);
+}
+</style>
+{% endblock %}
 
-            border: none;
-            border-radius: 10px;
-
-            background: #0f172a;
-            color: white;
-
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-
-            background: #38bdf8;
-
-            border: none;
-            border-radius: 10px;
-
-            font-weight: bold;
-            cursor: pointer;
-
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #0ea5e9;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="login-box">
-
-        <h1>로그인</h1>
+{% block content %}
+<section class="lf-auth-section">
+    <div class="lf-auth-card">
+        
+        <h1 class="lf-auth-title">로그인</h1>
+        <p class="lf-auth-sub">PYPI 특허 자동화 시스템에 오신 것을 환영합니다.</p>
 
         <form method="post">
             {% csrf_token %}
 
-            <div class="field">
-                <label>아이디</label>
+            <div class="lf-auth-field">
+                <label for="{{ form.username.id_for_label }}">아이디</label>
                 {{ form.username }}
             </div>
 
-            <div class="field">
-                <label>비밀번호</label>
+            <div class="lf-auth-field">
+                <label for="{{ form.password.id_for_label }}">비밀번호</label>
                 {{ form.password }}
             </div>
 
-            <button type="submit">로그인</button>
-
+            <button type="submit" class="lf-auth-btn">로그인</button>
         </form>
 
+        <div class="lf-auth-links">
+            <a href="{% url 'signup' %}">아직 계정이 없으신가요? 회원가입</a>
+        </div>
+
     </div>
-    {% if messages %}
-    <script>
-        {% for message in messages %}
-            alert("{{ message }}");
-        {% endfor %}
-    </script>
-    {% endif %}
+</section>
 
-
-</body>
-</html>
+{% if messages %}
+<script>
+    {% for message in messages %}
+        alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
+{% endblock %}
