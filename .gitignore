@@ -97,6 +97,7 @@ models/**/wandb/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/tsconfig.tsbuildinfo
 # Python
 __pycache__/
 *.py[cod]
