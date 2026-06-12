@@ -1,0 +1,146 @@
+/* ════════════════════════════════════════════════════════
+   PYPI — Header & Navigation
+════════════════════════════════════════════════════════ */
+
+.lf-header {
+  position: sticky; top: 0; z-index: 600;
+  background: rgba(255, 255, 255, .95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--lf-border);
+}
+
+.lf-nav {
+  max-width: 1180px; margin: 0 auto;
+  padding: 0 64px; height: 70px;
+  display: flex; align-items: center;
+}
+
+/* ── 로고 ─────────────────────────────────────────────── */
+.lf-logo {
+  display: flex; align-items: center; gap: 11px;
+  text-decoration: none; margin-right: 52px; flex-shrink: 0;
+}
+.lf-logo-mark {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(154, 120, 64, .4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 10px; color: var(--lf-gold);
+  transition: background .2s;
+}
+.lf-logo:hover .lf-logo-mark { background: rgba(154, 120, 64, .06); }
+.lf-logo-name {
+  font-family: var(--lf-serif); font-size: 15px; font-weight: 400;
+  letter-spacing: 2.8px; text-transform: uppercase; color: var(--lf-navy);
+}
+
+/* ── GNB ──────────────────────────────────────────────── */
+.lf-gnb { display: flex; align-items: center; flex: 1; gap: 0; }
+.lf-gnb-item { position: relative; height: 70px; display: flex; align-items: center; }
+
+.lf-gnb-a {
+  position: relative;
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  text-decoration: none; padding: 0 18px; height: 70px;
+  display: flex; align-items: center; gap: 5px;
+  transition: color .2s;
+}
+.lf-gnb-a::after {
+  content: ''; position: absolute; bottom: 0; left: 18px; right: 18px; height: 2px;
+  background: var(--lf-gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .28s cubic-bezier(.25, .46, .45, .94);
+}
+.lf-gnb-a:hover,
+.lf-gnb-item:hover > .lf-gnb-a { color: var(--lf-navy); }
+.lf-gnb-a:hover::after,
+.lf-gnb-item:hover > .lf-gnb-a::after { transform: scaleX(1); }
+
+.lf-gnb-chev { flex-shrink: 0; transition: transform .25s; }
+.lf-gnb-item:hover .lf-gnb-chev { transform: rotate(180deg); }
+
+/* ── Dropdown ─────────────────────────────────────────── */
+.lf-drop {
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 210px;
+  background: #fff;
+  border: 1px solid var(--lf-border);
+  border-top: 2px solid var(--lf-gold);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s, transform .22s;
+  z-index: 700;
+}
+.lf-drop--wide { min-width: 240px; }
+.lf-gnb-item:hover .lf-drop {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.lf-drop-inner { padding: .6rem 0; }
+
+.lf-drop-a {
+  display: flex; align-items: center; gap: 10px;
+  padding: .6rem 1.25rem;
+  font-size: 11.5px; font-weight: 400; letter-spacing: .2px;
+  color: var(--lf-body); text-decoration: none;
+  transition: color .15s, background .15s;
+  white-space: nowrap; cursor: pointer;
+  background: transparent; border: none; width: 100%; text-align: left;
+  font-family: var(--lf-sans);
+}
+.lf-drop-a:hover          { color: var(--lf-navy); background: var(--lf-bg2); }
+.lf-drop-a--hl            { color: var(--lf-gold); font-weight: 500; }
+.lf-drop-a--hl:hover      { color: var(--lf-gold-lt); }
+.lf-drop-a--cta           { color: var(--lf-gold); font-weight: 600; letter-spacing: .5px; }
+.lf-drop-a--cta:hover     { background: rgba(154, 120, 64, .06); }
+.lf-drop-logout:hover     { color: #dc2626; background: rgba(220, 38, 38, .05); }
+
+.lf-drop-num {
+  font-family: var(--lf-serif); font-size: 11px; font-style: italic;
+  color: var(--lf-muted); width: 16px; flex-shrink: 0;
+}
+.lf-drop-a:hover .lf-drop-num { color: var(--lf-gold); }
+.lf-drop-sep { height: 1px; background: var(--lf-border); margin: .4rem 1.25rem; }
+
+/* ── Util (우측) ─────────────────────────────────────── */
+.lf-util { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+
+.lf-login {
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  text-decoration: none; transition: color .2s;
+}
+.lf-login:hover { color: var(--lf-navy); }
+.lf-login--cta {
+  color: #fff; background: var(--lf-navy);
+  padding: .3rem .8rem; border-radius: 2px; transition: background .2s;
+}
+.lf-login--cta:hover { background: var(--lf-gold); color: #fff; }
+
+.lf-util-logout {
+  font-size: 10px; font-weight: 500; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--lf-mid);
+  background: none; border: 1px solid var(--lf-border);
+  border-radius: 2px; padding: .3rem .8rem; cursor: pointer;
+  transition: border-color .2s, color .2s; font-family: inherit;
+}
+.lf-util-logout:hover { border-color: rgba(239, 68, 68, .4); color: #e57373; }
+
+/* ── Language switcher ────────────────────────────────── */
+.lf .lang-btn {
+  border-color: rgba(0, 0, 0, .12); color: var(--lf-mid);
+  font-size: 10px; letter-spacing: 1.4px; background: transparent;
+}
+.lf .lang-btn:hover { border-color: rgba(154, 120, 64, .4); color: var(--lf-gold); }
+.lf .lang-dropdown {
+  background: #fff; border-color: var(--lf-border);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .1); margin-top: 4px;
+}
+.lf .lang-switcher:hover .lang-dropdown,
+.lf .lang-switcher.open .lang-dropdown { display: block; }
+.lf .lang-option { color: var(--lf-body); }
+.lf .lang-option:hover,
+.lf .lang-option.active { background: var(--lf-bg2); color: var(--lf-navy); }
+.lf .lang-code { color: var(--lf-muted); }
+.lf .lang-option.active .lang-code { color: var(--lf-gold); }

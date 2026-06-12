@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}PYPI — 내 특허 프로젝트{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   DASHBOARD THEME
+════════════════════════════════════════════════════════ */
+.lf-dash-section {
+    padding: 120px 0;
+    background: var(--lf-bg);
+    min-height: calc(100vh - 70px);
+}
+
+/* ── 헤더 영역 ── */
+.lf-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--lf-border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+}
+.lf-dash-title {
+    font-family: var(--lf-serif);
+    font-size: clamp(28px, 3.5vw, 36px);
+    font-weight: 300;
+    color: var(--lf-navy);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+.lf-dash-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* ── 대시보드 전용 버튼 ── */
+.lf-btn-danger {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    font-size: 10px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer;
+    color: #ef4444; background: #fff;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    transition: all 0.2s var(--lf-ease);
+}
+.lf-btn-danger:hover {
+    background: #ef4444; color: #fff; border-color: #ef4444;
+}
+.lf-btn-danger:disabled {
+    opacity: 0.5; cursor: not-allowed;
+}
+
+/* ── 유틸 및 선택 영역 ── */
+.lf-dash-utils {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    height: 24px; /* 높이 고정으로 레이아웃 흔들림 방지 */
+}
+.lf-cb-wrap {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+}
+.lf-cb {
+    width: 16px; height: 16px;
+    accent-color: var(--lf-gold);
+    cursor: pointer; margin: 0;
+}
+.lf-cb-label {
+    font-size: 12px; font-weight: 500; letter-spacing: 1px;
+    color: var(--lf-mid); cursor: pointer;
+}
+
+/* ── 프로젝트 리스트 & 카드 ── */
+.lf-project-list {
+    display: flex; flex-direction: column; gap: 12px;
+}
+.lf-card {
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    padding: 24px 32px;
+    display: flex; align-items: center; gap: 24px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+.lf-card:hover {
+    background: var(--lf-bg2);
+    border-color: rgba(154, 120, 64, 0.3);
+}
+/* 호버 시 좌측 골드 라인 생성 */
+.lf-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--lf-gold);
+    transform: scaleY(0); transform-origin: center;
+    transition: transform 0.3s var(--lf-ease);
+}
+.lf-card:hover::before { transform: scaleY(1); }
+
+.lf-card-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.lf-card-title {
+    font-family: var(--lf-serif); font-size: 22px; font-weight: 400;
+    color: var(--lf-navy); text-decoration: none;
+    transition: color 0.2s;
+}
+.lf-card-title:hover { color: var(--lf-gold); }
+
+.lf-card-meta {
+    display: flex; align-items: center; gap: 16px;
+}
+.lf-meta-date {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    color: var(--lf-muted); letter-spacing: 0.5px;
+}
+.lf-badge {
+    font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--lf-gold);
+    background: rgba(154, 120, 64, 0.06);
+    border: 1px solid rgba(154, 120, 64, 0.2);
+    padding: 3px 8px;
+}
+
+/* 개별 삭제 버튼 (이모지 대신 심플한 텍스트/아이콘) */
+.lf-card-del-btn {
+    background: none; border: none; padding: 8px;
+    color: var(--lf-muted); cursor: pointer; transition: color 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.lf-card-del-btn:hover { color: #ef4444; }
+
+/* ── 빈 상태 (Empty State) ── */
+.lf-empty {
+    text-align: center; padding: 100px 20px;
+    background: var(--lf-bg2); border: 1px dashed rgba(154, 120, 64, 0.3);
+}
+.lf-empty-icon { color: var(--lf-gold); opacity: 0.4; margin-bottom: 20px; }
+.lf-empty-text { font-size: 14px; font-weight: 300; color: var(--lf-mid); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="lf-dash-section">
+    <div class="lf-container">
+        
+        <div class="lf-dash-header">
+            <h1 class="lf-dash-title">내 특허 프로젝트</h1>
+            
+            <div class="lf-dash-actions">
+                <a href="{% url 'create_project' %}" id="create-project-btn" class="lf-btn-fill">
+                    새 프로젝트 시작
+                </a>
+                
+                <button id="toggle-delete-mode-btn" class="lf-btn-line">
+                    선택 삭제
+                </button>
+                
+                <button id="confirm-delete-btn" class="lf-btn-danger" style="display: none;">
+                    삭제 (0개)
+                </button>
+                <button id="cancel-delete-btn" class="lf-btn-line" style="display: none;">
+                    취소
+                </button>
+            </div>
+        </div>
+
+        <div class="lf-dash-utils">
+            <label id="select-all-container" class="lf-cb-wrap" style="display: none;">
+                <input type="checkbox" id="select-all-checkbox" class="lf-cb">
+                <span class="lf-cb-label">전체 선택</span>
+            </label>
+        </div>
+
+        <div class="lf-project-list">
+            {% for project in projects %}
+            <article class="lf-card">
+                <div class="delete-checkbox-cell" style="display: none;">
+                    <input type="checkbox" class="project-checkbox lf-cb" value="{{ project.id }}">
+                </div>
+                
+                <div class="lf-card-info">
+                    <a href="{% url 'workstation' project.id %}" class="lf-card-title">
+                        {{ project.title }}
+                    </a>
+                    <div class="lf-card-meta">
+                        <span class="lf-badge">{{ project.get_status_display }}</span>
+                        <span class="lf-meta-date">생성일: {{ project.created_at|date:"Y.m.d" }}</span>
+                    </div>
+                </div>
+
+                <div class="project-actions">
+                    <form action="{% url 'delete_project' project.id %}" method="POST" 
+                          onsubmit="return confirm('정말로 이 프로젝트를 삭제하시겠습니까?\n삭제된 데이터와 내역은 복구할 수 없습니다.');" 
+                          style="margin: 0;">
+                        {% csrf_token %}
+                        <button type="submit" class="lf-card-del-btn" aria-label="삭제" title="프로젝트 삭제">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </form> 
+                </div>
+            </article>
+
+            {% empty %}
+            <div class="lf-empty">
+                <svg class="lf-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                <p class="lf-empty-text">아직 진행 중인 프로젝트가 없습니다.<br>상단의 '새 프로젝트 시작' 버튼을 눌러 업무를 시작해보세요.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+        alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const createBtn = document.getElementById('create-project-btn');
+    const toggleBtn = document.getElementById('toggle-delete-mode-btn');
+    const confirmBtn = document.getElementById('confirm-delete-btn');
+    const cancelBtn = document.getElementById('cancel-delete-btn');
+    
+    const selectAllContainer = document.getElementById('select-all-container');
+    const selectAllCb = document.getElementById('select-all-checkbox');
+    
+    const projectCbs = document.querySelectorAll('.project-checkbox');
+    const checkboxCells = document.querySelectorAll('.delete-checkbox-cell');
+
+    // 1. 선택 모드 On/Off 
+    function setDeleteMode(isActive) {
+        if (isActive) {
+            toggleBtn.style.display = 'none';
+            if(createBtn) createBtn.style.display = 'none';
+            confirmBtn.style.display = 'inline-flex'; // 변경: flex 사용
+            cancelBtn.style.display = 'inline-flex';  // 변경: flex 사용
+            
+            selectAllContainer.style.display = 'flex';
+            checkboxCells.forEach(cell => cell.style.display = 'block');
+        } else {
+            toggleBtn.style.display = 'inline-flex';
+            if(createBtn) createBtn.style.display = 'inline-flex';
+            confirmBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            
+            selectAllContainer.style.display = 'none';
+            checkboxCells.forEach(cell => cell.style.display = 'none');
+            
+            // 체크박스 초기화
+            selectAllCb.checked = false;
+            projectCbs.forEach(cb => cb.checked = false);
+            updateConfirmButton();
+        }
+    }
+
+    // 2. 버튼 카운트 업데이트
+    function updateConfirmButton() {
+        const checkedCount = document.querySelectorAll('.project-checkbox:checked').length;
+        confirmBtn.innerHTML = `삭제 (${checkedCount})`; // 텍스트만 업데이트
+        confirmBtn.disabled = checkedCount === 0;
+    }
+
+    // 이벤트 리스너 등록
+    if (toggleBtn) toggleBtn.addEventListener('click', () => setDeleteMode(true));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => setDeleteMode(false));
+
+    if (selectAllCb) {
+        selectAllCb.addEventListener('change', function() {
+            const isChecked = this.checked;
+            projectCbs.forEach(cb => cb.checked = isChecked);
+            updateConfirmButton();
+        });
+    }
+
+    projectCbs.forEach(cb => {
+        cb.addEventListener('change', function() {
+            if (!this.checked) selectAllCb.checked = false;
+            else if (document.querySelectorAll('.project-checkbox:checked').length === projectCbs.length) {
+                selectAllCb.checked = true;
+            }
+            updateConfirmButton();
+        });
+    });
+
+    // 3. 실제 삭제 API 호출
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            const selectedIds = Array.from(document.querySelectorAll('.project-checkbox:checked')).map(cb => cb.value);
+            
+            if (selectedIds.length === 0) return;
+            
+            if (!confirm(`정말로 ${selectedIds.length}개의 프로젝트를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
+                return;
+            }
+
+            confirmBtn.innerText = "⏳ 삭제 중...";
+            confirmBtn.disabled = true;
+
+            fetch("{% url 'bulk_delete_projects_api' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ project_ids: selectedIds })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.reload(); 
+                } else {
+                    alert("삭제 실패: " + data.message);
+                    setDeleteMode(false);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("통신 중 오류가 발생했습니다.");
+                setDeleteMode(false);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
