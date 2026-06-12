@@ -24,7 +24,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from agents.graph import build_default_adapters
+from agents.graph import get_default_adapters
 from agents.validation import AgentValidationError
 
 router = APIRouter()
@@ -61,10 +61,7 @@ async def run_single_agent(agent_name: str, request: AgentRunRequest) -> dict[st
     Raises:
         HTTPException 404: agent_name이 존재하지 않을 때
     """
-    # build_default_adapters()가 adapter 등록 단일 기준입니다.
-    # 별도 유효성 목록(_VALID_AGENTS)을 따로 관리하지 않습니다.
-    # 새 agent를 추가하면 여기 자동으로 반영됩니다.
-    adapters = build_default_adapters()
+    adapters = get_default_adapters()
     adapter = adapters.get(agent_name)
 
     if adapter is None:

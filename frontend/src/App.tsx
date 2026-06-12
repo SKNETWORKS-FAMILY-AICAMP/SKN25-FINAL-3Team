@@ -1,32 +1,61 @@
-import { Routes, Route, Link } from 'react-router-dom'
-
-function Home() {
-  return (
-    <div>
-      <h1>Patent AI</h1>
-      <nav>
-        <Link to="/consult">상담 시작</Link>
-        {' | '}
-        <Link to="/pipeline">특허 파이프라인</Link>
-      </nav>
-    </div>
-  )
-}
-
-function ConsultPage() {
-  return <div>상담 페이지 — 구현 예정</div>
-}
-
-function PipelinePage() {
-  return <div>멀티에이전트 파이프라인 — 구현 예정</div>
-}
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Header from './components/Header'
+import ProtectedRoute from './components/ProtectedRoute'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import DashboardPage from './pages/DashboardPage'
+import CreateProjectPage from './pages/CreateProjectPage'
+import WorkstationPage from './pages/WorkstationPage'
+import MyPage from './pages/MyPage'
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/consult" element={<ConsultPage />} />
-      <Route path="/pipeline" element={<PipelinePage />} />
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+
+        {/* Protected */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <ProtectedRoute>
+              <CreateProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/workstation/:runId"
+          element={
+            <ProtectedRoute>
+              <WorkstationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   )
 }

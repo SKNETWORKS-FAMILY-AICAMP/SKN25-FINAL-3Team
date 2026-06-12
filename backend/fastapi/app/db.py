@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 
+import redis as redis_lib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
@@ -26,6 +27,16 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 class Base(DeclarativeBase):
     """모든 SQLAlchemy 모델이 상속할 기본 클래스입니다."""
+
+
+# ── Redis 공유 클라이언트 ────────────────────────────────────────
+# from_url()은 실제 연결을 하지 않습니다. 첫 명령 실행 시 연결됩니다.
+# pipeline.py와 runs.py가 이 단일 인스턴스를 공유해 커넥션 풀을 중복 생성하지 않습니다.
+REDIS_TTL = 86400  # 실행 진행상황 키 TTL: 1일 (초)
+redis_client = redis_lib.from_url(
+    os.getenv("REDIS_URL", "redis://redis:6379/0"),
+    decode_responses=True,
+)
 
 
 def get_db():

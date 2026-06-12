@@ -13,23 +13,13 @@ GET /api/runs/{run_id}
 """
 from __future__ import annotations
 
-import os
-
-import redis as redis_lib
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from backend.fastapi.app.db import get_db
+from backend.fastapi.app.db import get_db, redis_client as _redis
 from backend.fastapi.app.models import Run
 
 router = APIRouter()
-
-# Redis 클라이언트: from_url()은 실제로 연결하지 않습니다.
-# 첫 번째 명령을 실행할 때 연결됩니다.
-_redis = redis_lib.from_url(
-    os.getenv("REDIS_URL", "redis://redis:6379/0"),
-    decode_responses=True,  # bytes 대신 str로 반환
-)
 
 
 @router.get("/{run_id}")

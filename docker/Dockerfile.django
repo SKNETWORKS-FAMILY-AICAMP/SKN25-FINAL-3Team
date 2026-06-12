@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir uv==0.7.*
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --only-group shared --only-group django
 
+COPY agents ./agents
 COPY backend/django ./backend/django
 
 RUN useradd --create-home --shell /usr/sbin/nologin patent \

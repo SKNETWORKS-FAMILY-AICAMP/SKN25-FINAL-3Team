@@ -144,5 +144,10 @@ def repair_agent_output_with_llm(
         temperature=0,                              # 창의성 0: 정해진 형식에 맞게만 고칩니다
         response_format={"type": "json_object"},    # GPT가 반드시 JSON만 반환하도록 강제
     )
+    if not response.choices:
+        raise RuntimeError(
+            f"OpenAI repair 호출이 빈 choices를 반환했습니다 (콘텐츠 필터 등). "
+            f"model={model or DEFAULT_REPAIR_MODEL}"
+        )
     content = response.choices[0].message.content or "{}"
     return json.loads(content)

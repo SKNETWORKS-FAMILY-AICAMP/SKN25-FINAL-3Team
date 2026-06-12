@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import os
 from types import UnionType
-from typing import Any, Callable, TypeVar, get_args, get_origin
+from typing import Any, Callable, TypeVar, Union, get_args, get_origin
 
 from pydantic import BaseModel, ValidationError
 
@@ -60,7 +60,7 @@ class AgentValidationError(Exception):
 def _unwrap_optional(annotation: Any) -> Any:
     """Optional[X] 또는 X | None 타입에서 실제 타입 X를 꺼냅니다."""
     origin = get_origin(annotation)
-    if origin in {UnionType, getattr(__import__("typing"), "Union")}:
+    if origin in {UnionType, Union}:
         args = [arg for arg in get_args(annotation) if arg is not type(None)]
         return args[0] if len(args) == 1 else annotation
     return annotation
@@ -144,7 +144,9 @@ def normalize_to_schema_shape(raw: Any, schema: type[BaseModel]) -> Any:
                     if isinstance(item_type, type) and issubclass(item_type, BaseModel):
                         if isinstance(item, str):
                             target = _first_string_field(item_type)
-                            item = {target: item} if target else {}
+                            if target is not None:
+                                item = {target: item}
+                            # target이 None이면 item을 그대로 두어 Pydantic이 의미 있는 에러를 냅니다.
                         if isinstance(item, dict):
                             item = _fill_common_missing_model_fields(item, item_type, idx)
                             item = normalize_to_schema_shape(item, item_type)

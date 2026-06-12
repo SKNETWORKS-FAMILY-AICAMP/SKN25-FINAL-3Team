@@ -114,6 +114,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - django_media:/app/backend/django/media
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health/"]
       interval: 15s
@@ -231,6 +233,7 @@ services:
 
 volumes:
   postgres_data:
+  django_media:
   uploads:
   hf_cache:
 

@@ -19,7 +19,7 @@ def login_view(request):
             user.is_login = True
             user.save(update_fields=['is_login'])
             messages.success(request, f'환영합니다, {user.name}님! 👋')
-            next_url = request.GET.get('next', 'accounts:dashboard')
+            next_url = request.GET.get('next', 'dashboard')
             return redirect(next_url)
         else:
             messages.error(request, '아이디 또는 비밀번호가 올바르지 않습니다.')
@@ -43,7 +43,7 @@ def signup_view(request):
             user.is_login = True
             user.save(update_fields=['is_login'])
             messages.success(request, f'회원가입 완료! 환영합니다, {user.name}님 🎉')
-            return redirect('accounts:dashboard')
+            return redirect('dashboard')
         else:
             for field, errors in form.errors.items():
                 for error in errors:

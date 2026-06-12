@@ -50,6 +50,44 @@ docker compose run --rm fastapi \
 
 상세 옵션 및 환경변수 설정은 [docs/corpus-loading.md](corpus-loading.md)를 참조하세요.
 
+### 컨테이너 개별 실행
+
+전체 스택 대신 특정 컨테이너만 올릴 때 사용합니다.  
+`depends_on` 설정에 따라 의존 서비스는 자동으로 함께 기동됩니다.
+
+```bash
+# 인프라 (DB + 캐시)
+docker compose up postgres          # postgres만
+docker compose up redis             # redis만
+docker compose up postgres redis    # 인프라 두 개만
+
+# 인증 서버 — postgres가 자동으로 함께 기동됩니다
+docker compose up django
+
+# API 서버 — postgres + redis가 자동으로 함께 기동됩니다
+docker compose up fastapi
+
+# 프론트엔드 — fastapi + django(+ 각 의존 서비스)가 자동으로 함께 기동됩니다
+docker compose up frontend
+
+# Critic Agent (GPU 필요, --profile llm 필수)
+docker compose --profile llm up claim-api
+```
+
+빌드가 필요한 경우 `--build` 플래그를 추가하세요.
+
+```bash
+docker compose up --build django
+docker compose up --build fastapi
+```
+
+백그라운드로 실행하려면 `-d` 플래그를 사용하세요.
+
+```bash
+docker compose up -d postgres redis
+docker compose up -d django fastapi
+```
+
 ---
 
 ## 컨테이너별 확인 방법
@@ -76,30 +114,43 @@ docker compose exec redis redis-cli ping
 
 ---
 
-### 3. django `:8000` — JWT 인증 전용
+### 3. django `:8000` — 인증 + 워크스페이스 UI
 
 ```bash
-curl -s http://localhost:8000/api/auth/me/
-# → {"detail":"Authentication credentials were not provided."}  (401 정상)
+curl -s http://localhost:8000/health/
+# → {"status":"ok","service":"patent-auth"}
 ```
 
-**주요 엔드포인트**
+브라우저에서 http://localhost:8000 접속 시 로그인 페이지로 이동합니다.  
+로그인 후 `/workspace/dashboard/` 에서 특허 프로젝트를 관리할 수 있습니다.
+
+**JWT REST API 엔드포인트** (React 프론트엔드 또는 FastAPI 연동용)
 
 | Method | Path | 설명 |
 |--------|------|------|
-| POST | `/api/auth/signup/` | 회원가입 |
+| POST | `/api/auth/signup/` | 회원가입 (`username`, `name`, `gender`, `age`, `password`, `password2`) |
 | POST | `/api/auth/login/` | 로그인 → access/refresh 토큰 반환 |
 | POST | `/api/auth/logout/` | 토큰 블랙리스트 등록 |
 | POST | `/api/auth/token/refresh/` | access 토큰 갱신 |
 | GET  | `/api/auth/me/` | 현재 사용자 정보 |
 
+**워크스페이스 UI 엔드포인트** (템플릿 기반)
+
+| Method | Path | 설명 |
+|--------|------|------|
+| GET  | `/workspace/dashboard/` | 내 특허 프로젝트 목록 |
+| GET/POST | `/workspace/create/` | 새 특허 프로젝트 생성 |
+| GET  | `/workspace/workstation/<id>/` | 프로젝트 워크스테이션 |
+| GET  | `/workspace/mypage/` | 마이페이지 |
+
 **회원가입 → 로그인 확인 예시**
 
 ```bash
-# 1) 회원가입
+# 1) 회원가입 (username, name, gender(M/F), age, password, password2 필수)
 curl -s -X POST http://localhost:8000/api/auth/signup/ \
   -H "Content-Type: application/json" \
-  -d '{"username":"test","password":"test1234!","email":"test@example.com"}'
+  -d '{"username":"test","name":"테스터","gender":"M","age":25,"password":"test1234!","password2":"test1234!"}' \
+  | python3 -m json.tool
 
 # 2) 로그인 → access 토큰 획득
 curl -s -X POST http://localhost:8000/api/auth/login/ \

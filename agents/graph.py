@@ -32,6 +32,9 @@ from agents.summary.adapter import SummaryAdapter
 # graph 외부에서 이 모듈만 import해도 기본 파이프라인 순서를 알 수 있게 re-export합니다.
 DEFAULT_PIPELINE = SERVICE_PIPELINE
 
+# 모듈 수준 adapter 캐시: stateless adapter 객체를 요청마다 재생성하지 않습니다.
+_DEFAULT_ADAPTERS_CACHE: dict[str, AgentAdapter[Any]] | None = None
+
 
 def build_default_adapters() -> dict[str, AgentAdapter[Any]]:
     """서비스 graph가 기본으로 사용할 adapter 목록을 만듭니다.
@@ -55,6 +58,14 @@ def build_default_adapters() -> dict[str, AgentAdapter[Any]]:
     ]
     # adapter.agent_name을 key로 사용해서 이름으로 바로 찾을 수 있게 합니다.
     return {adapter.agent_name: adapter for adapter in adapters}
+
+
+def get_default_adapters() -> dict[str, AgentAdapter[Any]]:
+    """캐시된 기본 adapter map을 반환합니다. stateless이므로 요청 간 공유가 안전합니다."""
+    global _DEFAULT_ADAPTERS_CACHE
+    if _DEFAULT_ADAPTERS_CACHE is None:
+        _DEFAULT_ADAPTERS_CACHE = build_default_adapters()
+    return _DEFAULT_ADAPTERS_CACHE
 
 
 def build_agent_state_key_map(adapters: dict[str, AgentAdapter[Any]]) -> dict[str, str]:
@@ -155,7 +166,7 @@ def run_service_pipeline(
 
         # ── 중간 판단: 사용자 입력이 더 필요한가? ──────
         # 예: Summary agent가 "발명 설명이 너무 짧다"고 판단하면 여기서 멈춥니다.
-        decision = decide_next_agent(state, agent_state_keys=agent_state_keys)
+        decision = decide_next_agent(state, list(selected_route), agent_state_keys=agent_state_keys)
         if decision.requires_user_input:
             state["workflow"]["status"] = "wait_user"
             state["workflow"]["next_agent"] = "master"
@@ -164,7 +175,7 @@ def run_service_pipeline(
             return state  # 사용자 응답을 기다리기 위해 여기서 반환
 
     # ── 파이프라인 완료 처리 ──────────────────────────
-    final_decision = decide_next_agent(state, agent_state_keys=agent_state_keys)
+    final_decision = decide_next_agent(state, list(selected_route), agent_state_keys=agent_state_keys)
     state["workflow"]["status"] = "completed" if final_decision.status == "completed" else "running"
     state["workflow"]["current_agent"] = "master"
     # 다음 agent가 "end"면 review로 (review 구현 후 파이프라인의 마지막 단계)

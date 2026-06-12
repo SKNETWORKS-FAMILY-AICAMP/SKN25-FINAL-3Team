@@ -48,7 +48,16 @@ cd skn25-final-3team
 cp .env.example .env
 ```
 
-#### 3. Run the Application
+#### 3. Run Tests (로컬)
+
+```bash
+uv sync --group dev
+uv run pytest
+```
+
+Docker 없이 mock 기반으로 전체 테스트를 실행합니다.
+
+#### 4. Run the Application
 
 Docker를 이용해 시스템을 빌드하고 실행합니다.
 
@@ -56,7 +65,9 @@ Docker를 이용해 시스템을 빌드하고 실행합니다.
 docker compose up --build
 ```
 
-실행 완료 후, 브라우저에서 `http://localhost:8000`으로 접속하여 작업스페이스를 확인하세요.
+실행 완료 후, 브라우저에서 `http://localhost:3000`으로 접속하여 작업스페이스를 확인하세요.
+
+> 컨테이너별 확인 방법, API 엔드포인트, 로그 확인, 특허 코퍼스 DB 적재 등 상세 안내는 **[docs/QUICKSTART.md](docs/QUICKSTART.md)** 를 참조하세요.
 
 ## 📂 Project Structure
 

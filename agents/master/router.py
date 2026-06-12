@@ -137,7 +137,7 @@ def decide_next_agent(
     state_key_map = agent_state_keys or {}
     for agent in route_source:
         key = state_key_map.get(agent, agent)
-        if key not in state or not state.get(key):
+        if not state.get(key):
             # 이 agent의 결과가 아직 state에 없음 → 이 agent를 실행해야 함
             return MasterDecision(
                 status="run_next",
