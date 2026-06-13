@@ -2363,7 +2363,10 @@ django = [
 fastapi = [
     { name = "alembic" },
     { name = "fastapi" },
+    { name = "graphviz" },
     { name = "httpx" },
+    { name = "langchain-openai" },
+    { name = "langgraph" },
     { name = "numpy" },
     { name = "olefile" },
     { name = "openai" },
@@ -2454,7 +2457,10 @@ django = [
 fastapi = [
     { name = "alembic", specifier = ">=1.13" },
     { name = "fastapi", specifier = ">=0.111" },
+    { name = "graphviz", specifier = ">=0.20" },
     { name = "httpx", specifier = ">=0.27" },
+    { name = "langchain-openai", specifier = ">=0.1" },
+    { name = "langgraph", specifier = ">=0.1" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "olefile", specifier = ">=0.47" },
     { name = "openai", specifier = ">=1.0" },
