@@ -1,20 +1,14 @@
-"""개별 agent 단독 실행 API router입니다.
+"""[DEPRECATED] 개별 agent 단독 실행 API router입니다.
 
-─ 이 파일의 역할 ─
-  복잡한 분기 그래프 구조에서 각 agent 노드를 개별로 호출할 때 씁니다.
-  pipeline router와 달리 전체 파이프라인이 아니라 지정한 agent 하나만 실행합니다.
+⚠️  이 라우터는 deprecated 상태입니다.
+    전체 state를 body로 전달하는 방식 대신,
+    run_id 기반으로 DB에서 state를 로드하는 새 엔드포인트를 사용하세요.
 
-  POST /api/agents/{agent_name}/run
+    신규: POST /api/runs/{run_id}/agents/{agent_name}/run
+    구버전: POST /api/agents/{agent_name}/run  ← 이 파일
 
-─ 언제 쓰나? ─
-  - 특정 agent만 재실행하고 싶을 때 (예: claim만 다시 돌리기)
-  - 파이프라인이 특정 agent에서 실패(AgentValidationError)했을 때 해당 agent만 재시도
-  - 복잡한 분기 그래프에서 노드별로 순서를 직접 제어할 때
-  - 디버깅/테스트 목적으로 특정 agent만 격리해서 실행할 때
-
-─ pipeline/run과의 차이 ─
-  /pipeline/run → 여러 agent를 순서대로 전부 실행
-  /agents/{name}/run → 지정한 agent 하나만 실행
+    구버전은 하위 호환성을 위해 유지하지만 향후 제거될 예정입니다.
+    내부 디버깅·테스트 전용으로만 사용하세요.
 """
 from __future__ import annotations
 

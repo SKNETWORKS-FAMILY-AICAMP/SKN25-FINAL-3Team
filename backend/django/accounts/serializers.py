@@ -54,6 +54,18 @@ class SignupSerializer(serializers.ModelSerializer):
         return user
 
 
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """프로필 수정 직렬화 (PATCH /api/auth/me/)"""
+
+    class Meta:
+        model = User
+        fields = ['name', 'email']
+        extra_kwargs = {
+            'name':  {'required': False},
+            'email': {'required': False},
+        }
+
+
 class LoginSerializer(serializers.Serializer):
     """로그인 직렬화"""
 

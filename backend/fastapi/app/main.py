@@ -1,11 +1,19 @@
 """특허 agent service의 FastAPI 진입점입니다.
 
 ─ 등록된 API 경로 ─
-  POST /api/pipeline/run          : 전체 파이프라인 새로 실행
-  POST /api/pipeline/continue     : 기존 파이프라인 이어서 실행
-  POST /api/agents/{name}/run     : 특정 agent 하나만 실행
-  GET  /api/runs/{run_id}         : 실행 상태/결과 조회
-  GET  /health                    : 서버 상태 확인
+  POST /api/pipeline/run                         : 전체 파이프라인 새로 실행
+  POST /api/pipeline/continue                    : 기존 파이프라인 이어서 실행 (state 전체 전달 방식, deprecated 예정)
+  GET  /api/runs/{run_id}                        : 실행 상태/결과 조회
+  POST /api/runs/{run_id}/agents/{name}/run      : 특정 agent 재실행 (run_id 기반, DB에서 state 로드)
+  GET  /health                                   : 서버 상태 확인
+
+─ Deprecated ─
+  POST /api/agents/{name}/run     : 전체 state를 body로 전달하는 방식 → /api/runs/{run_id}/agents/{name}/run 으로 대체
+
+─ TODO (미구현) ─
+  POST /api/runs/{run_id}/continue               : run_id 기반 파이프라인 재개 (현재 /api/pipeline/continue 이전 예정)
+  GET  /api/runs/{run_id}/steps                  : step별 실행 기록
+  GET  /api/runs/{run_id}/artifacts              : 생성된 artifact 목록
 
 ─ 시작 시 ─
   DB 마이그레이션은 컨테이너 entrypoint에서 alembic upgrade head 로 처리합니다.

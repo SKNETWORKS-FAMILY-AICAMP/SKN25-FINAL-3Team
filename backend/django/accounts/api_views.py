@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from .serializers import SignupSerializer, LoginSerializer, UserSerializer
+from .serializers import SignupSerializer, LoginSerializer, UserSerializer, ProfileUpdateSerializer
 
 User = get_user_model()
 
@@ -162,3 +162,13 @@ class MeAPIView(APIView):
             {'user': UserSerializer(request.user).data},
             status=status.HTTP_200_OK,
         )
+
+    def patch(self, request):
+        serializer = ProfileUpdateSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {'user': UserSerializer(request.user).data},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
