@@ -38,4 +38,7 @@ export const authApi = {
 
   me: () =>
     api.get<{ user: User }>('/auth/api/auth/me/'),
+
+  updateProfile: (data: { name?: string; email?: string }) =>
+    api.patch<{ user: User }>('/auth/api/auth/me/', data),
 }

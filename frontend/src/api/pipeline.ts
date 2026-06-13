@@ -8,6 +8,7 @@ export interface PatentRun {
   completed_agents: string[]
   errors: string[]
   master_decision?: Record<string, unknown>
+  state?: Record<string, unknown>
   created_at?: string
   updated_at?: string
 }
@@ -16,6 +17,11 @@ export interface RunResult {
   run_id: string
   state: Record<string, unknown>
   decision: Record<string, unknown>
+}
+
+export interface AgentRunResult {
+  state: Record<string, unknown>
+  agent_output: unknown
 }
 
 export const pipelineApi = {
@@ -27,6 +33,9 @@ export const pipelineApi = {
 
   getRun: (run_id: string) =>
     api.get<PatentRun>(`/api/runs/${run_id}`),
+
+  runAgent: (agent_name: string, state: Record<string, unknown>) =>
+    api.post<AgentRunResult>(`/api/agents/${agent_name}/run`, { state }),
 }
 
 // 로컬 스토리지에서 내 프로젝트 목록 관리
@@ -37,12 +46,15 @@ export interface StoredProject {
   status: string
 }
 
-const STORAGE_KEY = 'patent_projects'
+function storageKey() {
+  const uid = localStorage.getItem('current_user_id')
+  return uid ? `patent_projects_${uid}` : 'patent_projects_guest'
+}
 
 export const projectStore = {
   list(): StoredProject[] {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
+      return JSON.parse(localStorage.getItem(storageKey()) ?? '[]')
     } catch {
       return []
     }
@@ -65,6 +77,6 @@ export const projectStore = {
   },
 
   _save(projects: StoredProject[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects))
+    localStorage.setItem(storageKey(), JSON.stringify(projects))
   },
 }

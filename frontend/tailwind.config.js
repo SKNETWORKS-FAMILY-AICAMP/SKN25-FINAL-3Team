@@ -4,13 +4,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          bg:      '#0f172a',
-          card:    '#1e293b',
-          border:  '#334155',
-          muted:   '#94a3b8',
-          text:    '#cbd5e1',
+        lf: {
+          bg:        '#ffffff',
+          bg2:       '#faf8f4',
+          bg3:       '#f4f0e8',
+          navy:      '#12100e',
+          body:      '#3d3830',
+          mid:       '#7c756e',
+          muted:     '#b8b0a8',
+          gold:      '#9a7840',
+          'gold-lt': '#b8935a',
         },
+      },
+      fontFamily: {
+        serif: ['"DM Serif Display"', '"Noto Serif KR"', 'Georgia', 'serif'],
+        sans:  ['"Noto Sans KR"', '-apple-system', 'sans-serif'],
       },
     },
   },
