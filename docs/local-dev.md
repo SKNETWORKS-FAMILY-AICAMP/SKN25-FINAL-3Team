@@ -126,6 +126,42 @@ uv run pytest tests/agents/test_master.py -v
 
 ---
 
+## 5-1. 테스트 스크립트
+
+### 전체 테스트 한 번에 돌리기
+
+Django / FastAPI / Agents 세 그룹을 순서대로 실행하고 결과를 요약합니다.
+
+```bash
+# 전체 실행
+./scripts/test_all.sh
+
+# 조용한 모드 (결과 요약만 출력)
+./scripts/test_all.sh --fast
+
+# 특정 그룹만
+./scripts/test_all.sh --suite=django
+./scripts/test_all.sh --suite=fastapi
+./scripts/test_all.sh --suite=agents
+```
+
+### Smoke test (실제 서버에 HTTP 요청)
+
+서버가 실제로 떠 있을 때, 핵심 엔드포인트가 살아있는지 빠르게 확인합니다.
+사전에 Django(8000)·FastAPI(8080) 서버를 실행해 두어야 합니다.
+
+```bash
+# 기본 (localhost:8000, localhost:8080)
+./scripts/smoke_test.sh
+
+# 다른 URL 지정 (스테이징 등)
+DJANGO_URL=http://staging:8000 FASTAPI_URL=http://staging:8080 ./scripts/smoke_test.sh
+```
+
+체크 항목: `/health`, 인증 흐름(signup → login → me → logout), FastAPI runs·pipeline 엔드포인트 응답 코드.
+
+---
+
 ## 6. 린트·포맷
 
 ```bash

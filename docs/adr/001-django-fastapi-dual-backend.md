@@ -1,7 +1,8 @@
 # ADR-001: Django + FastAPI 이중 백엔드
 
 **상태:** Accepted  
-**날짜:** 2026-06-02
+**날짜:** 2026-06-02  
+**참고:** 배포 단위 분리(독립 서버 배포)는 → [ADR-005](005-separate-deployment-units.md)
 
 ## 맥락
 

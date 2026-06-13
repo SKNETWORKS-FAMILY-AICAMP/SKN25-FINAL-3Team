@@ -32,6 +32,7 @@ django = [
     "whitenoise>=6.0",
 ]
 fastapi = [
+    {include-group = "agents"},
     "fastapi>=0.111",
     "httpx>=0.27",
     "numpy>=1.26",

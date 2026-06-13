@@ -9,6 +9,10 @@
 # 필수
 OPENAI_API_KEY=sk-...
 
+# Critic Agent (AWS vLLM) — 설정하지 않으면 Examiner Agent 실행 시 오류
+RUNPOD_VLLM_URL=http://<aws-instance-ip>:8000/v1
+RUNPOD_API_KEY=<발급받은_api_key>
+
 # 선택 (기본값으로 동작)
 OPENAI_MODEL=gpt-4o
 OPENAI_CHAT_MODEL=gpt-4o-mini
@@ -30,16 +34,24 @@ docker compose up --build
 
 모든 컨테이너가 `healthy` 상태가 될 때까지 1-2분 대기합니다.
 
-### Critic Agent 포함 (NVIDIA GPU 필요)
+### Critic Agent 연동 (외부 AWS vLLM)
 
-```bash
-# .env 에 추가:
-# HUGGINGFACE_TOKEN=hf_...
+Critic Agent(심사관 교차검증)는 AWS에서 vLLM으로 서빙되는 외부 LLM에 연결합니다.
+로컬 GPU나 `--profile llm` 없이 `.env`에 아래 두 값만 추가하면 됩니다.
 
-docker compose --profile llm up --build
+```dotenv
+# Critic Agent — AWS vLLM 엔드포인트 (OpenAI 호환)
+RUNPOD_VLLM_URL=http://<aws-instance-ip>:8000/v1
+RUNPOD_API_KEY=<발급받은_api_key>
 ```
 
-> 최초 실행 시 EXAONE-3.0-7.8B 모델 다운로드 (~16 GB)가 발생합니다.
+설정 후 기본 스택을 그대로 올리면 Examiner Agent가 자동으로 해당 엔드포인트를 사용합니다.
+
+```bash
+docker compose up --build
+```
+
+> `RUNPOD_VLLM_URL`을 설정하지 않으면 Examiner Agent 실행 시 연결 오류가 발생합니다.
 
 ### 특허 코퍼스 DB 적재 (최초 1회)
 
@@ -164,7 +176,7 @@ curl -s -X POST http://localhost:8000/api/auth/login/ \
 
 ```bash
 curl -s http://localhost:8080/health
-# → {"status":"ok"}
+# → {"status":"ok","service":"patent-agent"}
 ```
 
 **주요 엔드포인트**
@@ -180,15 +192,15 @@ curl -s http://localhost:8080/health
 **파이프라인 실행 예시**
 
 ```bash
-# 1) 파이프라인 시작
+# 1) 파이프라인 실행 (동기 — 완료될 때까지 대기 후 결과 반환)
 curl -s -X POST http://localhost:8080/api/pipeline/run \
   -H "Content-Type: application/json" \
-  -d '{"idea":"자율주행 차량의 장애물 감지 시스템"}' | python3 -m json.tool
-# → {"run_id": "...", "status": "running", ...}
+  -d '{"user_input":"자율주행 차량의 장애물 감지 시스템"}' | python3 -m json.tool
+# → {"run_id": "...", "state": {...}, "decision": {...}}
 
-# 2) 결과 폴링
+# 2) 실행 이력 조회 (run_id로 저장된 결과 조회)
 curl -s http://localhost:8080/api/runs/<run_id> | python3 -m json.tool
-# → {"status": "done", "artifacts": {...}}
+# → {"run_id":"...","status":"done","current_agent":null,"completed_agents":[...],"errors":[],...}
 ```
 
 **Swagger UI** — http://localhost:8080/docs
@@ -205,19 +217,31 @@ Vite 개발 서버가 요청을 자동 프록시합니다:
 
 ---
 
-### 6. claim-api `:8010` — Critic Agent (`--profile llm` 전용)
+### 6. Critic Agent — 외부 AWS vLLM 연동
+
+Critic Agent(Examiner)는 로컬 컨테이너 없이 AWS에서 vLLM으로 서빙되는 외부 서버에 직접 연결합니다.
+
+**연동 확인**
 
 ```bash
-curl -s http://localhost:8010/health
-# → {"status":"ok"}
-
-# 청구항 품질 평가 예시
-curl -s -X POST http://localhost:8010/critique \
-  -H "Content-Type: application/json" \
-  -d '{"claim":"청구항 텍스트"}' | python3 -m json.tool
+# vLLM 서버 헬스체크 (AWS 인스턴스에서 확인)
+curl -s http://<aws-instance-ip>:8000/v1/models \
+  -H "Authorization: Bearer <RUNPOD_API_KEY>" | python3 -m json.tool
+# → {"object":"list","data":[{"id":"silverstone1004/exaone-3.5-7.8B-custom",...}]}
 ```
 
-> EXAONE-3.0-7.8B + LoRA(`silverstone1004/claim`) 모델을 사용합니다. GPU 없이 실행하려면 `nvidia-container-toolkit` 없이 시작하되 응답 속도가 크게 느려집니다.
+**동작 방식**
+
+- `agents/examiner.py`의 `ExaminerAgent`가 시작 시 `/v1/models`를 호출해 실제 등록된 모델 ID를 확인합니다.
+- 이후 OpenAI 호환 API(`/v1/chat/completions`)로 청구항 심사를 요청합니다.
+- 연결에 실패하면 기본 모델명(`silverstone1004/exaone-3.5-7.8B-custom`)으로 재시도합니다.
+
+**필요 환경변수 (`.env`)**
+
+```dotenv
+RUNPOD_VLLM_URL=http://<aws-instance-ip>:8000/v1
+RUNPOD_API_KEY=<발급받은_api_key>
+```
 
 ---
 
