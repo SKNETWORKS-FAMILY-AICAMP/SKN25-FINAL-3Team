@@ -1,0 +1,22 @@
+# 개발 전용 오버라이드 — docker compose up 시 자동으로 병합됩니다.
+# 프로덕션 배포 시에는 이 파일을 사용하지 마세요.
+#   docker compose -f docker-compose.yml up   ← override 제외
+
+services:
+
+  django:
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend/django:/app/backend/django
+      - ./agents:/app/agents
+
+  fastapi:
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn backend.fastapi.app.main:app --host 0.0.0.0 --port 8080 --reload"
+    volumes:
+      - ./backend/fastapi:/app/backend/fastapi
+      - ./agents:/app/agents
+      - ./alembic.ini:/app/alembic.ini

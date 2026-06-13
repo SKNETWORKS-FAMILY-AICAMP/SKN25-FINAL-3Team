@@ -97,9 +97,6 @@ services:
       context: .
       dockerfile: docker/Dockerfile.django
     restart: unless-stopped
-    command: >
-      sh -c "python manage.py migrate --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
     environment:
       SECRET_KEY:         ${SECRET_KEY:-django-insecure-change-this-in-production-key-12345}
       DEBUG:              ${DEBUG:-True}
@@ -146,9 +143,6 @@ services:
       context: .
       dockerfile: docker/Dockerfile.fastapi
     restart: unless-stopped
-    command: >
-      sh -c "alembic upgrade head &&
-      uvicorn backend.fastapi.app.main:app --host 0.0.0.0 --port 8080 --reload"
     environment:
       OPENAI_API_KEY:    ${OPENAI_API_KEY:?OPENAI_API_KEY 를 .env 에 설정하세요}
       OPENAI_MODEL:      ${OPENAI_MODEL:-gpt-4o}
@@ -171,7 +165,6 @@ services:
       retries: 3
       start_period: 30s
     volumes:
-      - .:/app
       - uploads:/app/data/tmp
 
   # ---------------------------------------------------------------------------
