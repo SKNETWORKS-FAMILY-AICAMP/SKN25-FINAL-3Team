@@ -5,6 +5,7 @@ description = "Patent Drafting Multi-Agent Platform"
 dependencies = [
     # 웹 및 API
     "django>=6.0.6",
+    "django-extensions>=4.1",
     "fastapi>=0.136.1",
     "uvicorn>=0.46.0",
     # AI 에이전트 및 그래프 로직
