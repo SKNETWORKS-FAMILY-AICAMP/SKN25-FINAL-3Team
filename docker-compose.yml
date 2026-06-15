@@ -1,17 +1,37 @@
 version: '3.8'
 
 services:
-  web:
+  # 🛡️ 1. 장고 (메인 웹 서버)
+  django_web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: pypi_agent_backend
+    container_name: patent_django_web
     ports:
       - "8000:8000"
     environment:
-      - PYTHONPATH=/app/backend
+      - PYTHONPATH=/app # 💡 1: 루트 폴더(agents)를 인식하도록 변경
+    # 💡 2: 장고 실행 명령어로 덮어쓰기
+    command: python backend/django/manage.py runserver 0.0.0.0:8000
     volumes:
-      # 로컬 코드를 컨테이너에 마운트 (Hot Reload)
+      - .:/app # Hot Reload 유지
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  # ⚡ 2. FastAPI (AI 워커 서버)
+  fastapi_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: patent_fastapi_worker
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONPATH=/app # 💡 1: 동일하게 루트로 설정
+    # 💡 3: FastAPI 실행 명령어로 덮어쓰기 (--reload 추가로 코드 수정 시 자동 재시작)
+    command: uvicorn backend.fastapi.main:app --host 0.0.0.0 --port 8001 --reload
+    volumes:
       - .:/app
     env_file:
       - .env

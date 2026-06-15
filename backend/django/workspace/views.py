@@ -494,7 +494,7 @@ async def generate_claims_api(request, project_id):
 
     # 비동기 제너레이터 (async def)
     async def event_stream():
-        fastapi_url = "http://localhost:8001/api/v1/generate-claims"
+        fastapi_url = "http://fastapi_worker:8001/api/v1/generate-claims"
         payload = {"initial_state": initial_state}
 
         try:
@@ -795,8 +795,8 @@ async def generate_drawings_api(request, project_id):
         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
     }
 
-    fastapi_url = "http://localhost:8001/api/v1/generate-drawings"
-    
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
+
     try:
         async with httpx.AsyncClient(timeout=120.0) as client: # 도면 생성 대기시간 고려
             resp = await client.post(fastapi_url, json={"mock_input_data": mock_input_data})
@@ -855,7 +855,7 @@ async def generate_specification_api(request, project_id):
         }
     }
 
-    fastapi_url = "http://localhost:8001/api/v1/generate-specification"
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-specification"
 
     try:
         async with httpx.AsyncClient(timeout=300.0) as client: # 명세서는 가장 오래 걸림!
