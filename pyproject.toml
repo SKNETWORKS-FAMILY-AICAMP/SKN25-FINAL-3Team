@@ -32,4 +32,6 @@ dependencies = [
     "tiktoken>=0.13.0",
     "streamlit>=1.41.0",
     "whitenoise>=6.12.0",
+    "djangorestframework>=3.17.1",
+    "drf-spectacular>=0.29.0",
 ]
