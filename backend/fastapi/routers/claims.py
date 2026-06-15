@@ -1,0 +1,110 @@
+# backend/fastapi/routers/claims.py
+from fastapi import APIRouter, Request
+from fastapi.responses import StreamingResponse
+import json
+import logging
+
+from agents.core.graph import build_patent_graph
+from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
+
+logger = logging.getLogger(__name__)
+router = APIRouter()  # 💡 app = FastAPI() 대신 APIRouter()를 사용합니다!
+
+def safe_serialize(obj):
+    if hasattr(obj, 'model_dump'): return obj.model_dump()
+    elif hasattr(obj, '__dict__'): return obj.__dict__
+    return str(obj)
+
+
+
+@router.post("/generate-claims")
+async def generate_claims_worker(request: Request):
+    """장고가 보낸 데이터를 받아 랭그래프를 돌리고 스트리밍으로 반환"""
+    data = await request.json()
+    initial_state = data.get("initial_state")
+
+    def is_valid(val):
+        return bool(val and val.strip() != "미파악")
+
+    async def event_stream():
+        try:
+            yield json.dumps({"step": "start", "message": "FastAPI AI 워커 가동 시작"}) + "\n"
+
+            compiled_graph = build_patent_graph()
+            final_state = {}
+
+            # 1. 랭그래프 스트리밍 실행
+            for output in compiled_graph.stream(initial_state):
+                for node_name, state_update in output.items():
+                    final_state.update(state_update)
+
+                    # 상태 업데이트 로그 쏘기
+                    safe_state = {k: safe_serialize(v) for k, v in state_update.items()}
+                    yield json.dumps({
+                        "step": "log_and_state",
+                        "log_msg": f"[{node_name.upper()}] 에이전트 처리 완료",
+                        "state_data": safe_state
+                    }) + "\n"
+
+                    # 프론트엔드 UI용 스텝 신호
+                    if node_name == "summary_node":
+                        yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
+                    elif node_name == "claim_node":
+                        yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
+                    elif node_name == "examiner_node":
+                        examiner_data = state_update.get("examiner_data")
+                        if examiner_data and not getattr(examiner_data, 'is_approved', True):
+                            yield json.dumps({"step": "rewrite", "message": f"심사관 반려! 보정 진행"}) + "\n"
+                        else:
+                            yield json.dumps({"step": "examiner", "message": "심사관 승인 완료!"}) + "\n"
+                    elif node_name == "rewrite_node":
+                        yield json.dumps({"step": "rewrite_done", "message": "보정 완료! 재심사 요청 중..."}) + "\n"
+
+            claims_result = final_state.get("claims_data")
+            examiner_result = final_state.get("examiner_data")
+
+            loop_count = examiner_result.revision_count if examiner_result else 0
+            claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
+            
+            # 2. 선행기술조사 실행 (에이전트가 처리하도록)
+            yield json.dumps({"step": "prior_art_start", "message": "AWS RDS 벡터DB 선행기술조사 가동..."}) + "\n"
+            
+            pa_data = None
+            try:
+                prior_art_result = run_prior_art_agent(final_state, top_n=3)
+                if "prior_art_data" in prior_art_result:
+                    pa_data = prior_art_result["prior_art_data"].model_dump()
+                    yield json.dumps({
+                        "step": "prior_art_done", 
+                        "prior_art_data": pa_data
+                    }) + "\n"
+            except Exception as e:
+                logger.error(f"선기조 에러: {e}")
+
+            # 3. 완료 신호 및 최종 데이터 장고로 전송
+            claims_list = []
+            if claims_result and getattr(claims_result, 'claims', None):
+                for c in claims_result.claims:
+                    type_badge = '[종속항]' if c.is_dependent else '[독립항]'
+                    claim_result_text += f"**청구항 {c.claim_no} {type_badge}**\n{c.content}\n\n"
+                    
+                    claims_list.append({
+                        "claim_no": c.claim_no,
+                        "is_dependent": c.is_dependent,
+                        "cited_claim_no": getattr(c, 'cited_claim_no', []),
+                        "category": getattr(c, 'category', ''),
+                        "content": c.content
+                    })  
+
+            yield json.dumps({
+                "step": "done",
+                "message_content": claim_result_text,
+                "claims": claims_list,
+                "prior_art_data": pa_data
+            }) + "\n"
+
+        except Exception as e:
+            logger.error(f"FastAPI 에러: {e}")
+            yield json.dumps({"step": "error", "message": str(e)}) + "\n"
+
+    return StreamingResponse(event_stream(), media_type="application/x-ndjson")
