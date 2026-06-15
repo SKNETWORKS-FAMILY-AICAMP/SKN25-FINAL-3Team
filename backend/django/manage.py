@@ -7,7 +7,7 @@ from pathlib import Path
 
 def main():
     """Run administrative tasks."""
-    root_path = Path(__file__).resolve().parent.parent
+    root_path = Path(__file__).resolve().parent.parent.parent
     sys.path.append(str(root_path)) 
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")

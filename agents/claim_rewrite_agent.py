@@ -16,7 +16,7 @@ load_dotenv()
 class ClaimRewriteAgent:
     def __init__(self, model_name: str = "gpt-5.4-mini"):
         # 요청하신 gpt-5.4-mini 모델을 사용하여 정밀한 추론을 수행합니다.
-        self.llm = ChatOpenAI(model=model_name, temperature=0.1)
+        self.llm = ChatOpenAI(model=model_name, temperature=0.1, max_tokens=8192)
         # claim.py와 데이터 포맷을 일치시키기 위해 구조화된 출력 스키마를 연결합니다.
         self.structured_llm = self.llm.with_structured_output(
             schema=ClaimResult, 

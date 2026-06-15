@@ -150,7 +150,7 @@ load_dotenv()
 
 class ClaimAgent:
     def __init__(self, model_name: str = "gpt-4o"):
-        self.llm = ChatOpenAI(model=model_name, temperature=0.3, max_tokens=4096)
+        self.llm = ChatOpenAI(model=model_name, temperature=0.3, max_tokens=8192)
         self.structured_llm = self.llm.with_structured_output(ClaimResult,method="json_schema", 
             strict=True)
 
@@ -167,6 +167,10 @@ class ClaimAgent:
         if not parsed_data:
             logger.error("파싱된 발명 데이터(summary_data)가 없습니다.")
             return {"claims_data": None}
+        
+        component_count = len(parsed_data.architecture.components)
+        step_count = len(parsed_data.architecture.processing_steps)
+        flow_count = len(parsed_data.architecture.data_flows)
 
         system_prompt = """당신은 한국 특허법에 정통한 [특허 청구범위 작성 AI]입니다.
 제공된 발명의 구조화 데이터(Components, Data Flows, Processing Steps)를 바탕으로 특허 청구항을 작성하십시오.
@@ -175,8 +179,11 @@ class ClaimAgent:
 [청구항 작성 핵심 규칙]
 1. 카테고리 구성 전략:
    - '시스템', '방법', 'CRM' 3가지 카테고리로 작성합니다.
-   - 메인 카테고리 1개를 선정하여 제1항(독립항)을 작성하고, 이에 대한 종속항들을 2~3개 작성합니다.
-   - 나머지 2개 카테고리에 대해서는 각각 독립항 1개씩만 작성합니다 (종속항 작성 금지).
+   - 메인 카테고리 1개를 선정하여 제1항(독립항)을 작성합니다.
+   - 종속항은 아래 [발명 규모 정보]에 명시된 구성요소/처리단계 수를 기준으로 빠짐없이 작성합니다.
+     각 구성요소의 세부 동작, 각 처리 단계의 구체적 조건, 데이터 흐름의 분기 조건 등을
+     각각 별도의 종속항으로 세분화하여 권리범위를 최대한 확보하십시오.
+   - 나머지 2개 카테고리에 대해서는 각각 독립항 1개씩 작성합니다.
    
 2. 선행기재 요건 (Antecedent Basis) - 매우 중요:
    - 청구항 내에서 구성요소나 데이터가 **최초로 등장할 때는 '상기'를 붙이지 않습니다.**
@@ -191,7 +198,20 @@ class ClaimAgent:
    - [CRM항 예시]: 하드웨어와 결합되어 제X항의 방법을 실행시키기 위하여 컴퓨터 판독 가능한 기록 매체에 저장된 컴퓨터 프로그램. (제X항은 방법 독립항의 번호를 기재)
 
 4. 종속항(Dependent Claim) 작성 요령:
-   - 종속항은 단순히 구성을 반복하는 것이 아니라, 특정 Component의 구체적인 동작 방식, Data Flow의 조건, 또는 해결하고자 하는 과제를 달성하기 위한 구체적인 수단을 한정해야 합니다.
+   - 종속항은 독립항의 구성요소를 단순 반복하거나 재서술하면 절대 안 됩니다.
+   - 독립항에 기재된 구성요소의 '구체적인 구현 방식' 또는 '세부 조건'을 새롭게 한정해야 합니다.
+   
+   [좋은 종속항 예시]
+   - 독립항에 "셀프 어텐션 메커니즘을 적용"이 있다면:
+     → 종속항: "상기 셀프 어텐션 메커니즘은 스케일드 닷 프로덕트(Scaled Dot-Product) 방식으로 
+                쿼리와 키의 내적을 키 차원의 제곱근으로 나누어 소프트맥스 함수를 적용하는 것을 
+                특징으로 하는 시스템."
+   - 독립항에 "포지셔널 임베딩"이 있다면:
+     → 종속항: "상기 포지셔널 임베딩은 사인 및 코사인 함수를 이용하여 각 위치의 순서 정보를 
+                인코딩하는 것을 특징으로 하는 시스템."
+   - 독립항에 "디코더 네트워크"가 있다면:
+     → 종속항: "상기 디코더 네트워크는 이후 위치의 정보를 참조하지 못하도록 마스킹 처리를 
+                수행하는 마스크드 셀프 어텐션 모듈을 포함하는 것을 특징으로 하는 시스템."
 """
 
         human_prompt = """아래의 구조화된 발명 데이터를 바탕으로 청구항을 작성해 주세요.
@@ -201,6 +221,12 @@ class ClaimAgent:
 
 [해결하고자 하는 과제]
 {problem}
+
+[발명 규모 정보] ← 이 수치를 기준으로 종속항 수를 결정하세요
+- 구성요소(Components) 수: {component_count}개
+- 처리 단계(Processing Steps) 수: {step_count}개  
+- 데이터 흐름(Data Flows) 수: {flow_count}개
+- 권장 종속항 수: 최소 {min_deps}개 이상
 
 [구성요소 (Components)]
 {components}
@@ -220,15 +246,17 @@ class ClaimAgent:
         chain = prompt | self.structured_llm
         
         try:
-            # Pydantic 객체를 통째로 JSON 문자열로 변환하여 프롬프트에 주입
             result: ClaimResult = chain.invoke({
                 "title": parsed_data.invention_metadata.title,
                 "problem": parsed_data.technical_context.problem_to_solve,
+                "component_count": component_count,
+                "step_count": step_count,
+                "flow_count": flow_count,
+                "min_deps": max(component_count, step_count),  # 구성요소/단계 수 중 큰 값을 최소 종속항 수로 지정
                 "components": json.dumps([c.model_dump() for c in parsed_data.architecture.components], ensure_ascii=False, indent=2),
                 "data_flows": json.dumps([f.model_dump() for f in parsed_data.architecture.data_flows], ensure_ascii=False, indent=2),
                 "steps": json.dumps([s.model_dump() for s in parsed_data.architecture.processing_steps], ensure_ascii=False, indent=2)
             })
-            
             logger.info("[Claim Agent] 청구항 작성 완료.")
             return {"claims_data": result}
             
