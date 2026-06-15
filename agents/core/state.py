@@ -9,6 +9,11 @@ class Component(BaseModel):
     name: str = Field(description="특허 청구항에 들어갈 명사구 형태의 명칭 (예: 디코더 네트워크)")
     type: str = Field(description="구성요소의 속성 (MODULE | STEP | NETWORK | DATABASE 중 택 1)")
     description: str = Field(description="구성요소에 대한 간략한 설명 및 주요 기능")
+    parent_id: Optional[str] = Field(
+        default=None,
+        description="상위 구성요소의 ID. 최상위 구성요소이면 null. "
+                    "예: 디코더 네트워크가 신경망 시스템의 하위라면 신경망 시스템의 ID를 기재"
+    )
 
 class DataFlow(BaseModel):
     flow_id: str = Field(description="데이터 흐름의 고유 ID (예: FLOW_001)")

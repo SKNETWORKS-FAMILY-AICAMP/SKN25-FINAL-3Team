@@ -42,6 +42,12 @@ class SummaryAgent:
 - ProcessingStep의 subject_id는 반드시 Component에 존재하는 ID를 참조해야 한다.
 - ProcessingStep의 input_data_ids, output_data_ids는 반드시 DataFlow에 존재하는 ID를 참조해야 한다.
 
+[계층 관계 설정]
+- 상위 시스템에 포함되는 하위 모듈은 parent_id에 상위 구성요소의 ID를 반드시 기재하라.
+- 예: 신경망 시스템(COMP_001) 안에 디코더 네트워크(COMP_002)가 포함된다면
+      COMP_002의 parent_id = "COMP_001"
+- 최상위 구성요소만 parent_id를 null로 설정하라.
+
 [경계 설정]
 - 시스템의 최초 입력 데이터 소스는 'INPUT', 최종 출력 타겟은 'OUTPUT'이라는 예약어를 사용하라.
 
