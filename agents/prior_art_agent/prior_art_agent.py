@@ -123,7 +123,7 @@ def search_similar_patents(
                 "ipc_codes":      row.PatentCorpus.ipc_codes,
                 "examiner_cited": row.PatentCorpus.examiner_cited,
                 "pdf_s3_url":     row.PatentCorpus.pdf_s3_url,
-                "similarity_score": round(1 - float(row.distance) / 2, 4),
+                "similarity_score": round(1 - float(row.distance), 4),
             }
             for row in rows
         ]
