@@ -27,18 +27,18 @@ export interface SignupPayload {
 }
 
 export const authApi = {
+  // 수정: 장고의 urls.py에 정의된 정확한 경로인 '/accounts/signup/' 사용
   signup: (data: SignupPayload) =>
-    api.post<AuthTokens>('/auth/api/auth/signup/', data),
+    api.post<AuthTokens>('/accounts/signup/', data),
 
   login: (username: string, password: string) =>
-    api.post<AuthTokens>('/auth/api/auth/login/', { username, password }),
+    api.post<AuthTokens>('/accounts/login/', { username, password }),
 
   logout: (refresh: string) =>
-    api.post<{ message: string }>('/auth/api/auth/logout/', { refresh }),
+    api.post<{ message: string }>('/accounts/logout/', { refresh }),
 
-  me: () =>
-    api.get<{ user: User }>('/auth/api/auth/me/'),
-
-  updateProfile: (data: { name?: string; email?: string }) =>
-    api.patch<{ user: User }>('/auth/api/auth/me/', data),
+  // 주의: 현재 장고 urls.py에는 내 정보 조회(/me/)나 프로필 수정 API가 개통되어 있지 않습니다.
+  // 백엔드에 해당 기능을 추가하거나, 프론트에서 마이페이지(/workspace/mypage/) 렌더링을 활용해야 합니다.
+  // me: () => api.get<{ user: User }>('/accounts/me/'),
+  // updateProfile: (data: { name?: string; email?: string }) => api.patch<{ user: User }>('/accounts/me/', data),
 }

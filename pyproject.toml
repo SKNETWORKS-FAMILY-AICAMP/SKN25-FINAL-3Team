@@ -2,34 +2,43 @@
 name = "pypi-platform"
 version = "0.1.0"
 description = "Patent Drafting Multi-Agent Platform"
+requires-python = ">=3.12"
 dependencies = [
-    # 웹 및 API
-    "django>=6.0.6",
-    "django-extensions>=4.1",
-    "fastapi>=0.136.1",
-    "uvicorn>=0.46.0",
-    # AI 에이전트 및 그래프 로직
+    # 공통: AI 및 DB
     "openai>=2.41.0",
     "langchain>=1.2.17",
     "langchain-openai>=1.2.1",
     "langgraph>=1.1.10",
     "pydantic>=2.13.4",
-    # 데이터베이스 및 데이터 처리 (pgvector 필수!)
     "sqlalchemy>=2.0.0",
     "pgvector>=0.3.6",
-    "psycopg2-binary>=2.9.10", # PostgreSQL 연결용
+    "psycopg2-binary>=2.9.10",
     "numpy>=2.4.4",
-    # 도면 및 파일 처리
-    "pymupdf>=1.27.2",
-    "graphviz>=0.20.3",
-    "pygraphviz>=1.13; sys_platform != 'win32'",
-    "pdfminer-six>=20260107",
-    "python-docx>=1.2.0",
-    "olefile>=0.47",
-    # 기타 유틸
     "python-dotenv>=1.2.2",
     "requests>=2.33.1",
     "tiktoken>=0.13.0",
-    "streamlit>=1.41.0",
+    
+    # 공통: Django 코어
+    "django>=6.0.6",
+    "django-extensions>=4.1",
+    
+    # 공통: 파일 처리 및 시각화 (모두 올림!)
+    "pymupdf>=1.27.2",
+    "python-docx>=1.2.0",
+    "olefile>=0.47",
+    "pdfminer-six>=20260107",
+    "graphviz>=0.20.3",
+    "pygraphviz>=1.13; sys_platform != 'win32'",
+]
+
+[dependency-groups]
+django = [
+    "gunicorn>=23.0.0",
     "whitenoise>=6.12.0",
+    "streamlit>=1.41.0",
+]
+
+fastapi = [
+    "fastapi>=0.136.1",
+    "uvicorn>=0.46.0",
 ]

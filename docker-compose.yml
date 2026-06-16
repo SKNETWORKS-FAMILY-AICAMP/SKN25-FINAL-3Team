@@ -1,41 +1,112 @@
 version: '3.8'
 
 services:
-  # 🛡️ 1. 장고 (메인 웹 서버)
-  django_web:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  django:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: patent_django_web
+      dockerfile: docker/Dockerfile.django
+    restart: unless-stopped
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-this-in-production-key-12345}
+      - DEBUG=${DEBUG:-True}
+      - DJANGO_DB_ENGINE=${DJANGO_DB_ENGINE}
+      - DJANGO_DB_NAME=${DJANGO_DB_NAME}
+      - DJANGO_DB_USER=${DJANGO_DB_USER}
+      - DJANGO_DB_PASSWORD=${DJANGO_DB_PASSWORD}
+      - DJANGO_DB_HOST=${DJANGO_DB_HOST}
+      - DJANGO_DB_PORT=${DJANGO_DB_PORT}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_PREFIX=${S3_PREFIX}
+    # Django는 8000번 포트 사용
     ports:
       - "8000:8000"
-    environment:
-      - PYTHONPATH=/app # 💡 1: 루트 폴더(agents)를 인식하도록 변경
-    # 💡 2: 장고 실행 명령어로 덮어쓰기
-    command: python backend/django/manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app # Hot Reload 유지
-    env_file:
-      - .env
-    restart: unless-stopped
+      - django_media:/app/backend/django/media
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 40s
+      retries: 3
 
-  # ⚡ 2. FastAPI (AI 워커 서버)
   fastapi_worker:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: patent_fastapi_worker
-    ports:
-      - "8001:8001"
-    environment:
-      - PYTHONPATH=/app # 💡 1: 동일하게 루트로 설정
-    # 💡 3: FastAPI 실행 명령어로 덮어쓰기 (--reload 추가로 코드 수정 시 자동 재시작)
-    command: uvicorn backend.fastapi.main:app --host 0.0.0.0 --port 8001 --reload
-    volumes:
-      - .:/app
-    env_file:
-      - .env
+      dockerfile: docker/Dockerfile.fastapi
     restart: unless-stopped
+    environment:
+      # API Keys & Models
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL}
+      - OPENAI_CHAT_MODEL=${OPENAI_CHAT_MODEL}
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+      - LORA_HF_REPO=${LORA_HF_REPO}
+      - RUNPOD_VLLM_URL=${RUNPOD_VLLM_URL}
+      - RUNPOD_API_KEY=${RUNPOD_API_KEY}
+      # DB (AWS RDS) & Storage
+      - DATABASE_URL=${RDS_DATABASE_URL}
+      - RDS_DATABASE_URL=${RDS_DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_PREFIX=${S3_PREFIX}
+      # App Settings
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - PRIOR_ART_ANALYZE_MAX_WORKERS=${PRIOR_ART_ANALYZE_MAX_WORKERS}
+    # FastAPI는 8001번 포트 사용 (충돌 해결)
+    ports:
+      - "8001:8001" 
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - uploads:/app/data/tmp
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      target: dev
+    restart: unless-stopped
+    environment:
+      - FASTAPI_URL=http://fastapi_worker:8001
+      - DJANGO_URL=http://django_web:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      fastapi_worker:
+        condition: service_healthy
+      django:
+        condition: service_healthy
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
-  sqlite_data:
+  django_media:
+  uploads:

@@ -1,0 +1,42 @@
+FROM python:3.12-slim
+
+# PYTHONPATH에 django 폴더를 추가해서 경로를 못 찾는 일이 없게 못을 박습니다.
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app:/app/backend/django \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    DJANGO_HOST=0.0.0.0 \
+    DJANGO_PORT=8000
+
+# 처음부터 끝까지 작업 경로는 /app (루트)로 고정합니다.
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       curl gcc python3-dev libpq-dev \
+       graphviz libgraphviz-dev pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv==0.7.*
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --no-dev --group django
+
+COPY agents /app/agents
+COPY backend /app/backend
+
+RUN useradd --create-home --shell /usr/sbin/nologin patent \
+    && mkdir -p /app/backend/django/staticfiles /app/backend/django/media \
+    && chown -R patent:patent /app
+USER patent
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+EXPOSE ${DJANGO_PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${DJANGO_PORT}/health/" || exit 1
+
+# 실행(CMD)도 /app 폴더 기준으로 명확하게 경로를 적어줍니다.
+# gunicorn은 --chdir 옵션으로 실행 위치를 잡아줍니다.
+CMD ["sh", "-c", "python backend/django/manage.py migrate --noinput && python backend/django/manage.py collectstatic --noinput && gunicorn config.wsgi:application --chdir backend/django --bind ${DJANGO_HOST}:${DJANGO_PORT} --workers 2"]

@@ -1,0 +1,54 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app:/app/backend/django \ 
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    APP_HOST=0.0.0.0 \
+    APP_PORT=8001 \
+    APP_WORKERS=2 \
+    GRAPHVIZ_DOT=/usr/bin/dot
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       curl \
+       graphviz \
+       libgraphviz-dev \
+       pkg-config \
+       gcc \
+       g++ \
+       python3-dev \
+       fonts-nanum \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CFLAGS="-I/usr/include/graphviz" \
+    LDFLAGS="-L/usr/lib"
+
+RUN pip install --no-cache-dir uv==0.7.*
+
+COPY pyproject.toml uv.lock ./
+# 공통 패키지 + fastapi 그룹 설치
+RUN uv sync --frozen --no-dev --group fastapi
+
+COPY agents ./agents
+COPY backend/fastapi ./backend/fastapi
+COPY backend/django ./backend/django
+
+RUN useradd --create-home --shell /usr/sbin/nologin patent \
+    && mkdir -p /app/artifacts /app/data \
+    && chown -R patent:patent /app
+USER patent
+
+ENV PATH="/opt/venv/bin:$PATH"
+WORKDIR /app
+
+EXPOSE ${APP_PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${APP_PORT}/health" || exit 1
+
+CMD ["sh", "-c", "uvicorn backend.fastapi.main:app --host ${APP_HOST} --port ${APP_PORT} --workers ${APP_WORKERS}"]

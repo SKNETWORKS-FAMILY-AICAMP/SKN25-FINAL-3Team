@@ -24,3 +24,7 @@ app.include_router(specification.router, prefix="/api/v1", tags=["Specification"
 @app.on_event("startup")
 async def startup_event():
     print("🚀 FastAPI AI Worker 가동 완료! (Django 세팅 로드 성공)")
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
