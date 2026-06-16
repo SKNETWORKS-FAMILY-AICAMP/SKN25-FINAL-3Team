@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -46,6 +47,9 @@ INSTALLED_APPS = [
     "core",
     "workspace",
     'drf_spectacular',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +150,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 CSRF_TRUSTED_ORIGINS = [
     "https://simply-subsiding-crunchy.ngrok-free.dev",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.0.18:3000",
 ]
 
 MEDIA_URL = '/media/'
@@ -158,12 +165,21 @@ USE_X_FORWARDED_HOST = True
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patent AI Project API',
     'DESCRIPTION': '장고 메인 서버 API 명세서',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',), # 프론트에서 Bearer를 사용 중
 }

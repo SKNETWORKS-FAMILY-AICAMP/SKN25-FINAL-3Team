@@ -28,6 +28,10 @@ from asgiref.sync import sync_to_async
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
 
@@ -108,16 +112,50 @@ def dashboard(request):
 
     return render(request, template_name, {'projects': projects})
 
-@login_required(login_url='/accounts/login/')
-def create_project(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        problem = request.POST.get('problem_to_solve')
-        prior_art = request.POST.get('prior_art_problem')
-        core = request.POST.get('core_tech')
-        effect = request.POST.get('expected_effect')
+# @login_required(login_url='/accounts/login/')
+# def create_project(request):
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         problem = request.POST.get('problem_to_solve')
+#         prior_art = request.POST.get('prior_art_problem')
+#         core = request.POST.get('core_tech')
+#         effect = request.POST.get('expected_effect')
 
-        project = PatentProject.objects.create(title=title,owner=request.user)
+#         project = PatentProject.objects.create(title=title,owner=request.user)
+        
+#         # 발명 내용 저장
+#         # (여기에 원본 데이터에 대한 SHA-256 해시를 생성하여 project.original_data_hash에 저장하는 로직 추가 가능)
+#         InventionInput.objects.create(
+#             project=project,
+#             problem_to_solve=problem,
+#             prior_art_problem=prior_art,
+#             core_tech=core,
+#             expected_effect=effect 
+#         )
+        
+#         return redirect('dashboard')
+        
+#     return render(request, 'workspace/create_project.html')
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # JWT 토큰이 유효한 로그인 유저만 접근 가능하게 보호
+def create_project(request):
+    # React(Axios/Fetch)에서 보낸 JSON 데이터는 request.POST가 아니라 request.data로 받습니다.
+    data = request.data
+    #print("🎯 프론트엔드가 보낸 데이터:", data)
+    title = data.get('title')
+    problem = data.get('problem_to_solve')
+    prior_art = data.get('prior_art_problem')
+    core = data.get('core_tech')
+    effect = data.get('expected_effect')
+
+    # 간단한 유효성 검사 (필수 값 확인)
+    if not title:
+        return Response({"error": "프로젝트 제목을 입력해 주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # 프로젝트 생성 (request.user는 JWT 토큰을 해독하여 자동으로 매핑됨)
+        project = PatentProject.objects.create(title=title, owner=request.user)
         
         # 발명 내용 저장
         # (여기에 원본 데이터에 대한 SHA-256 해시를 생성하여 project.original_data_hash에 저장하는 로직 추가 가능)
@@ -129,9 +167,15 @@ def create_project(request):
             expected_effect=effect 
         )
         
-        return redirect('dashboard')
+        # redirect 대신 성공했다는 메시지와 방금 만든 프로젝트 ID를 JSON으로 반환
+        return Response({
+            "message": "프로젝트가 성공적으로 생성되었습니다.",
+            "project_id": project.id
+        }, status=status.HTTP_201_CREATED)
         
-    return render(request, 'workspace/create_project.html')
+    except Exception as e:
+        # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @login_required(login_url='/accounts/login/')
 def workstation(request, project_id):
@@ -320,147 +364,6 @@ def upload_file_api(request, project_id):
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
-
-# @login_required(login_url='/accounts/login/')
-# @require_POST
-# def generate_claims_api(request, project_id):
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#     state = get_object_or_404(ConsultationState, project=project)
-#     inv_input = getattr(project, 'inventioninput', None)
-
-#     def is_valid(val):
-#         return bool(val and val.strip() != "미파악")
-    
-#     if not all([
-#         is_valid(state.ext_problem), 
-#         is_valid(state.ext_solution), 
-#         is_valid(state.ext_differentiation), 
-#         is_valid(state.ext_effect)
-#     ]):
-#         return JsonResponse({
-#             'status': 'warning',
-#             'message': '아직 발명의 핵심 4대 요소가 모두 파악되지 않았습니다.\nAI 변리사와의 대화를 통해 좌측 패널의 빈칸을 모두 채운 후 다시 시도해 주세요!'
-#         })
-    
-    
-#     mock_input_data = {
-#         "title": project.title,
-#         "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-#         "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-#         "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-#         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-#     }
-
-#     initial_state = {
-#         "mock_input_data": mock_input_data,
-#         "summary_data": None,
-#         "claims_data": None,
-#         "examiner_data": None,
-#         "drawing_spec": None,
-#         "prior_art_data": None
-#     }
-
-#     def event_stream():
-#         try:
-#             # 첫 번째 신호 발송
-#             yield json.dumps({"step": "start", "message": "에이전트 가동을 시작합니다."}) + "\n"
-
-#             compiled_graph = patent_graph() 
-#             #final_state = compiled_graph.invoke(initial_state)
-#             final_state = {}
-
-#             for output in compiled_graph.stream(initial_state):
-#                 for node_name, state_update in output.items():
-#                     final_state.update(state_update)
-
-#                     safe_state = {k: safe_serialize(v) for k, v in state_update.items()}
-#                     yield json.dumps({
-#                         "step": "log_and_state",
-#                         "log_msg": f"[{node_name.upper()}] 에이전트 노드 처리 완료 및 State 업데이트",
-#                         "state_data": safe_state
-#                     }) + "\n"
-
-#                     if node_name == "summary_node":
-#                         yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
-#                     elif node_name == "claim_node":
-#                         yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
-#                     elif node_name == "examiner_node":
-#                         examiner_data = state_update.get("examiner_data")
-#                         if not examiner_data:
-#                             pass
-#                         if examiner_data and not examiner_data.is_approved:
-#                             yield json.dumps({"step": "rewrite", "message": f"심사관 반려! ({examiner_data.revision_count}차 보정 진행)"}) + "\n"
-#                         else:
-#                             yield json.dumps({"step": "examiner", "message": "심사관 승인 완료!"}) + "\n"
-#                     elif node_name == "rewrite_node":
-#                         yield json.dumps({"step": "rewrite_done", "message": "보정 완료! 재심사 요청 중..."}) + "\n"
-                    
-
-#             claims_result = final_state.get("claims_data")
-#             examiner_result = final_state.get("examiner_data")
-
-#             if not claims_result or not claims_result.claims:
-#                 yield json.dumps({"step": "error", "message": "AI 엔진이 청구항을 생성하지 못했습니다."}) + "\n"
-#                 return
-        
-#             loop_count = examiner_result.revision_count if examiner_result else 0
-#             claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
-
-#             claims_list_for_frontend = []
-#             for c in claims_result.claims: 
-#                 type_badge = '[종속항]' if c.is_dependent else '[독립항]'
-#                 claim_result_text += f"**청구항 {c.claim_no} {type_badge}**\n{c.content}\n\n"
-                
-#                 claims_list_for_frontend.append({
-#                     "claim_no": c.claim_no,
-#                     "is_dependent": c.is_dependent,
-#                     "cited_claim_no": c.cited_claim_no,
-#                     "category": c.category,
-#                     "content": c.content
-#                 })
-
-#             ChatMessage.objects.create(project=project, role='assistant', content=claim_result_text)
-
-#             yield json.dumps({"step": "prior_art_start", "message": "AWS RDS 벡터DB 연결 및 선행기술조사 가동..."}) + "\n"
-
-#             try:
-#                 from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
-                
-#                 prior_art_result = run_prior_art_agent(final_state, top_n=3)
-#                 pa_data = prior_art_result["prior_art_data"].model_dump()
-
-#                 PriorArtReport.objects.update_or_create(
-#                     project=project,
-#                     defaults={
-#                         'risk_level': pa_data.get('overall_risk', {}).get('level', 'unknown'),
-#                         'analysis_summary': pa_data.get('analysis_summary', ''),
-#                         'full_json_data': pa_data
-#                     }
-#                 )
-                
-                
-#                 yield json.dumps({
-#                     "step": "prior_art_done", 
-#                     "message": "선행기술조사 완료! 리포트를 생성했습니다.",
-#                     "prior_art_data": pa_data
-#                 }) + "\n"
-                
-#             except Exception as e:
-#                 logger.error(f"선기조 에러: {e}")
-#                 yield json.dumps({"step": "error", "message": f"선기조 중 오류 발생: {str(e)}"}) + "\n"
-
-#             yield json.dumps({
-#                 "step": "done",
-#                 "message_content": claim_result_text,
-#                 "claims": claims_list_for_frontend,
-#                 "prior_art_data": pa_data
-#             }) + "\n"
-
-#         except Exception as e:
-#             logger.error(f"랭그래프 청구항 생성 에러: {e}")
-#             yield json.dumps({"step": "error", "message": f"청구항 생성 중 오류가 발생했습니다: {str(e)}"}) + "\n"
-
-#     return StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
 
 @login_required
 @require_POST
