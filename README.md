@@ -1,92 +1,83 @@
 # SKN25-FINAL-3Team
 
-## Git 협업 안내
+## 💡 꽃보다특허
 
-팀 작업은 각자 브랜치에서 진행하고, `main`에 반영할 때는 **PR(Pull Request)** 로 공유해 주세요.
+**AI 기반 다중 에이전트 특허 명세서 자동 작성 플랫폼**
 
-```text
-작업 브랜치에서 개발
-→ GitHub에 push
-→ main으로 PR 생성
-→ PM 확인 후 merge
-```
 
-PR을 올릴 때는 아래만 가볍게 확인해 주세요.
 
-- 작업 목적이 PR 설명에 적혀 있는지
-- 불필요한 대용량 파일, 임시 파일, `.env` 같은 비밀값이 포함되지 않았는지
-- 실행 또는 확인 방법이 간단히 적혀 있는지
-- 은석/가영/범수/서현/홍익 담당자는 본인 확인 체크리스트를 작성했는지
-- PM은 마지막에 PM 확인 체크리스트를 확인했는지
+## 📌 Project Overview
 
-자세한 브랜치/PR 규칙과 팀원별 체크리스트는 [BRANCH_RULES.md](BRANCH_RULES.md)에 정리되어 있습니다.
+**꽃보다특허**는 발명자의 아이디어를 바탕으로 특허 청구범위 및 명세서 초안을 자동으로 작성해 주는 **Multi-Agent 시스템**입니다. 
 
----
+**LangGraph 기반의 여러 AI 에이전트**(청구항 작성, 심사관 검토, 도면 기획 등)가 유기적으로 협력하여 논리적이고 견고한 특허 문서를 생성합니다.
 
-AI/소프트웨어 특허 상담 및 선행기술 분석 프로젝트입니다.
+## ✨ Key Features
 
-## 개발 환경 세팅
+* **자동 청구항 생성 (Claim Agent):** 사용자 입력을 바탕으로 바탕으로 독립항과 종속항의 위계 및 카테고리(장치/방법 등)를 엄밀하게 설계.
+* **선행 기술 조사 (Prior Art Agent):** 사용자 발명의 신규성, 진보성 검토. 유사 선행 기술 Top-5 제공.
+* **심사관 교차 검증 (Examiner Agent):** 생성된 청구항의 명확성을 파인튜닝된 에이전트가 검토하고 보정 방향성을 제시.
+* **도면 기획 (Drawing Agent):** 발명 구성 요소 간의 연결성을 파악하여 블록도 및 흐름도 등의 도면 명세 초안 작성.
 
-이 프로젝트는 Python 환경을 `uv`로 맞춥니다.
+## 🛠️ Tech Stack
+
+* **Backend Core:** Python 3.12, Django
+* **AI & Workflow:** LangChain, LangGraph, OpenAI
+* **Infrastructure & Env:** Docker, Docker Compose, uv
+* **Database:** SQLite (개발용) / PostgreSQL (운영용) / pgvector (VectorDB)
+
+## 🚀 Getting Started
+
+#### 1. Prerequisites
+
+* [Docker](https://www.docker.com/) 및 [Docker Compose](https://docs.docker.com/compose/) 설치 (또는 Docker Desktop)
+* uv 패키지 매니저 설치 (`pip install uv`)
+
+#### 2. Installation
 
 ```bash
-cd SKN25-FINAL-3Team
-uv venv
-uv sync --dev
+# Repository Clone
+git clone https://github.com/sknetworks-family-aicamp/skn25-final-3team.git
+cd skn25-final-3team
+
+# 환경 변수 설정 (.env.example 파일을 복사하여 자신의 API Key 입력)
 cp .env.example .env
 ```
 
-그다음 `.env`에 OpenAI, DB, 외부 API 값을 채워 넣습니다. 실제 `.env`는 Git에 올리지 않습니다.
+#### 3. Run the Application
 
-자세한 폴더 구조와 실행 방법은 [프로젝트 폴더 구조와 개발 환경](docs/PROJECT_STRUCTURE.md)에 정리되어 있습니다.
-
-## 주요 실행 예시
+Docker를 이용해 시스템을 빌드하고 실행합니다.
 
 ```bash
-# Streamlit 상담 데모
-uv run streamlit run apps/streamlit/main.py
-
-# Django 백엔드
-uv run python backend/django/manage.py runserver 8000
-
-# 특허 TXT 적재
-uv run python agents/consultation/load_corpus.py --dir data/raw/texts/patents_txt
+docker compose up --build
 ```
 
-## 먼저 읽을 문서
+실행 완료 후, 브라우저에서 `http://localhost:8000`으로 접속하여 작업스페이스를 확인하세요.
 
-프로젝트 데이터 관리, 스키마, 파이프라인, 평가 기준은 LLM Wiki에서 관리합니다.
-
-- [프로젝트 폴더 구조와 개발 환경](docs/PROJECT_STRUCTURE.md)
-- [Git 브랜치 규칙](BRANCH_RULES.md)
-- [LLM Wiki 시작 문서](docs/llm-wiki/README.md)
-- [LLM Wiki 목차](docs/llm-wiki/index.md)
-- [팀 협업 가이드](docs/llm-wiki/concepts/team-collaboration-guide.md)
-- [데이터 관리 전략](docs/llm-wiki/concepts/data-management-strategy.md)
-- [Pilot 600 데이터셋](docs/llm-wiki/concepts/pilot-600-v1.md)
-- [특허 데이터 스키마](docs/llm-wiki/concepts/patent-data-schemas.md)
-- [파이프라인과 평가](docs/llm-wiki/concepts/pipeline-and-evaluation.md)
-
-## 현재 폴더 구조 요약
+## 📂 Project Structure
 
 ```text
-agents/             AI 에이전트 코드
-  consultation/     상담 상태/DB/선행기술
-  claim/            청구항 생성/저장
-  drawing/          도면/참조부호/SVG
-  specification/    발명의 설명/명세서/DOCX
-backend/django/     Django 로그인/JWT 백엔드
-frontend/           향후 React + TypeScript 프론트엔드
-apps/streamlit/     빠른 검증용 Streamlit 앱
-notebooks/claim/    청구항 데이터셋/학습 실험 노트북
-models/claim/       청구항 모델 설정/adapter 외부 위치 기록
-data/               원천/가공 데이터, 리포트, 매니페스트
-docs/               팀 문서와 LLM Wiki
-scripts/            데이터/운영/개발 보조 스크립트
+skn25-final-3team/
+├── agents/             # LangGraph 기반 다중 AI 에이전트 (청구항, 심사관, 명세서 등)
+│   ├── core/           # State, Graph 정의 및 공통 모듈
+│   ├── prior_art_agent/# 선행기술조사 에이전트
+│   └── specification/  # 명세서 작성 에이전트
+├── backend/            # Django/FastAPI 백엔드 서버 및 웹 워크스페이스
+│   ├── accounts/       # 사용자 계정 관리
+│   ├── workspace/      # 프로젝트 및 에이전트 상호작용 UI
+│   └── test_run.py     # 로컬 에이전트 파이프라인 테스트 스크립트
+├── pyproject.toml      # uv 기반 패키지 및 의존성 관리
+├── Dockerfile          # 배포 및 실행 환경 정의
+└── docker-compose.yml  # 컨테이너 오케스트레이션
 ```
 
-## 데이터 폴더
+## 🔃 Future Work
 
-- [data 폴더 설명](data/README.md)
-- 대량 PDF/TXT/SQLite/HTML 리포트는 Git에 올리지 않습니다.
-- Google Drive/GCS 원천 위치는 `data/manifests/`에서 관리합니다.
+- FastAPI 추가
+- DB Migration (Sqlite -> PostgreSQL)
+- Agent logic 고도화
+- Test 디렉토리 추가
+
+## 📅 프로젝트 진행 상황
+
+- **최종 발표 자료:** [Canva PPT 링크](https://canva.link/7tgiu30dzu4k638)

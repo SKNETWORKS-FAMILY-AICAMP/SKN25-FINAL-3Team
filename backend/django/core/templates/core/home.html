@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PYPI — AI 특허 자동화{% endblock %}
+
+{% block content %}
+<section class="lf-hero">
+    <div class="lf-hero-stamp" aria-hidden="true">VII</div>
+
+    <div class="lf-side-strip lf-side-strip--left" aria-hidden="true">
+        </div>
+    <div class="lf-side-strip lf-side-strip--right" aria-hidden="true">
+        </div>
+
+    <div class="lf-hero-lines" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="lf-hero-ticker" aria-hidden="true">
+      <div class="lf-ticker-track">
+        <span>PATENT APPLICATION</span><span class="lf-ticker-dot">◆</span>
+        <span>CLAIM DRAFTING</span><span class="lf-ticker-dot">◆</span>
+        <span>PRIOR ART SEARCH</span><span class="lf-ticker-dot">◆</span>
+        <span>AI SPECIFICATION</span><span class="lf-ticker-dot">◆</span>
+        </div>
+    </div>
+    
+    {% include 'components/_hero_deco.html' %}
+    {% include 'components/_side_strips.html' %}
+    {% include 'components/_hero_floats.html' %}
+    {% include 'components/_hero_circuit.html' %}
+
+    <div class="lf-hero-body">
+      <p class="lf-eyebrow reveal" data-i18n="lf_eyebrow">Patent Intelligence · AI 특허 자동화 플랫폼</p>
+
+      <h1 class="lf-hero-h1 reveal reveal-d1" data-i18n="lf_h1">Protect your patent<br><em>and intellectual property</em><br>with PYPI</h1>
+
+      <div class="lf-hero-rule reveal reveal-d2"></div>
+
+      <p class="lf-hero-sub reveal reveal-d2" data-i18n="lf_hero_sub">7개 전문 AI 에이전트가 특허청 제출 가능한 완성 명세서를 체계적으로 완성합니다</p>
+
+      <div class="lf-hero-cta reveal reveal-d3">
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="lf-hero-btn-fill" data-i18n="hero_start_auth">대시보드로 이동 →</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="lf-hero-btn-fill" data-i18n="hero_start_guest">지금 시작하기 →</a>
+        <a href="#" class="lf-hero-btn-line" data-i18n="hero_about">서비스 소개</a>
+        {% endif %}
+      </div>
+    </div>
+</section>
+
+<div class="lf-cred">
+  <div class="lf-cred-wrap">
+    <div class="lf-cred-item">
+      <span class="lf-cred-n"><span data-count="7">7</span></span>
+      <span class="lf-cred-label">전문 AI 에이전트</span>
+    </div>
+    <div class="lf-cred-sep"></div>
+    <div class="lf-cred-item">
+      <span class="lf-cred-n"><span data-count="4">4</span></span>
+      <span class="lf-cred-label">지원 언어</span>
+    </div>
+    <div class="lf-cred-sep"></div>
+    <div class="lf-cred-item">
+      <span class="lf-cred-n"><span data-count="100">100</span><span class="lf-cred-pct">%</span></span>
+      <span class="lf-cred-label">AI 자동 생성</span>
+    </div>
+    <div class="lf-cred-sep"></div>
+    <div class="lf-cred-item lf-cred-item--attorney">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--lf-gold);opacity:.7;margin-bottom:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span class="lf-cred-phrase" style="font-size:13px;">변리사 자문 완료</span>
+    </div>
+  </div>
+</div>
+
+{% include 'components/news_slider.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/news-slider.js' %}"></script>
+{% endblock %}

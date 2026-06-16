@@ -1,0 +1,32 @@
+{
+  "valid": true,
+  "quality": {
+    "score": 100,
+    "grade": "A",
+    "pass": true,
+    "issues": [],
+    "strengths": [
+      "구성요소 수 충분",
+      "도면부호 표시됨",
+      "특허청 실무 스타일: patent_block_pro",
+      "허용 도면 유형"
+    ]
+  },
+  "fig_json_validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "element_count": 4,
+    "relation_count": 5
+  },
+  "layout_meta": {
+    "layout_type": "patent_block_pro",
+    "canvas": {
+      "width": 1200,
+      "height": 780
+    },
+    "internal_count": 3,
+    "external_count": 0
+  },
+  "created_at": "2026-05-26T11:24:48.464523"
+}

@@ -1,0 +1,240 @@
+/* ════════════════════════════════════════════════════════
+   PYPI — Sections (process · about · pipeline · features · team · news)
+════════════════════════════════════════════════════════ */
+
+/* ── 공통 섹션 헬퍼 ─────────────────────────────────── */
+.lf-section-pad { padding: 120px 0; }
+
+/* ════ PROCESS ══════════════════════════════════════════ */
+.lf-process {
+  padding: 120px 0;
+  background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+}
+.lf-proc-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--lf-border);
+}
+.lf-proc-item {
+  padding: 40px 32px; border-right: 1px solid var(--lf-border);
+  position: relative; transition: background .2s;
+}
+.lf-proc-item:last-child { border-right: none; }
+.lf-proc-item:hover { background: var(--lf-bg); }
+.lf-proc-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.25, .46, .45, .94);
+}
+.lf-proc-item:hover::before { transform: scaleX(1); }
+
+.lf-proc-step { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.lf-proc-n {
+  font-family: 'Courier New', monospace; font-size: 13px; font-weight: 700;
+  color: var(--lf-gold); opacity: .6; line-height: 1; letter-spacing: 1px;
+  border: 1px solid rgba(154, 120, 64, .3); padding: 3px 6px;
+}
+.lf-proc-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(154, 120, 64, .3), transparent); }
+.lf-proc-name {
+  font-family: var(--lf-serif); font-size: 17px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 4px; letter-spacing: -.1px; line-height: 1.3;
+}
+.lf-proc-sub {
+  font-size: 9px; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .6; margin-bottom: 16px;
+}
+.lf-proc-desc { font-size: 12.5px; font-weight: 300; color: var(--lf-mid); line-height: 1.85; letter-spacing: .1px; }
+
+/* ════ ABOUT ════════════════════════════════════════════ */
+.lf-about { padding: 120px 0; background: var(--lf-bg); }
+.lf-about-grid {
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 96px; align-items: start;
+}
+.lf-about-l { position: sticky; top: 90px; }
+.lf-pullquote {
+  font-family: var(--lf-serif);
+  font-size: clamp(18px, 1.9vw, 24px);
+  font-style: italic; font-weight: 300; color: var(--lf-navy); line-height: 1.65;
+  border-left: 2px solid var(--lf-gold); padding: 4px 0 4px 24px; margin-bottom: 36px;
+  letter-spacing: -.1px;
+}
+.lf-about-deco { width: 88px; height: 88px; margin-bottom: 28px; opacity: .7; }
+.lf-about-deco svg { width: 100%; height: auto; }
+
+/* ── Attorney bar ────────────────────────────────────── */
+.lf-attorney-bar {
+  background: var(--lf-bg);
+  border-top: 1px solid var(--lf-border);
+  border-bottom: 1px solid var(--lf-border);
+  padding: 48px 0;
+}
+.lf-atty-inner { display: flex; align-items: flex-start; gap: 32px; }
+.lf-atty-icon {
+  width: 52px; height: 52px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(154, 120, 64, .3); color: var(--lf-gold); opacity: .7;
+}
+.lf-atty-body { flex: 1; }
+.lf-atty-title {
+  font-family: var(--lf-serif); font-size: 17px; font-weight: 400;
+  color: var(--lf-navy); margin-bottom: 10px; letter-spacing: -.1px;
+}
+.lf-atty-desc { font-size: 13px; font-weight: 300; color: var(--lf-mid); line-height: 1.9; letter-spacing: .1px; }
+.lf-atty-badge {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  flex-shrink: 0; text-align: center;
+  border-left: 1px solid var(--lf-border); padding-left: 32px;
+  color: var(--lf-gold); min-width: 120px;
+}
+.lf-atty-badge svg { opacity: .7; }
+.lf-atty-badge span {
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .65; line-height: 1.5;
+}
+
+/* ════ PIPELINE ═════════════════════════════════════════ */
+.lf-pipeline {
+  padding: 120px 0; background: var(--lf-bg2);
+  border-top: 1px solid var(--lf-border); border-bottom: 1px solid var(--lf-border);
+}
+.lf-agents { position: relative; border-top: 1px solid rgba(0, 0, 0, .07); }
+.lf-agents::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
+  background: rgba(154, 120, 64, .15);
+}
+.lf-agent {
+  display: grid; grid-template-columns: 88px 1fr;
+  padding: 44px 0 44px 32px; border-bottom: 1px solid rgba(0, 0, 0, .05);
+  position: relative; transition: background .2s;
+}
+.lf-agent::before {
+  content: ''; position: absolute; left: -4px; top: 48px;
+  width: 7px; height: 7px; border-radius: 50%;
+  border: 1px solid rgba(154, 120, 64, .25); background: var(--lf-bg2);
+  transition: border-color .25s, background .25s;
+}
+.lf-agent:hover::before, .lf-agent--hl::before {
+  border-color: var(--lf-gold); background: rgba(154, 120, 64, .12);
+}
+.lf-agent:hover { background: rgba(154, 120, 64, .02); }
+.lf-agent-num {
+  font-family: 'Courier New', monospace; font-size: 13px; font-weight: 400;
+  color: var(--lf-gold); opacity: .5; transition: opacity .2s;
+  line-height: 1; padding-top: 4px; letter-spacing: 1px;
+}
+.lf-agent:hover .lf-agent-num, .lf-agent--hl .lf-agent-num { opacity: .9; }
+.lf-agent--hl .lf-agent-num, .lf-agent--hl .lf-agent-name { color: var(--lf-gold); }
+.lf-agent-body { display: flex; flex-direction: column; gap: 10px; }
+.lf-agent-hd   { display: flex; align-items: baseline; gap: 14px; }
+.lf-agent-name {
+  font-family: var(--lf-serif); font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 400; color: var(--lf-navy); letter-spacing: -.1px; transition: color .2s;
+}
+.lf-agent-en {
+  font-size: 8.5px; font-weight: 500; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-muted);
+}
+.lf-agent-desc { font-size: 13px; font-weight: 300; line-height: 2; color: var(--lf-mid); max-width: 540px; }
+
+/* ════ FEATURES ═════════════════════════════════════════ */
+.lf-features { padding: 120px 0; background: var(--lf-bg); }
+.lf-feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--lf-border); border: 1px solid var(--lf-border);
+}
+.lf-feat {
+  background: var(--lf-bg); padding: 52px 40px 48px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden; transition: background .25s;
+}
+.lf-feat:hover { background: var(--lf-bg2); }
+.lf-feat-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--lf-ease);
+}
+.lf-feat:hover .lf-feat-line { transform: scaleX(1); }
+.lf-feat-no {
+  font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; color: var(--lf-gold); opacity: .55; margin-bottom: 28px;
+  border-bottom: 1px solid rgba(154, 120, 64, .25); padding-bottom: 8px; display: inline-block;
+}
+.lf-feat-icon { width: 48px; height: 48px; color: var(--lf-gold); opacity: .55; margin-bottom: 28px; transition: opacity .25s; }
+.lf-feat:hover .lf-feat-icon { opacity: .85; }
+.lf-feat-name { font-family: var(--lf-serif); font-size: 20px; font-weight: 400; color: var(--lf-navy); margin-bottom: 14px; }
+.lf-feat-desc { font-size: 13px; font-weight: 300; line-height: 2; color: var(--lf-mid); flex: 1; }
+
+/* ════ TEAM ══════════════════════════════════════════════ */
+.lf-team { padding: 128px 0; background: var(--lf-bg2); border-top: 1px solid var(--lf-border); }
+.lf-team-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--lf-border); border: 1px solid var(--lf-border);
+}
+.lf-member {
+  background: var(--lf-bg2); padding: 48px 36px;
+  display: flex; flex-direction: column; gap: 0;
+  transition: background .2s; position: relative; overflow: hidden;
+}
+.lf-member::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s var(--lf-ease);
+}
+.lf-member:hover { background: #fff; }
+.lf-member:hover::before { transform: scaleX(1); }
+.lf-member-avatar {
+  width: 76px; height: 76px; border-radius: 50%;
+  border: 2px solid rgba(154, 120, 64, .22);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 28px; font-weight: 300;
+  color: var(--lf-gold); margin-bottom: 28px;
+  overflow: hidden; background: var(--lf-bg3);
+  transition: border-color .25s, box-shadow .25s;
+}
+.lf-member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.lf-member:hover .lf-member-avatar {
+  border-color: rgba(154, 120, 64, .5);
+  box-shadow: 0 0 0 5px rgba(154, 120, 64, .07);
+}
+.lf-member-name { font-family: var(--lf-serif); font-size: 19px; font-weight: 400; color: var(--lf-navy); margin-bottom: 5px; letter-spacing: -.1px; }
+.lf-member-role { font-size: 8.5px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--lf-gold); opacity: .65; margin-bottom: 22px; }
+.lf-member-desc { font-size: 12.5px; font-weight: 300; line-height: 1.9; color: var(--lf-mid); letter-spacing: .05px; }
+
+/* ════ NEWS (card grid — 랜딩 인라인) ══════════════════ */
+.lf-news { padding: 128px 0; background: var(--lf-bg); border-top: 1px solid var(--lf-border); }
+.lf-news-hd { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; gap: 24px; }
+.lf-news-more {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lf-gold); text-decoration: none;
+  padding-bottom: 2px; border-bottom: 1px solid rgba(154, 120, 64, .3);
+  white-space: nowrap; transition: opacity .2s;
+}
+.lf-news-more:hover { opacity: .7; }
+.lf-news-h2 { font-family: var(--lf-serif); font-size: clamp(26px, 2.8vw, 38px); font-weight: 300; color: var(--lf-navy); line-height: 1.3; margin-top: 12px; }
+.lf-news-h2 em { font-style: italic; color: var(--lf-gold); }
+
+.lf-news-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; background: var(--lf-border); border: 1px solid var(--lf-border);
+}
+.lf-news-card {
+  background: var(--lf-bg); padding: 44px 36px 40px;
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  position: relative; overflow: hidden; transition: background .22s;
+}
+.lf-news-card:hover { background: var(--lf-bg2); }
+.lf-news-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left;
+  transition: transform .35s cubic-bezier(.25, .46, .45, .94);
+}
+.lf-news-card:hover .lf-news-accent { transform: scaleX(1); }
+.lf-news-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.lf-news-no { font-family: var(--lf-serif); font-size: 13px; font-weight: 300; font-style: italic; color: var(--lf-gold); opacity: .5; }
+.lf-news-tag { font-size: 8.5px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--lf-gold); opacity: .65; padding: .18rem .55rem; border: 1px solid rgba(154, 120, 64, .2); }
+.lf-news-title { font-family: var(--lf-serif); font-size: clamp(16px, 1.6vw, 20px); font-weight: 400; color: var(--lf-navy); line-height: 1.45; margin-bottom: 14px; letter-spacing: -.1px; }
+.lf-news-summary { font-size: 13px; font-weight: 300; color: var(--lf-mid); line-height: 1.85; margin-bottom: 20px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.lf-news-link { font-size: 9.5px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lf-gold); opacity: 0; transition: opacity .2s; margin-top: auto; }
+.lf-news-card:hover .lf-news-link { opacity: .85; }

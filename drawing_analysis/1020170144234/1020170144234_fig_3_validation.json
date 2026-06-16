@@ -1,0 +1,33 @@
+{
+  "valid": true,
+  "quality": {
+    "score": 85,
+    "grade": "B",
+    "pass": true,
+    "issues": [
+      "구성요소 3개 미만"
+    ],
+    "strengths": [
+      "도면부호 표시됨",
+      "특허청 실무 스타일: patent_sequence_pro",
+      "허용 도면 유형"
+    ]
+  },
+  "fig_json_validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "element_count": 2,
+    "relation_count": 5
+  },
+  "layout_meta": {
+    "layout_type": "patent_sequence_pro",
+    "canvas": {
+      "width": 900,
+      "height": 578
+    },
+    "actor_count": 2,
+    "message_count": 5
+  },
+  "created_at": "2026-05-26T11:24:48.466966"
+}

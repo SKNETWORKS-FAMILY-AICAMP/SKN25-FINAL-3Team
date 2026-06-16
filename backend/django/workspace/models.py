@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 
 class PatentProject(models.Model):
     STATUS_CHOICES = (
@@ -9,7 +9,7 @@ class PatentProject(models.Model):
         ('done', '완료'),
     )
     title = models.CharField(max_length=200, verbose_name="프로젝트명")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projects')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     original_data_hash = models.CharField(max_length=64, blank=True, null=True) # 원본 데이터의 해시값을 저장하는 필드 (중복 방지 및 변경 감지용)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,7 +47,6 @@ class DetailElement(models.Model):
     element_type = models.CharField(max_length=50)
     content = models.TextField()
 
-
 class PatentClaim(models.Model):
     project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='claims')
     claim_no = models.IntegerField(verbose_name="청구항 번호")
@@ -58,7 +57,35 @@ class PatentClaim(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['claim_no'] # 항상 청구항 번호 순서대로 정렬되도록 설정
+        ordering = ['claim_no'] 
 
     def __str__(self):
         return f"[{self.project.title}] 청구항 {self.claim_no}"
+    
+class PatentDrawingFile(models.Model):
+    project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='drawings')
+    title = models.CharField(max_length=200)  
+    image_url = models.CharField(max_length=500) 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project.title} - {self.title}"
+
+class PriorArtReport(models.Model):
+    project = models.OneToOneField('PatentProject', on_delete=models.CASCADE, related_name='prior_art_report')
+    risk_level = models.CharField(max_length=50)  # low, medium, high
+    analysis_summary = models.TextField()
+    full_json_data = models.JSONField()          
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project.title} - 선기조 리포트"
+
+class SpecificationDocument(models.Model):
+    project = models.OneToOneField('PatentProject', on_delete=models.CASCADE, related_name='specification_doc')
+    markdown_content = models.TextField()        
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.project.title} - 명세서 본문"

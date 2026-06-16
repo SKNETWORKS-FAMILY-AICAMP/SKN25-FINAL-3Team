@@ -1,127 +1,293 @@
-{% extends 'pages/base_page.html' %}
-{% block title %}마이페이지 | PYPI{% endblock %}
+{% extends "base.html" %}
 
-{% block content %}
-<div class="pg">
-  <header class="pg-header">
-    <div class="pg-nav">
-      <a href="{% url 'accounts:landing' %}" class="pg-logo">
-        <span class="pg-logo-mark">Pi</span><span class="pg-logo-name">PYPI</span>
-      </a>
-      {% include "pages/_nav.html" %}
-      <div class="pg-util">
-        <a href="/workspace/dashboard/" class="pg-btn-back">← 대시보드</a>
-      </div>
-    </div>
-  </header>
+{% block title %}PYPI — 마이페이지{% endblock %}
 
-  <section class="pg-hero" style="padding:80px 0 40px;">
-    <div class="pg-container">
-      <span class="pg-hero-tag">My Account</span>
-      <h1 class="pg-hero-h1" style="font-size:clamp(26px,4vw,44px);">마이페이지</h1>
-      <div class="pg-hero-rule"></div>
-      <p class="pg-hero-desc">내 계정 정보와 특허 프로젝트 진행 현황을 확인합니다.</p>
-    </div>
-  </section>
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   MYPAGE THEME (PYPI White Law Firm)
+════════════════════════════════════════════════════════ */
+.lf-mypage-section {
+    padding: 100px 0 120px;
+    background: var(--lf-bg);
+    min-height: calc(100vh - 70px);
+}
+.lf-mypage-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
 
-  <div class="pg-body" style="padding-bottom:80px;">
-    <div class="pg-container">
-      <div class="mp-grid">
+/* ── 타이틀 영역 ── */
+.lf-mypage-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+.lf-mypage-title {
+    font-family: var(--lf-serif);
+    font-size: clamp(28px, 3.5vw, 36px);
+    font-weight: 300;
+    color: var(--lf-navy);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+.lf-mypage-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--lf-mid);
+    letter-spacing: 0.2px;
+    margin: 0;
+}
 
-        <!-- 왼쪽: 정보 + 통계 -->
-        <div>
-          <div class="mp-card">
-            <div class="mp-card-title">회원 기본 정보</div>
-            <div class="mp-info-row"><span class="mp-info-key">아이디</span><span class="mp-info-val">{{ user.username }}</span></div>
-            <div class="mp-info-row"><span class="mp-info-key">이름</span><span class="mp-info-val">{{ user.name|default:"(지정 안 됨)" }}</span></div>
-            <div class="mp-info-row"><span class="mp-info-key">이메일</span><span class="mp-info-val">{{ user.email|default:"(지정 안 됨)" }}</span></div>
-            <div class="mp-info-row"><span class="mp-info-key">가입일</span><span class="mp-info-val">{{ user.date_joined|date:"Y년 m월 d일" }}</span></div>
-            <div class="mp-info-row"><span class="mp-info-key">회원 유형</span><span class="mp-role-badge">{{ role_display }}</span></div>
-          </div>
+/* ── 그리드 레이아웃 ── */
+.lf-mypage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+@media (max-width: 800px) {
+    .lf-mypage-grid { grid-template-columns: 1fr; }
+}
 
-          <div class="mp-card" style="margin-top:16px;">
-            <div class="mp-card-title">특허 프로젝트 현황</div>
-            <div class="mp-total">
-              <span class="mp-total-num">{{ project_stats.total }}</span>
-              <span class="mp-total-label">개 프로젝트</span>
-            </div>
-            <div class="mp-stats-grid">
-              <div class="mp-stat mp-stat--draft"><span class="mp-stat-label">초안 작성중</span><span class="mp-stat-num">{{ project_stats.draft }}</span></div>
-              <div class="mp-stat mp-stat--processing"><span class="mp-stat-label">AI 처리중</span><span class="mp-stat-num">{{ project_stats.agent_processing }}</span></div>
-              <div class="mp-stat mp-stat--review"><span class="mp-stat-label">검토중</span><span class="mp-stat-num">{{ project_stats.review }}</span></div>
-              <div class="mp-stat mp-stat--done"><span class="mp-stat-label">완료</span><span class="mp-stat-num">{{ project_stats.done }}</span></div>
-            </div>
-          </div>
-        </div>
+/* ── 공통 카드 스타일 ── */
+.lf-card {
+    background: #fff;
+    border: 1px solid var(--lf-border);
+    padding: 36px 40px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+/* 호버 시 상단 골드 라인 */
+.lf-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--lf-gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s var(--lf-ease);
+}
+.lf-card:hover::before { transform: scaleX(1); }
 
-        <!-- 오른쪽: 정보 수정 -->
-        <div class="mp-card">
-          <div class="mp-card-title">회원 정보 수정</div>
-          <form method="POST" action="{% url 'my_page' %}" style="display:flex;flex-direction:column;gap:20px;">
-            {% csrf_token %}
-            <div>
-              <label class="mp-label">이름</label>
-              <input type="text" name="name" value="{{ user.name }}" placeholder="이름을 입력하세요" required class="mp-input">
-            </div>
-            <div>
-              <label class="mp-label">이메일 주소</label>
-              <input type="email" name="email" value="{{ user.email }}" placeholder="example@email.com" required class="mp-input">
-            </div>
-            <div>
-              <label class="mp-label">주력 기술 분야 (선택)</label>
-              <select class="mp-input">
-                <option value="ai">인공지능 / 소프트웨어</option>
-                <option value="bio">바이오 / 헬스케어</option>
-                <option value="mech">기계 / 하드웨어</option>
-                <option value="chem">화학 / 신소재</option>
-              </select>
-            </div>
-            <button type="submit" class="cp-btn-next" style="margin-top:8px;">수정 내용 저장하기</button>
-          </form>
-        </div>
+.lf-card-hd {
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--lf-border);
+    padding-bottom: 16px; margin-bottom: 28px;
+}
+.lf-card-hd svg { color: var(--lf-gold); opacity: 0.8; }
+.lf-card-title {
+    font-family: var(--lf-serif); font-size: 19px; color: var(--lf-navy); margin: 0;
+}
 
-      </div>
-    </div>
-  </div>
+/* ── 좌측: 기본 정보 ── */
+.lf-info-list {
+    display: flex; flex-direction: column; gap: 20px;
+}
+.lf-info-item {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; border-bottom: 1px dashed rgba(0,0,0,0.05); padding-bottom: 12px;
+}
+.lf-info-item:last-child { border-bottom: none; padding-bottom: 0; }
+.lf-info-label { color: var(--lf-mid); font-weight: 500; letter-spacing: 0.5px; }
+.lf-info-val { color: var(--lf-navy); font-weight: 600; }
 
-  <footer class="pg-footer">
-    <div class="pg-container">
-      <div class="pg-footer-inner">
-        <span class="pg-footer-logo">PYPI</span>
-        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
-</div>
-{% if messages %}<script>{% for message in messages %}alert("{{ message }}");{% endfor %}</script>{% endif %}
+/* ── 좌측: 프로젝트 통계 ── */
+.lf-stat-total {
+    background: var(--lf-bg2); border: 1px solid var(--lf-border);
+    padding: 24px; text-align: center; border-radius: 4px; margin-bottom: 24px;
+}
+.lf-stat-total-label {
+    display: block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+    color: var(--lf-muted); text-transform: uppercase; margin-bottom: 10px;
+}
+.lf-stat-total-val {
+    font-family: var(--lf-serif); font-size: 38px; color: var(--lf-gold); line-height: 1;
+}
+.lf-stat-total-val span { font-size: 16px; font-family: var(--lf-sans); font-weight: 400; color: var(--lf-mid); }
+
+.lf-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.lf-stat-box {
+    background: #fff; border: 1px solid var(--lf-border);
+    padding: 16px 20px; border-radius: 4px;
+    border-left: 3px solid var(--lf-gold-lt);
+    transition: background 0.2s, border-color 0.2s;
+}
+.lf-stat-box:hover { background: var(--lf-bg2); border-left-color: var(--lf-gold); }
+.lf-stat-box--done { border-left-color: #059669; }
+.lf-stat-box--done:hover { border-left-color: #047857; }
+
+.lf-stat-lbl {
+    display: block; font-size: 11px; font-weight: 600; color: var(--lf-mid);
+    margin-bottom: 8px; letter-spacing: 0.5px;
+}
+.lf-stat-val {
+    font-family: 'Courier New', monospace; font-size: 22px; font-weight: bold; color: var(--lf-navy);
+}
+
+/* ── 우측: 폼 영역 ── */
+.lf-role-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--lf-bg2); padding: 16px 20px; border-radius: 4px;
+    border: 1px solid var(--lf-border); margin-bottom: 28px;
+}
+.lf-role-label { color: var(--lf-mid); font-size: 13px; font-weight: 500; }
+.lf-role-badge {
+    background: rgba(154,120,64,0.08); color: var(--lf-gold);
+    border: 1px solid rgba(154,120,64,0.2); padding: 4px 12px;
+    border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 1px;
+}
+
+.lf-field { margin-bottom: 24px; }
+.lf-label {
+    display: block; font-size: 12.5px; font-weight: 600; color: var(--lf-navy);
+    margin-bottom: 10px; letter-spacing: 0.5px;
+}
+.lf-input {
+    width: 100%; padding: 16px 20px; background: #fff;
+    border: 1px solid var(--lf-border); border-radius: 4px;
+    font-size: 14px; color: var(--lf-navy); font-family: var(--lf-sans);
+    transition: all 0.25s ease; outline: none; box-sizing: border-box;
+}
+.lf-input:focus {
+    border-color: var(--lf-gold); box-shadow: 0 4px 15px rgba(154,120,64,0.08);
+}
+.lf-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239a7840%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 20px top 50%; background-size: 10px auto; }
+
+.lf-btn-submit {
+    width: 100%; padding: 18px; margin-top: 10px;
+    background: var(--lf-navy); color: #fff; border: none;
+    font-size: 11.5px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer; border-radius: 2px;
+    transition: background 0.2s;
+}
+.lf-btn-submit:hover { background: var(--lf-gold); }
+</style>
 {% endblock %}
 
-{% block extra_js %}
-<style>
-.mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
-@media(max-width:768px){.mp-grid{grid-template-columns:1fr;}}
-.mp-card{background:var(--lf-bg);border:1px solid var(--lf-border);padding:28px 24px;}
-.mp-card-title{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--lf-gold);margin-bottom:20px;}
-.mp-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--lf-border);}
-.mp-info-row:last-child{border-bottom:none;}
-.mp-info-key{font-size:12px;color:var(--lf-muted);}
-.mp-info-val{font-size:13px;color:var(--lf-navy);font-weight:500;}
-.mp-role-badge{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;background:rgba(154,120,64,.1);color:var(--lf-gold);border-radius:2px;}
-.mp-total{text-align:center;padding:20px 0;border-bottom:1px solid var(--lf-border);margin-bottom:20px;}
-.mp-total-num{font-family:var(--lf-serif);font-size:48px;font-weight:400;color:var(--lf-gold);}
-.mp-total-label{font-size:13px;color:var(--lf-muted);margin-left:8px;}
-.mp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.mp-stat{padding:14px;border-left:3px solid var(--lf-border);}
-.mp-stat-label{display:block;font-size:10px;color:var(--lf-muted);margin-bottom:4px;}
-.mp-stat-num{font-size:24px;font-weight:700;color:var(--lf-navy);}
-.mp-stat--draft{border-color:var(--lf-muted);}
-.mp-stat--processing{border-color:#f59e0b;}
-.mp-stat--review{border-color:var(--lf-gold);}
-.mp-stat--done{border-color:#10b981;}
-.mp-label{display:block;font-size:12px;font-weight:600;color:var(--lf-navy);margin-bottom:8px;}
-.mp-input{width:100%;padding:12px 14px;border:1px solid var(--lf-border);border-radius:2px;font-size:14px;font-family:var(--lf-sans);color:var(--lf-navy);background:var(--lf-bg);outline:none;box-sizing:border-box;transition:border-color .2s;}
-.mp-input:focus{border-color:var(--lf-gold);}
-.cp-btn-next{width:100%;padding:14px;background:var(--lf-navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
-.cp-btn-next:hover{background:var(--lf-gold);}
-</style>
+{% block content %}
+<section class="lf-mypage-section">
+    <div class="lf-mypage-container">
+        
+        <div class="lf-mypage-header">
+            <h1 class="lf-mypage-title">마이페이지</h1>
+            <p class="lf-mypage-sub">내 계정 정보와 특허 프로젝트 진행 현황을 확인합니다.</p>
+        </div>
+
+        <div class="lf-mypage-grid">
+            
+            <div class="lf-col-left">
+                
+                <div class="lf-card">
+                    <div class="lf-card-hd">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <h3 class="lf-card-title">회원 기본 정보</h3>
+                    </div>
+                    <div class="lf-info-list">
+                        <div class="lf-info-item">
+                            <span class="lf-info-label">아이디</span>
+                            <span class="lf-info-val">{{ user.username }}</span>
+                        </div>
+                        <div class="lf-info-item">
+                            <span class="lf-info-label">이름</span>
+                            <span class="lf-info-val">{{ user.first_name|default:"(지정 안 됨)" }}</span>
+                        </div>
+                        <div class="lf-info-item">
+                            <span class="lf-info-label">이메일</span>
+                            <span class="lf-info-val">{{ user.email|default:"(지정 안 됨)" }}</span>
+                        </div>
+                        <div class="lf-info-item">
+                            <span class="lf-info-label">가입일</span>
+                            <span class="lf-info-val">{{ user.date_joined|date:"Y.m.d H:i" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lf-card">
+                    <div class="lf-card-hd">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <h3 class="lf-card-title">특허 프로젝트 현황</h3>
+                    </div>
+                    
+                    <div class="lf-stat-total">
+                        <span class="lf-stat-total-label">총 진행 프로젝트</span>
+                        <div class="lf-stat-total-val">{{ project_stats.total }} <span>건</span></div>
+                    </div>
+
+                    <div class="lf-stat-grid">
+                        <div class="lf-stat-box">
+                            <span class="lf-stat-lbl">초안 작성중</span>
+                            <span class="lf-stat-val">{{ project_stats.draft }}</span>
+                        </div>
+                        <div class="lf-stat-box">
+                            <span class="lf-stat-lbl">AI 처리중</span>
+                            <span class="lf-stat-val">{{ project_stats.agent_processing }}</span>
+                        </div>
+                        <div class="lf-stat-box">
+                            <span class="lf-stat-lbl">변리사 검토중</span>
+                            <span class="lf-stat-val">{{ project_stats.review }}</span>
+                        </div>
+                        <div class="lf-stat-box lf-stat-box--done">
+                            <span class="lf-stat-lbl" style="color:#059669;">완료</span>
+                            <span class="lf-stat-val" style="color:#059669;">{{ project_stats.done }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lf-col-right">
+                
+                <div class="lf-card" style="height: 100%;">
+                    <div class="lf-card-hd">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <h3 class="lf-card-title">회원 정보 수정</h3>
+                    </div>
+
+                    <form method="POST" action="{% url 'my_page' %}">
+                        {% csrf_token %}
+
+                        <div class="lf-role-row">
+                            <span class="lf-role-label">회원 유형</span>
+                            <span class="lf-role-badge">{{ role_display }}</span>
+                        </div>
+
+                        <div class="lf-field">
+                            <label class="lf-label">이름</label>
+                            <input type="text" name="name" value="{{ user.first_name }}" placeholder="이름을 입력하세요" required class="lf-input">
+                        </div>
+
+                        <div class="lf-field">
+                            <label class="lf-label">이메일 주소</label>
+                            <input type="email" name="email" value="{{ user.email }}" placeholder="example@email.com" required class="lf-input">
+                        </div>
+
+                        <div class="lf-field">
+                            <label class="lf-label">주력 기술 분야 (선택)</label>
+                            <select name="tech_field" class="lf-input lf-select">
+                                <option value="ai">인공지능 / 소프트웨어</option>
+                                <option value="bio">바이오 / 헬스케어</option>
+                                <option value="mech">기계 / 하드웨어</option>
+                                <option value="chem">화학 / 신소재</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="lf-btn-submit">
+                            수정 내용 저장하기
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+        alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
 {% endblock %}

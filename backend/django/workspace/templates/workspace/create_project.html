@@ -1,181 +1,441 @@
-{% extends 'pages/base_page.html' %}
-{% block title %}새 특허 프로젝트 | PYPI{% endblock %}
+{% extends "base.html" %}
 
-{% block content %}
-<div class="pg">
-  <header class="pg-header">
-    <div class="pg-nav">
-      <a href="{% url 'accounts:landing' %}" class="pg-logo">
-        <span class="pg-logo-mark">Pi</span><span class="pg-logo-name">PYPI</span>
-      </a>
-      {% include "pages/_nav.html" %}
-      <div class="pg-util">
-        <a href="/accounts/chat/" class="pg-btn-back">← 특허 AI 어시스턴트</a>
-      </div>
-    </div>
-  </header>
+{% block title %}PYPI — 새 특허 프로젝트 시작{% endblock %}
 
-  <section class="pg-hero" style="padding:80px 0 40px;">
-    <div class="pg-container" style="max-width:760px;">
-      <span class="pg-hero-tag">New Project</span>
-      <h1 class="pg-hero-h1" style="font-size:clamp(26px,4vw,44px);">새 특허 프로젝트<br><em>시작하기</em></h1>
-      <div class="pg-hero-rule"></div>
-    </div>
-  </section>
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════
+   PROJECT CREATION WIZARD THEME
+════════════════════════════════════════════════════════ */
+.lf-wizard-section {
+    padding: 100px 0 120px;
+    background: var(--lf-bg);
+    min-height: calc(100vh - 70px);
+}
+.lf-wizard-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
 
-  <div class="pg-body" style="padding-bottom:80px;">
-    <div class="pg-container" style="max-width:760px;">
-      <div class="cp-steps">
-        <div class="cp-step-line"></div>
-        <div class="step-indicator cp-step cp-step--active" id="ind-1">1</div>
-        <div class="step-indicator cp-step" id="ind-2">2</div>
-        <div class="step-indicator cp-step" id="ind-3">3</div>
-      </div>
+/* ── 타이틀 ── */
+.lf-wizard-title {
+    text-align: center;
+    font-family: var(--lf-serif);
+    font-size: clamp(28px, 3.5vw, 36px);
+    font-weight: 300;
+    color: var(--lf-navy);
+    margin-bottom: 60px;
+    letter-spacing: -0.5px;
+}
 
-      <form id="project-form" method="POST" action="{% url 'create_project' %}">
-        {% csrf_token %}
+/* ── 프로그레스 바 (Step Indicator) ── */
+.lf-step-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 64px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.lf-step-line {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: var(--lf-border);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+.lf-step-line-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: var(--lf-gold);
+    width: 0%; /* JS로 제어 (0%, 50%, 100%) */
+    transition: width 0.4s var(--lf-ease);
+}
+.lf-step-dot {
+    position: relative; z-index: 2;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--lf-serif); font-size: 16px; font-style: italic;
+    color: var(--lf-muted);
+    transition: all 0.4s var(--lf-ease);
+}
+/* 현재 활성화된 스텝 */
+.lf-step-dot.active {
+    border-color: var(--lf-navy);
+    background: var(--lf-navy);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(18, 16, 14, 0.05);
+}
+/* 이미 지나간 완료된 스텝 */
+.lf-step-dot.completed {
+    border-color: var(--lf-gold);
+    color: var(--lf-gold);
+    background: var(--lf-bg);
+}
 
-        <div class="form-step cp-step-body" id="step-1">
-          <div class="cp-field">
-            <div class="cp-field-hd">
-              <label class="cp-label">발명(프로젝트) 명칭</label>
-              <div class="cp-field-btns">
-                <button type="button" onclick="toggleGuide('guide-title')" class="cp-btn-guide">가이드</button>
-                <button type="button" onclick="fillDemo('title')" class="cp-btn-demo">예시 입력</button>
-              </div>
-            </div>
-            <input type="text" id="input-title" name="title" placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required class="cp-input">
-            <div id="guide-title" class="cp-guide" style="display:none;">발명의 핵심 기술 요소와 목적이 잘 드러나는 명칭을 입력해 주세요.</div>
-          </div>
-          <button type="button" class="cp-btn-next" onclick="nextStep(2)">다음 단계로 →</button>
-        </div>
+/* ── 폼 영역 (Inputs & Textareas) ── */
+.lf-form-field { margin-bottom: 40px; }
+.lf-form-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--lf-border);
+}
+.lf-form-label {
+    font-family: var(--lf-serif);
+    font-size: 19px;
+    color: var(--lf-navy);
+    margin: 0;
+}
+.lf-form-actions { display: flex; gap: 8px; }
 
-        <div class="form-step cp-step-body" id="step-2" style="display:none;">
-          <div class="cp-field">
-            <div class="cp-field-hd">
-              <label class="cp-label">1. 해결하고자 하는 과제</label>
-              <div class="cp-field-btns">
-                <button type="button" onclick="toggleGuide('guide-problem')" class="cp-btn-guide">가이드</button>
-                <button type="button" onclick="fillDemo('problem')" class="cp-btn-demo">예시 입력</button>
-              </div>
-            </div>
-            <textarea id="input-problem" name="problem_to_solve" rows="6" placeholder="기존 기술의 한계나 불편함을 구체적으로 서술해 주세요." class="cp-textarea"></textarea>
-            <div id="guide-problem" class="cp-guide" style="display:none;">기존 기술이 가지고 있던 명확한 한계점, 비효율성, 또는 기술적 단점을 기재해 주세요.</div>
-          </div>
-          <div class="cp-field">
-            <div class="cp-field-hd">
-              <label class="cp-label">2. 기존 기술의 문제점 (종래 기술)</label>
-              <div class="cp-field-btns">
-                <button type="button" onclick="toggleGuide('guide-prior')" class="cp-btn-guide">가이드</button>
-                <button type="button" onclick="fillDemo('prior')" class="cp-btn-demo">예시 입력</button>
-              </div>
-            </div>
-            <textarea id="input-prior" name="prior_art_problem" rows="8" placeholder="기존 기술의 구성과 그 한계를 논리적으로 작성해 주세요." class="cp-textarea"></textarea>
-            <div id="guide-prior" class="cp-guide" style="display:none;">기존 기술 구성 → 그 구성의 한계 → 그 결과 발생하는 문제 순서로 작성해 주세요.</div>
-          </div>
-          <div class="cp-btn-row">
-            <button type="button" class="cp-btn-back-step" onclick="nextStep(1)">← 이전</button>
-            <button type="button" class="cp-btn-next" onclick="nextStep(3)">다음 단계로 →</button>
-          </div>
-        </div>
+/* 작은 기능 버튼 (가이드, 예시입력) */
+.lf-btn-sm {
+    font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+    padding: 6px 12px; border-radius: 2px;
+    background: transparent; border: 1px solid var(--lf-border);
+    color: var(--lf-mid); text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+}
+.lf-btn-sm:hover { color: var(--lf-navy); border-color: rgba(18, 16, 14, 0.3); background: var(--lf-bg2); }
+.lf-btn-sm--demo {
+    color: var(--lf-gold);
+    border-color: rgba(154, 120, 64, 0.3);
+    background: rgba(154, 120, 64, 0.04);
+}
+.lf-btn-sm--demo:hover {
+    color: var(--lf-navy);
+    background: rgba(154, 120, 64, 0.1);
+    border-color: var(--lf-gold);
+}
 
-        <div class="form-step cp-step-body" id="step-3" style="display:none;">
-          <div class="cp-field">
-            <div class="cp-field-hd">
-              <label class="cp-label">3. 핵심 기술 구성 (Solution)</label>
-              <div class="cp-field-btns">
-                <button type="button" onclick="toggleGuide('guide-core')" class="cp-btn-guide">가이드</button>
-                <button type="button" onclick="fillDemo('core')" class="cp-btn-demo">예시 입력</button>
-              </div>
-            </div>
-            <textarea id="input-core" name="core_tech" rows="12" placeholder="발명의 대상, 구성요소, 입력값, 처리 방식, 출력값을 구체적으로 작성해 주세요." class="cp-textarea"></textarea>
-            <div id="guide-core" class="cp-guide cp-guide--highlight" style="display:none;"><strong>핵심 재료입니다.</strong> ① 발명의 대상 ② 주요 구성요소 ③ 입력값 ④ 처리 방식 ⑤ 출력값 순서로 작성해 주세요.</div>
-          </div>
-          <div class="cp-field">
-            <div class="cp-field-hd">
-              <label class="cp-label">4. 발명의 효과 (Expected Effect)</label>
-              <div class="cp-field-btns">
-                <button type="button" onclick="toggleGuide('guide-effect')" class="cp-btn-guide">가이드</button>
-                <button type="button" onclick="fillDemo('effect')" class="cp-btn-demo">예시 입력</button>
-              </div>
-            </div>
-            <textarea id="input-effect" name="expected_effect" rows="5" placeholder="발명을 통해 얻을 수 있는 기술적 효과를 적어주세요." class="cp-textarea"></textarea>
-            <div id="guide-effect" class="cp-guide" style="display:none;">속도 향상, 정확도 향상, 자원 절감 등으로 구체화해 주세요.</div>
-          </div>
-          <div class="cp-btn-row">
-            <button type="button" class="cp-btn-back-step" onclick="nextStep(2)">← 이전</button>
-            <button type="submit" class="cp-btn-submit">AI 특허 초안 생성 시작 →</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
+/* 인풋 필드 */
+.lf-input {
+    width: 100%;
+    padding: 18px 24px;
+    background: var(--lf-bg2);
+    border: 1px solid var(--lf-border);
+    color: var(--lf-navy);
+    font-size: 14px; font-family: var(--lf-sans); line-height: 1.8;
+    transition: all 0.25s var(--lf-ease);
+    outline: none; resize: vertical;
+}
+.lf-input::placeholder { color: var(--lf-muted); font-weight: 300; }
+.lf-input:focus {
+    background: var(--lf-bg);
+    border-color: var(--lf-gold);
+    box-shadow: 0 4px 20px rgba(154, 120, 64, 0.08);
+}
 
-  <footer class="pg-footer">
-    <div class="pg-container">
-      <div class="pg-footer-inner">
-        <span class="pg-footer-logo">PYPI</span>
-        <span class="pg-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
-</div>
+/* 가이드 박스 */
+.lf-guide-box {
+    display: none;
+    background: var(--lf-bg);
+    padding: 20px 24px;
+    border: 1px solid var(--lf-border);
+    border-left: 3px solid var(--lf-gold);
+    margin-top: 16px;
+}
+.lf-guide-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    color: var(--lf-gold); margin-bottom: 12px; text-transform: uppercase;
+}
+.lf-guide-text {
+    font-size: 13.5px; color: var(--lf-mid); font-weight: 300; line-height: 1.7; margin: 0;
+}
+.lf-guide-list {
+    margin-top: 12px; padding-left: 20px; color: var(--lf-mid); font-size: 13.5px; font-weight: 300; line-height: 1.8;
+}
+.lf-guide-list strong { font-weight: 500; color: var(--lf-navy); }
+
+/* 하단 버튼 래퍼 */
+.lf-form-footer {
+    display: flex; gap: 16px; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--lf-border);
+}
+.lf-btn-fill {
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px 32px; flex: 2;
+    font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; cursor: pointer; border: none;
+    color: #fff; background: var(--lf-navy);
+    transition: background 0.2s;
+}
+.lf-btn-fill:hover { background: var(--lf-gold); }
+.lf-btn-line {
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px 32px; flex: 1;
+    font-size: 11px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; cursor: pointer;
+    color: var(--lf-mid); background: transparent; border: 1px solid var(--lf-border);
+    transition: all 0.2s;
+}
+.lf-btn-line:hover { color: var(--lf-navy); border-color: rgba(18, 16, 14, 0.4); }
+
+@media (max-width: 768px) {
+    .lf-form-footer { flex-direction: column; flex-flow: column-reverse; }
+}
+
+/* 로딩 오버레이 스타일 */
+#loading-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(18, 16, 14, 0.85); z-index: 9999;
+    justify-content: center; align-items: center; flex-direction: column;
+    color: white; font-family: var(--lf-sans); backdrop-filter: blur(5px);
+}
+#loading-overlay .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid var(--lf-gold);
+    border-radius: 50%; width: 50px; height: 50px;
+    animation: spin 1s linear infinite; margin-bottom: 24px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
 {% endblock %}
 
-{% block extra_js %}
-<style>
-.cp-steps{display:flex;justify-content:space-between;align-items:center;position:relative;margin-bottom:48px;}
-.cp-step-line{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--lf-border);z-index:0;}
-.cp-step{z-index:1;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--lf-border);background:var(--lf-bg);color:var(--lf-muted);transition:all .3s;}
-.cp-step--active{border-color:var(--lf-gold);color:var(--lf-gold);}
-.cp-step--done{border-color:var(--lf-gold);background:var(--lf-gold);color:#fff;}
-.cp-field{margin-bottom:32px;}
-.cp-field-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.cp-label{font-size:15px;font-weight:600;color:var(--lf-navy);}
-.cp-field-btns{display:flex;gap:6px;}
-.cp-btn-guide{font-size:10px;font-weight:600;padding:5px 12px;border:1px solid var(--lf-border);background:transparent;color:var(--lf-muted);border-radius:2px;cursor:pointer;transition:all .15s;}
-.cp-btn-guide:hover{border-color:var(--lf-gold);color:var(--lf-gold);}
-.cp-btn-demo{font-size:10px;font-weight:700;padding:5px 12px;background:var(--lf-navy);color:#fff;border:none;border-radius:2px;cursor:pointer;transition:background .15s;}
-.cp-btn-demo:hover{background:var(--lf-gold);}
-.cp-input,.cp-textarea{width:100%;padding:16px 18px;background:var(--lf-bg);border:1px solid var(--lf-border);border-radius:2px;color:var(--lf-navy);font-size:14px;font-family:var(--lf-sans);box-sizing:border-box;transition:border-color .2s;}
-.cp-input:focus,.cp-textarea:focus{outline:none;border-color:var(--lf-gold);}
-.cp-textarea{resize:vertical;line-height:1.7;}
-.cp-guide{margin-top:10px;padding:14px 16px;background:var(--lf-bg2);border-left:3px solid var(--lf-gold);border-radius:0 2px 2px 0;font-size:13px;color:var(--lf-mid);line-height:1.7;}
-.cp-guide--highlight{border-color:var(--lf-navy);}
-.cp-btn-next{width:100%;padding:16px;background:var(--lf-navy);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
-.cp-btn-next:hover{background:var(--lf-gold);}
-.cp-btn-submit{flex:2;padding:16px 24px;background:var(--lf-gold);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .2s;}
-.cp-btn-submit:hover{background:var(--lf-navy);}
-.cp-btn-back-step{flex:1;padding:16px;background:transparent;color:var(--lf-mid);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--lf-border);border-radius:2px;cursor:pointer;transition:all .2s;}
-.cp-btn-back-step:hover{border-color:var(--lf-gold);color:var(--lf-gold);}
-.cp-btn-row{display:flex;gap:12px;}
-</style>
+{% block content %}
+<section class="lf-wizard-section">
+    <div class="lf-wizard-container">
+        
+        <h1 class="lf-wizard-title">새 특허 프로젝트 시작</h1>
+
+        <div class="lf-step-wrap">
+            <div class="lf-step-line">
+                <div class="lf-step-line-fill" id="progress-line"></div>
+            </div>
+            <div class="lf-step-dot active" id="dot-1">1</div>
+            <div class="lf-step-dot" id="dot-2">2</div>
+            <div class="lf-step-dot" id="dot-3">3</div>
+        </div>
+
+        <form id="project-form" method="POST" action="{% url 'create_project' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-step" id="step-1">
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">📄 논문 파일로 자동 시작하기 (선택)</label>
+                    </div>
+                    <div style="background: var(--lf-bg2); padding: 24px; border: 1px dashed var(--lf-border); border-radius: 4px; text-align: center;">
+                        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" style="display: block; margin: 0 auto 12px auto; font-family: var(--lf-sans);">
+                        <p class="lf-guide-text" style="color: var(--lf-gold); font-weight: 500;">
+                            논문(PDF)을 첨부하시면 AI 변리사가 발명 4대 요소를 자동으로 구조화하여 즉시 프로젝트를 세팅합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">프로젝트 명칭</label>
+                        <div class="lf-form-actions">
+                            <button type="button" class="lf-btn-sm" onclick="toggleGuide('guide-title')">가이드</button>
+                            <button type="button" class="lf-btn-sm lf-btn-sm--demo" onclick="fillDemo('title')">예시 입력</button>
+                        </div>
+                    </div>
+                    
+                    <input type="text" id="input-title" name="title" class="lf-input" placeholder="예시: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required>
+                    
+                    <div id="guide-title" class="lf-guide-box">
+                        <div class="lf-guide-title">Guide</div>
+                        <p class="lf-guide-text">발명의 핵심 기술 요소와 목적이 잘 드러나는 직관적인 명칭을 입력해 주세요.</p>
+                    </div>
+                </div>
+
+                <div class="lf-form-footer">
+                    <button type="button" id="btn-next-1" class="lf-btn-fill" onclick="nextStep(2)">다음 단계로 →</button>
+                    <button type="submit" id="btn-quick-start" class="lf-btn-fill" style="display: none; background: var(--lf-gold);">논문으로 즉시 시작 🚀</button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-2" style="display: none;">
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">1. 해결하고자 하는 과제</label>
+                        <div class="lf-form-actions">
+                            <button type="button" class="lf-btn-sm" onclick="toggleGuide('guide-problem')">가이드</button>
+                            <button type="button" class="lf-btn-sm lf-btn-sm--demo" onclick="fillDemo('problem')">예시 입력</button>
+                        </div>
+                    </div>
+                    <textarea id="input-problem" name="problem_to_solve" rows="5" class="lf-input" placeholder="예시: 기존 모델은 RNN 또는 CNN 계층에 의존하여 입력 위치 간 장거리 의존성을 학습하므로, 병렬화가 어렵고 먼 위치 간 관계를 효과적으로 반영하기 어려움."></textarea>
+                    
+                    <div id="guide-problem" class="lf-guide-box">
+                        <div class="lf-guide-title">Guide</div>
+                        <p class="lf-guide-text">기존 기술(또는 경쟁 제품)이 가지고 있던 명확한 한계점, 비효율성, 또는 기술적 단점을 기재해 주세요.</p>
+                    </div>
+                </div>
+
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">2. 기존 기술의 문제점 (종래 기술)</label>
+                        <div class="lf-form-actions">
+                            <button type="button" class="lf-btn-sm" onclick="toggleGuide('guide-prior')">가이드</button>
+                            <button type="button" class="lf-btn-sm lf-btn-sm--demo" onclick="fillDemo('prior')">예시 입력</button>
+                        </div>
+                    </div>
+                    <textarea id="input-prior" name="prior_art_problem" rows="7" class="lf-input" placeholder="기존 기술이 어떻게 구성되어 있고, 그 구성에서 어떤 요소나 방식이 문제를 일으키는지 구체적으로 작성해 주세요."></textarea>
+                    
+                    <div id="guide-prior" class="lf-guide-box">
+                        <div class="lf-guide-title">Guide</div>
+                        <p class="lf-guide-text">가능하면 “1. 기존 기술의 구성 → 2. 그 구성의 한계 → 3. 그 결과 발생하는 문제” 순서로 논리적으로 작성해주세요.</p>
+                    </div>
+                </div>
+
+                <div class="lf-form-footer">
+                    <button type="button" class="lf-btn-line" onclick="nextStep(1)">← 이전</button>
+                    <button type="button" class="lf-btn-fill" onclick="nextStep(3)">다음 단계로 →</button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-3" style="display: none;">
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">3. 핵심 기술 구성 (Solution)</label>
+                        <div class="lf-form-actions">
+                            <button type="button" class="lf-btn-sm" onclick="toggleGuide('guide-core')">가이드</button>
+                            <button type="button" class="lf-btn-sm lf-btn-sm--demo" onclick="fillDemo('core')">예시 입력</button>
+                        </div>
+                    </div>
+                    <textarea id="input-core" name="core_tech" rows="12" class="lf-input" placeholder="발명의 대상, 구성요소, 입력값, 처리 방식, 출력값을 구체적으로 적어주세요."></textarea>
+                    
+                    <div id="guide-core" class="lf-guide-box">
+                        <div class="lf-guide-title">Important Guide</div>
+                        <p class="lf-guide-text" style="color: var(--lf-navy); font-weight: 500; margin-bottom: 12px;">특허 청구항을 작성하는 가장 핵심적인 재료입니다.</p>
+                        <p class="lf-guide-text">발명을 이루는 주요 구성 요소(모듈, 단계 등)들을 나열하고, 각 구성 요소들이 데이터를 어떻게 주고받으며 작동하는지 논리적인 순서대로 상세히 설명해 주세요.</p>
+                        <ul class="lf-guide-list">
+                            <li><strong>1. 발명의 대상:</strong> 시스템 / 방법 / 장치 / 서버 / 프로그램 중 무엇인가요?</li>
+                            <li><strong>2. 주요 구성요소:</strong> 어떤 모듈, 신경망, 데이터베이스가 포함되나요?</li>
+                            <li><strong>3. 입력값:</strong> 무엇을 입력받나요?</li>
+                            <li><strong>4. 처리 방식:</strong> 입력값을 어떤 순서와 방식으로 처리하나요?</li>
+                            <li><strong>5. 출력값:</strong> 최종적으로 무엇을 생성하거나 제어하나요?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lf-form-field">
+                    <div class="lf-form-header">
+                        <label class="lf-form-label">4. 발명의 효과 (Expected Effect)</label>
+                        <div class="lf-form-actions">
+                            <button type="button" class="lf-btn-sm" onclick="toggleGuide('guide-effect')">가이드</button>
+                            <button type="button" class="lf-btn-sm lf-btn-sm--demo" onclick="fillDemo('effect')">예시 입력</button>
+                        </div>
+                    </div>
+                    <textarea id="input-effect" name="expected_effect" rows="5" class="lf-input" placeholder="발명을 통해 얻을 수 있는 기술적 효과를 적어주세요."></textarea>
+                    
+                    <div id="guide-effect" class="lf-guide-box">
+                        <div class="lf-guide-title">Guide</div>
+                        <p class="lf-guide-text">가능하면 속도 향상, 정확도 향상, 자원 절감, 오류 감소, 자동화, 안정성 향상 등으로 구체화해주세요. 수치가 있으면 더 좋지만, 없어도 됩니다.</p>
+                    </div>
+                </div>
+
+                <div class="lf-form-footer">
+                    <button type="button" class="lf-btn-line" onclick="nextStep(2)">← 이전</button>
+                    <button type="submit" class="lf-btn-fill">프로젝트 생성 및 AI 초안 요청</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- 화면 덮는 로딩 UI -->
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <h2 style="font-family: var(--lf-serif); font-size: 24px; font-weight: 300; margin-bottom: 12px; letter-spacing: 1px;">논문을 분석하고 있습니다...</h2>
+    <p style="color: var(--lf-muted); font-size: 14px; font-weight: 300; letter-spacing: 0.5px;">AI 변리사가 기술적 디테일을 구조화 중입니다. (약 1분 정도 소요)</p>
+</div>
+
 <script>
-function nextStep(step){
-    document.querySelectorAll('.form-step').forEach(el=>el.style.display='none');
-    document.getElementById('step-'+step).style.display='block';
-    document.querySelectorAll('.step-indicator').forEach((ind,idx)=>{
-        ind.classList.remove('cp-step--active','cp-step--done');
-        if(idx+1===step)ind.classList.add('cp-step--active');
-        else if(idx+1<step)ind.classList.add('cp-step--done');
+    // 파일이 첨부되면 '다음 단계' 대신 '즉시 시작' 버튼으로 교체
+    document.getElementById('pdf_file').addEventListener('change', function() {
+        const quickStartBtn = document.getElementById('btn-quick-start');
+        const nextBtn = document.getElementById('btn-next-1');
+        if (this.files.length > 0) {
+            quickStartBtn.style.display = 'flex';
+            nextBtn.style.display = 'none';
+            document.getElementById('input-title').required = false; // 제목 자동생성 허용
+        } else {
+            quickStartBtn.style.display = 'none';
+            nextBtn.style.display = 'flex';
+            document.getElementById('input-title').required = true;
+        }
     });
-    window.scrollTo({top:0,behavior:'smooth'});
-}
-function toggleGuide(id){var el=document.getElementById(id);el.style.display=el.style.display==='none'?'block':'none';}
-const demoData={
-    title:"셀프 어텐션 기반 시퀀스 변환 신경망 시스템",
-    problem:"기존 모델은 RNN 또는 CNN 계층에 의존하여 입력 위치 간 장거리 의존성을 학습하므로, 병렬화가 어렵고 먼 위치 간 관계를 효과적으로 반영하기 어려움.",
-    prior:"1. 기존 기술의 구성: RNN 또는 CNN 계층을 사용하여 입력 시퀀스의 각 위치 간 관계를 학습\n\n2. 그 구성의 한계: 입력 위치 간 장거리 의존성을 효과적으로 학습하기 어렵고, 병렬화가 어려움\n\n3. 그 결과 발생하는 문제: 긴 입력 시퀀스에 대한 학습 및 추론 시간이 길어지고, 성능이 저하됨",
-    core:"1. 발명의 대상: 신경망 시스템\n2. 주요 구성요소: 디코더 네트워크\n3. 입력값: 원본 문장, 토큰 정보, 포지셔널 임베딩\n4. 처리 방식: 쿼리·키·값 결정 → 셀프 어텐션 적용 → 표현 생성\n5. 출력값: 각 위치에 대한 출력 시퀀스",
-    effect:"셀프 어텐션을 사용하여 병렬 처리가 가능해지고, 학습 및 추론 시간이 단축되며, 장거리 의존성 학습 성능이 향상됨"
-};
-function fillDemo(key){
-    var el=document.getElementById('input-'+key);
-    if(!el)return;
-    el.value=demoData[key];
-    el.style.transition='border-color .3s';
-    el.style.borderColor='var(--lf-gold)';
-    setTimeout(()=>{el.style.borderColor='';},600);
-}
+
+    // 폼 전송 시, 파일이 있다면 로딩 애니메이션 띄우기
+    document.getElementById('project-form').addEventListener('submit', function() {
+        const fileInput = document.getElementById('pdf_file');
+        if (fileInput && fileInput.files.length > 0) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+    });
+
+    // 1. 단계 이동 로직 (디자인 연동형)
+    function nextStep(step) {
+        // 화면 뷰 교체
+        document.querySelectorAll('.form-step').forEach(el => el.style.display = 'none');
+        document.getElementById('step-' + step).style.display = 'block';
+        
+        // 상단 스크롤 이동
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // 프로그레스 라인 너비 계산 (1단계 0%, 2단계 50%, 3단계 100%)
+        const progressLine = document.getElementById('progress-line');
+        if (step === 1) progressLine.style.width = '0%';
+        if (step === 2) progressLine.style.width = '50%';
+        if (step === 3) progressLine.style.width = '100%';
+
+        // 도트(숫자) 스타일링
+        for (let i = 1; i <= 3; i++) {
+            const dot = document.getElementById('dot-' + i);
+            dot.classList.remove('active', 'completed');
+            
+            if (i === step) {
+                dot.classList.add('active'); // 현재 스텝
+            } else if (i < step) {
+                dot.classList.add('completed'); // 지나간 스텝
+            }
+        }
+    }
+
+    // 2. 가이드 토글 (Toggle)
+    function toggleGuide(guideId) {
+        const guideEl = document.getElementById(guideId);
+        if (guideEl.style.display === 'none' || guideEl.style.display === '') {
+            guideEl.style.display = 'block';
+        } else {
+            guideEl.style.display = 'none';
+        }
+    }
+
+    // 3. 개발용 예시 데이터 하드코딩
+    const demoData = {
+        title: "셀프 어텐션 기반 시퀀스 변환 신경망 시스템",
+        problem: "기존 모델은 RNN 또는 CNN 계층에 의존하여 입력 위치 간 장거리 의존성을 학습하므로, 병렬화가 어렵고 먼 위치 간 관계를 효과적으로 반영하기 어려움.",
+        prior: "1. 기존 기술의 구성: RNN 또는 CNN 계층을 사용하여 입력 시퀀스의 각 위치 간 관계를 학습하는 방식\n\n2. 그 구성의 한계: 입력 위치 간 장거리 의존성을 효과적으로 학습하기 어렵고, 병렬화가 어려움\n\n3. 그 결과 발생하는 문제: 긴 입력 시퀀스에 대한 학습 및 추론 시간이 길어지고, 성능이 저하됨",
+        core: "1. 발명의 대상: 신경망 시스템\n\n2. 주요 구성요소:\n   - 디코더 네트워크\n\n3. 입력값:\n   - 변환하려는 원본 문장 또는 원본 데이터\n   - 원본 문장을 단어 또는 토큰 단위로 나눈 정보\n   - 각 단어 또는 토큰의 순서 정보(포지셔널 임베딩)\n   - 이미 생성된 앞부분의 출력 단어 또는 출력 토큰\n\n4. 처리 방식:\n   - 디코더 서브 네트워크 입력으로부터 쿼리, 키, 값을 결정\n   - 결정된 쿼리, 키, 값을 이용하여 셀프 어텐션 메커니즘 적용\n   - 특정 출력 위치에 대한 업데이트된 표현 생성\n\n5. 출력값:\n   - 출력 순서 내의 복수의 출력 위치 각각에 대한 네트워크 출력\n   - 입력 시퀀스에 대응하는 출력 시퀀스",
+        effect: "셀프 어텐션을 사용하여 병렬 처리가 가능해지고, 학습 및 추론 시간이 단축되며, 장거리 의존성 학습 성능이 향상됨"
+    };
+
+    function fillDemo(fieldKey) {
+        const inputEl = document.getElementById('input-' + fieldKey);
+        if (inputEl) {
+            inputEl.value = demoData[fieldKey];
+            
+            // 입력칸 시각적 피드백 효과 (부드러운 골드 배경 플래시)
+            const originalBg = inputEl.style.backgroundColor;
+            inputEl.style.transition = "background-color 0.4s";
+            inputEl.style.backgroundColor = "rgba(154, 120, 64, 0.15)"; 
+            
+            setTimeout(() => {
+                inputEl.style.backgroundColor = originalBg; 
+            }, 400);
+        }
+    }
 </script>
 {% endblock %}

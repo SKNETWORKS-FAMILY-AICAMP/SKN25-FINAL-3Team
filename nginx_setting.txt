@@ -1,0 +1,42 @@
+sudo nano /etc/nginx/sites-available/patent_app
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/patent_app /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo service nginx restart
+-------------------------------------------
+
+server {
+    listen 80;
+    server_name localhost;
+
+    # 1. 일반적인 요청 처리
+    location / {
+        proxy_pass http://127.0.0.1:8000; # Uvicorn으로 토스
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    #  2. AI 스트리밍 API 경로 버퍼링 끄기!
+    # /workspace/workstation/ 등 스트리밍이 발생하는 API 경로를 지정합니다.
+    location /workspace/ {
+        proxy_pass http://127.0.0.1:8000;
+
+        # SSE 스트리밍을 위한 필수 Nginx 설정
+        proxy_http_version 1.1;
+        proxy_set_header Connection '';
+        proxy_buffering off;      # 버퍼링 끄기 (한 줄씩 바로바로 전달)
+        proxy_cache off;          # 캐시 끄기
+        chunked_transfer_encoding on;
+        proxy_read_timeout 300s;  # AI 응답이 길어질 수 있으니 타임아웃 넉넉히 설정 (5분)
+    }
+
+    # 3. 정적 파일(Static/Media) 서빙 (도면 이미지 엑스박스 안 뜨게!)
+    location /media/ {
+        alias /mnt/c/Users/playdata2/OneDrive/Desktop/SKN25-FINAL-3Team/backend/media/;
+    }
+    location /static/ {
+        alias /mnt/c/Users/playdata2/OneDrive/Desktop/SKN25-FINAL-3Team/backend/staticfiles/;
+    }
+}

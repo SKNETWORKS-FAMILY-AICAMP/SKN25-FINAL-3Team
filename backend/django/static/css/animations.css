@@ -1,0 +1,161 @@
+/* ════════════════════════════════════════════════════════
+   PYPI — Animations
+   모든 keyframe·transition 정의
+════════════════════════════════════════════════════════ */
+
+/* ── Scroll reveal ──────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1s var(--lf-ease), transform 1s var(--lf-ease);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+.reveal-d4 { transition-delay: .4s; }
+
+/* ── Floating elements ──────────────────────────────── */
+.lf-float {
+  position: absolute;
+  opacity: 0;
+  animation: floatIn 1.2s ease forwards, floatDrift linear infinite;
+}
+@keyframes floatIn  { to { opacity: .14; } }
+@keyframes floatDrift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+.lf-float--doc  { width: 40px; top: 20%; left:  7%; animation-duration: 1.2s, 8s;  animation-delay: .8s, .8s; }
+.lf-float--node { width: 44px; top: 65%; left:  5%; animation-duration: 1.2s, 11s; animation-delay: 1s, 1s; }
+.lf-float--scale{ width: 38px; top: 25%; left: 87%; animation-duration: 1.2s, 9s;  animation-delay: .9s, .9s; }
+.lf-float--pipe { width: 24px; top: 58%; left: 90%; animation-duration: 1.2s, 13s; animation-delay: 1.1s, 1.1s; }
+.lf-float--axis { width: 48px; top: 70%; left: 83%; animation-duration: 1.2s, 10s; animation-delay: 1.2s, 1.2s; }
+
+/* ── Tech ticker ────────────────────────────────────── */
+.lf-hero-ticker {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+  border-top: 1px solid rgba(154, 120, 64, .08);
+  padding: 9px 0;
+}
+.lf-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: max-content;
+  animation: tickerScroll 36s linear infinite;
+}
+.lf-ticker-track span {
+  font-family: 'Courier New', monospace;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--lf-gold);
+  opacity: .45;
+  white-space: nowrap;
+}
+.lf-ticker-dot { font-size: 6px !important; opacity: .2 !important; }
+@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ── Sketch → Patent gear animation ─────────────────── */
+.sk-layer { animation: skLayerVis 5.5s cubic-bezier(.25, .46, .45, .94) forwards; }
+@keyframes skLayerVis {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  55%  { opacity: 1; }
+  74%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+.sk-path { stroke-linecap: round; stroke-linejoin: round; }
+.sk-p0 { stroke-dasharray: 600; stroke-dashoffset: 600; animation: skDraw 1.2s .3s ease forwards; }
+.sk-p1 { stroke-dasharray: 400; stroke-dashoffset: 400; animation: skDraw .9s 1.4s ease forwards; }
+.sk-p2 { stroke-dasharray: 400; stroke-dashoffset: 400; animation: skDraw .9s 1.9s ease forwards; }
+.sk-p4 { stroke-dasharray: 200; stroke-dashoffset: 200; animation: skDraw .5s 2.4s ease forwards; }
+.sk-p5 { stroke-dasharray: 150; stroke-dashoffset: 150; animation: skDraw .4s 2.7s ease forwards; }
+@keyframes skDraw { to { stroke-dashoffset: 0; } }
+
+.sk-g-text { opacity: 0; animation: skTextShow 5.5s ease forwards; }
+@keyframes skTextShow {
+  0%, 35% { opacity: 0; }
+  48%      { opacity: 1; }
+  62%      { opacity: 1; }
+  74%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Patent layer fade-in groups */
+.pt-g-frame  { opacity: 0; animation: ptFade 1.0s 3.6s ease forwards; }
+.pt-g-title  { opacity: 0; animation: ptFade .7s 3.8s ease forwards; }
+.pt-g-cline  { opacity: 0; animation: ptFade .7s 4.0s ease forwards; }
+.pt-g-main   { opacity: 0; animation: ptFade 1.2s 4.2s ease forwards; }
+.pt-g-dim    { opacity: 0; animation: ptFade .8s 5.4s ease forwards; }
+.pt-g-ref    { opacity: 0; animation: ptFade .6s 5.8s ease forwards; }
+@keyframes ptFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── SVG 특수 애니메이션 ─────────────────────────────── */
+@keyframes drawLine  { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nodeIn    { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
+@keyframes pulsate   { 0%, 100% { transform: scale(1); opacity: .25; } 50% { transform: scale(1.2); opacity: .55; } }
+@keyframes ref-pulse { 0%, 100% { r: 10; opacity: .56; } 50% { r: 13; opacity: .85; } }
+.ref-pulse { animation: ref-pulse 2.4s ease-in-out infinite; }
+
+@keyframes scale-sway {
+  0%, 100% { transform: rotate(0deg); }
+  30%       { transform: rotate(-14deg); }
+  70%       { transform: rotate(14deg); }
+}
+.scale-beam { transform-box: fill-box; transform-origin: center top; animation: scale-sway 2.8s ease-in-out infinite; }
+
+/* Blueprint side strip */
+.lf-side-strip {
+  position: absolute; top: 0; bottom: 0;
+  width: 88px; pointer-events: none; z-index: 2;
+  opacity: 0; animation: sideFade 1.6s 1.2s ease forwards;
+}
+.lf-side-strip--left  { left: 0; }
+.lf-side-strip--right { right: 0; }
+@keyframes sideFade { to { opacity: 1; } }
+
+@keyframes scanDown { 0% { transform: translateY(0); }    100% { transform: translateY(70vh); } }
+@keyframes scanUp   { 0% { transform: translateY(70vh); } 100% { transform: translateY(0); } }
+.scan-dot-down { animation: scanDown 5s 1.5s ease-in-out infinite alternate; }
+.scan-dot-up   { animation: scanUp   5s 2s   ease-in-out infinite alternate; }
+
+@keyframes pulseDot { 0%, 100% { opacity: .1; } 50% { opacity: .7; } }
+.side-pulse { animation: pulseDot 2.4s ease-in-out infinite; }
+.side-pulse:nth-child(2) { animation-delay: .8s; }
+.side-pulse:nth-child(3) { animation-delay: 1.6s; }
+
+/* Dim fade (blueprint annotations) */
+.lf-dim-left {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none; z-index: 2; opacity: 0;
+  animation: dimFade 1.5s 1.2s ease forwards;
+}
+@keyframes dimFade { to { opacity: .22; } }
+
+/* Title block */
+.lf-title-block {
+  position: absolute; bottom: 36px; right: 36px; z-index: 2;
+  opacity: 0; animation: dimFade 1.5s 1.2s ease forwards; pointer-events: none;
+}
+
+/* Scroll pulse (scroll arrow) */
+.lf-scroll-line {
+  display: block; width: 1px; height: 36px;
+  background: linear-gradient(180deg, transparent, rgba(154, 120, 64, .4));
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+
+/* FAB */
+@keyframes lf-fab-bob  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes lf-fab-ping {
+  0%   { transform: scale(.85); opacity: .7; }
+  100% { transform: scale(1.4);  opacity: 0; }
+}

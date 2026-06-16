@@ -1,89 +1,48 @@
 # Python
-venv/
-.venv/
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-.pytest_cache/
 
-# 환경변수 (절대 커밋 금지!)
+# Virtual Environment
+venv/
+.env/
+.venv/
+
+# Django
+media/
+staticfiles/
+
+# Environment Variables
 .env
-.env.local
-
-# Streamlit (Next.js로 교체됨)
-.streamlit/
-
-# 임시 폴더
-temp_imgs/
-temp_uploads/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# 임시/캐시 파일
-temp_imgs/
-temp_uploads/
-.prior_art_index.pkl
-
-
-# DB
-*.sqlite3
-*.db
-
-# 대용량/바이너리
-*.pdf
-
-# Claude Code 내부
-.claude/
-
-# Data 폴더 정책: 매니페스트와 README만 추적
-data/raw/**
-data/processed/**
-data/reports/**
-data/tmp/**
-
-!data/
-!data/README.md
-!data/manifests/
-!data/manifests/**
-!data/raw/**/
-!data/raw/**/.gitkeep
-!data/raw/**/README.md
-!data/processed/**/
-!data/processed/**/.gitkeep
-!data/processed/**/README.md
-!data/processed/examples/
-!data/processed/examples/**
-!data/processed/claim_loop/
-!data/processed/claim_loop/training/
-!data/processed/claim_loop/training/*.jsonl
-!data/reports/**/
-!data/reports/**/.gitkeep
-!data/reports/**/README.md
-!data/tmp/**/
-!data/tmp/**/.gitkeep
-!data/tmp/**/README.md
-
-# 도면 에이전트 생성 결과물
-drawing_analysis/
-
-# Jupyter
-.ipynb_checkpoints/
-**/.ipynb_checkpoints/
-
-# Model/checkpoint artifacts: configs/README are okay, weights are not
-models/**/*.safetensors
-models/**/*.bin
-models/**/*.pt
-models/**/*.pth
-models/**/checkpoint-*/
-models/**/adapter_model.*
-models/**/optimizer.pt
-models/**/scheduler.pt
-models/**/runs/
-models/**/wandb/
+.env.*
+!.env.example
 
 # IDE
 .vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Cache
+.cache/
+pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+
+# SQLite
+*.sqlite3
+db.sqlite3

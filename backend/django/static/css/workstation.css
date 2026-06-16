@@ -1,0 +1,164 @@
+/* ════════════════════════════════════════════════════════
+   WORKSTATION THEME (PYPI White Law Firm)
+════════════════════════════════════════════════════════ */
+.lf-ws-container {
+    display: flex;
+    height: calc(100vh - 70px);
+    background: var(--lf-bg);
+}
+
+/* ── Left Panel (데이터 & AI 분석) ── */
+.lf-ws-sidebar {
+    flex: 1; min-width: 380px; max-width: 480px;
+    border-right: 1px solid var(--lf-border);
+    background: var(--lf-bg2);
+    overflow-y: auto; display: flex; flex-direction: column;
+}
+.lf-ws-sidebar-hd {
+    padding: 24px 30px; border-bottom: 1px solid var(--lf-border);
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; background: rgba(250, 248, 244, 0.95);
+    backdrop-filter: blur(10px); z-index: 10;
+}
+.lf-ws-sidebar-title {
+    font-family: var(--lf-serif); font-size: 18px; color: var(--lf-navy); margin: 0;
+}
+.lf-ws-badges { display: flex; gap: 8px; align-items: center; }
+.lf-badge-origin {
+    font-size: 10px; font-weight: 600; letter-spacing: 1px; color: var(--lf-mid);
+    border: 1px solid var(--lf-border); padding: 4px 8px; border-radius: 4px;
+}
+.lf-badge-report {
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: var(--lf-gold);
+    border: 1px solid var(--lf-gold); padding: 4px 10px; border-radius: 4px;
+    text-decoration: none; transition: all 0.2s;
+}
+.lf-badge-report:hover { background: var(--lf-gold); color: #fff; }
+
+.lf-ws-sidebar-body { padding: 30px; display: flex; flex-direction: column; gap: 24px; }
+.lf-ws-card {
+    background: #fff; border: 1px solid var(--lf-border);
+    padding: 24px; border-radius: 4px;
+}
+.lf-ws-card-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+    color: var(--lf-navy); margin-bottom: 12px; border-bottom: 1px solid var(--lf-border);
+    padding-bottom: 8px; text-transform: uppercase;
+}
+.lf-ws-card-text { font-size: 13.5px; font-weight: 300; line-height: 1.8; color: var(--lf-body); margin: 0; }
+
+/* AI 분석 요약 섹션 */
+.lf-ws-ai-summary { margin-top: 20px; padding-top: 30px; border-top: 2px dashed rgba(154,120,64,0.3); }
+.lf-ws-ai-summary-title { font-family: var(--lf-serif); font-size: 16px; color: var(--lf-gold); margin-bottom: 20px; }
+.lf-ws-ai-card { background: rgba(154,120,64,0.04); border: 1px solid rgba(154,120,64,0.2); border-radius: 4px; padding: 16px; margin-bottom: 12px; }
+.lf-ws-ai-card-title { font-size: 10.5px; font-weight: 600; letter-spacing: 1px; color: var(--lf-gold); margin: 0 0 8px 0; }
+
+/* ── Right Panel (채팅 및 워크스페이스) ── */
+.lf-ws-main {
+    flex: 2; display: flex; flex-direction: column; background: var(--lf-bg); position: relative;
+}
+.lf-ws-main-hd {
+    padding: 20px 40px; border-bottom: 1px solid var(--lf-border);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.lf-ws-main-title { font-family: var(--lf-serif); font-size: 22px; color: var(--lf-navy); margin: 0; }
+.lf-ws-actions { display: flex; gap: 10px; align-items: center; }
+
+/* 기능 액션 버튼들 */
+.lf-btn-action {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 16px; font-size: 10.5px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; border-radius: 2px; cursor: pointer; transition: all 0.2s;
+}
+.lf-btn-action--primary { background: var(--lf-navy); color: #fff; border: 1px solid var(--lf-navy); }
+.lf-btn-action--primary:hover { background: var(--lf-gold); border-color: var(--lf-gold); }
+.lf-btn-action--secondary { background: #fff; color: var(--lf-navy); border: 1px solid var(--lf-border); }
+.lf-btn-action--secondary:hover { border-color: var(--lf-navy); }
+.lf-btn-action--gold { background: var(--lf-gold); color: #fff; border: 1px solid var(--lf-gold); }
+.lf-btn-action--gold:hover { background: var(--lf-gold-lt); border-color: var(--lf-gold-lt); }
+
+/* 채팅 영역 */
+.lf-chat-box {
+    flex: 1; padding: 40px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 24px;
+}
+.lf-msg { max-width: 75%; padding: 18px 24px; font-size: 14px; line-height: 1.7; font-weight: 300; white-space: pre-wrap; }
+.lf-msg-user {
+    align-self: flex-end; background: var(--lf-navy); color: #fff;
+    border-radius: 12px 12px 0 12px;
+}
+.lf-msg-ai {
+    align-self: flex-start; background: #fff; color: var(--lf-body);
+    border: 1px solid var(--lf-border); border-radius: 12px 12px 12px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+/* 입력 폼 영역 */
+.lf-chat-footer {
+    padding: 24px 40px; background: var(--lf-bg); border-top: 1px solid var(--lf-border);
+}
+.lf-chat-form { display: flex; gap: 12px; align-items: center; }
+.lf-chat-attach {
+    background: #fff; border: 1px solid var(--lf-border); color: var(--lf-mid);
+    width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: 0.2s; flex-shrink: 0;
+}
+.lf-chat-attach:hover { border-color: var(--lf-gold); color: var(--lf-gold); }
+.lf-chat-input {
+    flex: 1; padding: 16px 24px; border-radius: 24px; border: 1px solid var(--lf-border);
+    background: var(--lf-bg2); color: var(--lf-navy); font-size: 14px; outline: none; transition: 0.2s;
+}
+.lf-chat-input:focus { border-color: var(--lf-gold); background: #fff; box-shadow: 0 4px 12px rgba(154,120,64,0.05); }
+
+/* 타이핑 인디케이터 */
+.typing-indicator { display: flex; align-items: center; gap: 4px; margin-left: 10px; }
+.typing-indicator span {
+    display: inline-block; width: 6px; height: 6px; background-color: var(--lf-gold);
+    border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both;
+}
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+/* ── 모달 공통 ── */
+.lf-modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(18,16,14,0.6);
+    backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;
+}
+.lf-modal-content {
+    background: var(--lf-bg); width: 70%; max-width: 900px; max-height: 85vh;
+    border-radius: 8px; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid var(--lf-border);
+}
+.lf-modal-hd {
+    padding: 24px 32px; border-bottom: 1px solid var(--lf-border);
+    display: flex; justify-content: space-between; align-items: center; background: var(--lf-bg2);
+}
+.lf-modal-title { margin: 0; color: var(--lf-navy); font-family: var(--lf-serif); font-size: 20px; }
+.lf-modal-close { background: none; border: none; font-size: 24px; color: var(--lf-mid); cursor: pointer; transition: 0.2s; }
+.lf-modal-close:hover { color: var(--lf-navy); }
+.lf-modal-body { padding: 32px; overflow-y: auto; background: var(--lf-bg); display: flex; flex-direction: column; gap: 20px; }
+.lf-modal-ft { padding: 20px 32px; border-top: 1px solid var(--lf-border); text-align: right; background: var(--lf-bg2); }
+
+/* 노드 그래프 스타일 */
+.lf-process-graph { display: flex; align-items: center; justify-content: space-between; padding: 40px 20px; }
+.lf-node-wrap { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+.lf-node {
+    width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    font-size: 18px; font-weight: bold; border: 2px solid var(--lf-border); background: #fff; color: var(--lf-muted);
+    transition: all 0.4s ease;
+}
+.lf-node-label { margin-top: 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--lf-mid); transition: all 0.4s ease; }
+.lf-edge { flex: 1; height: 2px; background: var(--lf-border); margin: 0 -10px; position: relative; top: -14px; z-index: 1; transition: all 0.4s ease; }
+
+.lf-node.active { border-color: var(--lf-navy); background: var(--lf-navy); color: #fff; }
+.lf-node-label.active { color: var(--lf-navy); }
+.lf-edge.active { background: var(--lf-navy); }
+
+@keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(154,120,64,0.4); border-color: var(--lf-gold); }
+    70% { box-shadow: 0 0 0 10px rgba(154,120,64,0); border-color: var(--lf-gold-lt); }
+    100% { box-shadow: 0 0 0 0 rgba(154,120,64,0); border-color: var(--lf-gold); }
+}
+.lf-node.current { animation: pulse-gold 2s infinite; background: #fff; border-color: var(--lf-gold); }
+.lf-node-label.current { color: var(--lf-gold); font-weight: 700; }
