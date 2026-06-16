@@ -108,25 +108,81 @@ def dashboard(request):
 @login_required(login_url='/accounts/login/')
 def create_project(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        problem = request.POST.get('problem_to_solve')
-        prior_art = request.POST.get('prior_art_problem')
-        core = request.POST.get('core_tech')
-        effect = request.POST.get('expected_effect')
+        # 1. 파일이 첨부된 경우 (논문 첨부 모드)
+        if 'pdf_file' in request.FILES:
+            uploaded_file = request.FILES['pdf_file']
+            fs = FileSystemStorage()
+            filename = fs.save(uploaded_file.name, uploaded_file)
+            file_path = fs.path(filename)
+            
+            try:
+                extracted_text = extract_text_from_pdf(file_path)
+                if not extracted_text:
+                    messages.error(request, 'PDF에서 텍스트를 추출할 수 없습니다.')
+                    return redirect('create_project')
+                
+                # PaperAnalyzerAgent 실행
+                from agents.paper_analyzer import PaperAnalyzerAgent
+                analyzer = PaperAnalyzerAgent(model_name="gpt-4o")
+                mock_data = analyzer.extract_from_paper(extracted_text)
+                
+                # 프로젝트 생성 (제목이 없으면 논문 제목 사용)
+                title = request.POST.get('title') or mock_data.get("title", "논문 기반 자동 생성 프로젝트")
+                project = PatentProject.objects.create(title=title, owner=request.user)
+                
+                InventionInput.objects.create(
+                    project=project,
+                    problem_to_solve=mock_data.get("problem_to_solve", ""),
+                    prior_art_problem=mock_data.get("prior_art_problem", ""),
+                    core_tech=mock_data.get("core_tech", ""),
+                    expected_effect=mock_data.get("expected_effect", "")
+                )
+                
+                # 상담 상태를 완료(Phase 2)로 바로 세팅
+                state, _ = ConsultationState.objects.get_or_create(project=project)
+                prior_prob = mock_data.get("prior_art_problem", "")
+                solve_prob = mock_data.get("problem_to_solve", "")
+                state.ext_problem = f"{prior_prob}\n\n[해결 과제]\n{solve_prob}".strip()
+                state.ext_solution = mock_data.get("core_tech", "미파악")
+                state.ext_differentiation = "논문 제안 방법(Proposed Method)에 명시된 기술적 차별점"
+                state.ext_effect = mock_data.get("expected_effect", "미파악")
+                state.phase = 2
+                state.save()
+                
+                # 웰컴 메시지 생성
+                ai_msg = f"📄 **논문({uploaded_file.name}) 분석 완료!**\n\n논문의 기술적 디테일을 과요약 없이 추출하여 정리했습니다.\n우측 상단의 **'청구항 작성'** 버튼을 누르시면 즉시 특허 초안 작성을 시작합니다!"
+                ChatMessage.objects.create(project=project, role='assistant', content=ai_msg)
+                
+            except Exception as e:
+                logger.error(f"프로젝트 생성 중 논문 추출 에러: {e}")
+                messages.error(request, '논문 분석 중 오류가 발생했습니다.')
+                return redirect('create_project')
+            finally:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            
+            # 논문이 성공적으로 처리되면 즉시 워크스테이션(채팅방)으로 보냅니다!
+            return redirect('workstation', project_id=project.id)
 
-        project = PatentProject.objects.create(title=title,owner=request.user)
-        
-        # 발명 내용 저장
-        # (여기에 원본 데이터에 대한 SHA-256 해시를 생성하여 project.original_data_hash에 저장하는 로직 추가 가능)
-        InventionInput.objects.create(
-            project=project,
-            problem_to_solve=problem,
-            prior_art_problem=prior_art,
-            core_tech=core,
-            expected_effect=effect 
-        )
-        
-        return redirect('dashboard')
+        # 2. 파일 없이 기존 텍스트로만 입력한 경우 (기존 직접 입력 모드)
+        else:
+            title = request.POST.get('title')
+            problem = request.POST.get('problem_to_solve')
+            prior_art = request.POST.get('prior_art_problem')
+            core = request.POST.get('core_tech')
+            effect = request.POST.get('expected_effect')
+
+            project = PatentProject.objects.create(title=title,owner=request.user)
+            
+            InventionInput.objects.create(
+                project=project,
+                problem_to_solve=problem,
+                prior_art_problem=prior_art,
+                core_tech=core,
+                expected_effect=effect 
+            )
+            
+            return redirect('dashboard')
         
     return render(request, 'workspace/create_project.html')
 
