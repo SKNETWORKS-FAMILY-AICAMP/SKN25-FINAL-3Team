@@ -5,6 +5,8 @@ import { workspaceApi, WorkstationData, ChatMessage } from '../api/workspace'
 import AgentModal, { AgentLog } from '../components/AgentModal'
 import ClaimEditModal from '../components/ClaimEditModal'
 import ProcessMapModal from '../components/ProcessMapModal'
+import PriorArtModal from '../components/PriorArtModal'
+
 
 
 const STEP_TO_PIPELINE: Record<string, string> = {
@@ -31,16 +33,44 @@ export default function WorkstationPage() {
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false)
-
+  
   // (모달 관리용)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [agentLogs, setAgentLogs] = useState<AgentLog[]>([])
   const [currentStep, setCurrentStep] = useState<string>('summary')
   const [isAgentDone, setIsAgentDone] = useState(false)
-
+ //const [isReportOpen, setIsReportOpen] = useState(false);
+  
   const [pendingClaims, setPendingClaims] = useState<any[] | null>(null) // 방금 AI가 만든 저장 대기 중인 청구항
   const [isSaving, setIsSaving] = useState(false)
-  // const [isClaimModalOpen, setIsClaimModalOpen] = useState(false) // 나중에 모달 연결용
+  const [isDrawingLoading, setIsDrawingLoading] = useState(false)
+
+  const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
+  const [priorArtData, setPriorArtData] = useState<any>(null) //
+
+  const renderMessageContent = (content: string) => {
+    // ![alt](url) 패턴을 찾아서 쪼갭니다.
+    const parts = content.split(/(!\[.*?\]\(.*?\))/g);
+
+    return parts.map((part, i) => {
+      const match = part.match(/!\[(.*?)\]\((.*?)\)/);
+      if (match) {
+        // 이미지를 찾으면 예쁜 img 태그로 변환!
+        return (
+          <div key={i} style={{ margin: '16px 0', textAlign: 'center' }}>
+            <img 
+              src={match[2]} 
+              alt={match[1]} 
+              style={{ maxWidth: '100%', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} 
+            />
+            <div style={{ fontSize: 11, color: 'var(--lf-muted)', marginTop: 8 }}>{match[1]}</div>
+          </div>
+        );
+      }
+      // 이미지가 아니면 그냥 텍스트 출력
+      return <span key={i}>{part}</span>;
+    });
+  }
 
   // 1. 초기 데이터 로드
   useEffect(() => {
@@ -50,6 +80,8 @@ export default function WorkstationPage() {
       .catch(err => alert("데이터를 불러오는데 실패했습니다: " + err.message))
       .finally(() => setLoading(false))
   }, [projectId])
+
+  
 
   // 스크롤 맨 아래로 자동 이동
   useEffect(() => {
@@ -134,6 +166,7 @@ export default function WorkstationPage() {
         if (data.step === 'done') {
           setIsAgentDone(true)
           if (data.claims) setPendingClaims(data.claims)
+          if (data.prior_art_data) setPriorArtData(data.prior_art_data)
           // 완료되면 최신 데이터(청구항 내역 등)를 서버에서 다시 불러와서 화면 새로고침
           workspaceApi.getWorkstation(projectId).then(res => setData(res))
         }
@@ -144,6 +177,59 @@ export default function WorkstationPage() {
     }finally {
       setIsGenerating(false) 
     }
+  }
+  // 🎯 명세서 작성 핸들러
+  const handleGenerateSpecification = async () => {
+    if (!projectId || !confirm("최종 특허 명세서(상세 설명) 작성을 시작하시겠습니까?\n본문 텍스트량이 많아 완료까지 약 1~2분이 소요될 수 있습니다.")) return
+
+    setIsSending(true) // 👈 채팅창 하단에 "AI가 입력 중입니다..." 활성화!
+
+    try {
+      const res = await workspaceApi.generateSpecification(projectId)
+      
+      if (res.status === 'success') {
+        alert("최종 명세서 작성이 성공적으로 완료되었습니다! 📄")
+        
+        // 완료 시 최신 워크스테이션 데이터를 다시 불러와서 
+        // AI 변리사가 보낸 명세서 완료 메시지를 채팅창에 즉시 업데이트합니다.
+        const updatedData = await workspaceApi.getWorkstation(projectId)
+        setData(updatedData)
+      } else {
+        alert(`명세서 작성 실패: ${res.message}`)
+      }
+    } catch (err) {
+      alert("명세서 작성 중 통신 오류가 발생했습니다.")
+    } finally {
+      setIsSending(false) // 👈 로딩 종료
+    }
+  }
+  const handleGenerateDrawings = async () => {
+    if (!projectId || !confirm("AI 특허 도면(구성도/흐름도) 생성을 시작하시겠습니까?\n이 작업은 최대 1분이 소요될 수 있습니다.")) return
+
+    setIsDrawingLoading(true)
+    setIsSending(true) // 채팅창에 "AI가 입력 중입니다..." 띄우기
+
+    try {
+      const res = await workspaceApi.generateDrawings(projectId)
+      
+      if (res.status === 'success') {
+        alert("특허 도면 생성 및 저장이 완료되었습니다! 🎨")
+        
+        // 🚀 핵심: 도면 생성이 완료되면 워크스테이션 데이터를 싹 다시 불러와서 
+        // 새 채팅 메시지와 도면 현황을 화면에 즉시 갱신합니다!
+        const updatedData = await workspaceApi.getWorkstation(projectId)
+        setData(updatedData)
+      } else {
+        alert(`도면 생성 실패: ${res.message}`)
+      }
+    } catch (err) {
+      alert("도면 생성 중 통신 오류가 발생했습니다.")
+    } finally {
+      setIsDrawingLoading(false)
+      setIsSending(false)
+    }
+
+  
   }
 
 
@@ -223,8 +309,22 @@ export default function WorkstationPage() {
             <button onClick={() => setIsProcessModalOpen(true)} className="btn-line">파이프라인 상태</button>
             <button onClick={handleGenerateClaims} className="btn-gold">청구항 작성</button>
             <button onClick={() => setIsClaimModalOpen(true)} className="btn-line">청구항 수정</button> 
-            <button className="btn-line">도면 생성</button>
-            <button className="btn-fill">명세서 작성</button>
+            <button 
+              onClick={handleGenerateDrawings} 
+              disabled={isDrawingLoading} 
+              className="btn-line"
+              style={{ opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
+            >
+              {isDrawingLoading ? "도면 생성 중..." : "도면 생성"}
+            </button>
+            <button onClick={handleGenerateSpecification} className="btn-fill">명세서 작성</button>
+            <button 
+              onClick={() => setIsPaModalOpen(true)} 
+              className="btn-action" 
+              style={{ background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, color: 'var(--lf-navy)', cursor: 'pointer' }}
+            >
+              선행기술 리포트
+            </button>
           </div>
         </header>
 
@@ -233,12 +333,14 @@ export default function WorkstationPage() {
           {chat_messages.map((msg, idx) => (
             <div key={idx} style={{ 
               alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-              background: msg.role === 'user' ? 'var(--lf-navy)' : 'var(--lf-bg2)',
+              background: msg.role === 'user' ? 'var(--lf-navy)' : '#fff', // 👈 AI 메시지 배경을 하얗게 하면 도면이 더 돋보입니다.
               color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
               border: msg.role === 'assistant' ? '1px solid var(--lf-border)' : 'none',
-              padding: '16px 20px', borderRadius: 8, maxWidth: '70%', whiteSpace: 'pre-wrap', fontSize: 14
+              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap', fontSize: 14,
+              boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
             }}>
-              {msg.content}
+              {/* 🎯 그냥 출력하지 않고, 함수를 통과시킵니다! */}
+              {renderMessageContent(msg.content)}
             </div>
           ))}
           {isSending && <div style={{ alignSelf: 'flex-start', color: 'var(--lf-muted)', fontSize: 12 }}>AI가 입력 중입니다...</div>}
@@ -295,6 +397,16 @@ export default function WorkstationPage() {
         hasDrawings={false} // 나중에 도면 API 연결 시 업데이트
         hasSpec={false}     // 나중에 명세서 API 연결 시 업데이트
       />
+      <PriorArtModal 
+        isOpen={isPaModalOpen} 
+        onClose={() => setIsPaModalOpen(false)} 
+        data={priorArtData} 
+      />
+      {/* <ReportViewer 
+        isOpen={isReportOpen} 
+        onClose={() => setIsReportOpen(false)} 
+        data={data} // 백엔드에서 받아온 전체 데이터를 그대로 던져줍니다!
+      /> */}
     </div>
   )
 }

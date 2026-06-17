@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage'
 import CreateProjectPage from './pages/CreateProjectPage'
 import WorkstationPage from './pages/WorkstationPage'
 import MyPage from './pages/MyPage'
+import ReportPage from './pages/ReportPage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/report/:projectId" element={<ReportPage />} />
 
         {/* Protected */}
         <Route

@@ -54,6 +54,16 @@ export const workspaceApi = {
       { message }
     ),
 
+    generateDrawings: (projectId: string) =>
+    api.post<{ status: string; message: string; drawings: any[] }>(
+      `/auth/workspace/workstation/${projectId}/generate_drawings_api/`,
+      {}
+    ),
+
+    getReport: (projectId: string) =>
+    api.get<any>(`/auth/workspace/workstation/${projectId}/report/`)
+      .then(res => res.data ? res.data : res), 
+
   // 3. 파일 업로드 (FormData 사용 필요)
   uploadFile: (projectId: string, file: File) => {
     const formData = new FormData()
@@ -72,11 +82,10 @@ export const workspaceApi = {
   // generateClaims: (projectId: string) =>
   //   api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {}),
 
-  generateDrawings: (projectId: string) =>
-    api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_drawings_api/`, {}),
-
   generateSpecification: (projectId: string) =>
-    api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_specification_api/`, {}),
+    api.post<{ status: string; message: string; markdown: string; details: any }>(
+      `/auth/workspace/workstation/${projectId}/generate_specification_api/`,{}
+    ),
 
   generateClaimsStream: async (projectId: string, onMessage: (data: any) => void) => {
     const token = localStorage.getItem('access_token')
@@ -111,6 +120,43 @@ export const workspaceApi = {
           try {
             const parsedData = JSON.parse(line)
             onMessage(parsedData) // 프론트엔드 UI로 데이터 전달
+          } catch (e) {
+            console.error("JSON 파싱 에러:", line)
+          }
+        }
+      }
+    }
+  },
+  generateSpecStream: async (projectId: string, onMessage: (data: any) => void) => {
+    const token = localStorage.getItem('access_token')
+    
+    const response = await fetch(`/auth/workspace/workstation/${projectId}/generate_specification_api/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.body) throw new Error("스트리밍을 지원하지 않는 브라우저입니다.")
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder('utf-8')
+    let buffer = '' 
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || '' 
+
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const parsedData = JSON.parse(line)
+            onMessage(parsedData)
           } catch (e) {
             console.error("JSON 파싱 에러:", line)
           }
