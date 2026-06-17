@@ -1,0 +1,34 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # 1. 서버의 프로젝트 폴더로 이동
+            cd /home/ubuntu/SKN25-FINAL-3Team
+            
+            # 2. 최신 코드 받아오기
+            git pull origin main
+
+            # 기존 컨테이너와 이미지 정리
+            sudo docker-compose down --remove-orphans
+            
+            # 3. 도커 컨테이너 재빌드 및 재시작
+            sudo docker-compose up -d --build
+            
+            # 4. 정적 파일 다시 모으기 (디자인 깨짐 방지)
+            sudo docker exec patent_django_web python backend/django/manage.py collectstatic --noinput

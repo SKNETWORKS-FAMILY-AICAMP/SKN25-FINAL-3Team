@@ -146,6 +146,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 CSRF_TRUSTED_ORIGINS = [
     "https://simply-subsiding-crunchy.ngrok-free.dev",
+    'https://skn25-final-3team.duckdns.org'
 ]
 
 #MEDIA_URL = '/media/'
