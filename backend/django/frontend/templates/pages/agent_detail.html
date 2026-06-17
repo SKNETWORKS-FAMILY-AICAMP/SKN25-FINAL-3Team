@@ -46,6 +46,23 @@
               {% endfor %}
             </ul>
           </div>
+
+          {% if agent.steps %}
+          <div class="ag-section">
+            <p class="ag-section-label">처리 단계</p>
+            <ol class="ag-steps">
+              {% for title, desc in agent.steps %}
+              <li class="ag-step">
+                <div class="ag-step-header">
+                  <span class="ag-step-num">{{ forloop.counter }}</span>
+                  <span class="ag-step-title">{{ title }}</span>
+                </div>
+                <p class="ag-step-body">{{ desc }}</p>
+              </li>
+              {% endfor %}
+            </ol>
+          </div>
+          {% endif %}
         </div>
 
         <!-- Right: Meta card -->
@@ -547,6 +564,40 @@
 .ag-list li::before {
   content: ''; position: absolute; left: 0; top: 10px;
   width: 8px; height: 1px; background: var(--lf-gold);
+}
+
+/* Steps timeline */
+.ag-steps {
+  list-style: none; display: flex; flex-direction: column; gap: 0; padding: 0; margin: 0;
+  border-left: 1px solid var(--lf-border); margin-left: 10px;
+}
+.ag-step {
+  position: relative; padding: 0 0 2.4rem 2rem;
+}
+.ag-step:last-child { padding-bottom: 0; }
+.ag-step::before {
+  content: ''; position: absolute; left: -1px; top: 10px;
+  width: 1px; bottom: 0; background: var(--lf-border);
+}
+.ag-step-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.ag-step-num {
+  position: absolute; left: -10px; top: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--lf-gold); color: #fff;
+  font-size: 9px; font-weight: 700; letter-spacing: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ag-step-title {
+  font-size: 13px; font-weight: 600; color: var(--lf-navy);
+  letter-spacing: -.1px; line-height: 1.4;
+  padding-left: 8px;
+}
+.ag-step-body {
+  font-size: 14px; font-weight: 300; color: var(--lf-mid);
+  line-height: 1.85; letter-spacing: .05px;
 }
 
 /* Meta card */

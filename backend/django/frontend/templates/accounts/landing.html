@@ -322,6 +322,64 @@
 @media (max-width: 1024px) { .lf-hero-deco { width: clamp(260px, 42vw, 480px); right: -2vw; } }
 @media (max-width: 768px)  { .lf-hero-deco { display: none; } }
 
+/* ════════ HERO LEFT PANEL ══════════════════════════ */
+.lf-hero-left-panel {
+  position: absolute; left: -1vw; top: 50%;
+  transform: translateY(-50%);
+  width: clamp(300px, 44vw, 600px);
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+.lf-left-svg { width: 100%; height: auto; }
+
+/* 클레임 트리 라인 순차 등장 */
+@keyframes claimDraw { to { stroke-dashoffset: 0; } }
+.cl-trunk { stroke-dasharray:300; stroke-dashoffset:300; animation:claimDraw 1.2s .8s ease forwards; }
+.cl-branch { stroke-dasharray:200; stroke-dashoffset:200; animation:claimDraw 1s ease forwards; }
+.cl-branch:nth-child(1){animation-delay:1.2s} .cl-branch:nth-child(2){animation-delay:1.5s}
+.cl-branch:nth-child(3){animation-delay:1.8s} .cl-branch:nth-child(4){animation-delay:2.0s}
+.cl-branch:nth-child(5){animation-delay:2.2s}
+.cl-sub  { stroke-dasharray:120; stroke-dashoffset:120; animation:claimDraw .8s ease forwards; }
+.cl-sub:nth-child(1){animation-delay:2.4s} .cl-sub:nth-child(2){animation-delay:2.6s}
+.cl-sub:nth-child(3){animation-delay:2.8s} .cl-sub:nth-child(4){animation-delay:3.0s}
+
+/* 노드 박스 등장 */
+@keyframes clNodeIn { from{opacity:0;transform:scaleX(.4)} to{opacity:1;transform:scaleX(1)} }
+.cl-node { opacity:0; transform-box:fill-box; transform-origin:left center; animation:clNodeIn .45s ease forwards; }
+.cl-node:nth-child(1){animation-delay:0.6s} .cl-node:nth-child(2){animation-delay:1.3s}
+.cl-node:nth-child(3){animation-delay:1.6s} .cl-node:nth-child(4){animation-delay:1.9s}
+.cl-node:nth-child(5){animation-delay:2.1s} .cl-node:nth-child(6){animation-delay:2.3s}
+.cl-node:nth-child(7){animation-delay:2.5s} .cl-node:nth-child(8){animation-delay:2.7s}
+.cl-node:nth-child(9){animation-delay:2.9s}
+
+/* 텍스트 레이블 */
+@keyframes clLabelIn { from{opacity:0} to{opacity:1} }
+.cl-label { opacity:0; animation:clLabelIn .4s ease forwards; }
+.cl-label:nth-child(1){animation-delay:0.9s} .cl-label:nth-child(2){animation-delay:1.5s}
+.cl-label:nth-child(3){animation-delay:1.8s} .cl-label:nth-child(4){animation-delay:2.1s}
+.cl-label:nth-child(5){animation-delay:2.3s} .cl-label:nth-child(6){animation-delay:2.5s}
+.cl-label:nth-child(7){animation-delay:2.7s} .cl-label:nth-child(8){animation-delay:2.9s}
+.cl-label:nth-child(9){animation-delay:3.1s}
+
+/* 데이터 플로우 점 */
+@keyframes clFlowDot {
+  0%   { opacity:0; }
+  10%  { opacity:.8; }
+  90%  { opacity:.8; }
+  100% { opacity:0; }
+}
+.cl-flow { opacity:0; animation:clFlowDot 3s 3s ease-in-out infinite; }
+.cl-flow:nth-child(2){animation-delay:3.6s}
+.cl-flow:nth-child(3){animation-delay:4.2s}
+
+/* 펄스 링 */
+@keyframes clPulse { 0%,100%{r:8;opacity:.25} 50%{r:12;opacity:.55} }
+.cl-pulse { animation:clPulse 2.6s 3.2s ease-in-out infinite; }
+
+@media (max-width: 1024px) { .lf-hero-left-panel { width: clamp(240px, 40vw, 460px); left: -2vw; } }
+@media (max-width: 768px)  { .lf-hero-left-panel { display: none; } }
+
 /* ════════ HERO ══════════════════════════════════════ */
 .lf-hero {
   position: relative; min-height: 100vh;
@@ -1960,6 +2018,297 @@ a.lf-footer-link:hover { color: var(--lf-navy); }
 
       </svg>
     </div>
+    <!-- ── LEFT PANEL — 특허 클레임 트리 + AI 파이프라인 ── -->
+    <div class="lf-hero-left-panel" aria-hidden="true">
+      <svg class="lf-left-svg" viewBox="0 0 580 580" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="flow-trunk"  d="M 210 82 V 160"/>
+          <path id="flow-b1"     d="M 210 160 H 100 V 230"/>
+          <path id="flow-b2"     d="M 210 160 H 210 V 230"/>
+          <path id="flow-b3"     d="M 210 160 H 320 V 230"/>
+          <path id="flow-sub1"   d="M 100 282 V 350"/>
+          <path id="flow-sub2"   d="M 320 282 V 350"/>
+        </defs>
+
+        <!-- ── 배경 그리드 (도면 느낌) ─────────────────── -->
+        <g stroke="#9a7840" stroke-width="0.3" opacity="0.07">
+          <line x1="0" y1="80"  x2="580" y2="80"/>
+          <line x1="0" y1="160" x2="580" y2="160"/>
+          <line x1="0" y1="240" x2="580" y2="240"/>
+          <line x1="0" y1="320" x2="580" y2="320"/>
+          <line x1="0" y1="400" x2="580" y2="400"/>
+          <line x1="0" y1="480" x2="580" y2="480"/>
+          <line x1="80"  y1="0" x2="80"  y2="580"/>
+          <line x1="160" y1="0" x2="160" y2="580"/>
+          <line x1="240" y1="0" x2="240" y2="580"/>
+          <line x1="320" y1="0" x2="320" y2="580"/>
+          <line x1="400" y1="0" x2="400" y2="580"/>
+          <line x1="480" y1="0" x2="480" y2="580"/>
+        </g>
+
+        <!-- ── 도면 헤더 ────────────────────────────── -->
+        <g opacity="0.18" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="28" y="24" font-size="7" letter-spacing="2">FIG. 1 — PATENT CLAIM ARCHITECTURE</text>
+          <text x="28" y="36" font-size="5.5" letter-spacing="1" opacity="0.7">PYPI PATENT AI · REV C · SHEET 1 OF 3</text>
+          <line x1="28" y1="42" x2="390" y2="42" stroke="#9a7840" stroke-width="0.4"/>
+        </g>
+
+        <!-- ── 우상단 제목 블록 ──────────────────────── -->
+        <g opacity="0.15" stroke="#9a7840" stroke-width="0.4">
+          <rect x="420" y="14" width="148" height="48" fill="none"/>
+          <line x1="420" y1="28" x2="568" y2="28"/>
+          <line x1="420" y1="42" x2="568" y2="42"/>
+        </g>
+        <g opacity="0.18" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="430" y="25" font-size="5.5">DRAWN: PYPI AI SYSTEM</text>
+          <text x="430" y="38" font-size="5.5">DATE: 2025-06 · DWG 001</text>
+          <text x="430" y="52" font-size="5.5">SCALE: NTS · APPROVED</text>
+        </g>
+
+        <!-- ══ CLAIM TREE ══════════════════════════════ -->
+
+        <!-- 트렁크 라인 (루트→분기점) -->
+        <line class="cl-trunk" x1="210" y1="82" x2="210" y2="160"
+              stroke="#9a7840" stroke-width="1.2" opacity="0.55"/>
+
+        <!-- 수평 분기 라인 -->
+        <g class="cl-branch" stroke="#9a7840" stroke-width="1" opacity="0.45">
+          <line x1="60"  y1="160" x2="360" y2="160"/>
+        </g>
+        <!-- 수직 드롭 라인들 -->
+        <g stroke="#9a7840" stroke-width="0.9" opacity="0.4">
+          <line class="cl-branch" x1="60"  y1="160" x2="60"  y2="230"/>
+          <line class="cl-branch" x1="160" y1="160" x2="160" y2="230"/>
+          <line class="cl-branch" x1="260" y1="160" x2="260" y2="230"/>
+          <line class="cl-branch" x1="360" y1="160" x2="360" y2="230"/>
+        </g>
+
+        <!-- ── ROOT NODE — Independent Claim 1 ──────── -->
+        <g class="cl-node">
+          <rect x="130" y="52" width="160" height="30" rx="1"
+                stroke="#9a7840" stroke-width="1.2" fill="rgba(154,120,64,.07)"/>
+          <line x1="130" y1="62" x2="290" y2="62" stroke="#9a7840" stroke-width="0.5" opacity="0.35"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="210" y="63" text-anchor="middle" font-size="6" font-weight="700" letter-spacing="1.5" opacity="0.6">INDEPENDENT CLAIM</text>
+          <text x="210" y="74" text-anchor="middle" font-size="9" font-weight="700" opacity="0.85">Claim 1</text>
+        </g>
+        <!-- 루트 펄스 링 -->
+        <circle class="cl-pulse" cx="210" cy="67" r="8"
+                stroke="#9a7840" stroke-width="0.7" fill="none" opacity="0.3"/>
+
+        <!-- ── LEVEL 2 NODES ───────────────────────── -->
+        <!-- Node II -->
+        <g class="cl-node">
+          <rect x="22" y="230" width="76" height="52" rx="1"
+                stroke="#9a7840" stroke-width="0.9" fill="rgba(154,120,64,.05)"/>
+          <line x1="22" y1="240" x2="98" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.3"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="60" y="243" text-anchor="middle" font-size="5.5" letter-spacing="1" opacity="0.5">CLAIM II</text>
+          <text x="60" y="256" text-anchor="middle" font-size="7.5" font-weight="600" opacity="0.75">Method</text>
+          <text x="60" y="268" text-anchor="middle" font-size="6" opacity="0.5">Claim</text>
+          <text x="60" y="278" text-anchor="middle" font-size="5" opacity="0.38">→ ref. §1(a)</text>
+        </g>
+
+        <!-- Node III -->
+        <g class="cl-node">
+          <rect x="122" y="230" width="76" height="52" rx="1"
+                stroke="#9a7840" stroke-width="0.9" fill="rgba(154,120,64,.05)"/>
+          <line x1="122" y1="240" x2="198" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.3"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="160" y="243" text-anchor="middle" font-size="5.5" letter-spacing="1" opacity="0.5">CLAIM III</text>
+          <text x="160" y="256" text-anchor="middle" font-size="7.5" font-weight="600" opacity="0.75">System</text>
+          <text x="160" y="268" text-anchor="middle" font-size="6" opacity="0.5">Claim</text>
+          <text x="160" y="278" text-anchor="middle" font-size="5" opacity="0.38">→ ref. §1(b)</text>
+        </g>
+
+        <!-- Node IV -->
+        <g class="cl-node">
+          <rect x="222" y="230" width="76" height="52" rx="1"
+                stroke="#9a7840" stroke-width="1.1" fill="rgba(154,120,64,.09)"/>
+          <line x1="222" y1="240" x2="298" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.3"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="260" y="243" text-anchor="middle" font-size="5.5" letter-spacing="1" opacity="0.5">CLAIM IV</text>
+          <text x="260" y="256" text-anchor="middle" font-size="7.5" font-weight="600" opacity="0.85">Device</text>
+          <text x="260" y="268" text-anchor="middle" font-size="6" opacity="0.55">Claim</text>
+          <text x="260" y="278" text-anchor="middle" font-size="5" opacity="0.4">→ ref. §1(c)</text>
+        </g>
+
+        <!-- Node V -->
+        <g class="cl-node">
+          <rect x="322" y="230" width="76" height="52" rx="1"
+                stroke="#9a7840" stroke-width="0.9" fill="rgba(154,120,64,.05)"/>
+          <line x1="322" y1="240" x2="398" y2="240" stroke="#9a7840" stroke-width="0.4" opacity="0.3"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="360" y="243" text-anchor="middle" font-size="5.5" letter-spacing="1" opacity="0.5">CLAIM V</text>
+          <text x="360" y="256" text-anchor="middle" font-size="7.5" font-weight="600" opacity="0.75">Storage</text>
+          <text x="360" y="268" text-anchor="middle" font-size="6" opacity="0.5">Medium</text>
+          <text x="360" y="278" text-anchor="middle" font-size="5" opacity="0.38">→ ref. §1(d)</text>
+        </g>
+
+        <!-- ── Level 3 수직 드롭 ───────────────────── -->
+        <g stroke="#9a7840" stroke-width="0.7" opacity="0.35">
+          <line class="cl-sub" x1="60"  y1="282" x2="60"  y2="340"/>
+          <line class="cl-sub" x1="160" y1="282" x2="160" y2="340"/>
+          <line class="cl-sub" x1="260" y1="282" x2="260" y2="340"/>
+          <line class="cl-sub" x1="360" y1="282" x2="360" y2="340"/>
+        </g>
+
+        <!-- ── LEVEL 3 NODES — Dependent Claims ──────── -->
+        <g class="cl-node">
+          <rect x="22" y="340" width="76" height="36" rx="1"
+                stroke="#9a7840" stroke-width="0.7" fill="rgba(154,120,64,.03)"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="60" y="355" text-anchor="middle" font-size="5.5" opacity="0.45">dep. claim</text>
+          <text x="60" y="368" text-anchor="middle" font-size="7" opacity="0.6">§ 2–4</text>
+        </g>
+
+        <g class="cl-node">
+          <rect x="122" y="340" width="76" height="36" rx="1"
+                stroke="#9a7840" stroke-width="0.7" fill="rgba(154,120,64,.03)"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="160" y="355" text-anchor="middle" font-size="5.5" opacity="0.45">dep. claim</text>
+          <text x="160" y="368" text-anchor="middle" font-size="7" opacity="0.6">§ 5–7</text>
+        </g>
+
+        <g class="cl-node">
+          <rect x="222" y="340" width="76" height="36" rx="1"
+                stroke="#9a7840" stroke-width="0.9" fill="rgba(154,120,64,.05)"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="260" y="355" text-anchor="middle" font-size="5.5" opacity="0.5">dep. claim</text>
+          <text x="260" y="368" text-anchor="middle" font-size="7" opacity="0.65">§ 8–11</text>
+        </g>
+
+        <g class="cl-node">
+          <rect x="322" y="340" width="76" height="36" rx="1"
+                stroke="#9a7840" stroke-width="0.7" fill="rgba(154,120,64,.03)"/>
+        </g>
+        <g class="cl-label" font-family="'Courier New',monospace" fill="#9a7840">
+          <text x="360" y="355" text-anchor="middle" font-size="5.5" opacity="0.45">dep. claim</text>
+          <text x="360" y="368" text-anchor="middle" font-size="7" opacity="0.6">§ 12–14</text>
+        </g>
+
+        <!-- ══ AI PIPELINE BAR (하단) ══════════════════ -->
+        <g opacity="0.0" style="animation:clLabelIn .6s 3.4s ease forwards">
+
+          <!-- 파이프라인 헤더 -->
+          <text x="28" y="426" font-family="'Courier New',monospace" font-size="6"
+                fill="#9a7840" opacity="0.35" letter-spacing="2">AI AGENT PIPELINE — PATENT SPECIFICATION</text>
+          <line x1="28" y1="432" x2="510" y2="432" stroke="#9a7840" stroke-width="0.4" opacity="0.2"/>
+
+          <!-- 파이프라인 박스들 -->
+          <g stroke="#9a7840" fill="rgba(154,120,64,.05)" font-family="'Courier New',monospace">
+            <!-- INPUT -->
+            <rect x="28"  y="442" width="56" height="36" stroke-width="0.8" rx="1"/>
+            <text x="56"  y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.5">INPUT</text>
+            <text x="56"  y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.7" font-weight="600">SUM</text>
+            <!-- arrow -->
+            <line x1="84" y1="460" x2="96" y2="460" stroke-width="0.7" opacity="0.4"/>
+            <polygon points="96,457 102,460 96,463" fill="#9a7840" opacity="0.35"/>
+
+            <!-- PRIOR ART -->
+            <rect x="102" y="442" width="56" height="36" stroke-width="0.8" rx="1"/>
+            <text x="130" y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.5">SEARCH</text>
+            <text x="130" y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.7" font-weight="600">ART</text>
+            <line x1="158" y1="460" x2="170" y2="460" stroke-width="0.7" opacity="0.4"/>
+            <polygon points="170,457 176,460 170,463" fill="#9a7840" opacity="0.35"/>
+
+            <!-- CLAIM -->
+            <rect x="176" y="442" width="56" height="36" stroke-width="1" rx="1" fill="rgba(154,120,64,.09)"/>
+            <text x="204" y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.55">DRAFT</text>
+            <text x="204" y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.85" font-weight="700">CLM</text>
+            <line x1="232" y1="460" x2="244" y2="460" stroke-width="0.7" opacity="0.4"/>
+            <polygon points="244,457 250,460 244,463" fill="#9a7840" opacity="0.35"/>
+
+            <!-- DRAWING -->
+            <rect x="250" y="442" width="56" height="36" stroke-width="1" rx="1" fill="rgba(154,120,64,.09)"/>
+            <text x="278" y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.55">RENDER</text>
+            <text x="278" y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.85" font-weight="700">DRW</text>
+            <line x1="306" y1="460" x2="318" y2="460" stroke-width="0.7" opacity="0.4"/>
+            <polygon points="318,457 324,460 318,463" fill="#9a7840" opacity="0.35"/>
+
+            <!-- SPEC -->
+            <rect x="324" y="442" width="56" height="36" stroke-width="0.8" rx="1"/>
+            <text x="352" y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.5">WRITE</text>
+            <text x="352" y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.7" font-weight="600">SPC</text>
+            <line x1="380" y1="460" x2="392" y2="460" stroke-width="0.7" opacity="0.4"/>
+            <polygon points="392,457 398,460 392,463" fill="#9a7840" opacity="0.35"/>
+
+            <!-- OUTPUT -->
+            <rect x="398" y="442" width="56" height="36" stroke-width="0.8" rx="1"/>
+            <text x="426" y="457" text-anchor="middle" font-size="5.5" fill="#9a7840" opacity="0.5">OUTPUT</text>
+            <text x="426" y="469" text-anchor="middle" font-size="7" fill="#9a7840" opacity="0.7" font-weight="600">DOCX</text>
+          </g>
+
+          <!-- 흐르는 점 애니메이션 -->
+          <circle r="3" fill="#9a7840" opacity="0.65">
+            <animateMotion dur="4s" repeatCount="indefinite" begin="3.8s">
+              <mpath href="#pipeline-path"/>
+            </animateMotion>
+          </circle>
+          <circle r="2" fill="#9a7840" opacity="0.45">
+            <animateMotion dur="4s" repeatCount="indefinite" begin="5.2s">
+              <mpath href="#pipeline-path"/>
+            </animateMotion>
+          </circle>
+          <defs>
+            <path id="pipeline-path" d="M 28 460 H 454"/>
+          </defs>
+        </g>
+
+        <!-- ══ 치수선 장식 ══════════════════════════════ -->
+        <g stroke="#9a7840" stroke-width="0.45" opacity="0.16">
+          <!-- 수직 치수 -->
+          <line x1="500" y1="52"  x2="500" y2="378"/>
+          <line x1="494" y1="52"  x2="506" y2="52"/>
+          <line x1="494" y1="378" x2="506" y2="378"/>
+          <text x="513" y="220" font-family="'Courier New',monospace" font-size="6"
+                fill="#9a7840" opacity="0.55" transform="rotate(90,513,220)">326 mm</text>
+          <!-- 수평 치수 -->
+          <line x1="22"  y1="520" x2="398" y2="520"/>
+          <line x1="22"  y1="514" x2="22"  y2="526"/>
+          <line x1="398" y1="514" x2="398" y2="526"/>
+          <text x="210" y="535" text-anchor="middle" font-family="'Courier New',monospace"
+                font-size="6" fill="#9a7840" opacity="0.55">376 mm</text>
+        </g>
+
+        <!-- ── 크로스레퍼런스 원 ────────────────────── -->
+        <g stroke="#9a7840" fill="none" opacity="0.22">
+          <circle cx="560" cy="160" r="12" stroke-width="0.6"/>
+          <text x="560" y="165" text-anchor="middle" font-family="'Courier New',monospace"
+                font-size="9" fill="#9a7840">A</text>
+          <circle cx="560" cy="282" r="12" stroke-width="0.6"/>
+          <text x="560" y="287" text-anchor="middle" font-family="'Courier New',monospace"
+                font-size="9" fill="#9a7840">B</text>
+        </g>
+
+        <!-- ── 데이터 플로우 점 (트리 위) ──────────── -->
+        <circle class="cl-flow" r="2.5" fill="#9a7840" opacity="0.7">
+          <animateMotion dur="3s" repeatCount="indefinite" begin="3.2s">
+            <mpath href="#flow-trunk"/>
+          </animateMotion>
+        </circle>
+        <circle class="cl-flow" r="2" fill="#9a7840" opacity="0.55">
+          <animateMotion dur="2.5s" repeatCount="indefinite" begin="3.8s">
+            <mpath href="#flow-b1"/>
+          </animateMotion>
+        </circle>
+        <circle class="cl-flow" r="2" fill="#9a7840" opacity="0.55">
+          <animateMotion dur="2.5s" repeatCount="indefinite" begin="4.4s">
+            <mpath href="#flow-b3"/>
+          </animateMotion>
+        </circle>
+
+      </svg>
+    </div>
+
     <div class="lf-hero-body">
 
       <!-- ══ 왼쪽 배경 동적 도면 레이어 ══ -->

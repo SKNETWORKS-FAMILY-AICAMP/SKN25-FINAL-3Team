@@ -29,13 +29,13 @@
       <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
     </a>
     <div class="pg-drop pg-drop--wide"><div class="pg-drop-inner">
-      <a href="{% url 'accounts:chat' %}"                class="pg-drop-a"><span class="pg-drop-num">I</span> <span data-i18n="agent_I">상담 에이전트</span></a>
-      <a href="{% url 'accounts:agent_summary' %}"       class="pg-drop-a"><span class="pg-drop-num">II</span> <span data-i18n="agent_II">요약 에이전트</span></a>
-      <a href="{% url 'accounts:agent_prior_art' %}"     class="pg-drop-a"><span class="pg-drop-num">III</span> <span data-i18n="agent_III">선행기술조사 에이전트</span></a>
-      <a href="{% url 'accounts:agent_claim' %}"         class="pg-drop-a"><span class="pg-drop-num">IV</span> <span data-i18n="agent_IV">청구항 에이전트</span></a>
-      <a href="{% url 'accounts:agent_drawing' %}"       class="pg-drop-a"><span class="pg-drop-num">V</span> <span data-i18n="agent_V">도면 에이전트</span></a>
-      <a href="{% url 'accounts:agent_specification' %}" class="pg-drop-a"><span class="pg-drop-num">VI</span> <span data-i18n="agent_VI">명세서 에이전트</span></a>
-      <a href="{% url 'accounts:agent_composer' %}"      class="pg-drop-a"><span class="pg-drop-num">VII</span> <span data-i18n="agent_VII">컴포저 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'consulting' %}"    class="pg-drop-a"><span class="pg-drop-num">I</span> <span data-i18n="agent_I">상담 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'summary' %}"      class="pg-drop-a"><span class="pg-drop-num">II</span> <span data-i18n="agent_II">요약 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'prior-art' %}"    class="pg-drop-a"><span class="pg-drop-num">III</span> <span data-i18n="agent_III">선행기술조사 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'claim' %}"        class="pg-drop-a"><span class="pg-drop-num">IV</span> <span data-i18n="agent_IV">청구항 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'drawing' %}"      class="pg-drop-a"><span class="pg-drop-num">V</span> <span data-i18n="agent_V">도면 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'specification' %}" class="pg-drop-a"><span class="pg-drop-num">VI</span> <span data-i18n="agent_VI">명세서 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'composer' %}"     class="pg-drop-a"><span class="pg-drop-num">VII</span> <span data-i18n="agent_VII">컴포저 에이전트</span></a>
       <div class="pg-drop-sep"></div>
       <a href="{% url 'accounts:drawing_gallery' %}"     class="pg-drop-a" data-i18n="nav_drawing_gallery">도면 갤러리</a>
     </div></div>
