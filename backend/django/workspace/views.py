@@ -58,16 +58,17 @@ def save_final_data(project, data):
 def save_drawings_data(project, drawings_data):
     chat_content = "[AI 특허 도면 생성 완료]\n요청하신 발명의 구성도와 흐름도입니다.\n\n"
     drawing_urls = []
-    
+
     for dwg in drawings_data:
-        web_url = f"{settings.MEDIA_URL}drawings/{dwg['file_name']}"
-        drawing_urls.append({"title": dwg['title'], "url": web_url})
+        # FastAPI 워커가 S3에 직접 업로드한 URL을 그대로 사용
+        s3_url = dwg['s3_url']
+        drawing_urls.append({"title": dwg['title'], "url": s3_url})
         chat_content += f"- **{dwg['fig_no']}**: {dwg['title']}\n"
 
         PatentDrawingFile.objects.create(
             project=project,
             title=dwg['title'],
-            image_url=web_url
+            image_url=s3_url,
         )
     ChatMessage.objects.create(project=project, role='assistant', content=chat_content)
     return chat_content, drawing_urls
@@ -854,8 +855,12 @@ async def generate_drawings_api(request, project_id):
     fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
 
     try:
-        async with httpx.AsyncClient(timeout=120.0) as client: # 도면 생성 대기시간 고려
-            resp = await client.post(fastapi_url, json={"mock_input_data": mock_input_data})
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            resp = await client.post(fastapi_url, json={
+                "mock_input_data": mock_input_data,
+                "user_id":    request.user.id,
+                "project_id": project_id,
+            })
             resp.raise_for_status()
             data = resp.json()
             
