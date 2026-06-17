@@ -3,6 +3,9 @@ import { FormEvent, useEffect, useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { workspaceApi, WorkstationData, ChatMessage } from '../api/workspace'
 import AgentModal, { AgentLog } from '../components/AgentModal'
+import ClaimEditModal from '../components/ClaimEditModal'
+import ProcessMapModal from '../components/ProcessMapModal'
+
 
 const STEP_TO_PIPELINE: Record<string, string> = {
   start: 'summary',
@@ -26,12 +29,18 @@ export default function WorkstationPage() {
   const [chatInput, setChatInput] = useState('')
   const [isSending, setIsSending] = useState(false)
   const chatBoxRef = useRef<HTMLDivElement>(null)
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
+  const [isProcessModalOpen, setIsProcessModalOpen] = useState(false)
 
   // (모달 관리용)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [agentLogs, setAgentLogs] = useState<AgentLog[]>([])
   const [currentStep, setCurrentStep] = useState<string>('summary')
   const [isAgentDone, setIsAgentDone] = useState(false)
+
+  const [pendingClaims, setPendingClaims] = useState<any[] | null>(null) // 방금 AI가 만든 저장 대기 중인 청구항
+  const [isSaving, setIsSaving] = useState(false)
+  // const [isClaimModalOpen, setIsClaimModalOpen] = useState(false) // 나중에 모달 연결용
 
   // 1. 초기 데이터 로드
   useEffect(() => {
@@ -76,6 +85,22 @@ export default function WorkstationPage() {
       setIsSending(false)
     }
   }
+  //  "저장해럇!" 버튼 클릭 시 실행
+  const handleSaveClaims = async () => {
+    if (!pendingClaims || !projectId) return
+    setIsSaving(true)
+    try {
+      await workspaceApi.saveClaims(projectId, pendingClaims)
+      alert("저장 완료! 🎉")
+      setPendingClaims(null) // 저장이 끝났으니 버튼을 숨깁니다.
+      // 최신 상태 리로드
+      workspaceApi.getWorkstation(projectId).then(res => setData(res))
+    } catch (err) {
+      alert("저장에 실패했습니다.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
   const [isGenerating, setIsGenerating] = useState(false)
   // 3. 파이프라인 액션 핸들러 (예시: 청구항 작성)
   const handleGenerateClaims = async () => {
@@ -108,6 +133,7 @@ export default function WorkstationPage() {
         // 모든 작업 완료 시
         if (data.step === 'done') {
           setIsAgentDone(true)
+          if (data.claims) setPendingClaims(data.claims)
           // 완료되면 최신 데이터(청구항 내역 등)를 서버에서 다시 불러와서 화면 새로고침
           workspaceApi.getWorkstation(projectId).then(res => setData(res))
         }
@@ -193,8 +219,10 @@ export default function WorkstationPage() {
           <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
           
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn-line">파이프라인 상태</button>
+            {/* 3. 버튼에 onClick 이벤트 연결! */}
+            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line">파이프라인 상태</button>
             <button onClick={handleGenerateClaims} className="btn-gold">청구항 작성</button>
+            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line">청구항 수정</button> 
             <button className="btn-line">도면 생성</button>
             <button className="btn-fill">명세서 작성</button>
           </div>
@@ -215,6 +243,19 @@ export default function WorkstationPage() {
           ))}
           {isSending && <div style={{ alignSelf: 'flex-start', color: 'var(--lf-muted)', fontSize: 12 }}>AI가 입력 중입니다...</div>}
         </div>
+
+        {pendingClaims && (
+            <div style={{ alignSelf: 'flex-end', marginTop: 12, marginBottom: 24 }}>
+              <button 
+                onClick={handleSaveClaims} 
+                disabled={isSaving}
+                className="btn-fill" 
+                style={{ padding: '12px 24px', fontSize: 13, background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
+              >
+                {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
+              </button>
+            </div>
+          )}
 
         {/* 채팅 입력 폼 */}
         <footer style={{ padding: 24, borderTop: '1px solid var(--lf-border)', background: 'var(--lf-bg2)' }}>
@@ -240,6 +281,19 @@ export default function WorkstationPage() {
         logs={agentLogs}
         currentStep={currentStep}
         isDone={isAgentDone}
+      />
+      <ClaimEditModal 
+        isOpen={isClaimModalOpen} 
+        onClose={() => setIsClaimModalOpen(false)} 
+        projectId={projectId!} 
+      />
+      
+      <ProcessMapModal 
+        isOpen={isProcessModalOpen} 
+        onClose={() => setIsProcessModalOpen(false)} 
+        hasClaims={data?.project.has_claims || false}
+        hasDrawings={false} // 나중에 도면 API 연결 시 업데이트
+        hasSpec={false}     // 나중에 명세서 API 연결 시 업데이트
       />
     </div>
   )

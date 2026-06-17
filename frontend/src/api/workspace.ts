@@ -88,6 +88,7 @@ export const workspaceApi = {
         'Content-Type': 'application/json'
       }
     })
+  
 
     if (!response.body) throw new Error("스트리밍을 지원하지 않는 브라우저입니다.")
 
@@ -117,4 +118,15 @@ export const workspaceApi = {
       }
     }
   },
+  // 5. 청구항 저장 (AI가 만들어준 초안 저장)
+  saveClaims: (projectId: string, claims: any[]) =>
+    api.post<{ status: string }>(`/auth/workspace/workstation/${projectId}/save_claims_api/`, { claims }),
+
+  // 6. 청구항 조회 (수정 모달용)
+  getClaims: (projectId: string) =>
+    api.get<{ status: string, claims: any[] }>(`/auth/workspace/workstation/${projectId}/manage_claims_api/`),
+
+  // 7. 청구항 수정 (수정 모달에서 저장)
+  updateClaims: (projectId: string, claims: any[]) =>
+    api.post<{ status: string }>(`/auth/workspace/workstation/${projectId}/manage_claims_api/`, { claims }),
 }

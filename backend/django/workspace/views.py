@@ -24,7 +24,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import httpx
 from asgiref.sync import sync_to_async
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework.decorators import api_view, permission_classes
@@ -32,6 +32,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
+
 
 
 
@@ -696,80 +699,60 @@ async def generate_claims_api(request, project_id):
     response['Cache-Control'] = 'no-cache'
     return response  # ← 이게 빠진 거예요
 
-
-@login_required(login_url='/accounts/login/')
-@require_POST
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def save_claims_api(request, project_id):
     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-
     try:
-        data = json.loads(request.body)
-        claims_list = data.get('claims', [])
-
+        claims_list = request.data.get('claims', [])
         if not claims_list:
-            return JsonResponse({'status': 'error', 'message': '저장할 청구항 데이터가 없습니다.'})
+            return Response({'status': 'error', 'message': '저장할 청구항 데이터가 없습니다.'})
         
         project.claims.all().delete()
-
-        claims_to_create = []
-        for c in claims_list:
-            claims_to_create.append(
-                PatentClaim(
-                    project=project,
-                    claim_no=c.get('claim_no'),
-                    is_dependent=c.get('is_dependent', False),
-                    cited_claim_no=c.get('cited_claim_no', []),
-                    category=c.get('category', ''),
-                    content=c.get('content', '')
-                )
-            )
-
+        claims_to_create = [
+            PatentClaim(
+                project=project, claim_no=c.get('claim_no'),
+                is_dependent=c.get('is_dependent', False), cited_claim_no=c.get('cited_claim_no', []),
+                category=c.get('category', ''), content=c.get('content', '')
+            ) for c in claims_list
+        ]
         PatentClaim.objects.bulk_create(claims_to_create)
-
-        return JsonResponse({'status': 'success'})
-    
+        return Response({'status': 'success'})
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return Response({'status': 'error', 'message': str(e)})
     
-@login_required(login_url='/accounts/login/')
+@csrf_exempt
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def manage_claims_api(request, project_id):
     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
 
     if request.method == 'GET':
-        claims = project.claims.all() # 아까 Meta에 ordering을 해둬서 번호순으로 나옴
+        claims = project.claims.all()
         if not claims.exists():
-            return JsonResponse({'status': 'empty', 'message': '저장된 청구항이 없습니다. 먼저 우측 상단의 "AI 청구항 작성 시작"을 통해 초안을 생성하고 저장해 주세요.'})
-            
-        claims_data = [{
-            'id': c.id,
-            'claim_no': c.claim_no,
-            'is_dependent': c.is_dependent,
-            'category': c.category,
-            'cited_claim_no': c.cited_claim_no,
-            'content': c.content
-        } for c in claims]
+            return Response({'status': 'empty', 'message': '저장된 청구항이 없습니다.'})
         
-        return JsonResponse({'status': 'success', 'claims': claims_data})
+        claims_data = [{
+            'id': c.id, 'claim_no': c.claim_no, 'is_dependent': c.is_dependent,
+            'category': c.category, 'cited_claim_no': c.cited_claim_no, 'content': c.content
+        } for c in claims]
+        return Response({'status': 'success', 'claims': claims_data})
 
     elif request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            updated_claims = data.get('claims', [])
-
+            updated_claims = request.data.get('claims', [])
             for item in updated_claims:
                 claim = PatentClaim.objects.get(id=item['id'], project=project)
-                
                 claim.content = item.get('content', claim.content)
-                
-                if 'category' in item:
-                    claim.category = item['category']
-                if 'cited_claim_no' in item:
-                    claim.cited_claim_no = item['cited_claim_no']
-                    
+                if 'category' in item: claim.category = item['category']
+                if 'cited_claim_no' in item: claim.cited_claim_no = item['cited_claim_no']
                 claim.save()
-            return JsonResponse({'status': 'success'})
+            return Response({'status': 'success'})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return Response({'status': 'error', 'message': str(e)})
         
 @login_required(login_url='/accounts/login/')
 @require_POST
