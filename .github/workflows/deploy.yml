@@ -31,4 +31,4 @@ jobs:
             sudo docker-compose up -d --build
             
             # 4. 정적 파일 다시 모으기 (디자인 깨짐 방지)
-            sudo docker exec -T patent_django_web python backend/django/manage.py collectstatic --noinput
+            sudo docker exec patent_django_web python backend/django/manage.py collectstatic --noinput
