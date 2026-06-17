@@ -29,6 +29,9 @@ jobs:
             
             # 3. 도커 컨테이너 재빌드 및 재시작
             sudo docker-compose up -d --build
+
+            # django 마이그레이션
+            sudo docker exec patent_django_web python backend/django/manage.py migrate
             
             # 4. 정적 파일 다시 모으기 (디자인 깨짐 방지)
             sudo docker exec patent_django_web python backend/django/manage.py collectstatic --noinput
