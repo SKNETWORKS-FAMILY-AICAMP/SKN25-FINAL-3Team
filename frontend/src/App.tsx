@@ -37,7 +37,7 @@ export default function App() {
           }
         />
         <Route
-          path="/workstation/:runId"
+          path="/workstation/:projectId"
           element={
             <ProtectedRoute>
               <WorkstationPage />

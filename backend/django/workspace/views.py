@@ -177,35 +177,92 @@ def create_project(request):
         # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@login_required(login_url='/accounts/login/')
-def workstation(request, project_id):
-    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-    invention_input = get_object_or_404(InventionInput, project=project)
-    consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
+# @login_required(login_url='/accounts/login/')
+# def workstation(request, project_id):
+#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+#     invention_input = get_object_or_404(InventionInput, project=project)
+#     consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
     
-    #if not project.chat_messages.exists():
-    #    agent = DjangoPatentConsultant(project)
-    #    agent.generate_welcome_message()
+#     #if not project.chat_messages.exists():
+#     #    agent = DjangoPatentConsultant(project)
+#     #    agent.generate_welcome_message()
 
-    prior_art_report = getattr(project, 'prior_art_report', None)
-    pa_json_string = json.dumps(prior_art_report.full_json_data) if prior_art_report else "null"
+#     prior_art_report = getattr(project, 'prior_art_report', None)
+#     pa_json_string = json.dumps(prior_art_report.full_json_data) if prior_art_report else "null"
 
-    # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
-    algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
-    details = project.details.all()
-    chat_messages = project.chat_messages.all().order_by('created_at')
+#     # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
+#     algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
+#     details = project.details.all()
+#     chat_messages = project.chat_messages.all().order_by('created_at')
   
-    context = {
-        'project': project,
-        'invention_input': invention_input,
-        'consultation_state': consultation_state,
-        'algorithm_steps': algorithm_steps,
-        'details': details,
-        'chat_messages': chat_messages,
-        'prior_art_json': pa_json_string
+#     context = {
+#         'project': project,
+#         'invention_input': invention_input,
+#         'consultation_state': consultation_state,
+#         'algorithm_steps': algorithm_steps,
+#         'details': details,
+#         'chat_messages': chat_messages,
+#         'prior_art_json': pa_json_string
+#     }
+    
+#     return render(request, 'workspace/workstation.html', context)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def workstation(request, project_id):
+    # 1. 로그인한 유저의 프로젝트가 맞는지 확인 후 가져옵니다.
+    project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+    
+    # 2. 연관된 데이터들을 가져옵니다. (없을 경우를 대비해 예외 처리)
+    try:
+        invention_input = project.inventioninput
+    except Exception:
+        invention_input = None
+        
+    try:
+        consultation_state = project.consultationstate
+    except Exception:
+        consultation_state = None
+        
+    # 채팅 내역 가져오기 (오래된 순)
+    chat_messages = project.chat_messages.all().order_by('created_at')
+    
+    # 3. React가 기다리는 형태(workspace.ts의 WorkstationData)에 딱 맞게 JSON을 조립합니다.
+    data = {
+        "project": {
+            "id": project.id,
+            "title": project.title,
+            "created_at": project.created_at.isoformat(),
+            "status": getattr(project, 'status', 'ready'),
+            "has_claims": getattr(project, 'has_claims', False)
+        },
+        "invention_input": {
+            "problem_to_solve": invention_input.problem_to_solve if invention_input else "",
+            "prior_art_problem": invention_input.prior_art_problem if invention_input else "",
+            "core_tech": invention_input.core_tech if invention_input else "",
+            "expected_effect": invention_input.expected_effect if invention_input else "",
+        },
+        "consultation_state": {
+            "ext_problem": consultation_state.ext_problem if consultation_state else "",
+            "ext_solution": consultation_state.ext_solution if consultation_state else "",
+            "ext_differentiation": consultation_state.ext_differentiation if consultation_state else "",
+            "ext_effect": consultation_state.ext_effect if consultation_state else "",
+        } if consultation_state else {},
+        "chat_messages": [
+            {
+                "id": msg.id,
+                "role": msg.role,
+                "content": msg.content
+            } for msg in chat_messages
+        ],
+        "prior_art_json": getattr(project, 'prior_art_json', "{}")
     }
     
-    return render(request, 'workspace/workstation.html', context)
+    return Response(data)
+
+
 
 @login_required(login_url='/accounts/login/')
 @require_POST
