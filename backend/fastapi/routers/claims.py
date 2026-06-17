@@ -7,6 +7,9 @@ import logging
 from agents.core.graph import build_patent_graph
 from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
 
+from fastapi.concurrency import run_in_threadpool
+import asyncio
+
 logger = logging.getLogger(__name__)
 router = APIRouter()  # 💡 app = FastAPI() 대신 APIRouter()를 사용합니다!
 
@@ -26,39 +29,54 @@ async def generate_claims_worker(request: Request):
     def is_valid(val):
         return bool(val and val.strip() != "미파악")
 
-    async def event_stream():
+    async def event_stream():        
         try:
             yield json.dumps({"step": "start", "message": "FastAPI AI 워커 가동 시작"}) + "\n"
-
+            
             compiled_graph = build_patent_graph()
             final_state = {}
+            queue = asyncio.Queue()
 
-            # 1. 랭그래프 스트리밍 실행
-            for output in compiled_graph.stream(initial_state):
-                for node_name, state_update in output.items():
-                    final_state.update(state_update)
 
-                    # 상태 업데이트 로그 쏘기
-                    safe_state = {k: safe_serialize(v) for k, v in state_update.items()}
-                    yield json.dumps({
-                        "step": "log_and_state",
-                        "log_msg": f"[{node_name.upper()}] 에이전트 처리 완료",
-                        "state_data": safe_state
-                    }) + "\n"
+            def run_graph():
+                for output in compiled_graph.stream(initial_state):
+                    for node_name, state_update in output.items():
+                        queue.put_nowait((node_name, state_update))
+                queue.put_nowait(None) 
 
-                    # 프론트엔드 UI용 스텝 신호
-                    if node_name == "summary_node":
-                        yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
-                    elif node_name == "claim_node":
-                        yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
-                    elif node_name == "examiner_node":
-                        examiner_data = state_update.get("examiner_data")
-                        if examiner_data and not getattr(examiner_data, 'is_approved', True):
-                            yield json.dumps({"step": "rewrite", "message": f"심사관 반려! 보정 진행"}) + "\n"
-                        else:
-                            yield json.dumps({"step": "examiner", "message": "심사관 승인 완료!"}) + "\n"
-                    elif node_name == "rewrite_node":
-                        yield json.dumps({"step": "rewrite_done", "message": "보정 완료! 재심사 요청 중..."}) + "\n"
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(None, run_graph)
+
+            while True:
+                item = await queue.get()
+                if item is None:
+                    break
+
+                node_name, state_update = item
+                final_state.update(state_update)
+
+                safe_state = {k: safe_serialize(v) for k, v in state_update.items()}
+                yield json.dumps({
+                    "step": "log_and_state",
+                    "log_msg": f"[{node_name.upper()}] 에이전트 처리 완료",
+                    "state_data": safe_state
+                }) + "\n"
+
+
+                if node_name == "summary_node":
+                    yield json.dumps({"step": "summary", "message": "발명 내용 구조화 완료!"}) + "\n"
+                elif node_name == "claim_node":
+                    yield json.dumps({"step": "claim", "message": "청구항 초안 작성 완료!"}) + "\n"
+                elif node_name == "examiner_node":
+                    examiner_data = state_update.get("examiner_data")
+                    if examiner_data and not getattr(examiner_data, 'is_approved', True):
+                        yield json.dumps({"step": "rewrite", "message": "심사관 반려! 보정 진행"}) + "\n"
+                    else:
+                        yield json.dumps({"step": "examiner", "message": "심사관 승인 완료!"}) + "\n"
+                elif node_name == "rewrite_node":
+                    yield json.dumps({"step": "rewrite_done", "message": "보정 완료! 재심사 요청 중..."}) + "\n"
+
+                    
 
             claims_result = final_state.get("claims_data")
             examiner_result = final_state.get("examiner_data")
@@ -71,7 +89,7 @@ async def generate_claims_worker(request: Request):
             
             pa_data = None
             try:
-                prior_art_result = run_prior_art_agent(final_state, top_n=3)
+                prior_art_result = await run_in_threadpool(run_prior_art_agent, final_state, 3)
                 if "prior_art_data" in prior_art_result:
                     pa_data = prior_art_result["prior_art_data"].model_dump()
                     yield json.dumps({

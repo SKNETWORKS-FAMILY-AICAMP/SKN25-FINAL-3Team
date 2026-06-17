@@ -43,10 +43,16 @@ export const workspaceApi = {
   // 1. 워크스테이션 초기 데이터 불러오기 (GET)
   getWorkstation: (projectId: string) =>
     api.get<WorkstationData>(`/auth/workspace/workstation/${projectId}/`),
+  // 1-1. 환영 메시지 및 초기 상담 상태 업데이트 (POST)
+  welcomeApi: (projectId: string) =>
+    api.post<{ status: string, ai_message?: string, extracted_data: ConsultationState }>(`/auth/workspace/workstation/${projectId}/welcome_api/`, {}),
 
   // 2. 채팅 메시지 전송 (POST)
   sendMessage: (projectId: string, message: string) =>
-    api.post<{ message: string, reply: string }>(`/auth/workspace/workstation/${projectId}/chat_api/`, { message }),
+    api.post<{ status: string, ai_message: string, extracted_data: ConsultationState }>(
+      `/auth/workspace/workstation/${projectId}/chat_api/`, 
+      { message }
+    ),
 
   // 3. 파일 업로드 (FormData 사용 필요)
   uploadFile: (projectId: string, file: File) => {
@@ -63,12 +69,52 @@ export const workspaceApi = {
   },
 
   // 4. 파이프라인 액션들 (POST)
-  generateClaims: (projectId: string) =>
-    api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {}),
+  // generateClaims: (projectId: string) =>
+  //   api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {}),
 
   generateDrawings: (projectId: string) =>
     api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_drawings_api/`, {}),
 
   generateSpecification: (projectId: string) =>
     api.post<{ message: string }>(`/auth/workspace/workstation/${projectId}/generate_specification_api/`, {}),
+
+  generateClaimsStream: async (projectId: string, onMessage: (data: any) => void) => {
+    const token = localStorage.getItem('access_token')
+    
+    const response = await fetch(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.body) throw new Error("스트리밍을 지원하지 않는 브라우저입니다.")
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder('utf-8')
+    let buffer = '' // 데이터가 중간에 끊겨서 올 경우를 대비한 버퍼
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      
+      // 마지막 줄은 불완전할 수 있으므로 다시 버퍼에 넣음
+      buffer = lines.pop() || '' 
+
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const parsedData = JSON.parse(line)
+            onMessage(parsedData) // 프론트엔드 UI로 데이터 전달
+          } catch (e) {
+            console.error("JSON 파싱 에러:", line)
+          }
+        }
+      }
+    }
+  },
 }

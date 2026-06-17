@@ -222,30 +222,6 @@ class DjangoPatentConsultant:
         return response
     
     def _handle_phase_1(self, user_input: str) -> str:
-        # step_count = self.project.algorithm_steps.count()
-
-        # # [모드 A] 알고리즘 스텝 수집 중일 때
-        # if self.state.collecting_steps:
-        #     cleaned_in = user_input.strip().lower()
-        #     if cleaned_in in ALGO_EXIT_KEYWORDS or not cleaned_in:
-        #         if step_count >= 3:
-        #             self.state.collecting_steps = False
-        #             self.state.phase = 2
-        #             self.state.save()
-        #             return f"훌륭합니다! 독립항 핵심 정보 수집이 완료되었습니다. \n\n{PHASE2_QUESTION}"
-        #         else:
-        #             return f" 특허 구성을 위해 최소 3단계 이상의 설명이 필요합니다.\n현재 **{step_count}단계**입니다. 다음 단계를 계속 말씀해 주세요."
-        #     else:
-        #         AlgorithmStep.objects.create(project=self.project, step_seq=step_count+1, content=user_input)
-        #         if step_count + 1>=10:
-        #             self.state.collecting_steps = False
-        #             self.state.phase = 2
-        #             self.state.save()
-        #             return f"[알고리즘 10단계 수집 완료]\n\n{PHASE2_QUESTION}"
-        #         else:
-        #             return f"**{step_count+2}단계**를 말씀해 주세요.\n(마치시려면 '완료' 또는 '끝'이라고 입력해 주세요.)"
-
-        # [모드 B] 일반 4대 요소 추출 모드 (GPT-4o)
         extract_prompt = PHASE1_EXTRACT_PROMPT.format(
             problem=self.state.ext_problem or "미파악",
             solution=self.state.ext_solution or "미파악",
@@ -291,18 +267,6 @@ class DjangoPatentConsultant:
             self.state.phase = 2
             self.state.save()
             return f"{ai_reply}\n\n발명의 핵심 요소 파악이 모두 완료되었습니다!\n\n{PHASE2_QUESTION}"    
-            
-
-        # if not is_valid(self.state.ext_problem):
-        #     next_question = "현재 구상하신 발명이 해결하고자 하는 **기존 기술이나 상황의 문제점**은 무엇인지 편하게 말씀해 주시겠어요?"
-        # elif not is_valid(self.state.ext_solution):
-        #     next_question = "그 문제를 해결하기 위한 발명가님만의 **핵심 해결 방법**은 무엇인지 자세히 들려주세요."
-        # elif not is_valid(self.state.ext_differentiation):
-        #     next_question = "기존에 있던 비슷한 기술들과 비교했을 때, 이 발명만이 가지는 특별한 **차별성이나 장점**은 무엇일까요?"
-        # elif not is_valid(self.state.ext_effect):
-        #     next_question = "이 발명이 실제로 적용되었을 때 사용자가 얻게 될 구체적인 **기대 효과나 편익**은 무엇일까요?"
-        # else:
-        #     next_question = "추가로 덧붙이실 내용이 있나요?"
 
         return ai_reply # + "\n\n" + next_question
     

@@ -2,7 +2,20 @@
 import { FormEvent, useEffect, useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { workspaceApi, WorkstationData, ChatMessage } from '../api/workspace'
-// import AgentModal from '../components/AgentModal' // 모달은 다음 스텝에서 분리!
+import AgentModal, { AgentLog } from '../components/AgentModal'
+
+const STEP_TO_PIPELINE: Record<string, string> = {
+  start: 'summary',
+  //log_and_state: currentStep,  // ← 이건 제거
+  summary: 'summary',
+  claim: 'claim',
+  rewrite: 'examiner',
+  rewrite_done: 'examiner',
+  examiner: 'examiner',
+  prior_art_start: 'prior_art',
+  prior_art_done: 'prior_art',
+  done: 'prior_art',
+}
 
 export default function WorkstationPage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -13,6 +26,12 @@ export default function WorkstationPage() {
   const [chatInput, setChatInput] = useState('')
   const [isSending, setIsSending] = useState(false)
   const chatBoxRef = useRef<HTMLDivElement>(null)
+
+  // (모달 관리용)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [agentLogs, setAgentLogs] = useState<AgentLog[]>([])
+  const [currentStep, setCurrentStep] = useState<string>('summary')
+  const [isAgentDone, setIsAgentDone] = useState(false)
 
   // 1. 초기 데이터 로드
   useEffect(() => {
@@ -48,7 +67,8 @@ export default function WorkstationPage() {
       // AI 응답 추가
       setData(prev => prev ? {
         ...prev,
-        chat_messages: [...prev.chat_messages, { role: 'assistant', content: res.reply }]
+        chat_messages: [...prev.chat_messages, { role: 'assistant', content: res.ai_message }],
+        consultation_state: res.extracted_data 
       } : prev)
     } catch (err) {
       alert("메시지 전송 실패")
@@ -56,18 +76,50 @@ export default function WorkstationPage() {
       setIsSending(false)
     }
   }
-
+  const [isGenerating, setIsGenerating] = useState(false)
   // 3. 파이프라인 액션 핸들러 (예시: 청구항 작성)
   const handleGenerateClaims = async () => {
+    if (isGenerating) return  // ← 추가
     if (!projectId || !confirm("청구항 작성을 시작하시겠습니까?")) return
+    // 모달 초기화 및 열기
+    setIsGenerating(true) 
+    setAgentLogs([{ step: 'system', message: '파이프라인 초기화 중...' }])
+    setCurrentStep('summary')
+    setIsAgentDone(false)
+    setIsModalOpen(true)
     try {
-      await workspaceApi.generateClaims(projectId)
-      alert("AI가 청구항 작성을 시작했습니다.")
-      // TODO: Agent Modal 띄우기 로직 추가
+      await workspaceApi.generateClaimsStream(projectId, (data) => {
+        console.log('SSE data:', data) // 디버깅용 로그
+      // 에러나 경고가 백엔드에서 온 경우 (4대 요소 부족 등)
+        if (data.status === 'warning' || data.status === 'error') {
+          
+          setAgentLogs(prev => [...prev, { step: 'error', message: data.message }])
+          setIsAgentDone(true)
+          return
+        }
+
+        // 실시간 로그와 단계 업데이트
+        if (data.step && data.message) {
+          setAgentLogs(prev => [...prev, { step: data.step, message: data.message }])
+          console.log('setCurrentStep 호출:', STEP_TO_PIPELINE[data.step] ?? data.step) 
+          setCurrentStep(STEP_TO_PIPELINE[data.step] ?? data.step)
+        }
+
+        // 모든 작업 완료 시
+        if (data.step === 'done') {
+          setIsAgentDone(true)
+          // 완료되면 최신 데이터(청구항 내역 등)를 서버에서 다시 불러와서 화면 새로고침
+          workspaceApi.getWorkstation(projectId).then(res => setData(res))
+        }
+      })
     } catch (err) {
-      alert("오류가 발생했습니다.")
+      setAgentLogs(prev => [...prev, { step: 'error', message: "통신 중 오류가 발생했습니다." }])
+      setIsAgentDone(true)
+    }finally {
+      setIsGenerating(false) 
     }
   }
+
 
   if (loading) return <div style={{ padding: 100, textAlign: 'center' }}>데이터 로딩 중...</div>
   if (!data) return <div style={{ padding: 100, textAlign: 'center' }}>프로젝트를 찾을 수 없습니다.</div>
@@ -182,7 +234,13 @@ export default function WorkstationPage() {
         </footer>
       </main>
 
-      {/* TODO: 여기에 나중에 AgentModal 추가 */}
+      <AgentModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        logs={agentLogs}
+        currentStep={currentStep}
+        isDone={isAgentDone}
+      />
     </div>
   )
 }
