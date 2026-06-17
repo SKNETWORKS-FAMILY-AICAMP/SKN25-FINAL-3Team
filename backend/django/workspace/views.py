@@ -60,7 +60,7 @@ def save_drawings_data(project, drawings_data):
     drawing_urls = []
     
     for dwg in drawings_data:
-        web_url = f"{settings.MEDIA_URL}drawings/{dwg['file_name']}"
+        web_url = dwg['url']
         drawing_urls.append({"title": dwg['title'], "url": web_url})
         chat_content += f"- **{dwg['fig_no']}**: {dwg['title']}\n"
 
@@ -852,10 +852,15 @@ async def generate_drawings_api(request, project_id):
     }
 
     fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
+    payload = {
+        "mock_input_data": mock_input_data,
+        "user_id": str(request.user.id),
+        "project_id": str(project.id)
+    }
 
     try:
         async with httpx.AsyncClient(timeout=120.0) as client: # 도면 생성 대기시간 고려
-            resp = await client.post(fastapi_url, json={"mock_input_data": mock_input_data})
+            resp = await client.post(fastapi_url, json=payload)
             resp.raise_for_status()
             data = resp.json()
             
