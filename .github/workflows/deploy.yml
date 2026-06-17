@@ -23,9 +23,12 @@ jobs:
             
             # 2. 최신 코드 받아오기
             git pull origin main
+
+            # 기존 컨테이너와 이미지 정리
+            sudo docker-compose down --remove-orphans
             
             # 3. 도커 컨테이너 재빌드 및 재시작
             sudo docker-compose up -d --build
             
             # 4. 정적 파일 다시 모으기 (디자인 깨짐 방지)
-            sudo docker exec -it patent_django_web python backend/django/manage.py collectstatic --noinput
+            sudo docker exec -T patent_django_web python backend/django/manage.py collectstatic --noinput
