@@ -12,7 +12,7 @@ from pathlib import Path
 import numpy as np
 from openai import OpenAI
 from dotenv import load_dotenv
-from sqlalchemy import Text
+from sqlalchemy import Text, text
 from agents.core.state import (
     ClaimResult,
     PatentState,
@@ -70,6 +70,7 @@ def search_similar_patents(
     query_text: str,
     top_n: int = 5,
     ipc_prefix: str = None,
+    bm25_pool: int = 500,
 ) -> list[dict]:
     embed_started_at = time.perf_counter()
     query_vec = embed_texts([query_text])[0].tolist()
@@ -82,7 +83,25 @@ def search_similar_patents(
         # 이렇게 해야 각 결과별 similarity_score를 정확히 계산 가능
         distance_col = PatentCorpus.embedding.cosine_distance(query_vec).label("distance")
 
+        trgm_query = query_text[:500]
+        pre_filter_sql = text("""
+            SELECT id FROM patent_corpus
+            WHERE (title || ' ' || abstract || ' ' || claim1) % :q
+                OR similarity(title || ' ' || abstract || ' ' || claim1, :q) > 0.05
+            ORDER BY similarity(title || ' ' || abstract || ' ' || claim1, :q) DESC
+            LIMIT :limit
+        """)
+        pre_ids = [
+            row[0]
+            for row in db.execute(pre_filter_sql, {"q": trgm_query, "limit": bm25_pool})
+        ]
+        print(f"[선행기술조사] trigram 후보 {len(pre_ids)}건 필터링")
+
+
         q = db.query(PatentCorpus, distance_col)
+
+        if pre_ids:
+            q = q.filter(PatentCorpus.id.in_(pre_ids))
 
         # IPC 필터: 기술 분야가 명확하면 관련 없는 특허 미리 제거
         if ipc_prefix:
@@ -104,7 +123,7 @@ def search_similar_patents(
                 "ipc_codes":      row.PatentCorpus.ipc_codes,
                 "examiner_cited": row.PatentCorpus.examiner_cited,
                 "pdf_s3_url":     row.PatentCorpus.pdf_s3_url,
-                "similarity_score": round(1 - float(row.distance) / 2, 4),
+                "similarity_score": round(1 - float(row.distance), 4),
             }
             for row in rows
         ]
