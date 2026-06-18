@@ -12,7 +12,7 @@ services:
     environment:
       - PYTHONPATH=/app # 💡 1: 루트 폴더(agents)를 인식하도록 변경
     # 💡 2: 장고 실행 명령어로 덮어쓰기
-    command: python backend/django/manage.py runserver 0.0.0.0:8000
+    command: uvicorn config.asgi:application --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/app # Hot Reload 유지
     env_file:
