@@ -76,7 +76,12 @@ export default function WorkstationPage() {
   useEffect(() => {
     if (!projectId) return
     workspaceApi.getWorkstation(projectId)
-      .then(res => setData(res))
+      .then(res => {
+      setData(res)
+      if (res.prior_art_data) {          
+        setPriorArtData(res.prior_art_data)
+      }
+    })
       .catch(err => alert("데이터를 불러오는데 실패했습니다: " + err.message))
       .finally(() => setLoading(false))
   }, [projectId])
@@ -167,8 +172,10 @@ export default function WorkstationPage() {
           setIsAgentDone(true)
           if (data.claims) setPendingClaims(data.claims)
           if (data.prior_art_data) setPriorArtData(data.prior_art_data)
-          // 완료되면 최신 데이터(청구항 내역 등)를 서버에서 다시 불러와서 화면 새로고침
-          workspaceApi.getWorkstation(projectId).then(res => setData(res))
+          workspaceApi.getWorkstation(projectId).then(res => {
+            setData(res)
+            if (res.prior_art_data) setPriorArtData(res.prior_art_data) 
+          })
         }
       })
     } catch (err) {
@@ -239,10 +246,10 @@ export default function WorkstationPage() {
   const { project, invention_input, consultation_state, chat_messages } = data
 
   return (
-    <div className="lf-ws-container" style={{ display: 'flex', minHeight: '100vh', paddingTop: 70 }}>
+    <div className="lf-ws-container" style={{ display: 'flex', height: '100vh', paddingTop: 70, boxSizing: 'border-box', overflow: 'hidden' }}>
       
       {/* 왼쪽 사이드바 (원본 데이터) */}
-      <aside className="lf-ws-sidebar" style={{ width: 400, borderRight: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', padding: 24, overflowY: 'auto' }}>
+      <aside className="lf-ws-sidebar" style={{ width: 400, flexShrink: 0, borderRight: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', padding: 24, overflowY: 'auto', height: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
           <h2 style={{ fontSize: 18, fontFamily: 'var(--lf-serif)' }}>발명 원본 데이터</h2>
           <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px', fontSize: 10 }}>리포트 보기</Link>
@@ -300,7 +307,7 @@ export default function WorkstationPage() {
       </aside>
 
       {/* 오른쪽 메인 (액션 버튼 & 채팅창) */}
-      <main className="lf-ws-main" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
         <header style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
           
@@ -329,7 +336,7 @@ export default function WorkstationPage() {
         </header>
 
         {/* 채팅 내역 */}
-        <div ref={chatBoxRef} style={{ flex: 1, padding: 32, overflowY: 'auto', background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div ref={chatBoxRef} style={{ flex: 1, minHeight: 0, padding: 32, overflowY: 'auto', background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {chat_messages.map((msg, idx) => (
             <div key={idx} style={{ 
               alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
@@ -360,7 +367,7 @@ export default function WorkstationPage() {
           )}
 
         {/* 채팅 입력 폼 */}
-        <footer style={{ padding: 24, borderTop: '1px solid var(--lf-border)', background: 'var(--lf-bg2)' }}>
+        <footer style={{ padding: 24, borderTop: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', flexShrink: 0 }}>
           <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: 12 }}>
             <button type="button" className="btn-line" style={{ padding: '0 20px' }}>📎</button>
             <input 

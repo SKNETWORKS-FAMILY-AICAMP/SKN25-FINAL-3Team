@@ -67,6 +67,20 @@ def save_final_data(project, data):
                 'full_json_data': pa_data
             }
         )
+@sync_to_async
+def save_prior_art_data_only(project, data):
+    """스트리밍 도중 prior_art_done 스텝이 오면 선기조 데이터만 즉시 DB에 저장합니다."""
+    if data.get("prior_art_data"):
+        pa_data = data["prior_art_data"]
+        from .models import PriorArtReport
+        PriorArtReport.objects.update_or_create(
+            project=project,
+            defaults={
+                'risk_level': pa_data.get('overall_risk', {}).get('level', 'unknown'),
+                'analysis_summary': pa_data.get('analysis_summary', ''),
+                'full_json_data': pa_data
+            }
+        )
 
 @sync_to_async
 def save_drawings_data(project, drawings_data):
@@ -119,31 +133,6 @@ def dashboard(request):
 
     return render(request, template_name, {'projects': projects})
 
-# @login_required(login_url='/accounts/login/')
-# def create_project(request):
-#     if request.method == 'POST':
-#         title = request.POST.get('title')
-#         problem = request.POST.get('problem_to_solve')
-#         prior_art = request.POST.get('prior_art_problem')
-#         core = request.POST.get('core_tech')
-#         effect = request.POST.get('expected_effect')
-
-#         project = PatentProject.objects.create(title=title,owner=request.user)
-        
-#         # 발명 내용 저장
-#         # (여기에 원본 데이터에 대한 SHA-256 해시를 생성하여 project.original_data_hash에 저장하는 로직 추가 가능)
-#         InventionInput.objects.create(
-#             project=project,
-#             problem_to_solve=problem,
-#             prior_art_problem=prior_art,
-#             core_tech=core,
-#             expected_effect=effect 
-#         )
-        
-#         return redirect('dashboard')
-        
-#     return render(request, 'workspace/create_project.html')
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # JWT 토큰이 유효한 로그인 유저만 접근 가능하게 보호
 def create_project(request):
@@ -184,47 +173,21 @@ def create_project(request):
         # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# @login_required(login_url='/accounts/login/')
-# def workstation(request, project_id):
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#     invention_input = get_object_or_404(InventionInput, project=project)
-#     consultation_state, _ = ConsultationState.objects.get_or_create(project=project)
-    
-#     #if not project.chat_messages.exists():
-#     #    agent = DjangoPatentConsultant(project)
-#     #    agent.generate_welcome_message()
-
-#     prior_art_report = getattr(project, 'prior_art_report', None)
-#     pa_json_string = json.dumps(prior_art_report.full_json_data) if prior_art_report else "null"
-
-#     # 3. ai가 추출한 알고리즘 단계 및 심화 정보 가져오기
-#     algorithm_steps = project.algorithm_steps.all().order_by('step_seq')
-#     details = project.details.all()
-#     chat_messages = project.chat_messages.all().order_by('created_at')
-  
-#     context = {
-#         'project': project,
-#         'invention_input': invention_input,
-#         'consultation_state': consultation_state,
-#         'algorithm_steps': algorithm_steps,
-#         'details': details,
-#         'chat_messages': chat_messages,
-#         'prior_art_json': pa_json_string
-#     }
-    
-#     return render(request, 'workspace/workstation.html', context)
-
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def workstation(request, project_id):
-    # 1. 로그인한 유저의 프로젝트가 맞는지 확인 후 가져옵니다.
     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
+
+    if not project.chat_messages.exists():
+        agent = DjangoPatentConsultant(project)
+        agent.generate_welcome_message()
     
     invention_input = InventionInput.objects.filter(project=project).first()
     consultation_state = ConsultationState.objects.filter(project=project).first()
-        
+    prior_art = PriorArtReport.objects.filter(project=project).first()
+    
     # 채팅 내역 가져오기 (오래된 순)
     chat_messages = project.chat_messages.all().order_by('created_at')
     
@@ -256,43 +219,10 @@ def workstation(request, project_id):
                 "content": msg.content
             } for msg in chat_messages
         ],
-        "prior_art_json": getattr(project, 'prior_art_json', "{}")
+        "prior_art_data": prior_art.full_json_data if prior_art else None
     }
     
     return Response(data)
-
-
-
-# @login_required(login_url='/accounts/login/')
-# @require_POST
-# def welcome_api(request, project_id):
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-
-#     if project.chat_messages.filter(role='assistant').exists():
-#             state = ConsultationState.objects.get(project=project)
-#             return JsonResponse({
-#                 'status': 'already_exists',
-#                 'extracted_data': {
-#                     'problem': state.ext_problem or '미파악',
-#                     'solution': state.ext_solution or '미파악',
-#                     'differentiation': state.ext_differentiation or '미파악',
-#                     'effect': state.ext_effect or '미파악'
-#                 }
-#             })
-#     agent = DjangoPatentConsultant(project)
-#     ai_response = agent.generate_welcome_message()
-#     state = ConsultationState.objects.get(project=project)
-
-#     return JsonResponse({
-#         'status': 'success',
-#         'ai_message': ai_response,
-#         'extracted_data': {
-#             'problem': state.ext_problem or '미파악',
-#             'solution': state.ext_solution or '미파악',
-#             'differentiation': state.ext_differentiation or '미파악',
-#             'effect': state.ext_effect or '미파악'
-#         }
-#     })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -330,29 +260,6 @@ def welcome_api(request, project_id):
         }
     })
 
-# @login_required
-# def chat_api(request, project_id):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         user_input = data.get('message')
-        
-#         project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#         agent = DjangoPatentConsultant(project)
-#         ai_response = agent.interact(user_input)
-#         state = project.consultation_state
-        
-#         return JsonResponse({
-#             'status': 'success',
-#             'ai_message': ai_response,
-#             'extracted_data': {
-#                 'problem': state.ext_problem,
-#                 'solution': state.ext_solution,
-#                 'differentiation': state.ext_differentiation,
-#                 'effect': state.ext_effect,
-#                 'phase': state.phase
-#             }
-#         })
-#     return JsonResponse({'status': 'error'}, status=400)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -488,134 +395,6 @@ def upload_file_api(request, project_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-# @login_required
-# @require_POST
-# async def generate_claims_api(request, project_id):
-#     project, state, inv_input = await get_project_data(project_id, request.user)
-
-#     def is_valid(val):
-#         return bool(val and val.strip() != "미파악")
-    
-#     if not all([
-#         is_valid(state.ext_problem), 
-#         is_valid(state.ext_solution), 
-#         is_valid(state.ext_differentiation), 
-#         is_valid(state.ext_effect)
-#     ]):
-#         return JsonResponse({
-#             'status': 'warning',
-#             'message': '아직 발명의 핵심 4대 요소가 모두 파악되지 않았습니다.\nAI 변리사와의 대화를 통해 좌측 패널의 빈칸을 모두 채운 후 다시 시도해 주세요!'
-#         })
-    
-#     mock_input_data = {
-#         "title": project.title,
-#         "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-#         "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-#         "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-#         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-#     }
-    
-#     initial_state = {
-#         "mock_input_data": mock_input_data,
-#         "summary_data": None, "claims_data": None, "examiner_data": None,
-#         "drawing_spec": None, "prior_art_data": None
-#     }
-
-#     # 비동기 제너레이터 (async def)
-#     async def event_stream():
-#         fastapi_url = "http://fastapi_worker:8001/api/v1/generate-claims"
-#         payload = {"initial_state": initial_state}
-
-#         try:
-#             async with httpx.AsyncClient(timeout=None) as client:
-#                 async with client.stream("POST", fastapi_url, json=payload) as r:
-#                     # iter_lines() 대신 aiter_lines() 사용
-#                     async for line in r.aiter_lines():
-#                         if not line:
-#                             continue
-                            
-#                         try:
-#                             data = json.loads(line)
-#                             if data.get("step") == "done":
-#                                 await save_final_data(project, data)
-#                         except json.JSONDecodeError:
-#                             pass
-                        
-#                         yield line + "\n"
-                        
-#         except httpx.RequestError as e:
-#             yield json.dumps({"step": "error", "message": f"AI 서버 통신 오류: {str(e)}"}) + "\n"
-
-#     # StreamingHttpResponse는 비동기 제너레이터를 기본적으로 지원합니다.
-#     return StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def generate_claims_api(request, project_id):
-#     # 1. 일반 동기(Sync) 방식으로 DB 데이터 즉시 조회 (DRF 환경에 맞춰 수정)
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#     state = ConsultationState.objects.filter(project=project).first()
-#     inv_input = InventionInput.objects.filter(project=project).first()
-
-#     def is_valid(val):
-#         return bool(val and val.strip() != "미파악")
-    
-#     # 2. 4대 요소가 다 채워졌는지 검사
-#     if not state or not all([
-#         is_valid(state.ext_problem), 
-#         is_valid(state.ext_solution), 
-#         is_valid(state.ext_differentiation), 
-#         is_valid(state.ext_effect)
-#     ]):
-#         return Response({
-#             'status': 'warning',
-#             'message': '아직 발명의 핵심 4대 요소가 모두 파악되지 않았습니다.\nAI 변리사와의 대화를 통해 좌측 패널의 빈칸을 모두 채운 후 다시 시도해 주세요!'
-#         })
-    
-#     mock_input_data = {
-#         "title": project.title,
-#         "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-#         "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-#         "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-#         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-#     }
-    
-#     initial_state = {
-#         "mock_input_data": mock_input_data,
-#         "summary_data": None, "claims_data": None, "examiner_data": None,
-#         "drawing_spec": None, "prior_art_data": None
-#     }
-
-#     # 3. 비동기 제너레이터 (스트리밍으로 AI 작성 과정을 한 줄씩 프론트엔드에 쏴줍니다)
-#     async def event_stream():
-#         #fastapi_url = "http://fastapi_worker:8001/api/v1/generate-claims"
-#         fastapi_url = "http://127.0.0.1:8001/api/v1/generate-claims"
-#         payload = {"initial_state": initial_state}
-
-#         try:
-#             async with httpx.AsyncClient(timeout=None) as client:
-#                 async with client.stream("POST", fastapi_url, json=payload) as r:
-#                     async for line in r.aiter_lines():
-#                         if not line:
-#                             continue
-                            
-#                         try:
-#                             data = json.loads(line)
-#                             if data.get("step") == "done":
-#                                 # 완료 시 DB에 저장 (이전에 만들어두신 save_final_data 호출)
-#                                 await save_final_data(project, data)
-#                         except json.JSONDecodeError:
-#                             pass
-                        
-#                         yield line + "\n"
-                        
-#         except httpx.RequestError as e:
-#             yield json.dumps({"step": "error", "message": f"AI 서버 통신 오류: {str(e)}"}) + "\n"
-
-#     # DRF 환경에서도 StreamingHttpResponse를 반환하면 실시간 연결이 유지됩니다!
-#     return StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
-
-
 
 @csrf_exempt
 async def generate_claims_api(request, project_id):
@@ -688,6 +467,9 @@ async def generate_claims_api(request, project_id):
                                 for line in text.strip().split('\n'):
                                     if line:
                                         parsed = json.loads(line)
+                                        if parsed.get("step") == "prior_art_done":
+                                            await save_prior_art_data_only(project, parsed)
+                                            
                                         if parsed.get("step") == "done":
                                             await save_final_data(project, parsed)
                             except Exception:
@@ -699,7 +481,7 @@ async def generate_claims_api(request, project_id):
     response = StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
     response['X-Accel-Buffering'] = 'no'
     response['Cache-Control'] = 'no-cache'
-    return response  # ← 이게 빠진 거예요
+    return response  
 
 @csrf_exempt
 @api_view(['POST'])
@@ -819,189 +601,6 @@ def patent_report_api(request, project_id):
         }
     })
 
-# @login_required
-# @require_POST
-# def generate_drawings_api(request, project_id):
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#     state = get_object_or_404(ConsultationState, project=project)
-#     inv_input = getattr(project, 'inventioninput', None)
-
-#     try:
-#         mock_input_data = {
-#             "title": project.title,
-#             "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-#             "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-#             "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-#             "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-#         }
-
-#         # 2. 요약 에이전트를 한 번 돌려서 Pydantic 객체(ParsedInvention) 추출
-#         # (청구항 짤 때와 동일한 데이터 구조 획득)
-#         summary_agent = SummaryAgent(model_name="gpt-4o-mini")
-#         summary_state = summary_agent.run({"mock_input_data": mock_input_data})
-        
-#         # 3. 도면 에이전트 가동! (1초 컷)
-#         drawing_agent = SmartDrawingAgent()
-#         drawing_result = drawing_agent.run(summary_state)
-        
-#         drawing_spec = drawing_result.get("drawing_spec")
-#         if not drawing_spec:
-#             raise Exception("도면 생성에 실패했습니다.")
-
-#         drawing_urls = []
-#         chat_content = "[AI 특허 도면 생성 완료]\n요청하신 발명의 구성도와 흐름도입니다.\n\n"
-        
-#         for dwg in drawing_spec.drawings:
-#             file_name = os.path.basename(dwg.image_path)
-#             web_url = f"{settings.MEDIA_URL}drawings/{file_name}"
-#             drawing_urls.append({"title": dwg.title, "url": web_url})
-#             chat_content += f"- **{dwg.fig_no}**: {dwg.title}\n"
-
-#             PatentDrawingFile.objects.create(
-#                 project=project,
-#                 title=dwg.title,
-#                 image_url=web_url
-#             )
-
-#         # 5. 채팅 기록 저장
-#         ChatMessage.objects.create(project=project, role='assistant', content=chat_content)
-
-#         return JsonResponse({
-#             "status": "success",
-#             "message": chat_content,
-#             "drawings": drawing_urls
-#         })
-
-#     except Exception as e:
-#         logger.error(f"도면 생성 에러: {e}")
-#         return JsonResponse({"status": "error", "message": str(e)})
-
-# @login_required
-# @require_POST
-# def generate_specification_api(request, project_id):
-#     project = get_object_or_404(PatentProject, id=project_id, owner=request.user)
-#     state = get_object_or_404(ConsultationState, project=project)
-
-#     try:
-#         saved_claims = project.claims.all() if hasattr(project, 'claims') else []
-#         saved_drawings = project.drawings.all() if hasattr(project, 'drawings') else []
-
-#         draft_claims = []
-#         for c in saved_claims:
-#             draft_claims.append({
-#                 "claim_no": c.claim_no,
-#                 "text": c.content,
-#                 "type": "dependent" if c.is_dependent else "independent",
-#                 "category": getattr(c, 'category', '장치')
-#             })
-
-#         figures = []
-#         for i, d in enumerate(saved_drawings):
-#             figures.append({
-#                 "fig_no": i + 1,
-#                 "title": d.title,
-#                 "brief_description": f"본 발명의 실시예에 따른 {d.title}이다."
-#             })
-
-#         agent_state = {
-#             "consultation": {
-#                 "invention_title": project.title,
-#                 "problem": state.ext_problem,
-#                 "solution": state.ext_solution,
-#                 "differentiation": state.ext_differentiation,
-#                 "effect": state.ext_effect,
-#             },
-#             "claims": {
-#                 "draft_claims": draft_claims
-#             },
-#             "drawings": {
-#                 "figures": figures,
-#                 "reference_numerals": {} # 도면 에이전트에서 파싱한 데이터가 있다면 매핑
-#             },
-#             "drafting_options": {
-#                 "use_subheadings_in_detailed_description": True,
-#                 "brief_drawing_description": True,
-#                 "strict_grounding": False,
-#                 "method_step_format": {"enabled": False}
-#             }
-#         }
-
-#         result = run_specification_agent(agent_state)
-
-#         if result.get("status") != "ok":
-#             raise Exception(f"명세서 생성 실패: {result.get('warnings', ['알 수 없는 오류'])}")
-
-#         md_content = convert_to_markdown_format(project.title, result)
-
-#         SpecificationDocument.objects.update_or_create(
-#             project=project,
-#             defaults={
-#                 'markdown_content': md_content
-#             }
-#         )
-
-#         chat_message = "📝 **[AI 발명의 설명(명세서 본문) 작성 완료]**\n명세서 초안 작성이 완료되었습니다. 아래 마크다운 내용을 확인해 주세요!\n\n"
-#         ChatMessage.objects.create(project=project, role='assistant', content=chat_message)
-        
-#         ChatMessage.objects.create(project=project, role='assistant', content=md_content)
-
-#         return JsonResponse({
-#             "status": "success",
-#             "message": chat_message,
-#             "markdown": md_content,
-#             "details": result.get("details", {})
-#         })
-
-#     except Exception as e:
-#         logger.error(f"명세서 생성 에러: {e}")
-#         return JsonResponse({"status": "error", "message": str(e)})
-    
-# def safe_serialize(obj):
-#     if isinstance(obj, BaseModel):
-#         return obj.model_dump()
-#     elif hasattr(obj, '__dict__'):
-#         return obj.__dict__
-#     return str(obj)
-
-
-
-# @login_required
-# @require_POST
-# async def generate_drawings_api(request, project_id):
-#     project, state, inv_input = await get_project_data(project_id, request.user)
-
-#     mock_input_data = {
-#         "title": project.title,
-#         "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
-#         "problem_to_solve": inv_input.problem_to_solve if inv_input else state.ext_problem,
-#         "core_tech": inv_input.core_tech if inv_input else state.ext_solution,
-#         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
-#     }
-
-#     #fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
-#     fastapi_url = "http://127.0.0.1:8001/api/v1/generate-drawings"
-
-#     try:
-#         async with httpx.AsyncClient(timeout=120.0) as client: # 도면 생성 대기시간 고려
-#             resp = await client.post(fastapi_url, json={"mock_input_data": mock_input_data})
-#             resp.raise_for_status()
-#             data = resp.json()
-            
-#         if data.get("status") == "success":
-#             chat_content, drawing_urls = await save_drawings_data(project, data["drawings"])
-#             return JsonResponse({
-#                 "status": "success",
-#                 "message": chat_content,
-#                 "drawings": drawing_urls
-#             })
-#         else:
-#             return JsonResponse({"status": "error", "message": data.get("message")})
-            
-#     except Exception as e:
-#         logger.error(f"도면 API 에러: {e}")
-#         return JsonResponse({"status": "error", "message": str(e)})
-
-# workspace/views.py
 
 @csrf_exempt
 @api_view(['POST'])
@@ -1070,71 +669,6 @@ def generate_drawings_api(request, project_id):
         logger.error(f"도면 API 에러: {e}")
         return Response({"status": "error", "message": f"도면 생성 중 서버 오류 발생: {str(e)}"})
     
-# @login_required
-# @require_POST
-# async def generate_specification_api(request, project_id):
-#     project, state, _ = await get_project_data(project_id, request.user)
-#     saved_claims, saved_drawings = await get_spec_inputs(project)
-
-#     # 1. FastAPI로 보낼 상태(State) 조립
-#     draft_claims = [
-#         {
-#             "claim_no": c.claim_no, "text": c.content,
-#             "type": "dependent" if c.is_dependent else "independent",
-#             "category": getattr(c, 'category', '장치')
-#         } for c in saved_claims
-#     ]
-
-#     figures = [
-#         {
-#             "fig_no": i + 1, "title": d.title,
-#             "brief_description": f"본 발명의 실시예에 따른 {d.title}이다."
-#         } for i, d in enumerate(saved_drawings)
-#     ]
-
-#     agent_state = {
-#         "consultation": {
-#             "invention_title": project.title,
-#             "problem": state.ext_problem, "solution": state.ext_solution,
-#             "differentiation": state.ext_differentiation, "effect": state.ext_effect,
-#         },
-#         "claims": {"draft_claims": draft_claims},
-#         "drawings": {"figures": figures, "reference_numerals": {}},
-#         "drafting_options": {
-#             "use_subheadings_in_detailed_description": True,
-#             "brief_drawing_description": True, "strict_grounding": False,
-#             "method_step_format": {"enabled": False}
-#         }
-#     }
-
-#     #fastapi_url = "http://fastapi_worker:8001/api/v1/generate-specification"
-#     fastapi_url = "http://127.0.0.1:8001/api/v1/generate-specification"
-
-#     try:
-#         async with httpx.AsyncClient(timeout=300.0) as client: # 명세서는 가장 오래 걸림!
-#             resp = await client.post(fastapi_url, json={"agent_state": agent_state})
-#             resp.raise_for_status()
-#             data = resp.json()
-
-#         if data.get("status") == "success":
-#             result = data["result"]
-            
-#             # 장고 딴에서 마크다운으로 변환 후 DB 저장
-#             md_content = convert_to_markdown_format(project.title, result)
-#             chat_message = await save_spec_data(project, md_content)
-            
-#             return JsonResponse({
-#                 "status": "success",
-#                 "message": chat_message,
-#                 "markdown": md_content,
-#                 "details": result.get("details", {})
-#             })
-#         else:
-#             return JsonResponse({"status": "error", "message": data.get("message")})
-
-#     except Exception as e:
-#         logger.error(f"명세서 API 에러: {e}")
-#         return JsonResponse({"status": "error", "message": str(e)})
 
 
 def convert_to_markdown_format(invention_title: str, spec_dict: dict) -> str:

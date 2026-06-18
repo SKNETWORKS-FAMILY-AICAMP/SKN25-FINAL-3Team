@@ -35,7 +35,7 @@ export interface WorkstationData {
   invention_input: InventionInput
   consultation_state: ConsultationState
   chat_messages: ChatMessage[]
-  prior_art_json: string
+  prior_art_data: any | null
 }
 
 // --- API Functions ---
