@@ -455,7 +455,7 @@ async def generate_claims_api(request, project_id):
     }
 
     async def event_stream():
-        fastapi_url = "http://127.0.0.1:8001/api/v1/generate-claims"
+        fastapi_url = "http://fastapi_worker:8001/api/v1/generate-claims"
         payload = {"initial_state": initial_state}
         try:
             async with httpx.AsyncClient(timeout=None) as client:
@@ -623,7 +623,7 @@ def generate_drawings_api(request, project_id):
         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
     }
 
-    fastapi_url = "http://127.0.0.1:8001/api/v1/generate-drawings"
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
     payload = {
         "mock_input_data": mock_input_data,
         "user_id": str(request.user.id),
@@ -759,7 +759,7 @@ def generate_specification_api(request, project_id):
         }
     }
 
-    fastapi_url = "http://127.0.0.1:8001/api/v1/generate-specification"
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-specification"
 
     try:
         # 3. 명세서 작성은 양이 많으므로 타임아웃을 넉넉히 300초(5분) 설정하여 호출합니다.
