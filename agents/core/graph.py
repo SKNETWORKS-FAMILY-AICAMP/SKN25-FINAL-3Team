@@ -86,7 +86,7 @@ def build_patent_graph():
     workflow.add_node("examiner_node", examiner_agent.run)
     workflow.add_node("rewrite_node", rewrite_agent.run)
     
-    # 3. 엣지 연결 (직진 코스)
+    # 3. 엣지 연결 (무조건 summary_node 부터 시작)
     workflow.add_edge(START, "summary_node")
     workflow.add_edge("summary_node", "claim_node")
     workflow.add_edge("claim_node", "examiner_node") # 1차 초안 작성 후 심사관에게 제출

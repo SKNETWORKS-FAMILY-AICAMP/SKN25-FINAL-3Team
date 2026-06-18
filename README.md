@@ -73,5 +73,11 @@ skn25-final-3team/
 
 ## 🔃 Future Work
 
-- FastAPI
+- FastAPI 추가
+- DB Migration (Sqlite -> PostgreSQL)
 - Agent logic 고도화
+- Test 디렉토리 추가
+
+## 📅 프로젝트 진행 상황
+
+- **최종 발표 자료:** [Canva PPT 링크](https://canva.link/7tgiu30dzu4k638)

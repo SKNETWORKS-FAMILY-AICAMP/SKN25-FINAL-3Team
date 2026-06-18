@@ -65,7 +65,7 @@ class PatentClaim(models.Model):
 class PatentDrawingFile(models.Model):
     project = models.ForeignKey(PatentProject, on_delete=models.CASCADE, related_name='drawings')
     title = models.CharField(max_length=200)  
-    image_url = models.CharField(max_length=500) 
+    image_url = models.URLField(max_length=500, help_text="S3에 업로드된 도면 이미지 URL")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -88,7 +88,7 @@ def save_drawings_data(project, drawings_data):
     drawing_urls = []
     
     for dwg in drawings_data:
-        web_url = f"{settings.MEDIA_URL}drawings/{dwg['file_name']}"
+        web_url = dwg['url']
         drawing_urls.append({"title": dwg['title'], "url": web_url})
         chat_content += f"- **{dwg['fig_no']}**: {dwg['title']}\n"
 
