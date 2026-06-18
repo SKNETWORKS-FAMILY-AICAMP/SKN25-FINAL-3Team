@@ -615,7 +615,6 @@ def generate_drawings_api(request, project_id):
     if not state:
         return Response({'status': 'error', 'message': '발명 분석 상태가 존재하지 않습니다.'})
 
-    # 2. FastAPI로 보낼 데이터 준비
     mock_input_data = {
         "title": project.title,
         "prior_art_problem": inv_input.prior_art_problem if inv_input else state.ext_problem,
@@ -625,11 +624,15 @@ def generate_drawings_api(request, project_id):
     }
 
     fastapi_url = "http://127.0.0.1:8001/api/v1/generate-drawings"
-
+    payload = {
+        "mock_input_data": mock_input_data,
+        "user_id": str(request.user.id),
+        "project_id": str(project.id)
+    }
     try:
         # 3. 비동기 오류(Deadlock)를 원천 차단하기 위해 동기식(Sync) 클라이언트를 사용합니다.
         with httpx.Client(timeout=120.0) as client: 
-            resp = client.post(fastapi_url, json={"mock_input_data": mock_input_data})
+            resp = client.post(fastapi_url, json=payload)
             resp.raise_for_status()
             data = resp.json()
             
@@ -640,8 +643,7 @@ def generate_drawings_api(request, project_id):
             drawing_urls = []
             
             for dwg in drawings_data:
-                raw_url = f"{settings.MEDIA_URL}drawings/{dwg['file_name']}"
-                web_url = request.build_absolute_uri(raw_url)
+                web_url = dwg['url']
                 
                 drawing_urls.append({"title": dwg['title'], "url": web_url})
                 
