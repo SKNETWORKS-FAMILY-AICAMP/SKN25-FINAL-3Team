@@ -48,6 +48,8 @@ export default function WorkstationPage() {
   const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
   const [priorArtData, setPriorArtData] = useState<any>(null) //
 
+  const [loadingText, setLoadingText] = useState("AI 변리사가 명세서 구조를 기획하고 있습니다...")
+
   const renderMessageContent = (content: string) => {
     // ![alt](url) 패턴을 찾아서 쪼갭니다.
     const parts = content.split(/(!\[.*?\]\(.*?\))/g);
@@ -238,6 +240,26 @@ export default function WorkstationPage() {
 
   
   }
+  useEffect(() => {
+      if (isSending) {
+        const texts = [
+          "배경 기술과 종래 기술의 문제점을 분석하고 있습니다...",
+          "해결하고자 하는 과제와 핵심 기술 구성을 매핑 중입니다...",
+          "도면 부호를 추출하고 상세 설명을 작성하고 있습니다...",
+          "명세서 마크다운 문서를 최종 조립하고 있습니다... 거의 다 되었습니다!"
+        ];
+        let i = 0;
+        const timer = setInterval(() => {
+          i = (i + 1) % texts.length;
+          setLoadingText(texts[i]);
+        }, 5000); // 5초마다 텍스트 변경
+        
+        return () => {
+          clearInterval(timer);
+          setLoadingText("AI가 입력 중입니다..."); // 끝나면 원상복구
+        };
+      }
+    }, [isSending]);
 
 
   if (loading) return <div style={{ padding: 100, textAlign: 'center' }}>데이터 로딩 중...</div>
@@ -346,11 +368,21 @@ export default function WorkstationPage() {
               padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap', fontSize: 14,
               boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
             }}>
-              {/* 🎯 그냥 출력하지 않고, 함수를 통과시킵니다! */}
-              {renderMessageContent(msg.content)}
+              {/* 🎯 일반 렌더링 대신 타자기 컴포넌트를 통과시킵니다! */}
+              {msg.role === 'assistant' && msg.content.length > 500 ? (
+                <TypewriterMessage content={msg.content} renderContent={renderMessageContent} />
+              ) : (
+                renderMessageContent(msg.content)
+              )}
             </div>
           ))}
-          {isSending && <div style={{ alignSelf: 'flex-start', color: 'var(--lf-muted)', fontSize: 12 }}>AI가 입력 중입니다...</div>}
+
+          {/* 🎯 로딩 문구가 실시간으로 슉슉 바뀝니다! */}
+          {isSending && (
+            <div style={{ alignSelf: 'flex-start', color: 'var(--lf-gold)', fontSize: 13, fontWeight: 'bold', padding: '16px 20px', background: '#fff', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+              ⏳ {loadingText}
+            </div>
+          )}
         </div>
 
         {pendingClaims && (
@@ -416,4 +448,31 @@ export default function WorkstationPage() {
       /> */}
     </div>
   )
+}
+
+const TypewriterMessage = ({ content, renderContent }: { content: string, renderContent: (str: string) => React.ReactNode }) => {
+  const [displayedText, setDisplayedText] = useState('');
+
+  useEffect(() => {
+    // 이미 다 써진 예전 메시지는 타이핑 안 하고 바로 띄움
+    if (content.length < 200) {
+      setDisplayedText(content);
+      return;
+    }
+
+    // 길이가 긴 명세서 본문 같은 경우만 타다닥! 타이핑 효과 발동
+    let i = 0;
+    const intervalId = setInterval(() => {
+      setDisplayedText(content.slice(0, i));
+      i += 8; // 👈 한 번에 8글자씩 팍팍팍 출력 (속도 조절 가능)
+      if (i > content.length) {
+        clearInterval(intervalId);
+        setDisplayedText(content);
+      }
+    }, 10); // 10ms마다 출력 (엄청 빠르고 시원함)
+
+    return () => clearInterval(intervalId);
+  }, [content]);
+
+  return <>{renderContent(displayedText)}</>;
 }
