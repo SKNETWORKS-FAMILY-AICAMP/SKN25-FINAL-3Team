@@ -44,6 +44,11 @@ export default function WorkstationPage() {
   const [pendingClaims, setPendingClaims] = useState<any[] | null>(null) // 방금 AI가 만든 저장 대기 중인 청구항
   const [isSaving, setIsSaving] = useState(false)
   const [isDrawingLoading, setIsDrawingLoading] = useState(false)
+  const [pipelineOverrides, setPipelineOverrides] = useState({
+    hasClaims: false,
+    hasDrawings: false,
+    hasSpec: false,
+  })
 
   const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
   const [priorArtData, setPriorArtData] = useState<any>(null) //
@@ -129,6 +134,7 @@ export default function WorkstationPage() {
     try {
       await workspaceApi.saveClaims(projectId, pendingClaims)
       alert("저장 완료! 🎉")
+      setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
       setPendingClaims(null) // 저장이 끝났으니 버튼을 숨깁니다.
       // 최신 상태 리로드
       workspaceApi.getWorkstation(projectId).then(res => setData(res))
@@ -170,7 +176,10 @@ export default function WorkstationPage() {
         // 모든 작업 완료 시
         if (data.step === 'done') {
           setIsAgentDone(true)
-          if (data.claims) setPendingClaims(data.claims)
+          if (data.claims) {
+            setPendingClaims(data.claims)
+            setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
+          }
           if (data.prior_art_data) setPriorArtData(data.prior_art_data)
           workspaceApi.getWorkstation(projectId).then(res => {
             setData(res)
@@ -196,6 +205,7 @@ export default function WorkstationPage() {
       
       if (res.status === 'success') {
         alert("최종 명세서 작성이 성공적으로 완료되었습니다! 📄")
+        setPipelineOverrides(prev => ({ ...prev, hasSpec: true }))
         
         // 완료 시 최신 워크스테이션 데이터를 다시 불러와서 
         // AI 변리사가 보낸 명세서 완료 메시지를 채팅창에 즉시 업데이트합니다.
@@ -221,6 +231,7 @@ export default function WorkstationPage() {
       
       if (res.status === 'success') {
         alert("특허 도면 생성 및 저장이 완료되었습니다! 🎨")
+        setPipelineOverrides(prev => ({ ...prev, hasDrawings: true }))
         
         // 🚀 핵심: 도면 생성이 완료되면 워크스테이션 데이터를 싹 다시 불러와서 
         // 새 채팅 메시지와 도면 현황을 화면에 즉시 갱신합니다!
@@ -244,6 +255,9 @@ export default function WorkstationPage() {
   if (!data) return <div style={{ padding: 100, textAlign: 'center' }}>프로젝트를 찾을 수 없습니다.</div>
 
   const { project, invention_input, consultation_state, chat_messages } = data
+  const processHasClaims = project.has_claims || pipelineOverrides.hasClaims || Boolean(pendingClaims?.length)
+  const processHasDrawings = project.has_drawings || pipelineOverrides.hasDrawings
+  const processHasSpec = project.has_spec || pipelineOverrides.hasSpec
 
   return (
     <div className="lf-ws-container" style={{ display: 'flex', height: '100vh', paddingTop: 70, boxSizing: 'border-box', overflow: 'hidden' }}>
@@ -400,9 +414,9 @@ export default function WorkstationPage() {
       <ProcessMapModal 
         isOpen={isProcessModalOpen} 
         onClose={() => setIsProcessModalOpen(false)} 
-        hasClaims={data?.project.has_claims || false}
-        hasDrawings={false} // 나중에 도면 API 연결 시 업데이트
-        hasSpec={false}     // 나중에 명세서 API 연결 시 업데이트
+        hasClaims={processHasClaims}
+        hasDrawings={processHasDrawings}
+        hasSpec={processHasSpec}
       />
       <PriorArtModal 
         isOpen={isPaModalOpen} 

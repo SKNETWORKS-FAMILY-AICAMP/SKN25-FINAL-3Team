@@ -60,7 +60,6 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
           {/* 좌측: 단계 표시 (Stepper) */}
           <div style={{ width: '40%', background: 'var(--lf-bg2)', padding: '32px', borderRight: '1px solid var(--lf-border)' }}>
             <h4 style={{ fontSize: 12, color: 'var(--lf-muted)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 24 }}>Processing Steps</h4>
-            <div style={{ fontSize: 11, color: 'red' }}>currentStep: "{currentStep}"</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {PIPELINE_STEPS.map((step, idx) => {
                 const isActive = currentStep === step.id
@@ -70,9 +69,10 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
                   <div key={step.id} style={{ display: 'flex', gap: 16, opacity: isActive || isPassed ? 1 : 0.4, transition: 'opacity 0.3s' }}>
                     <div style={{
                       width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isActive ? 'var(--lf-gold)' : isPassed ? 'var(--lf-navy)' : '#fff',
-                      border: `1px solid ${isActive || isPassed ? 'transparent' : 'var(--lf-border)'}`,
-                      color: '#fff', fontSize: 12, fontWeight: 'bold'
+                      background: isActive ? '#f59e0b' : isPassed ? '#10b981' : '#fff',
+                      border: `1px solid ${isActive ? '#f59e0b' : isPassed ? '#10b981' : 'var(--lf-border)'}`,
+                      color: isActive || isPassed ? '#fff' : 'var(--lf-text)',
+                      fontSize: 12, fontWeight: 'bold'
                     }}>
                       {isPassed ? '✓' : idx + 1}
                     </div>
