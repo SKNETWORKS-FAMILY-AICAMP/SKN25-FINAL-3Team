@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { workspaceApi } from '../api/workspace';
+import MarkdownContent from '../components/MarkdownContent';
 
 export default function ReportPage() {
   //const { id } = useParams<{ id: string }>();
@@ -113,8 +114,8 @@ export default function ReportPage() {
         {specification && specification.markdown_content && (
           <>
             <h3 style={sectionTitleStyle}>IV. 발명의 설명</h3>
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', padding: 40, borderRadius: 2, fontSize: 15, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-              {specification.markdown_content}
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', padding: 40, borderRadius: 2 }}>
+              <MarkdownContent content={specification.markdown_content} variant="report" />
             </div>
           </>
         )}
