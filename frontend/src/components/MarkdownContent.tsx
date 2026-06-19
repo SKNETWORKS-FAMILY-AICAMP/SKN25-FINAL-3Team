@@ -5,13 +5,13 @@ type MarkdownContentProps = {
   variant?: 'chat' | 'report'
 }
 
-function renderInline(text: string) {
+function renderInline(text: string, color: string) {
   return text
     .split(/(\*\*[^*]+\*\*)/g)
     .filter(Boolean)
     .map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index} style={{ fontWeight: 700, color: 'var(--lf-navy, #12100e)' }}>{part.slice(2, -2)}</strong>
+        return <strong key={index} style={{ fontWeight: 700, color }}>{part.slice(2, -2)}</strong>
       }
       return <React.Fragment key={index}>{part}</React.Fragment>
     })
@@ -21,6 +21,8 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
   const lines = content.replace(/\r\n/g, '\n').split('\n')
   const blocks: React.ReactNode[] = []
   const isReport = variant === 'report'
+  const primaryColor = isReport ? '#12100e' : 'inherit'
+  const bodyColor = isReport ? '#334155' : 'inherit'
   let i = 0
 
   while (i < lines.length) {
@@ -38,12 +40,12 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
           fontSize: isReport ? 24 : 20,
           lineHeight: 1.35,
           fontWeight: 700,
-          color: '#12100e',
+          color: primaryColor,
           margin: isReport ? '0 0 28px' : '0 0 18px',
           paddingBottom: isReport ? 14 : 10,
           borderBottom: '1px solid rgba(154,120,64,.25)',
         }}>
-          {renderInline(trimmed.slice(2).trim())}
+          {renderInline(trimmed.slice(2).trim(), primaryColor)}
         </h2>
       )
       i += 1
@@ -56,10 +58,10 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
           fontSize: isReport ? 18 : 15,
           lineHeight: 1.45,
           fontWeight: 700,
-          color: '#12100e',
+          color: primaryColor,
           margin: isReport ? '30px 0 12px' : '22px 0 8px',
         }}>
-          {renderInline(trimmed.slice(3).trim())}
+          {renderInline(trimmed.slice(3).trim(), primaryColor)}
         </h3>
       )
       i += 1
@@ -72,10 +74,10 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
           fontSize: isReport ? 16 : 14,
           lineHeight: 1.45,
           fontWeight: 700,
-          color: '#9a7840',
+          color: isReport ? '#9a7840' : 'inherit',
           margin: isReport ? '24px 0 10px' : '18px 0 8px',
         }}>
-          {renderInline(trimmed.slice(4).trim())}
+          {renderInline(trimmed.slice(4).trim(), isReport ? '#9a7840' : 'inherit')}
         </h4>
       )
       i += 1
@@ -94,7 +96,7 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
           padding: 0,
           lineHeight: isReport ? 1.85 : 1.75,
         }}>
-          {items.map((item, index) => <li key={index}>{renderInline(item)}</li>)}
+          {items.map((item, index) => <li key={index}>{renderInline(item, bodyColor)}</li>)}
         </ul>
       )
       continue
@@ -112,7 +114,7 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
           padding: 0,
           lineHeight: isReport ? 1.85 : 1.75,
         }}>
-          {items.map((item, index) => <li key={index}>{renderInline(item)}</li>)}
+          {items.map((item, index) => <li key={index}>{renderInline(item, bodyColor)}</li>)}
         </ol>
       )
       continue
@@ -136,10 +138,10 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
         margin: isReport ? '0 0 18px' : '0 0 14px',
         lineHeight: isReport ? 1.9 : 1.8,
         fontSize: isReport ? 15 : 14,
-        color: isReport ? '#334155' : 'var(--lf-navy)',
+        color: bodyColor,
         whiteSpace: 'pre-line',
       }}>
-        {renderInline(paragraphLines.join('\n'))}
+        {renderInline(paragraphLines.join('\n'), bodyColor)}
       </p>
     )
   }
@@ -148,7 +150,7 @@ export default function MarkdownContent({ content, variant = 'chat' }: MarkdownC
     <div style={{
       fontSize: isReport ? 15 : 14,
       lineHeight: isReport ? 1.9 : 1.8,
-      color: isReport ? '#334155' : 'var(--lf-navy)',
+      color: bodyColor,
     }}>
       {blocks}
     </div>

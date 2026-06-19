@@ -383,14 +383,25 @@ export default function WorkstationPage() {
         {/* 채팅 내역 */}
         <div ref={chatBoxRef} style={{ flex: 1, minHeight: 0, padding: 32, overflowY: 'auto', background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {chat_messages.map((msg, idx) => (
-            <div key={idx} style={{ 
-              alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-              background: msg.role === 'user' ? 'var(--lf-navy)' : '#fff', // 👈 AI 메시지 배경을 하얗게 하면 도면이 더 돋보입니다.
-              color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
-              border: msg.role === 'assistant' ? '1px solid var(--lf-border)' : 'none',
-              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap', fontSize: 14,
-              boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
-            }}>
+            <div
+              key={idx}
+              style={{
+                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                width: 'fit-content',
+                maxWidth: '75%',
+                padding: '16px 20px',
+                borderRadius: msg.role === 'user' ? '10px 10px 2px 10px' : '10px 10px 10px 2px',
+                background: msg.role === 'user' ? 'var(--lf-gold)' : '#fff',
+                color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
+                border: msg.role === 'user' ? '1px solid var(--lf-gold)' : '1px solid var(--lf-border)',
+                boxShadow: msg.role === 'user'
+                  ? '0 8px 20px rgba(73,57,34,.12)'
+                  : '0 3px 12px rgba(18,16,14,.05)',
+                fontSize: 14,
+                whiteSpace: 'pre-wrap',
+                overflowWrap: 'anywhere',
+              }}
+            >
               {/* 🎯 일반 렌더링 대신 타자기 컴포넌트를 통과시킵니다! */}
               {msg.role === 'assistant' && msg.content.length > 500 && !msg.content.includes('![') && !hasMarkdownFormatting(msg.content) ? (
                 <TypewriterMessage content={msg.content} renderContent={renderMessageContent} />
