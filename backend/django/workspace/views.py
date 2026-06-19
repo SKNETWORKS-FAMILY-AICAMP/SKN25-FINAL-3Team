@@ -11,12 +11,14 @@ from django.core.files.storage import FileSystemStorage
 from .utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp
 import os
 import logging
+import tempfile
 #from agents.core.graph import build_patent_graph
 #from agents.core.graph import app as patent_graph
 #from agents.core.graph import build_patent_graph as patent_graph
 #from agents.core.state import PatentState, ParsedInvention
 #from agents.summary_agent import SummaryAgent 
 #from agents.drawing_agent import SmartDrawingAgent 
+from agents.paper_analyzer import PaperAnalyzerAgent
 from django.conf import settings
 #from agents.specification.specification_agent import run_specification_agent
 #from agents.specification.specification_storage import convert_to_markdown_format
@@ -24,6 +26,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import httpx
 from asgiref.sync import sync_to_async
+from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
@@ -41,6 +44,31 @@ from asgiref.sync import async_to_sync
 
 
 logger = logging.getLogger(__name__)
+
+SUPPORTED_PAPER_EXTENSIONS = {'.pdf', '.docx', '.hwp'}
+
+
+def extract_text_from_uploaded_document(uploaded_file):
+    ext = os.path.splitext(uploaded_file.name)[1].lower()
+    if ext not in SUPPORTED_PAPER_EXTENSIONS:
+        raise ValueError('PDF, DOCX, HWP 파일만 지원합니다.')
+
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_file:
+            for chunk in uploaded_file.chunks():
+                temp_file.write(chunk)
+            temp_path = temp_file.name
+
+        if ext == '.pdf':
+            return extract_text_from_pdf(temp_path)
+        if ext == '.docx':
+            return extract_text_from_docx(temp_path)
+        return extract_text_from_hwp(temp_path)
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
+
 
 # 헬퍼 함수 (비동기 처리)
 @sync_to_async
@@ -171,6 +199,78 @@ def create_project(request):
         
     except Exception as e:
         # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def create_project_from_paper(request):
+    uploaded_file = request.FILES.get('file')
+    if not uploaded_file:
+        return Response({"error": "논문 파일을 첨부해 주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        paper_text = extract_text_from_uploaded_document(uploaded_file)
+    except ValueError as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        logger.exception("논문 파일 텍스트 추출 실패")
+        return Response({"error": f"파일에서 텍스트를 추출하지 못했습니다: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not paper_text or not paper_text.strip():
+        return Response({"error": "파일에서 텍스트를 추출하지 못했습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    analyzer = PaperAnalyzerAgent()
+    paper_data = analyzer.extract_from_paper(paper_text)
+    required_fields = ['title', 'prior_art_problem', 'problem_to_solve', 'core_tech', 'expected_effect']
+    missing_fields = [field for field in required_fields if not paper_data.get(field)]
+
+    if missing_fields:
+        return Response({
+            "error": "논문 내용을 특허 프로젝트 입력값으로 변환하지 못했습니다.",
+            "missing_fields": missing_fields,
+        }, status=status.HTTP_502_BAD_GATEWAY)
+
+    title_override = str(request.data.get('title') or '').strip()
+    project_title = title_override or paper_data['title']
+
+    try:
+        with transaction.atomic():
+            project = PatentProject.objects.create(title=project_title, owner=request.user)
+            InventionInput.objects.create(
+                project=project,
+                problem_to_solve=paper_data['problem_to_solve'],
+                prior_art_problem=paper_data['prior_art_problem'],
+                core_tech=paper_data['core_tech'],
+                expected_effect=paper_data['expected_effect'],
+            )
+            ChatMessage.objects.create(
+                project=project,
+                role='user',
+                content=f"[논문 파일 첨부]\n{uploaded_file.name}"
+            )
+
+        agent = DjangoPatentConsultant(project)
+        ai_message = agent.generate_welcome_message()
+        state = ConsultationState.objects.filter(project=project).first()
+
+        return Response({
+            "message": "논문 분석을 바탕으로 프로젝트가 생성되었습니다.",
+            "project_id": project.id,
+            "title": project.title,
+            "source_file": uploaded_file.name,
+            "ai_message": ai_message,
+            "paper_data": paper_data,
+            "extracted_data": {
+                "ext_problem": state.ext_problem if state else "",
+                "ext_solution": state.ext_solution if state else "",
+                "ext_differentiation": state.ext_differentiation if state else "",
+                "ext_effect": state.ext_effect if state else "",
+            },
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        logger.exception("논문 기반 프로젝트 생성 실패")
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

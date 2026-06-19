@@ -41,9 +41,10 @@ async function tryRefresh(): Promise<boolean> {
 
 async function request<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
   const url = path.startsWith('/auth/') ? resolveAuthUrl(path) : `${API_BASE}${path}`
+  const isFormData = typeof FormData !== 'undefined' && init?.body instanceof FormData
   const res = await fetch(url, {
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       ...getAuthHeader(),
       ...init?.headers,
     },
@@ -78,6 +79,7 @@ async function request<T>(path: string, init?: RequestInit, retry = true): Promi
 export const api = {
   get:    <T>(path: string)                => request<T>(path),
   post:   <T>(path: string, body: unknown) => request<T>(path, { method: 'POST',   body: JSON.stringify(body) }),
+  postForm: <T>(path: string, body: FormData) => request<T>(path, { method: 'POST', body }),
   patch:  <T>(path: string, body: unknown) => request<T>(path, { method: 'PATCH',  body: JSON.stringify(body) }),
   delete: <T>(path: string)               => request<T>(path, { method: 'DELETE' }),
 }
