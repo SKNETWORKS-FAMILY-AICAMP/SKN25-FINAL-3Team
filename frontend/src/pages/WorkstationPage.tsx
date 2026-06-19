@@ -346,29 +346,36 @@ export default function WorkstationPage() {
 
       {/* 오른쪽 메인 (액션 버튼 & 채팅창) */}
       <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <header style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <header className="ws-main-header" style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
           
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="ws-action-bar" style={{ display: 'flex', gap: 8 }}>
             {/* 3. 버튼에 onClick 이벤트 연결! */}
-            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line">파이프라인 상태</button>
-            <button onClick={handleGenerateClaims} className="btn-gold">청구항 작성</button>
-            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line">청구항 수정</button> 
+            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line ws-action-button">
+              <span className="ws-action-label">파이프라인<br />상태</span>
+            </button>
+            <button onClick={handleGenerateClaims} className="btn-gold ws-action-button">
+              <span className="ws-action-label">청구항<br />작성</span>
+            </button>
+            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line ws-action-button">
+              <span className="ws-action-label">청구항<br />수정</span>
+            </button>
             <button 
               onClick={handleGenerateDrawings} 
               disabled={isDrawingLoading} 
-              className="btn-line"
+              className="btn-line ws-action-button"
               style={{ opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
             >
-              {isDrawingLoading ? "도면 생성 중..." : "도면 생성"}
+              <span className="ws-action-label">{isDrawingLoading ? <>도면 생성<br />중...</> : <>도면<br />생성</>}</span>
             </button>
-            <button onClick={handleGenerateSpecification} className="btn-fill">명세서 작성</button>
+            <button onClick={handleGenerateSpecification} className="btn-fill ws-action-button">
+              <span className="ws-action-label">명세서<br />작성</span>
+            </button>
             <button 
               onClick={() => setIsPaModalOpen(true)} 
-              className="btn-action" 
-              style={{ background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, color: 'var(--lf-navy)', cursor: 'pointer' }}
+              className="btn-line ws-action-button"
             >
-              선행기술 리포트
+              <span className="ws-action-label">선행기술<br />리포트</span>
             </button>
           </div>
         </header>
