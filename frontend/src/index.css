@@ -23,6 +23,8 @@
     background: var(--lf-bg);
     color: var(--lf-navy);
     font-family: var(--lf-sans);
+    /* 수정 사항 */
+    font-size: 15px; 
     font-weight: 300;
     line-height: 1.6;
     overflow-x: hidden;
@@ -41,7 +43,7 @@
     gap: 8px;
     padding: 14px 36px;
     font-family: var(--lf-sans);
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 2.5px;
     text-transform: uppercase;
@@ -60,7 +62,7 @@
     align-items: center;
     padding: 14px 32px;
     font-family: var(--lf-sans);
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -80,7 +82,7 @@
     gap: 6px;
     padding: 10px 24px;
     font-family: var(--lf-sans);
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -158,13 +160,73 @@
 
   .label {
     display: block;
-    font-size: 8.5px;
+    font-size: 22px;
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--lf-gold);
     opacity: .75;
     margin-bottom: 12px;
+  }
+
+    /* ── Typography ── */
+  .page-title {
+    font-family: var(--lf-serif);
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--lf-navy);
+    letter-spacing: 0;
+  }
+
+  .section-title {
+    font-family: var(--lf-serif);
+    font-size: 30px;
+    font-weight: 300;
+    color: var(--lf-navy);
+    letter-spacing: 0;
+  }
+
+  .panel-title {
+    font-family: var(--lf-serif);
+    font-size: 25px;
+    font-weight: 300;
+    color: var(--lf-navy);
+    letter-spacing: 0;
+  }
+
+  .card-title {
+    font-size: 23px;
+    font-weight: 600;
+    color: var(--lf-navy);
+  }
+
+  .body-text {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--lf-body);
+  }
+
+  .muted-text {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--lf-muted);
+  }
+
+  .meta-text {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    color: var(--lf-muted);
+  }
+
+  .nav-text {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    font-family: var(--lf-sans);
   }
 
   /* ── Page container ── */

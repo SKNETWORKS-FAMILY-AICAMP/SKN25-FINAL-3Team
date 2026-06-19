@@ -265,56 +265,56 @@ export default function WorkstationPage() {
       {/* 왼쪽 사이드바 (원본 데이터) */}
       <aside className="lf-ws-sidebar" style={{ width: 400, flexShrink: 0, borderRight: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', padding: 24, overflowY: 'auto', height: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 18, fontFamily: 'var(--lf-serif)' }}>발명 원본 데이터</h2>
-          <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px', fontSize: 10 }}>리포트 보기</Link>
+          <h2 className="panel-title">발명 원본 데이터</h2>
+          <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px' }}>리포트 보기</Link>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* 1. 해결하고자 하는 과제 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>1. 해결하고자 하는 과제</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.problem_to_solve}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>1. 해결하고자 하는 과제</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.problem_to_solve}</p>
           </div>
           
           {/* 2. 종래 기술의 문제점 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>2. 종래 기술의 문제점</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.prior_art_problem}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>2. 종래 기술의 문제점</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.prior_art_problem}</p>
           </div>
 
           {/* 3. 핵심 기술 구성 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>3. 핵심 기술 구성</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.core_tech}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>3. 핵심 기술 구성</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.core_tech}</p>
           </div>
 
           {/* 4. 기대 효과 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>4. 기대 효과</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.expected_effect || "(입력되지 않음)"}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>4. 기대 효과</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.expected_effect || "(입력되지 않음)"}</p>
           </div>
 
           {/* AI Agent Analysis (이하 동일) */}
           <div style={{ marginTop: 32 }}>
-            <h2 style={{ fontSize: 16, fontFamily: 'var(--lf-serif)', marginBottom: 16 }}>AI Agent Analysis</h2>
+            <h2 className="panel-title" style={{ marginBottom: 16 }}>AI Agent Analysis</h2>
             <div className="card-sm" style={{ background: '#fff' }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 핵심 문제점</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_problem || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 핵심 문제점</h4>
+               <p className="body-text">{consultation_state.ext_problem || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 해결 방법</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_solution || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 해결 방법</h4>
+               <p className="body-text">{consultation_state.ext_solution || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 차별성</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_differentiation || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 차별성</h4>
+               <p className="body-text">{consultation_state.ext_differentiation || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 기대 효과</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_effect || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 기대 효과</h4>
+               <p className="body-text">{consultation_state.ext_effect || "분석 대기 중..."}</p>
             </div>
           </div>
         </div>
@@ -322,27 +322,27 @@ export default function WorkstationPage() {
 
       {/* 오른쪽 메인 (액션 버튼 & 채팅창) */}
       <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <header style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
+        <header style={{ padding: '20px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <h2 className="page-title" style={{ margin: 0 }}>{project.title}</h2>
           
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
             {/* 3. 버튼에 onClick 이벤트 연결! */}
-            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line">파이프라인 상태</button>
-            <button onClick={handleGenerateClaims} className="btn-gold">청구항 작성</button>
-            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line">청구항 수정</button> 
-            <button 
-              onClick={handleGenerateDrawings} 
-              disabled={isDrawingLoading} 
+            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line" style={{ whiteSpace: 'nowrap' }}>파이프라인 상태</button>
+            <button onClick={handleGenerateClaims} className="btn-gold" style={{ whiteSpace: 'nowrap' }}>청구항 작성</button>
+            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line" style={{ whiteSpace: 'nowrap' }}>청구항 수정</button>
+            <button
+              onClick={handleGenerateDrawings}
+              disabled={isDrawingLoading}
               className="btn-line"
-              style={{ opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
+              style={{ whiteSpace: 'nowrap', opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
             >
               {isDrawingLoading ? "도면 생성 중..." : "도면 생성"}
             </button>
-            <button onClick={handleGenerateSpecification} className="btn-fill">명세서 작성</button>
-            <button 
-              onClick={() => setIsPaModalOpen(true)} 
-              className="btn-action" 
-              style={{ background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, color: 'var(--lf-navy)', cursor: 'pointer' }}
+            <button onClick={handleGenerateSpecification} className="btn-fill" style={{ whiteSpace: 'nowrap' }}>명세서 작성</button>
+            <button
+              onClick={() => setIsPaModalOpen(true)}
+              className="btn-action"
+              style={{ whiteSpace: 'nowrap', background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, color: 'var(--lf-navy)', cursor: 'pointer' }}
             >
               선행기술 리포트
             </button>
@@ -357,14 +357,14 @@ export default function WorkstationPage() {
               background: msg.role === 'user' ? 'var(--lf-navy)' : '#fff', // 👈 AI 메시지 배경을 하얗게 하면 도면이 더 돋보입니다.
               color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
               border: msg.role === 'assistant' ? '1px solid var(--lf-border)' : 'none',
-              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap', fontSize: 14,
+              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap',
               boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
             }}>
               {/* 🎯 그냥 출력하지 않고, 함수를 통과시킵니다! */}
               {renderMessageContent(msg.content)}
             </div>
           ))}
-          {isSending && <div style={{ alignSelf: 'flex-start', color: 'var(--lf-muted)', fontSize: 12 }}>AI가 입력 중입니다...</div>}
+          {isSending && <div className="muted-text" style={{ alignSelf: 'flex-start' }}>AI가 입력 중입니다...</div>}
         </div>
 
         {pendingClaims && (
@@ -373,7 +373,7 @@ export default function WorkstationPage() {
                 onClick={handleSaveClaims} 
                 disabled={isSaving}
                 className="btn-fill" 
-                style={{ padding: '12px 24px', fontSize: 13, background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
+                style={{ padding: '12px 24px', background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
               >
                 {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
               </button>
@@ -391,7 +391,7 @@ export default function WorkstationPage() {
               disabled={isSending}
               placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
               className="input-field" 
-              style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '0 20px', border: '1px solid var(--lf-border)' }} 
+              style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '0 20px', border: '1px solid var(--lf-border)', height: 48 }}
             />
             <button type="submit" disabled={isSending} className="btn-gold" style={{ padding: '0 32px' }}>전송</button>
           </form>

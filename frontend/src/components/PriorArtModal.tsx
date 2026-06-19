@@ -34,7 +34,7 @@ export default function PriorArtModal({ isOpen, onClose, data }: Props) {
       <div style={overlayStyle}>
         <div style={modalStyle}>
           <Header onClose={onClose} />
-          <div style={{ padding: 60, textAlign: 'center', color: 'var(--lf-muted)' }}>
+          <div className="muted-text" style={{ padding: 60, textAlign: 'center' }}>
             아직 생성된 선행기술조사 리포트가 없습니다.<br/>청구항 작성 파이프라인을 먼저 실행해 주세요.
           </div>
         </div>
@@ -60,15 +60,15 @@ export default function PriorArtModal({ isOpen, onClose, data }: Props) {
             background: '#fff', borderLeft: `4px solid ${getRiskColor(data.overall_risk.level)}`, 
             padding: 24, borderRadius: '0 8px 8px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' 
           }}>
-            <h3 style={{ margin: '0 0 12px 0', fontSize: 18, color: 'var(--lf-navy)' }}>
+            <h3 className="panel-title" style={{ margin: '0 0 12px 0' }}>
               종합 평가: {data.overall_risk.summary}
             </h3>
-            <p style={{ margin: 0, fontSize: 14, color: 'var(--lf-body)', lineHeight: 1.6 }}>
+            <p className="body-text" style={{ margin: 0 }}>
               {data.analysis_summary}
             </p>
           </div>
 
-          <h3 style={{ fontFamily: 'var(--lf-serif)', fontSize: 18, margin: '8px 0 0 0' }}>
+          <h3 className="panel-title" style={{ margin: '8px 0 0 0' }}>
             검색된 주요 선행문헌 (Top {data.candidates.length})
           </h3>
 
@@ -78,7 +78,7 @@ export default function PriorArtModal({ isOpen, onClose, data }: Props) {
             
             return (
               <div key={idx} style={{ background: '#fff', border: '1px solid var(--lf-border)', borderRadius: 12, padding: 24 }}>
-                <h4 style={{ margin: '0 0 16px 0', fontSize: 16, color: 'var(--lf-navy)' }}>
+                <h4 className="card-title" style={{ margin: '0 0 16px 0' }}>
                   [{cand.rank}위] {cand.title}
                 </h4>
                 
@@ -90,7 +90,7 @@ export default function PriorArtModal({ isOpen, onClose, data }: Props) {
                   </span>
                 </div>
 
-                <div style={{ background: 'var(--lf-bg2)', padding: 16, borderRadius: 8, fontSize: 13, color: 'var(--lf-body)', lineHeight: 1.6, marginBottom: 16 }}>
+                <div className="body-text" style={{ background: 'var(--lf-bg2)', padding: 16, borderRadius: 8, marginBottom: 16 }}>
                   <strong style={{ color: 'var(--lf-navy)' }}>💡 AI 핵심 요약:</strong><br/>
                   {cand.summary}
                 </div>
@@ -101,12 +101,13 @@ export default function PriorArtModal({ isOpen, onClose, data }: Props) {
                       href={cand.pdf_s3_url} 
                       target="_blank" 
                       rel="noreferrer"
-                      style={{ display: 'inline-block', background: 'var(--lf-navy)', color: '#fff', padding: '10px 20px', borderRadius: 6, textDecoration: 'none', fontSize: 13, fontWeight: 500 }}
+                      className="card-title"
+                      style={{ display: 'inline-block', background: 'var(--lf-navy)', color: '#fff', padding: '10px 20px', borderRadius: 6, textDecoration: 'none' }}
                     >
                       📄 원문 PDF 열기
                     </a>
                   ) : (
-                    <span style={{ fontSize: 13, color: 'var(--lf-muted)' }}>🚫 PDF 원문 미제공</span>
+                    <span className="muted-text">🚫 PDF 원문 미제공</span>
                   )}
                 </div>
               </div>
@@ -129,11 +130,11 @@ const modalStyle: React.CSSProperties = {
   display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid var(--lf-border)'
 }
 const tagStyle: React.CSSProperties = {
-  padding: '6px 12px', borderRadius: 20, border: '1px solid var(--lf-border)', fontSize: 12, color: 'var(--lf-mid)'
+  padding: '6px 12px', borderRadius: 20, border: '1px solid var(--lf-border)', color: 'var(--lf-mid)'
 }
 const Header = ({ onClose }: { onClose: () => void }) => (
   <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <h3 style={{ margin: 0, fontSize: 18, fontFamily: 'var(--lf-serif)' }}>AI 선행기술조사 리포트</h3>
+    <h3 className="panel-title" style={{ margin: 0 }}>AI 선행기술조사 리포트</h3>
     <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: 'var(--lf-mid)' }}>&times;</button>
   </div>
 )

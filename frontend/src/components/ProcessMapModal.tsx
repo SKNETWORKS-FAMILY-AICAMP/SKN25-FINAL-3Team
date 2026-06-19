@@ -33,7 +33,7 @@ export default function ProcessMapModal({ isOpen, onClose, hasClaims, hasDrawing
         display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid var(--lf-border)'
       }}>
         <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: 18, fontFamily: 'var(--lf-serif)' }}>특허 출원 파이프라인 진행도</h3>
+          <h3 className="panel-title" style={{ margin: 0 }}>특허 출원 파이프라인 진행도</h3>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: 'var(--lf-mid)' }}>&times;</button>
         </div>
 
@@ -57,8 +57,8 @@ export default function ProcessMapModal({ isOpen, onClose, hasClaims, hasDrawing
                   }}>
                     {isDone ? '✓' : step.num}
                   </div>
-                  <h4 style={{ marginTop: 16, marginBottom: 4, fontSize: 14, color: isDone ? '#10b981' : isActive ? '#f59e0b' : 'var(--lf-navy)', fontWeight: isDone || isActive ? 600 : 400 }}>{step.title}</h4>
-                  <p style={{ margin: 0, fontSize: 11, color: 'var(--lf-muted)', textAlign: 'center' }}>{step.desc}</p>
+                  <h4 className="card-title" style={{ marginTop: 16, marginBottom: 4, color: isDone ? '#10b981' : isActive ? '#f59e0b' : 'var(--lf-navy)', fontWeight: isDone || isActive ? 600 : 400 }}>{step.title}</h4>
+                  <p className="muted-text" style={{ margin: 0, textAlign: 'center' }}>{step.desc}</p>
                 </div>
               )
             })}
@@ -66,7 +66,7 @@ export default function ProcessMapModal({ isOpen, onClose, hasClaims, hasDrawing
         </div>
 
         <div style={{ padding: '20px', background: 'var(--lf-bg2)', borderTop: '1px solid var(--lf-border)', textAlign: 'center' }}>
-          <p style={{ margin: 0, color: 'var(--lf-mid)', fontSize: 13 }}>
+          <p className="body-text" style={{ margin: 0, color: 'var(--lf-mid)' }}>
             {activeIndex === -1 ? "모든 과정이 완료되었습니다! 검토 후 출원을 진행해 주세요." : `현재 [${steps[currentIndex].title}] 단계를 진행/대기 중입니다.`}
           </p>
         </div>
