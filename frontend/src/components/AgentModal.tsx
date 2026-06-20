@@ -60,7 +60,6 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
           {/* 좌측: 단계 표시 (Stepper) */}
           <div style={{ width: '40%', background: 'var(--lf-bg2)', padding: '32px', borderRight: '1px solid var(--lf-border)' }}>
             <h4 style={{ fontSize: 12, color: 'var(--lf-muted)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 24 }}>Processing Steps</h4>
-            <div style={{ fontSize: 11, color: 'red' }}>currentStep: "{currentStep}"</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {PIPELINE_STEPS.map((step, idx) => {
                 const isActive = currentStep === step.id

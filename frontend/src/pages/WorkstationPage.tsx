@@ -181,8 +181,32 @@ export default function WorkstationPage() {
         // 실시간 로그와 단계 업데이트
         if (data.step && data.message) {
           setAgentLogs(prev => [...prev, { step: data.step, message: data.message }])
-          console.log('setCurrentStep 호출:', STEP_TO_PIPELINE[data.step] ?? data.step) 
           setCurrentStep(STEP_TO_PIPELINE[data.step] ?? data.step)
+        }
+
+        // 💡 신규 추가: 선행기술조사가 끝났을 때 판단 결과를 화면에 보여주기
+        if (data.step === 'prior_art_done' && data.prior_art_data) {
+          const source = data.prior_art_data.search_source;
+          
+          setAgentLogs(prev => {
+            // 1. 아까 띄웠던 "기술 분야 분석 중..." 메시지를 최종 결정된 소스로 바꿔치기
+            const updatedLogs = prev.map(log => 
+              log.step === 'prior_art_start'
+                ? { 
+                    ...log, 
+                    message: source === 'EXTERNAL_API' 
+                      ? 'KIPRIS 외부 API 선행기술조사 가동 완료' 
+                      : '내부 벡터 DB 선행기술조사 가동 완료' 
+                  }
+                : log
+            );
+
+            const infoMessage = source === 'EXTERNAL_API'
+              ? '💡 비-AI 기술로 판단되어 KIPRIS 공공데이터망을 조회했습니다.'
+              : '💡 AI 기술로 판단되어 내부 벡터 DB를 조회했습니다.';
+
+            return [...updatedLogs, { step: 'prior_art_info', message: infoMessage }];
+          });
         }
 
         // 모든 작업 완료 시
