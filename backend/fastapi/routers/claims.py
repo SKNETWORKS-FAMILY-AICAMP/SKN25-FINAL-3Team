@@ -85,7 +85,7 @@ async def generate_claims_worker(request: Request):
             claim_result_text = f"📜 **[AI 멀티에이전트 최종 청구범위 발행 완료]**\n(AI 심사관 검수 통과: {loop_count}회 루프)\n\n"
             
             # 2. 선행기술조사 실행 (에이전트가 처리하도록)
-            yield json.dumps({"step": "prior_art_start", "message": "AWS RDS 벡터DB 선행기술조사 가동..."}) + "\n"
+            yield json.dumps({"step": "prior_art_start", "message": "선행기술조사 에이전트 가동 (기술 분야 분석 중)..."}) + "\n"
             
             pa_data = None
             try:
