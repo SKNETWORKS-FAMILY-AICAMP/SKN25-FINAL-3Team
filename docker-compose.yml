@@ -1,8 +1,25 @@
 version: '3.8'
 
 services:
+  # 🗄️ 0. PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: patent_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   # 🛡️ 1. 장고 (메인 웹 서버)
-  django_web:
+  django-web:
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,17 +27,19 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PYTHONPATH=/app # 💡 1: 루트 폴더(agents)를 인식하도록 변경
-    # 💡 2: 장고 실행 명령어로 덮어쓰기
-    command: bash -c "cd backend/django && uvicorn config.asgi:application --host 0.0.0.0 --port 8000"
+      - PYTHONPATH=/app
+    command: bash -c "cd backend/django && python manage.py migrate && uvicorn config.asgi:application --host 0.0.0.0 --port 8000"
     volumes:
-      - .:/app # Hot Reload 유지
+      - .:/app
     env_file:
       - .env
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   # ⚡ 2. FastAPI (AI 워커 서버)
-  fastapi_worker:
+  fastapi-worker:
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,14 +47,47 @@ services:
     ports:
       - "8001:8001"
     environment:
-      - PYTHONPATH=/app # 💡 1: 동일하게 루트로 설정
-    # 💡 3: FastAPI 실행 명령어로 덮어쓰기 (--reload 추가로 코드 수정 시 자동 재시작)
+      - PYTHONPATH=/app
     command: uvicorn backend.fastapi.main:app --host 0.0.0.0 --port 8001 --reload
     volumes:
       - .:/app
     env_file:
       - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # 🖥️ 3. Frontend (Vite 개발 서버)
+  frontend:
+    image: node:20-slim
+    container_name: patent_frontend
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - DJANGO_URL=http://django-web:8000
+      - FASTAPI_URL=http://fastapi-worker:8001
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - django-web
+      - fastapi-worker
+    restart: unless-stopped
+
+  # 📊 4. Phoenix (LLM 모니터링 UI) — 개발 환경 전용
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: patent_phoenix
+    profiles:
+      - dev
+    ports:
+      - "6006:6006"   # Phoenix UI
+      - "4317:4317"   # OTLP gRPC (에이전트 → Phoenix 트레이스 전송)
     restart: unless-stopped
 
 volumes:
-  sqlite_data:
+  postgres_data:
+#   sqlite_data:

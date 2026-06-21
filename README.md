@@ -49,10 +49,19 @@ cp .env.example .env
 Docker를 이용해 시스템을 빌드하고 실행합니다.
 
 ```bash
+# 기본 실행 (DB · Django · FastAPI · Frontend)
 docker compose up --build
+
+# 개발 환경 — Phoenix LLM 모니터링 UI 포함
+docker compose --profile dev up --build
 ```
 
-실행 완료 후, 브라우저에서 `http://localhost:8000`으로 접속하여 작업스페이스를 확인하세요.
+실행 완료 후, 브라우저에서 아래 주소로 접속하세요.
+
+| 서비스 | URL | 비고 |
+|---|---|---|
+| 메인 워크스페이스 | `http://localhost:8000` | 항상 실행 |
+| Phoenix 모니터링 UI | `http://localhost:6006` | `--profile dev` 시에만 실행 |
 
 ## 📂 Project Structure
 

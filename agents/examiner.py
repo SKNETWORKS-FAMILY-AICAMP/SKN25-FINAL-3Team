@@ -13,7 +13,6 @@ from agents.core.state import RejectionDetail, ExaminerResult, PatentState, Clai
 # ==========================================
 # 0. 로깅 및 환경 설정
 # ==========================================
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()

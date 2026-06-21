@@ -38,4 +38,10 @@ dependencies = [
     "django-storages>=1.14.6",
     "boto3>=1.43.31",
     "langsmith>=0.8.11",
+    # 모니터링 및 관찰 가능성
+    "arize-phoenix>=4.0.0",
+    "openinference-instrumentation-langchain>=0.1.0",
+    "opentelemetry-sdk>=1.24.0",
+    "opentelemetry-exporter-otlp>=1.24.0",
+    "python-json-logger>=2.0.7",
 ]

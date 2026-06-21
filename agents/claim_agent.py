@@ -7,7 +7,6 @@ from langchain_core.prompts import ChatPromptTemplate
 #from agents.core.state import PatentState, ClaimResult, ClaimItem, Element
 from agents.core.state import PatentState, ClaimResult, ParsedInvention
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()

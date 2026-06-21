@@ -64,8 +64,8 @@ def should_continue(state: PatentState):
         is_approved = examiner_data.is_approved
         revision_count = examiner_data.revision_count
     
-    # 승인(통과)되었거나, 2번 이상 수정을 반복했다면 강제 종료!
-    if is_approved or revision_count >= 2:
+    # 승인(통과)되었거나, 3번 이상 수정을 반복했다면 강제 종료!
+    if is_approved or revision_count >= 3:
         return END
     
     # 거절당했으면 수정하러 가기

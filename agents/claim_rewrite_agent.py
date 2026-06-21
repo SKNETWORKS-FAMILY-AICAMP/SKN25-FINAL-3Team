@@ -7,8 +7,6 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 from agents.core.state import PatentState, ClaimResult, ClaimItem 
 
-# 로깅 기본 설정
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()

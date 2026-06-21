@@ -12,7 +12,6 @@ from agents.core.state import (
     PatentDrawingSpecification
 )
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 # Component type별 스타일 - 흑백

@@ -1,10 +1,6 @@
-# import logging
 # from typing import Dict, Any
 # from langchain_openai import ChatOpenAI
 # from agents.core.state import PatentState, ClaimResult, ExaminerResult
-
-# # 실무 환경을 위한 로깅 설정
-# logger = logging.getLogger(__name__)
 
 
 # class ExaminerAgent:
