@@ -1,7 +1,7 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { pipelineApi, projectStore } from '../api/pipeline'
-import { api } from '../api/client'
+import { projectStore } from '../api/pipeline'
+import { workspaceApi } from '../api/workspace'
 
 const STEPS = 3
 const DEMO = {
@@ -28,7 +28,11 @@ export default function CreateProjectPage() {
   const [form, setForm] = useState({ title: '', problem: '', prior_art: '', core_tech: '', expected_effect: '' })
   const [openGuide, setOpenGuide] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPaperLoading, setIsPaperLoading] = useState(false)
+  const [paperFile, setPaperFile] = useState<File | null>(null)
   const [error, setError] = useState('')
+  const paperInputRef = useRef<HTMLInputElement>(null)
+  const isSubmitting = isLoading || isPaperLoading
 
   function update(field: keyof typeof form, value: string) {
     setForm(f => ({ ...f, [field]: value }))
@@ -38,6 +42,11 @@ export default function CreateProjectPage() {
     if (step === 1) update('title', DEMO.title)
     if (step === 2) { update('problem', DEMO.problem); update('prior_art', DEMO.prior_art) }
     if (step === 3) { update('core_tech', DEMO.core_tech); update('expected_effect', DEMO.expected_effect) }
+  }
+
+  function clearPaperFile() {
+    setPaperFile(null)
+    if (paperInputRef.current) paperInputRef.current.value = ''
   }
 
   // async function handleSubmit(e: FormEvent) {
@@ -64,6 +73,25 @@ export default function CreateProjectPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    if (paperFile) {
+      setIsPaperLoading(true); setError('')
+      try {
+        const result = await workspaceApi.createFromPaper(paperFile, form.title)
+        projectStore.add({
+          run_id: String(result.project_id),
+          title: result.title || result.paper_data?.title || form.title || paperFile.name,
+          created_at: new Date().toISOString(),
+          status: 'running'
+        })
+        navigate(`/workstation/${result.project_id}`, { state: { runResult: result } })
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '논문 분석에 실패했습니다.')
+      } finally {
+        setIsPaperLoading(false)
+      }
+      return
+    }
+
     if (step < STEPS) { setStep(s => s + 1); return }
     setIsLoading(true); setError('')
     try {
@@ -77,12 +105,12 @@ export default function CreateProjectPage() {
       }
 
       // 2. 파이프라인 API 대신, 방금 연결한 Django 백엔드 주소로 직접 쏩니다.
-      const result = await api.post<{ project_id: number, message: string }>('/auth/workspace/create/', payload)      
+      const result = await workspaceApi.createProject(payload)      
       
       // 3. 백엔드가 run_id가 아니라 project_id를 주므로, 이에 맞춰서 스토어와 라우터를 수정합니다.
       projectStore.add({ 
         run_id: String(result.project_id), 
-        title: form.title, 
+        title: form.title,
         created_at: new Date().toISOString(), 
         status: 'running' 
       })
@@ -138,8 +166,54 @@ export default function CreateProjectPage() {
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {step === 1 && (
               <div>
+                <div style={{ marginBottom: 32 }}>
+                  <span className="label">논문 파일 첨부</span>
+                  <div style={{
+                    border: `1px dashed ${paperFile ? 'var(--lf-gold)' : 'var(--lf-border)'}`,
+                    background: paperFile ? 'rgba(154,120,64,.06)' : 'var(--lf-bg2)',
+                    padding: '18px 20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 16,
+                  }}>
+                    <input
+                      ref={paperInputRef}
+                      type="file"
+                      accept=".pdf,.docx,.hwp"
+                      style={{ display: 'none' }}
+                      onChange={e => setPaperFile(e.target.files?.[0] ?? null)}
+                    />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{
+                        fontSize: 13,
+                        color: paperFile ? 'var(--lf-navy)' : 'var(--lf-mid)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        marginBottom: 4,
+                      }}>
+                        {paperFile ? paperFile.name : 'PDF, DOCX, HWP'}
+                      </p>
+                      <p style={{ fontSize: 11, color: 'var(--lf-muted)', lineHeight: 1.6 }}>
+                        논문을 첨부하면 AI가 발명 입력값을 자동으로 구성합니다.
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      <button type="button" onClick={() => paperInputRef.current?.click()} className="btn-line" style={{ padding: '10px 18px' }}>
+                        파일 선택
+                      </button>
+                      {paperFile && (
+                        <button type="button" onClick={clearPaperFile} className="btn-line" style={{ padding: '10px 18px' }}>
+                          선택 해제
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <FieldHeader label="프로젝트 명칭" guideKey="title" openGuide={openGuide} setOpenGuide={setOpenGuide} fillDemo={fillDemo} />
-                <input type="text" value={form.title} onChange={e => update('title', e.target.value)} placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required className="input-field" />
+                <input type="text" value={form.title} onChange={e => update('title', e.target.value)} placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required={!paperFile} className="input-field" />
                 <GuideBox guideKey="title" openGuide={openGuide} />
               </div>
             )}
@@ -179,13 +253,45 @@ export default function CreateProjectPage() {
               {step > 1 && (
                 <button type="button" onClick={() => setStep(s => s - 1)} className="btn-line" style={{ flex: 1 }}>← 이전</button>
               )}
-              <button type="submit" disabled={isLoading} className="btn-fill" style={{ flex: 2, opacity: isLoading ? .6 : 1 }}>
-                {step < STEPS ? '다음 단계로 →' : isLoading ? 'AI 분석 요청 중...' : '프로젝트 생성 및 AI 분석 시작 →'}
+              <button type="submit" disabled={isSubmitting} className="btn-fill" style={{ flex: 2, opacity: isSubmitting ? .6 : 1 }}>
+                {paperFile ? (isPaperLoading ? '논문 분석 중...' : '논문으로 즉시 시작 →') : step < STEPS ? '다음 단계로 →' : isLoading ? 'AI 분석 요청 중...' : '프로젝트 생성 및 AI 분석 시작 →'}
               </button>
             </div>
           </div>
         </form>
       </div>
+
+      {isPaperLoading && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(18,16,14,.42)',
+          backdropFilter: 'blur(7px)',
+          WebkitBackdropFilter: 'blur(7px)',
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#fff', textAlign: 'center', padding: '0 24px' }}>
+            <div style={{
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              border: '4px solid rgba(255,255,255,.32)',
+              borderTopColor: 'var(--lf-gold)',
+              animation: 'paper-spin 1s linear infinite',
+              marginBottom: 24,
+            }} />
+            <h2 style={{ fontFamily: 'var(--lf-serif)', fontSize: 26, fontWeight: 300, marginBottom: 10 }}>
+              에이전트가 논문을 파악 중입니다
+            </h2>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,.76)', letterSpacing: 0 }}>
+              논문의 기술 내용을 특허 프로젝트 입력값으로 구조화하고 있습니다.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

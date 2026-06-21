@@ -6,6 +6,7 @@ import AgentModal, { AgentLog } from '../components/AgentModal'
 import ClaimEditModal from '../components/ClaimEditModal'
 import ProcessMapModal from '../components/ProcessMapModal'
 import PriorArtModal from '../components/PriorArtModal'
+import MarkdownContent from '../components/MarkdownContent'
 
 
 
@@ -21,6 +22,8 @@ const STEP_TO_PIPELINE: Record<string, string> = {
   prior_art_done: 'prior_art',
   done: 'prior_art',
 }
+
+type PreviewImage = { src: string; alt: string }
 
 export default function WorkstationPage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -52,29 +55,33 @@ export default function WorkstationPage() {
 
   const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
   const [priorArtData, setPriorArtData] = useState<any>(null) //
+  const [previewImage, setPreviewImage] = useState<PreviewImage | null>(null)
+
+  const [loadingText, setLoadingText] = useState("AI 변리사가 명세서 구조를 기획하고 있습니다...")
+
+  const hasMarkdownFormatting = (content: string) =>
+    /(^|\n)#{1,3}\s/.test(content) || /\*\*[^*]+\*\*/.test(content)
 
   const renderMessageContent = (content: string) => {
-    // ![alt](url) 패턴을 찾아서 쪼갭니다.
-    const parts = content.split(/(!\[.*?\]\(.*?\))/g);
+    const imageRegex = /!\[(.*?)\]\((.*?)\)/g
+    const images = Array.from(content.matchAll(imageRegex)).map(match => ({
+      alt: match[1],
+      src: match[2],
+    }))
 
-    return parts.map((part, i) => {
-      const match = part.match(/!\[(.*?)\]\((.*?)\)/);
-      if (match) {
-        // 이미지를 찾으면 예쁜 img 태그로 변환!
-        return (
-          <div key={i} style={{ margin: '16px 0', textAlign: 'center' }}>
-            <img 
-              src={match[2]} 
-              alt={match[1]} 
-              style={{ maxWidth: '100%', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} 
-            />
-            <div style={{ fontSize: 11, color: 'var(--lf-muted)', marginTop: 8 }}>{match[1]}</div>
-          </div>
-        );
-      }
-      // 이미지가 아니면 그냥 텍스트 출력
-      return <span key={i}>{part}</span>;
-    });
+    if (images.length === 0) return <MarkdownContent content={content} variant="chat" />
+
+    const textOnly = content
+      .replace(imageRegex, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+
+    return (
+      <>
+        {textOnly && <MarkdownContent content={textOnly} variant="chat" />}
+        <DrawingThumbnailStrip images={images} onOpen={setPreviewImage} />
+      </>
+    )
   }
 
   // 1. 초기 데이터 로드
@@ -99,6 +106,17 @@ export default function WorkstationPage() {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
     }
   }, [data?.chat_messages])
+
+  useEffect(() => {
+    if (!previewImage) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPreviewImage(null)
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [previewImage])
 
   // 2. 채팅 전송 핸들러
   const handleSendMessage = async (e: FormEvent) => {
@@ -169,8 +187,32 @@ export default function WorkstationPage() {
         // 실시간 로그와 단계 업데이트
         if (data.step && data.message) {
           setAgentLogs(prev => [...prev, { step: data.step, message: data.message }])
-          console.log('setCurrentStep 호출:', STEP_TO_PIPELINE[data.step] ?? data.step) 
           setCurrentStep(STEP_TO_PIPELINE[data.step] ?? data.step)
+        }
+
+        // 💡 신규 추가: 선행기술조사가 끝났을 때 판단 결과를 화면에 보여주기
+        if (data.step === 'prior_art_done' && data.prior_art_data) {
+          const source = data.prior_art_data.search_source;
+          
+          setAgentLogs(prev => {
+            // 1. 아까 띄웠던 "기술 분야 분석 중..." 메시지를 최종 결정된 소스로 바꿔치기
+            const updatedLogs = prev.map(log => 
+              log.step === 'prior_art_start'
+                ? { 
+                    ...log, 
+                    message: source === 'EXTERNAL_API' 
+                      ? 'KIPRIS 외부 API 선행기술조사 가동 완료' 
+                      : '내부 벡터 DB 선행기술조사 가동 완료' 
+                  }
+                : log
+            );
+
+            const infoMessage = source === 'EXTERNAL_API'
+              ? '💡 비-AI 기술로 판단되어 KIPRIS 공공데이터망을 조회했습니다.'
+              : '💡 AI 기술로 판단되어 내부 벡터 DB를 조회했습니다.';
+
+            return [...updatedLogs, { step: 'prior_art_info', message: infoMessage }];
+          });
         }
 
         // 모든 작업 완료 시
@@ -249,6 +291,26 @@ export default function WorkstationPage() {
 
   
   }
+  useEffect(() => {
+      if (isSending) {
+        const texts = [
+          "배경 기술과 종래 기술의 문제점을 분석하고 있습니다...",
+          "해결하고자 하는 과제와 핵심 기술 구성을 매핑 중입니다...",
+          "도면 부호를 추출하고 상세 설명을 작성하고 있습니다...",
+          "명세서 마크다운 문서를 최종 조립하고 있습니다... 거의 다 되었습니다!"
+        ];
+        let i = 0;
+        const timer = setInterval(() => {
+          i = (i + 1) % texts.length;
+          setLoadingText(texts[i]);
+        }, 5000); // 5초마다 텍스트 변경
+        
+        return () => {
+          clearInterval(timer);
+          setLoadingText("AI가 입력 중입니다..."); // 끝나면 원상복구
+        };
+      }
+    }, [isSending]);
 
 
   if (loading) return <div style={{ padding: 100, textAlign: 'center' }}>데이터 로딩 중...</div>
@@ -324,7 +386,7 @@ export default function WorkstationPage() {
       <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
         <header style={{ padding: '20px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <h2 className="page-title" style={{ margin: 0 }}>{project.title}</h2>
-          
+
           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
             {/* 3. 버튼에 onClick 이벤트 연결! */}
             <button onClick={() => setIsProcessModalOpen(true)} className="btn-line" style={{ whiteSpace: 'nowrap' }}>파이프라인 상태</button>
@@ -336,15 +398,16 @@ export default function WorkstationPage() {
               className="btn-line"
               style={{ whiteSpace: 'nowrap', opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
             >
-              {isDrawingLoading ? "도면 생성 중..." : "도면 생성"}
+              <span className="ws-action-label">{isDrawingLoading ? <>도면 생성<br />중...</> : <>도면<br />생성</>}</span>
             </button>
-            <button onClick={handleGenerateSpecification} className="btn-fill" style={{ whiteSpace: 'nowrap' }}>명세서 작성</button>
+            <button onClick={handleGenerateSpecification} className="btn-fill ws-action-button">
+              <span className="ws-action-label">명세서<br />작성</span>
+            </button>
             <button
               onClick={() => setIsPaModalOpen(true)}
-              className="btn-action"
-              style={{ whiteSpace: 'nowrap', background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, color: 'var(--lf-navy)', cursor: 'pointer' }}
+              className="btn-line ws-action-button"
             >
-              선행기술 리포트
+              <span className="ws-action-label">선행기술<br />리포트</span>
             </button>
           </div>
         </header>
@@ -352,19 +415,38 @@ export default function WorkstationPage() {
         {/* 채팅 내역 */}
         <div ref={chatBoxRef} style={{ flex: 1, minHeight: 0, padding: 32, overflowY: 'auto', background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {chat_messages.map((msg, idx) => (
-            <div key={idx} style={{ 
-              alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-              background: msg.role === 'user' ? 'var(--lf-navy)' : '#fff', // 👈 AI 메시지 배경을 하얗게 하면 도면이 더 돋보입니다.
-              color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
-              border: msg.role === 'assistant' ? '1px solid var(--lf-border)' : 'none',
-              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap',
-              boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
-            }}>
-              {/* 🎯 그냥 출력하지 않고, 함수를 통과시킵니다! */}
-              {renderMessageContent(msg.content)}
+            <div
+              key={idx}
+              style={{
+                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                width: 'fit-content',
+                maxWidth: '75%',
+                padding: '16px 20px',
+                borderRadius: msg.role === 'user' ? '10px 10px 2px 10px' : '10px 10px 10px 2px',
+                background: msg.role === 'user' ? 'var(--lf-gold)' : '#fff',
+                color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
+                border: msg.role === 'user' ? '1px solid var(--lf-gold)' : '1px solid var(--lf-border)',
+                boxShadow: msg.role === 'user'
+                  ? '0 8px 20px rgba(73,57,34,.12)'
+                  : '0 3px 12px rgba(18,16,14,.05)',
+                fontSize: 14,
+                whiteSpace: 'pre-wrap',
+                overflowWrap: 'anywhere',
+              }}
+            >
+              {msg.role === 'assistant' && msg.content.length > 500 && !msg.content.includes('![') && !hasMarkdownFormatting(msg.content) ? (
+                <TypewriterMessage content={msg.content} renderContent={renderMessageContent} />
+              ) : (
+                renderMessageContent(msg.content)
+              )}
             </div>
           ))}
-          {isSending && <div className="muted-text" style={{ alignSelf: 'flex-start' }}>AI가 입력 중입니다...</div>}
+
+          {isSending && (
+            <div style={{ alignSelf: 'flex-start', color: 'var(--lf-gold)', fontSize: 13, fontWeight: 'bold', padding: '16px 20px', background: '#fff', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+              ⏳ {loadingText}
+            </div>
+          )}
         </div>
 
         {pendingClaims && (
@@ -423,11 +505,173 @@ export default function WorkstationPage() {
         onClose={() => setIsPaModalOpen(false)} 
         data={priorArtData} 
       />
+      {previewImage && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${previewImage.alt} 확대 보기`}
+          onMouseDown={() => setPreviewImage(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 3000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 32,
+            background: 'rgba(18,16,14,.72)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+          }}
+        >
+          <div
+            onMouseDown={e => e.stopPropagation()}
+            style={{
+              width: '96vw',
+              maxHeight: '94vh',
+              display: 'flex',
+              flexDirection: 'column',
+              background: '#fff',
+              border: '1px solid rgba(255,255,255,.2)',
+              borderRadius: 8,
+              overflow: 'hidden',
+              boxShadow: '0 24px 70px rgba(0,0,0,.28)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 18px', borderBottom: '1px solid var(--lf-border)' }}>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ fontSize: 12, color: 'var(--lf-gold)', fontWeight: 600, marginBottom: 2 }}>도면 미리보기</p>
+                <p style={{ fontSize: 13, color: 'var(--lf-navy)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{previewImage.alt}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewImage(null)}
+                className="btn-line"
+                style={{ padding: '8px 16px', flexShrink: 0 }}
+              >
+                닫기
+              </button>
+            </div>
+            <div style={{ padding: 20, background: 'var(--lf-bg2)', overflow: 'auto', textAlign: 'center' }}>
+              <img
+                src={previewImage.src}
+                alt={previewImage.alt}
+                style={{
+                  display: 'block',
+                  maxWidth: '100%',
+                  maxHeight: '82vh',
+                  width: 'auto',
+                  height: 'auto',
+                  margin: '0 auto',
+                  background: '#fff',
+                  border: '1px solid var(--lf-border)',
+                  borderRadius: 6,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
       {/* <ReportViewer 
         isOpen={isReportOpen} 
         onClose={() => setIsReportOpen(false)} 
         data={data} // 백엔드에서 받아온 전체 데이터를 그대로 던져줍니다!
       /> */}
+    </div>
+  )
+}
+
+const TypewriterMessage = ({ content, renderContent }: { content: string, renderContent: (str: string) => React.ReactNode }) => {
+  const [displayedText, setDisplayedText] = useState('');
+
+  useEffect(() => {
+    // 이미 다 써진 예전 메시지는 타이핑 안 하고 바로 띄움
+    if (content.length < 200) {
+      setDisplayedText(content);
+      return;
+    }
+
+    // 길이가 긴 명세서 본문 같은 경우만 타다닥! 타이핑 효과 발동
+    let i = 0;
+    const intervalId = setInterval(() => {
+      setDisplayedText(content.slice(0, i));
+      i += 8; // 👈 한 번에 8글자씩 팍팍팍 출력 (속도 조절 가능)
+      if (i > content.length) {
+        clearInterval(intervalId);
+        setDisplayedText(content);
+      }
+    }, 10); // 10ms마다 출력 (엄청 빠르고 시원함)
+
+    return () => clearInterval(intervalId);
+  }, [content]);
+
+  return <>{renderContent(displayedText)}</>;
+}
+
+function DrawingThumbnailStrip({ images, onOpen }: { images: PreviewImage[]; onOpen: (image: PreviewImage) => void }) {
+  return (
+    <div style={{
+      marginTop: 16,
+      padding: '14px 4px 18px 4px',
+      overflowX: 'auto',
+      overflowY: 'hidden',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', minHeight: 152, paddingLeft: 2, paddingRight: 26 }}>
+        {images.map((image, index) => (
+          <button
+            key={`${image.src}-${index}`}
+            type="button"
+            onClick={() => onOpen(image)}
+            aria-label={`${image.alt} 크게 보기`}
+            title="클릭해서 크게 보기"
+            style={{
+              position: 'relative',
+              zIndex: index + 1,
+              width: 205,
+              height: 142,
+              flex: '0 0 205px',
+              marginLeft: index === 0 ? 0 : -26,
+              padding: 0,
+              overflow: 'hidden',
+              border: '1px solid rgba(154,120,64,.26)',
+              borderRadius: 8,
+              background: '#fff',
+              boxShadow: '0 12px 28px rgba(18,16,14,.14)',
+              cursor: 'zoom-in',
+              transform: `translateY(${index % 2 === 0 ? 0 : 8}px) rotate(${index % 2 === 0 ? '-1.4deg' : '1.2deg'})`,
+            }}
+          >
+            <img
+              src={image.src}
+              alt={image.alt}
+              style={{
+                display: 'block',
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                background: '#fff',
+              }}
+            />
+            <div style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              padding: '8px 10px',
+              background: 'linear-gradient(to top, rgba(18,16,14,.74), rgba(18,16,14,0))',
+              color: '#fff',
+              fontSize: 10,
+              fontWeight: 600,
+              textAlign: 'left',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>
+              {image.alt}
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
