@@ -40,4 +40,5 @@ dependencies = [
     "django-storages>=1.14.6",
     "boto3>=1.43.31",
     "langsmith>=0.8.11",
+    "xmltodict>=1.0.4",
 ]

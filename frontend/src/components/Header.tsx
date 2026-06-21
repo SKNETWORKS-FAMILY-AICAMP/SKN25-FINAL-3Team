@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import PatentSearchModal from './PatentSearchModal'
 
 const NAV_ITEMS = [
   { label: '서비스 소개', hash: 'intro' },
@@ -12,6 +13,14 @@ export default function Header() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  function handleSearch(e: FormEvent) {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+    setIsSearchOpen(true)
+  }
 
   async function handleLogout() {
     await logout()
@@ -28,6 +37,7 @@ export default function Header() {
   }
 
   return (
+    <>
     <header style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 600,
       background: 'rgba(255,255,255,.95)',
@@ -56,7 +66,7 @@ export default function Header() {
         </Link>
 
         {/* GNB */}
-        <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {NAV_ITEMS.map(({ label, hash }) => (
             <button key={hash} onClick={() => handleNavClick(hash)} className="nav-text" style={{
               color: 'var(--lf-mid)',
@@ -70,8 +80,33 @@ export default function Header() {
           ))}
         </div>
 
+
+        {/* 검색창 */}
+        <form onSubmit={handleSearch} style={{ flex: 1, maxWidth: 400, marginRight: 24 }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="특허 검색..."
+              style={{
+                width: '100%', height: 36, padding: '0 40px 0 16px',
+                border: '1px solid var(--lf-border)', borderRadius: 18,
+                fontSize: 14, color: 'var(--lf-navy)', background: 'var(--lf-bg2)',
+                outline: 'none', fontFamily: 'var(--lf-sans)',
+              }}
+              onFocus={e => e.currentTarget.style.borderColor = 'var(--lf-gold)'}
+              onBlur={e => e.currentTarget.style.borderColor = 'var(--lf-border)'}
+            />
+            <button type="submit" style={{
+              position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+              background: 'none', border: 'none', cursor: 'pointer', color: 'var(--lf-muted)', padding: 0, fontSize: 15,
+            }}>🔍</button>
+          </div>
+        </form>
+
         {/* Auth */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginLeft: 'auto' }}>
           {user ? (
             <>
               <Link to="/dashboard" className="nav-text" style={{
@@ -108,5 +143,12 @@ export default function Header() {
         </div>
       </nav>
     </header>
+
+    <PatentSearchModal
+      isOpen={isSearchOpen}
+      query={searchQuery}
+      onClose={() => setIsSearchOpen(false)}
+    />
+    </>
   )
 }
