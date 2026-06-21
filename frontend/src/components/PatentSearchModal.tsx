@@ -20,7 +20,7 @@ export default function PatentSearchModal({ isOpen, query, onClose }: Props) {
   const [results, setResults] = useState<PatentResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
-// 여기에 추가
+
   useEffect(() => {
     if (!isOpen || !query) return
     setIsLoading(true)
