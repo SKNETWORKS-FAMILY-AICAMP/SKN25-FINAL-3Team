@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="600" viewBox="0 0 700 600">
+<defs>
+  <marker id="bc-arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#222"/></marker>
+  <marker id="bc-ret" markerWidth="9" markerHeight="7" refX="1" refY="3.5" orient="auto"><polygon points="9 0,0 3.5,9 7" fill="#555"/></marker>
+</defs>
+<rect x="0" y="0" width="700" height="600" fill="#fff"/>
+<rect x="4" y="4" width="692" height="592" fill="#fff" stroke="#444" stroke-width="1.8"/>
+<rect x="10" y="10" width="680" height="580" fill="none" stroke="#ccc" stroke-width="0.6"/>
+<text x="350" y="33" font-family="'Courier New',monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">도 3  시퀀스 다이어그램</text>
+<line x1="14" y1="43" x2="686" y2="43" stroke="#999" stroke-width="0.8"/>
+<!-- 참가자 박스 (4개) -->
+<rect x="55" y="60" width="100" height="46" rx="2" fill="#f5f5f5" stroke="#222" stroke-width="1.8"/>
+<text x="105" y="80" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">사용자</text>
+<text x="105" y="96" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">(10)</text>
+<rect x="215" y="60" width="100" height="46" rx="2" fill="#f5f5f5" stroke="#222" stroke-width="1.8"/>
+<text x="265" y="80" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">클라이언트</text>
+<text x="265" y="96" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">(100)</text>
+<rect x="375" y="60" width="100" height="46" rx="2" fill="#efefef" stroke="#111" stroke-width="2.2"/>
+<text x="425" y="80" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">서버</text>
+<text x="425" y="96" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">(200)</text>
+<rect x="535" y="60" width="100" height="46" rx="2" fill="#f5f5f5" stroke="#222" stroke-width="1.8"/>
+<text x="585" y="80" font-family="Arial,sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">DB</text>
+<text x="585" y="96" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">(300)</text>
+<!-- 생명선 -->
+<line x1="105" y1="106" x2="105" y2="540" stroke="#ccc" stroke-width="0.9" stroke-dasharray="7 5"/>
+<line x1="265" y1="106" x2="265" y2="540" stroke="#ccc" stroke-width="0.9" stroke-dasharray="7 5"/>
+<line x1="425" y1="106" x2="425" y2="540" stroke="#ccc" stroke-width="0.9" stroke-dasharray="7 5"/>
+<line x1="585" y1="106" x2="585" y2="540" stroke="#ccc" stroke-width="0.9" stroke-dasharray="7 5"/>
+<!-- 활성화 막대 -->
+<rect x="261" y="160" width="8" height="350" fill="#f0f0f0" stroke="#999" stroke-width="0.8"/>
+<rect x="421" y="200" width="8" height="255" fill="#f0f0f0" stroke="#999" stroke-width="0.8"/>
+<rect x="581" y="240" width="8" height="175" fill="#f0f0f0" stroke="#999" stroke-width="0.8"/>
+<!-- 메시지 M01 -->
+<line x1="105" y1="160" x2="261" y2="160" stroke="#222" stroke-width="1.5" marker-end="url(#bc-arr)"/>
+<text x="183" y="152" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#333">로그인 요청 (M01)</text>
+<!-- M02 -->
+<line x1="265" y1="200" x2="421" y2="200" stroke="#222" stroke-width="1.5" marker-end="url(#bc-arr)"/>
+<text x="343" y="192" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#333">인증 토큰 검증 (M02)</text>
+<!-- M03 -->
+<line x1="425" y1="240" x2="581" y2="240" stroke="#222" stroke-width="1.5" marker-end="url(#bc-arr)"/>
+<text x="503" y="232" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#333">사용자 조회 (M03)</text>
+<!-- M04 (return) -->
+<line x1="581" y1="280" x2="425" y2="280" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bc-arr)"/>
+<text x="503" y="272" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">결과 반환 (M04)</text>
+<!-- M05 (return) -->
+<line x1="425" y1="320" x2="265" y2="320" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bc-arr)"/>
+<text x="345" y="312" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">인증 완료 (M05)</text>
+<!-- M06 -->
+<line x1="265" y1="360" x2="421" y2="360" stroke="#222" stroke-width="1.5" marker-end="url(#bc-arr)"/>
+<text x="343" y="352" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#333">데이터 요청 (M06)</text>
+<!-- M07 -->
+<line x1="425" y1="395" x2="581" y2="395" stroke="#222" stroke-width="1.5" marker-end="url(#bc-arr)"/>
+<text x="503" y="387" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#333">데이터 쿼리 (M07)</text>
+<!-- M08 (return) -->
+<line x1="581" y1="430" x2="425" y2="430" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bc-arr)"/>
+<text x="503" y="422" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">데이터 반환 (M08)</text>
+<!-- M09 (return) -->
+<line x1="425" y1="465" x2="265" y2="465" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bc-arr)"/>
+<text x="345" y="457" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">처리된 데이터 (M09)</text>
+<!-- M10 (to user) -->
+<line x1="265" y1="500" x2="105" y2="500" stroke="#555" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#bc-arr)"/>
+<text x="185" y="492" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#777">화면 렌더링 (M10)</text>
+<!-- 참조번호 -->
+<circle cx="52" cy="85" r="12" fill="#fff" stroke="#555" stroke-width="1.1"/>
+<text x="52" y="89" font-family="Arial,sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="#333">10</text>
+<!-- 타이틀 블록 -->
+<line x1="14" y1="555" x2="686" y2="555" stroke="#888" stroke-width="0.8"/>
+<line x1="234" y1="555" x2="234" y2="590" stroke="#ccc" stroke-width="0.5"/>
+<line x1="468" y1="555" x2="468" y2="590" stroke="#ccc" stroke-width="0.5"/>
+<text x="22" y="570" font-family="'Courier New',monospace" font-size="11" font-weight="bold" fill="#333">도 3</text>
+<text x="22" y="585" font-family="Arial,sans-serif" font-size="9" fill="#777">시퀀스 다이어그램</text>
+<text x="350" y="570" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">SCALE : N.T.S  |  UNIT : —</text>
+<text x="678" y="570" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#aaa">PYPI AI · 특허청 기준</text>
+<text x="678" y="585" font-family="Arial,sans-serif" font-size="7" text-anchor="end" fill="#bbb">AUTO GENERATED</text>
+</svg>

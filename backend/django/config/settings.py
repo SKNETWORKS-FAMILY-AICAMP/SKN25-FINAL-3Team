@@ -15,10 +15,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
 
-load_dotenv()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent.parent / '.env', override=True)
 
 
 # Quick-start development settings - unsuitable for production
@@ -51,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    "frontend",
 ]
 
 MIDDLEWARE = [
@@ -156,9 +155,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.0.18:3000",
 ]
 
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
@@ -170,6 +168,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patent AI Project API',
     'DESCRIPTION': '장고 메인 서버 API 명세서',
@@ -184,3 +183,26 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',), # 프론트에서 Bearer를 사용 중
 }
+
+# ── AWS S3 ────────────────────────────────────────────────────
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '')
+AWS_S3_REGION_NAME = os.getenv('AWS_DEFAULT_REGION', 'ap-northeast-2')
+AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET', '')
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False  # Presigned URL 미사용 (퍼블릭 버킷 기준)
+
+if AWS_STORAGE_BUCKET_NAME:
+    AWS_S3_CUSTOM_DOMAIN = (
+        f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+    )
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }

@@ -1,0 +1,48 @@
+# Review rules for cross-agent patent output validation.
+
+version: 0.1.0
+language: ko
+purpose: cross_agent_review
+
+review_modes:
+  centralized_review_agent:
+    recommended_for_mvp: true
+    description: "하나의 Review agent가 상담/선행기술/청구항/도면/명세서 산출물의 전체 일관성을 검사한다."
+  per_agent_self_review:
+    recommended_for_later: true
+    description: "각 agent 내부에 self-check를 붙이고, 중앙 Review agent가 최종 교차 검증한다."
+
+required_checks:
+  consultation:
+    - id: required_slots
+      description: "problem, solution, components, effect, differentiation의 충족 여부를 본다."
+    - id: followup_quality
+      description: "부족 정보 질문이 target_slot/why_needed를 포함하는지 본다."
+  prior_art:
+    - id: evidence_grounding
+      description: "선행기술 분석이 candidate evidence에 근거하는지 본다."
+    - id: risk_not_probability
+      description: "검색 score를 법적 확신도로 표현하지 않았는지 본다."
+  claims:
+    - id: claim_1_core
+      description: "청구항 1이 invention_graph의 필수 구성/단계를 포함하는지 본다."
+    - id: dependency_integrity
+      description: "종속항의 depends_on이 실제 부모항과 맞는지 본다."
+  drawings:
+    - id: reference_numeral_integrity
+      description: "참조부호 중복/누락/오배정 여부를 본다."
+    - id: drawing_claim_alignment
+      description: "청구항 핵심 구성요소가 도면에도 표현되는지 본다."
+  specification:
+    - id: support_links
+      description: "청구항 핵심 구성요소가 명세서 상세 설명에 의해 뒷받침되는지 본다."
+    - id: anaphora_resolution
+      description: "상기/전술한 표현이 document_links에서 해소되는지 본다."
+
+feedback_format:
+  target_agent: "consultation|prior_art|claim|drawing|specification|composer"
+  severity: "low|medium|high"
+  target_path: "state 내부 경로 예: claims.draft_claims[0].text"
+  issue: "문제 설명"
+  suggestion: "수정 제안"
+  evidence: "근거"

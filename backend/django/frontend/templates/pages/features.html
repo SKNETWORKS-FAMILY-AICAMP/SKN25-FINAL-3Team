@@ -1,0 +1,223 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}특징 및 원칙 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag" data-i18n="feat_tag">Why PYPI</span>
+      <h1 class="pg-hero-h1"><span data-i18n="feat_h1_1">PYPI의</span><br><em data-i18n="feat_h1_2">원칙과 특징</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc" data-i18n="feat_desc">전문가급 품질, 신속한 자동화, 종합 파이프라인 — 세 가지 원칙으로 특허 출원을 혁신합니다.</p>
+    </div>
+  </section>
+
+  <div class="pg-body">
+    <div class="pg-container">
+
+      <div class="ft-list">
+
+        <div class="ft-item">
+          <div class="ft-item-l">
+            <span class="ft-no">01</span>
+            <div class="ft-icon">
+              <svg viewBox="0 0 48 48" fill="none"><path d="M24 6C14.059 6 6 14.059 6 24s8.059 18 18 18 18-8.059 18-18S33.941 6 24 6z" stroke="currentColor" stroke-width="1"/><path d="M16 24l6 6 10-12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="ft-item-r">
+            <h2 class="ft-name" data-i18n="feat1_name">전문가급 품질</h2>
+            <p class="ft-desc" data-i18n="feat1_desc">특허청 규정에 맞춘 독립항·종속항 구성과 품질 점수 자동 검수로 전문 변리사 수준의 출력을 제공합니다.</p>
+            <ul class="ft-detail">
+              <li data-i18n="feat1_d1">특허청 작성 규정 기반 청구항 자동 구성</li>
+              <li data-i18n="feat1_d2">도면 품질 점수(0~100) 자동 산정 및 S/A/B/C 등급 부여</li>
+              <li data-i18n="feat1_d3">명세서 각 섹션의 특허 문체 자동 적용</li>
+              <li data-i18n="feat1_d4">Composer 에이전트의 최종 용어·참조부호 통일 검수</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ft-item">
+          <div class="ft-item-l">
+            <span class="ft-no">02</span>
+            <div class="ft-icon">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="1"/><path d="M24 14v10l7 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div class="ft-item-r">
+            <h2 class="ft-name" data-i18n="feat2_name">신속한 자동화</h2>
+            <p class="ft-desc" data-i18n="feat2_desc">아이디어 입력 한 번으로 7개 에이전트가 협력하여 수일이 걸리던 특허 작성을 자동으로 완성합니다.</p>
+            <ul class="ft-detail">
+              <li data-i18n="feat2_d1">LangGraph 기반 에이전트 파이프라인 자동 실행</li>
+              <li data-i18n="feat2_d2">요약→청구항→명세서→통합 순서 자동 처리</li>
+              <li data-i18n="feat2_d3">GPT-4o 기반 고품질 텍스트 생성</li>
+              <li data-i18n="feat2_d4">OpenAI Streaming API로 실시간 결과 확인</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ft-item">
+          <div class="ft-item-l">
+            <span class="ft-no">03</span>
+            <div class="ft-icon">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="1"/><path d="M16 24h16M24 16l8 8-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="ft-item-r">
+            <h2 class="ft-name" data-i18n="feat3_name">종합 파이프라인</h2>
+            <p class="ft-desc" data-i18n="feat3_desc">상담부터 도면·명세서·최종 통합까지 단일 파이프라인에서 완결되어 제출 가능한 문서를 출력합니다.</p>
+            <ul class="ft-detail">
+              <li data-i18n="feat3_d1">7개 에이전트 공유 State(PatentAgentState) 기반 통합</li>
+              <li data-i18n="feat3_d2">최종 DOCX 파일 자동 생성</li>
+              <li data-i18n="feat3_d3">도면 SVG + 명세서를 하나의 패키지로 병합</li>
+              <li data-i18n="feat3_d4">한국어·영어·일본어·중국어 4개 언어 지원</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ag-section">
+        <div class="ag-section-hd">
+          <span class="ag-section-tag" data-i18n="ag_section_tag">Agent Pipeline</span>
+          <h2 class="ag-section-h2"><span data-i18n="ag_section_h2_1">7개의 전문 에이전트가</span><br><em data-i18n="ag_section_h2_2">순차적으로 협력합니다</em></h2>
+          <p class="ag-section-desc" data-i18n="ag_section_desc">각 에이전트는 이전 단계의 산출물을 공유 State로 받아 처리하고, 최종적으로 특허청 제출 가능한 완성 명세서를 생성합니다.</p>
+        </div>
+        <div class="ov-list">
+          {% for item in agents %}
+          <a href="{% url item.url_name %}" class="ov-item ov-item--on">
+            <div class="ov-num">{{ item.num }}</div>
+            <div class="ov-body">
+              <div class="ov-hd">
+                <h3 class="ov-name" data-i18n="agent_{{ item.num }}">{{ item.name }}</h3>
+                <span class="ov-en" data-i18n="{{ item.en_key }}">{{ item.en }}</span>
+              </div>
+              <p class="ov-desc" data-i18n="agent_{{ item.num }}_desc">{{ item.desc }}</p>
+            </div>
+            <div class="ov-arrow">→</div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── Feature list ── */
+.ft-list { display: flex; flex-direction: column; gap: 0; }
+
+.ft-item {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: 0; padding: 72px 0;
+  border-bottom: 1px solid var(--lf-border);
+  transition: background .2s;
+}
+.ft-item:first-child { border-top: 1px solid var(--lf-border); }
+.ft-item:hover { background: rgba(154,120,64,.02); }
+
+.ft-item-l {
+  display: flex; flex-direction: column; gap: 20px;
+  padding-right: 56px; padding-top: 4px;
+}
+.ft-no {
+  font-family: var(--lf-serif); font-size: 11px; letter-spacing: 3px;
+  color: var(--lf-gold); opacity: .7; text-transform: uppercase;
+}
+.ft-icon { width: 44px; height: 44px; color: var(--lf-gold); opacity: .5; }
+.ft-icon svg { width: 100%; height: 100%; }
+
+.ft-item-r { padding-left: 56px; border-left: 1px solid var(--lf-border); }
+
+.ft-name {
+  font-family: var(--lf-serif); font-size: clamp(24px,2.5vw,34px);
+  font-weight: 300; color: var(--lf-navy); margin-bottom: 14px; line-height: 1.2;
+}
+.ft-desc {
+  font-size: 15.5px; font-weight: 300; color: var(--lf-body);
+  line-height: 2; margin-bottom: 32px; max-width: 560px;
+}
+.ft-detail {
+  list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 32px;
+}
+.ft-detail li {
+  font-size: 13.5px; font-weight: 400; color: var(--lf-muted);
+  padding-left: 20px; position: relative; line-height: 1.7;
+}
+.ft-detail li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--lf-gold); font-size: 11px; top: 3px; font-weight: 700;
+}
+
+/* ── Agent pipeline section ── */
+.ag-section {
+  margin-top: 96px; padding-top: 80px;
+  border-top: 2px solid var(--lf-border);
+}
+.ag-section-hd { margin-bottom: 56px; max-width: 640px; }
+.ag-section-tag {
+  font-size: 9px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--lf-gold); display: block; margin-bottom: 18px;
+}
+.ag-section-h2 {
+  font-family: var(--lf-serif); font-size: clamp(30px,3vw,42px);
+  font-weight: 300; color: var(--lf-navy); line-height: 1.25; margin-bottom: 20px;
+}
+.ag-section-h2 em { font-style: italic; color: var(--lf-gold); }
+.ag-section-desc {
+  font-size: 15px; font-weight: 300; color: var(--lf-body); line-height: 2;
+}
+
+.ov-list { border-top: 1px solid var(--lf-border); }
+.ov-item {
+  display: grid; grid-template-columns: 80px 1fr 40px;
+  align-items: center; padding: 32px 0;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  text-decoration: none; color: inherit;
+  position: relative; transition: background .2s;
+}
+.ov-item--on:hover { background: rgba(154,120,64,.025); }
+.ov-item--on::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--lf-gold); transform: scaleY(0); transform-origin: top;
+  transition: transform .3s;
+}
+.ov-item--on:hover::before { transform: scaleY(1); }
+.ov-num {
+  font-family: var(--lf-serif); font-size: 22px; font-weight: 300;
+  font-style: italic; color: var(--lf-muted); padding-left: 16px; transition: color .2s;
+}
+.ov-item--on:hover .ov-num { color: var(--lf-gold); }
+.ov-body { padding: 0 2.5rem; }
+.ov-hd { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.ov-name {
+  font-family: var(--lf-serif); font-size: clamp(17px,1.8vw,22px);
+  font-weight: 400; color: var(--lf-navy);
+}
+.ov-en { font-size: .68rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--lf-muted); }
+.ov-desc { font-size: 14px; font-weight: 300; color: var(--lf-body); line-height: 1.85; max-width: 580px; }
+.ov-arrow { font-size: 1.1rem; color: var(--lf-gold); opacity: 0; transition: opacity .2s; text-align: center; }
+.ov-item--on:hover .ov-arrow { opacity: 1; }
+
+@media (max-width: 860px) {
+  .ft-item { grid-template-columns: 1fr; gap: 28px; }
+  .ft-item-r { border-left: none; padding-left: 0; border-top: 1px solid var(--lf-border); padding-top: 28px; }
+  .ft-detail { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

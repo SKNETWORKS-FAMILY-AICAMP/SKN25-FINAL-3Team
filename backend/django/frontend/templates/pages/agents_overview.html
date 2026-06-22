@@ -1,0 +1,93 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}에이전트 파이프라인 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag" data-i18n="ov_tag">Agent Pipeline</span>
+      <h1 class="pg-hero-h1"><span data-i18n="ov_h1_1">7개의 전문 에이전트가</span><br><em data-i18n="ov_h1_2">순차적으로 협력합니다</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc" data-i18n="ov_desc">각 에이전트는 이전 단계의 산출물을 공유 State로 받아 처리하고, 최종적으로 특허청 제출 가능한 완성 명세서를 생성합니다.</p>
+    </div>
+  </section>
+
+  <div class="pg-body">
+    <div class="pg-container">
+      <div class="ov-list">
+
+        {% for item in agents %}
+        <a href="{% url item.url_name %}" class="ov-item ov-item--on">
+          <div class="ov-num">{{ item.num }}</div>
+          <div class="ov-body">
+            <div class="ov-hd">
+              <h3 class="ov-name" data-i18n="agent_{{ item.num }}">{{ item.name }}</h3>
+              <span class="ov-en" data-i18n="{{ item.en_key }}">{{ item.en }}</span>
+            </div>
+            <p class="ov-desc" data-i18n="agent_{{ item.num }}_desc">{{ item.desc }}</p>
+          </div>
+          <div class="ov-arrow">→</div>
+        </a>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.ov-list { border-top: 1px solid var(--lf-border); }
+.ov-item {
+  display: grid; grid-template-columns: 80px 1fr 40px;
+  align-items: center; gap: 0; padding: 36px 0;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  text-decoration: none; color: inherit;
+  position: relative; transition: background .2s;
+}
+.ov-item--on { cursor: pointer; }
+.ov-item--on:hover { background: rgba(154,120,64,.02); }
+.ov-item--on::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--lf-gold); transform: scaleY(0); transform-origin: top;
+  transition: transform .3s;
+}
+.ov-item--on:hover::before { transform: scaleY(1); }
+
+.ov-num {
+  font-family: var(--lf-serif); font-size: 24px; font-weight: 300;
+  font-style: italic; color: var(--lf-muted); padding-left: 16px;
+  transition: color .2s;
+}
+.ov-item--on:hover .ov-num { color: var(--lf-gold); }
+
+.ov-body { padding: 0 2rem; }
+.ov-hd { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.ov-name {
+  font-family: var(--lf-serif); font-size: clamp(18px,2vw,24px);
+  font-weight: 400; color: var(--lf-navy); transition: color .2s;
+}
+.ov-item--on:hover .ov-name { color: var(--lf-navy); }
+.ov-en { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--lf-muted); }
+.ov-badge { font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .16rem .5rem; border-radius: 3px; }
+.ov-badge--on  { background: rgba(154,120,64,.12); color: var(--lf-gold); }
+.ov-badge--off { background: rgba(0,0,0,.05); color: var(--lf-muted); }
+.ov-desc { font-size: 15px; font-weight: 300; color: var(--lf-body); line-height: 1.9; max-width: 600px; }
+.ov-arrow { font-size: 1.2rem; color: var(--lf-gold); opacity: 0; transition: opacity .2s; text-align: center; }
+.ov-item--on:hover .ov-arrow { opacity: 1; }
+</style>
+{% endblock %}

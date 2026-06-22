@@ -1,0 +1,90 @@
+{
+  "fig_number": "도 4",
+  "title": "사용자 인터페이스 화면 예시",
+  "diagram_type": "ui_screen",
+  "purpose": "UI 구성",
+  "figure_source_text": "자동 추가",
+  "elements": [
+    {
+      "id": "UI1000",
+      "ref_no": "1000",
+      "name": "장치",
+      "type": "device",
+      "description": "사용자 입력에 기반한 문장을 제공하는 장치",
+      "source_text": "1000: 장치"
+    },
+    {
+      "id": "UI1200",
+      "ref_no": "1200",
+      "name": "제어부",
+      "type": "module",
+      "description": "장치의 전반적인 동작을 제어하는 제어부",
+      "source_text": "1200: 제어부"
+    },
+    {
+      "id": "UI1300",
+      "ref_no": "1300",
+      "name": "입출력부",
+      "type": "module",
+      "description": "사용자로부터 입력받고 문장을 제공하는 입출력부",
+      "source_text": "1300: 입출력부"
+    },
+    {
+      "id": "UI1210",
+      "ref_no": "1210",
+      "name": "데이터 학습부",
+      "type": "module",
+      "description": "축약어에 대응되는 문장을 생성하기 위한 기준을 학습하는 부",
+      "source_text": "1210: 데이터 학습부"
+    },
+    {
+      "id": "UI1220",
+      "ref_no": "1220",
+      "name": "데이터 인식부",
+      "type": "module",
+      "description": "사용자의 상황 정보에 기초하여 문장을 생성하는 부",
+      "source_text": "1220: 데이터 인식부"
+    },
+    {
+      "id": "UI13102",
+      "ref_no": "13102",
+      "name": "데이터 획득부",
+      "type": "module",
+      "description": "데이터 획득부",
+      "source_text": "데이터 획득부(13102)"
+    },
+    {
+      "id": "UI2000",
+      "ref_no": "2000",
+      "name": "및 서버",
+      "type": "module",
+      "description": "및 서버",
+      "source_text": "및 서버(2000)"
+    },
+    {
+      "id": "UI1400",
+      "ref_no": "1400",
+      "name": "센싱부",
+      "type": "module",
+      "description": "센싱부",
+      "source_text": "센싱부(1400)"
+    },
+    {
+      "id": "UI1500",
+      "ref_no": "1500",
+      "name": "통신부",
+      "type": "module",
+      "description": "통신부",
+      "source_text": "통신부(1500)"
+    },
+    {
+      "id": "UI1600",
+      "ref_no": "1600",
+      "name": "V 입력부",
+      "type": "module",
+      "description": "V 입력부",
+      "source_text": "V 입력부(1600)"
+    }
+  ],
+  "relations": []
+}

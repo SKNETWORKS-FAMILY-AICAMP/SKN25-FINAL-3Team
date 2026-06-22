@@ -1,0 +1,196 @@
+<mxfile host="app.diagrams.net">
+
+  <!-- ════════════════════════════════════════════
+       PAGE 1 : ERD
+  ════════════════════════════════════════════ -->
+  <diagram name="ERD" id="erd_page">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" /><mxCell id="1" parent="0" />
+
+        <!-- 제목 -->
+        <mxCell id="title" value="PatentAI - ERD (Supabase PostgreSQL)" style="text;html=1;fontStyle=1;fontSize=18;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="600" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- ── consulting ── -->
+        <mxCell id="t_consulting_hdr" value="consulting" style="swimlane;fontStyle=1;fontSize=13;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="280" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="🔑 user_id : VARCHAR(50) PK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r2" value="🔑 consultation_idx : INTEGER PK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r3" value="raw_chat_log : JSON" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r4" value="uploaded_file_path : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r5" value="summary_problem : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r6" value="summary_solution : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r7" value="summary_difference : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="174" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="r8" value="summary_effect : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_consulting_hdr"><mxGeometry x="0" y="198" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- ── algorithm_steps ── -->
+        <mxCell id="t_steps_hdr" value="algorithm_steps" style="swimlane;fontStyle=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="🔑 id : INTEGER PK AI" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="s2" value="🔗 user_id : VARCHAR(50) FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="s3" value="🔗 consultation_idx : INTEGER FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="s4" value="step_seq : INTEGER" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="s5" value="step_content : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="s6" value="created_at : TIMESTAMP" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_steps_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- ── detail_elements ── -->
+        <mxCell id="t_detail_hdr" value="detail_elements" style="swimlane;fontStyle=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="🔑 id : INTEGER PK AI" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="d2" value="🔗 user_id : VARCHAR(50) FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="d3" value="🔗 consultation_idx : INTEGER FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="d4" value="element_type : VARCHAR(30)" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="d5" value="seq : INTEGER" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="d6" value="content : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_detail_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- ── generated_claims ── -->
+        <mxCell id="t_claims_hdr" value="generated_claims" style="swimlane;fontStyle=1;fontSize=13;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="430" y="100" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" value="🔑 id : INTEGER PK AI" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="c2" value="🔗 user_id : VARCHAR(50) FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="c3" value="🔗 consultation_idx : INTEGER FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="c4" value="claim_1 : TEXT (독립항)" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="c5" value="dependent_claims : TEXT (종속항)" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="c6" value="created_at : TIMESTAMP" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_claims_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- ── generated_drawings ── -->
+        <mxCell id="t_drawings_hdr" value="generated_drawings" style="swimlane;fontStyle=1;fontSize=13;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="430" y="340" width="280" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="dr1" value="🔑 id : INTEGER PK AI" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr2" value="🔗 user_id : VARCHAR(50) FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr3" value="🔗 consultation_idx : INTEGER FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr4" value="fig_number : VARCHAR(20)" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr5" value="diagram_type : VARCHAR(30)" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr6" value="diagram_title : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr7" value="quality_score : INTEGER" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="174" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr8" value="svg_content : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="198" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="dr9" value="created_at : TIMESTAMP" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_drawings_hdr"><mxGeometry x="0" y="222" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- ── generated_specifications ── -->
+        <mxCell id="t_spec_hdr" value="generated_specifications" style="swimlane;fontStyle=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="280" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="sp1" value="🔑 id : INTEGER PK AI" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="30" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp2" value="🔗 user_id : VARCHAR(50) FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="54" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp3" value="🔗 consultation_idx : INTEGER FK" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="78" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp4" value="tech_field : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="102" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp5" value="background_art : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="126" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp6" value="problem_statement : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="150" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp7" value="solution_means : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="174" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp8" value="effects : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="198" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp9" value="drawing_description : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="222" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp10" value="detailed_desc : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="246" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp11" value="embodiments : TEXT" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="270" width="280" height="24" as="geometry" /></mxCell>
+        <mxCell id="sp12" value="created_at : TIMESTAMP" style="text;html=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="t_spec_hdr"><mxGeometry x="0" y="294" width="280" height="24" as="geometry" /></mxCell>
+
+        <!-- FK 관계선 -->
+        <mxCell id="fk1" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="t_consulting_hdr" target="t_steps_hdr" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fk2" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="t_consulting_hdr" target="t_detail_hdr" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fk3" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" source="t_consulting_hdr" target="t_claims_hdr" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fk4" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" source="t_consulting_hdr" target="t_drawings_hdr" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fk5" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" source="t_consulting_hdr" target="t_spec_hdr" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- 범례 -->
+        <mxCell id="legend" value="🔑 PK (Primary Key)   🔗 FK (Foreign Key)   AI = Auto Increment" style="text;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="840" width="500" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ════════════════════════════════════════════
+       PAGE 2 : API 규격서
+  ════════════════════════════════════════════ -->
+  <diagram name="API 규격서" id="api_page">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" /><mxCell id="1" parent="0" />
+
+        <!-- 제목 -->
+        <mxCell id="api_title" value="PatentAI - API 규격서 초안" style="text;html=1;fontStyle=1;fontSize=18;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="600" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- ── 상담 API ── -->
+        <mxCell id="g_consult" value="상담 에이전트 API" style="swimlane;fontStyle=1;fontSize=13;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="620" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="POST /api/consultation/start" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_consult"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="a1d" value="Request: { user_id, message, file_path? }   Response: { consultation_idx, reply, missing_slots, completeness_score }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_consult"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="a2" value="POST /api/consultation/continue" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_consult"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="a2d" value="Request: { user_id, consultation_idx, message }   Response: { reply, missing_slots, completeness_score }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_consult"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="a3" value="GET /api/consultation/{user_id}/{consultation_idx}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_consult"><mxGeometry x="0" y="130" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="a3d" value="Response: { summary_problem, summary_solution, summary_difference, summary_effect, algorithm_steps }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_consult"><mxGeometry x="0" y="150" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 선행기술 API ── -->
+        <mxCell id="g_prior" value="선행기술 조사 API" style="swimlane;fontStyle=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="620" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="POST /api/prior-art/search" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_prior"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="b1d" value="Request: { user_id, consultation_idx }   Response: { candidates[], novelty_risk, inventive_step_risk, analysis_summary }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_prior"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="b2" value="GET /api/prior-art/{user_id}/{consultation_idx}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_prior"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="b2d" value="Response: { candidates[], overlap_points, difference_points, novelty_risk }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_prior"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 청구항 API ── -->
+        <mxCell id="g_claim" value="청구항 에이전트 API" style="swimlane;fontStyle=1;fontSize=13;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="620" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cl1" value="POST /api/claims/generate" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_claim"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="cl1d" value="Request: { user_id, consultation_idx }   Response: { claim_1, dependent_claims, claim_strategy_notes }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_claim"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="cl2" value="GET /api/claims/{user_id}/{consultation_idx}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_claim"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="cl2d" value="Response: { id, claim_1, dependent_claims, created_at }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_claim"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 도면 API ── -->
+        <mxCell id="g_drawing" value="도면 에이전트 API" style="swimlane;fontStyle=1;fontSize=13;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="570" width="620" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="dr_1" value="POST /api/drawings/generate" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_drawing"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="dr_1d" value="Request: { user_id, consultation_idx }   Response: { figures[{ fig_number, diagram_type, quality_score, svg_url }] }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_drawing"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="dr_2" value="GET /api/drawings/{user_id}/{consultation_idx}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_drawing"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="dr_2d" value="Response: { drawings[{ id, fig_number, diagram_title, quality_score, quality_grade, svg_content }] }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_drawing"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="dr_3" value="GET /api/drawings/{id}/svg" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_drawing"><mxGeometry x="0" y="130" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 명세서 API ── -->
+        <mxCell id="g_spec" value="발명의 설명 에이전트 API" style="swimlane;fontStyle=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="700" y="70" width="620" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="sp_1" value="POST /api/specification/generate" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_spec"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="sp_1d" value="Request: { user_id, consultation_idx }   Response: { tech_field, background_art, problem_statement, solution_means, effects, detailed_desc }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_spec"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="sp_2" value="GET /api/specification/{user_id}/{consultation_idx}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_spec"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="sp_2d" value="Response: { tech_field, background_art, problem_statement, solution_means, effects, drawing_description, detailed_desc, embodiments }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_spec"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="sp_3" value="GET /api/specification/{user_id}/{consultation_idx}/export" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_spec"><mxGeometry x="0" y="130" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 파이프라인 (전체 실행) API ── -->
+        <mxCell id="g_pipeline" value="전체 파이프라인 API (LangGraph)" style="swimlane;fontStyle=1;fontSize=13;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="700" y="250" width="620" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="pp1" value="POST /api/pipeline/run" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_pipeline"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="pp1d" value="Request: { user_id, consultation_idx, target_agents[]? }   Response: { job_id, status: queued }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_pipeline"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="pp2" value="GET /api/pipeline/status/{job_id}" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_pipeline"><mxGeometry x="0" y="80" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="pp2d" value="Response: { job_id, status: running|completed|failed, current_agent, progress_pct, errors[] }" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_pipeline"><mxGeometry x="0" y="100" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- ── 챗봇 API ── -->
+        <mxCell id="g_chat" value="챗봇 API (기존 구현)" style="swimlane;fontStyle=1;fontSize=13;fillColor=#f5f5f5;strokeColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="700" y="400" width="620" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ch1" value="POST /api/chat" style="text;html=1;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="g_chat"><mxGeometry x="0" y="30" width="620" height="20" as="geometry" /></mxCell>
+        <mxCell id="ch1d" value="Request: { messages[] }   Response: { reply }   Model: GPT-4o-mini / max_tokens: 400" style="text;html=1;fontSize=10;align=left;spacingLeft=16;fontColor=#555;" vertex="1" parent="g_chat"><mxGeometry x="0" y="50" width="620" height="20" as="geometry" /></mxCell>
+
+        <!-- HTTP 메서드 범례 -->
+        <mxCell id="api_legend" value="POST = 생성/실행   GET = 조회   초안 기준 - 5/19 멘토링에서 확정 예정" style="text;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="760" width="600" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>

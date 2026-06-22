@@ -1,0 +1,96 @@
+{
+  "fig_number": "도 10",
+  "title": "사용자 입력 기반 문장 제공 방법 흐름도",
+  "diagram_type": "flowchart",
+  "purpose": "",
+  "figure_source_text": "",
+  "elements": [
+    {
+      "id": "S100",
+      "ref_no": "S100",
+      "name": "시작",
+      "shape_type": "terminal",
+      "branches": []
+    },
+    {
+      "id": "S200",
+      "ref_no": "S200",
+      "name": "축약어 입력 수신",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S300",
+      "ref_no": "S300",
+      "name": "상황 정보 획득",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S400",
+      "ref_no": "S400",
+      "name": "인식 모델에 입력",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S500",
+      "ref_no": "S500",
+      "name": "대응 문장 생성",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S600",
+      "ref_no": "S600",
+      "name": "복수 문장 여부",
+      "shape_type": "decision",
+      "branches": [
+        {
+          "label": "예",
+          "target": "S700"
+        },
+        {
+          "label": "아니오",
+          "target": "S800"
+        }
+      ]
+    },
+    {
+      "id": "S700",
+      "ref_no": "S700",
+      "name": "우선순위로 정렬",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S800",
+      "ref_no": "S800",
+      "name": "문장 사용자에 제공",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S900",
+      "ref_no": "S900",
+      "name": "축약어 → 문장 대체 표시",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S1000",
+      "ref_no": "S1000",
+      "name": "관련도 학습 갱신",
+      "shape_type": "process",
+      "branches": []
+    },
+    {
+      "id": "S1100",
+      "ref_no": "S1100",
+      "name": "종료",
+      "shape_type": "terminal",
+      "branches": []
+    }
+  ],
+  "relations": []
+}

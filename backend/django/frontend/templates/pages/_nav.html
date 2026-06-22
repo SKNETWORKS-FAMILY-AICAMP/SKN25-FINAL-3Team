@@ -1,0 +1,68 @@
+<nav class="pg-gnb">
+
+  <div class="pg-gnb-item">
+    <a href="{% url 'accounts:about' %}" class="pg-gnb-a">
+      <span data-i18n="nav_about_top">PYPI 소개</span>
+      <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
+    <div class="pg-drop"><div class="pg-drop-inner">
+      <a href="{% url 'accounts:about' %}"    class="pg-drop-a" data-i18n="nav_about">서비스 소개</a>
+      <a href="{% url 'accounts:features' %}" class="pg-drop-a" data-i18n="nav_features">특징 및 원칙</a>
+      <a href="{% url 'accounts:team' %}"     class="pg-drop-a" data-i18n="nav_team">팀 소개</a>
+    </div></div>
+  </div>
+
+  <div class="pg-gnb-item">
+    <a href="{% url 'accounts:chat' %}" class="pg-gnb-a">
+      <span data-i18n="nav_service">서비스</span>
+      <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
+    <div class="pg-drop"><div class="pg-drop-inner">
+      <a href="{% url 'accounts:chat' %}"     class="pg-drop-a pg-drop-a--hl" data-i18n="nav_dashboard">AI 어시스턴트</a>
+      <a href="{% url 'accounts:pipeline' %}" class="pg-drop-a pg-drop-a--cta" data-i18n="nav_pipeline_run">파이프라인 실행</a>
+    </div></div>
+  </div>
+
+  <div class="pg-gnb-item">
+    <a href="{% url 'accounts:features' %}" class="pg-gnb-a">
+      <span data-i18n="nav_agents">에이전트</span>
+      <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
+    <div class="pg-drop pg-drop--wide"><div class="pg-drop-inner">
+      <a href="{% url 'accounts:agent_detail' 'consulting' %}"    class="pg-drop-a"><span class="pg-drop-num">I</span> <span data-i18n="agent_I">상담 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'summary' %}"      class="pg-drop-a"><span class="pg-drop-num">II</span> <span data-i18n="agent_II">요약 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'prior-art' %}"    class="pg-drop-a"><span class="pg-drop-num">III</span> <span data-i18n="agent_III">선행기술조사 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'claim' %}"        class="pg-drop-a"><span class="pg-drop-num">IV</span> <span data-i18n="agent_IV">청구항 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'drawing' %}"      class="pg-drop-a"><span class="pg-drop-num">V</span> <span data-i18n="agent_V">도면 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'specification' %}" class="pg-drop-a"><span class="pg-drop-num">VI</span> <span data-i18n="agent_VI">명세서 에이전트</span></a>
+      <a href="{% url 'accounts:agent_detail' 'composer' %}"     class="pg-drop-a"><span class="pg-drop-num">VII</span> <span data-i18n="agent_VII">컴포저 에이전트</span></a>
+      <div class="pg-drop-sep"></div>
+      <a href="{% url 'accounts:drawing_gallery' %}"     class="pg-drop-a" data-i18n="nav_drawing_gallery">도면 갤러리</a>
+    </div></div>
+  </div>
+
+  <div class="pg-gnb-item">
+    <a href="{% url 'accounts:qna' %}" class="pg-gnb-a">
+      <span data-i18n="nav_qna">특허법 Q&amp;A</span>
+      <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
+    <div class="pg-drop pg-drop--wide"><div class="pg-drop-inner">
+      <a href="{% url 'accounts:qna' %}#basics"    class="pg-drop-a" data-i18n="nav_qna_basics">출원 기초</a>
+      <a href="{% url 'accounts:qna' %}#claims"    class="pg-drop-a" data-i18n="nav_qna_claims">청구항 작성</a>
+      <a href="{% url 'accounts:qna' %}#exam"      class="pg-drop-a" data-i18n="nav_qna_exam">심사·등록</a>
+      <a href="{% url 'accounts:qna' %}#ai"        class="pg-drop-a pg-drop-a--hl" data-i18n="nav_qna_ai">AI 특허 Q&amp;A</a>
+    </div></div>
+  </div>
+
+  <div class="pg-gnb-item">
+    <a href="{% url 'accounts:insights' %}" class="pg-gnb-a">
+      <span data-i18n="nav_patent_data">특허 자료</span>
+      <svg class="pg-gnb-chev" width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </a>
+    <div class="pg-drop"><div class="pg-drop-inner">
+      <a href="{% url 'accounts:insights' %}" class="pg-drop-a" data-i18n="nav_insights">특허 인사이트</a>
+    </div></div>
+  </div>
+
+
+</nav>

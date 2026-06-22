@@ -1,0 +1,27 @@
+<header class="pg-header">
+  <div class="pg-nav">
+    <a href="{% url 'accounts:landing' %}" class="pg-logo">
+      <span class="pg-logo-mark">Pi</span>
+      <span class="pg-logo-name">PYPI</span>
+    </a>
+    {% include "pages/_nav.html" %}
+    <div class="pg-util">
+      <div class="lang-switcher">
+        <button class="lang-btn" type="button">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span data-lang-display>KO</span>
+        </button>
+        <div class="lang-dropdown">
+          <a href="#" class="lang-option" data-lang="ko"><span class="lang-name">한국어</span><span class="lang-code">KO</span></a>
+          <a href="#" class="lang-option" data-lang="en"><span class="lang-name">English</span><span class="lang-code">EN</span></a>
+          <a href="#" class="lang-option" data-lang="ja"><span class="lang-name">日本語</span><span class="lang-code">JA</span></a>
+          <a href="#" class="lang-option" data-lang="zh"><span class="lang-name">中文</span><span class="lang-code">ZH</span></a>
+        </div>
+      </div>
+      <a href="{% url 'accounts:chat' %}" class="pg-btn-cta" data-i18n="nav_dashboard">AI 어시스턴트</a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:login' %}" class="pg-btn-back" data-i18n="nav_login">로그인</a>
+      {% endif %}
+    </div>
+  </div>
+</header>

@@ -1,0 +1,39 @@
+{
+  "figures": [
+    {
+      "fig_number": "도 1",
+      "diagram_type": "block_diagram",
+      "title": "일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다",
+      "purpose": "사용자 입력에 기반한 문장을 제공하는 장치의 구조를 설명하기 위함",
+      "source_text": "도 1은 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 장치를 설명하기 위한 블록도이다"
+    },
+    {
+      "fig_number": "도 10",
+      "diagram_type": "flowchart",
+      "title": "일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 방법을 나타내는 흐름도이다",
+      "purpose": "사용자 입력에 기반한 문장을 제공하는 방법의 처리 단계를 설명하기 위함",
+      "source_text": "도 10은 일 실시예에 따른 사용자 입력에 기반한 문장을 제공하는 방법을 나타내는 흐름도이다"
+    },
+    {
+      "fig_number": "도 3",
+      "diagram_type": "sequence",
+      "title": "시스템 간 통신 시퀀스",
+      "purpose": "통신 흐름",
+      "source_text": "자동 추가"
+    },
+    {
+      "fig_number": "도 4",
+      "diagram_type": "ui_screen",
+      "title": "사용자 인터페이스 화면 예시",
+      "purpose": "UI 구성",
+      "source_text": "자동 추가"
+    },
+    {
+      "fig_number": "도 5",
+      "diagram_type": "circuit",
+      "title": "하드웨어 회로 구성도",
+      "purpose": "회로 구성",
+      "source_text": "자동 추가"
+    }
+  ]
+}

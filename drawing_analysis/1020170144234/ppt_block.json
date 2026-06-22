@@ -1,0 +1,73 @@
+{
+  "fig_number": "도 1",
+  "title": "사용자 입력 기반 문장 제공 장치 전체 구성도",
+  "diagram_type": "block_diagram",
+  "purpose": "",
+  "figure_source_text": "",
+  "elements": [
+    {
+      "id": "N1000",
+      "ref_no": "1000",
+      "name": "장치",
+      "type": "container",
+      "description": "전체 시스템"
+    },
+    {
+      "id": "N1100",
+      "ref_no": "1100",
+      "name": "메모리",
+      "type": "data",
+      "description": "프로그램·데이터 저장"
+    },
+    {
+      "id": "N1200",
+      "ref_no": "1200",
+      "name": "제어부",
+      "type": "module",
+      "description": "전반 동작 제어"
+    },
+    {
+      "id": "N1300",
+      "ref_no": "1300",
+      "name": "입출력부",
+      "type": "module",
+      "description": "축약어 입력 / 문장 표시"
+    },
+    {
+      "id": "N1210",
+      "ref_no": "1210",
+      "name": "데이터 학습부",
+      "type": "module",
+      "description": "인식 모델 학습"
+    },
+    {
+      "id": "N1220",
+      "ref_no": "1220",
+      "name": "데이터 인식부",
+      "type": "module",
+      "description": "문장 생성·추론"
+    }
+  ],
+  "relations": [
+    {
+      "from": "N1100",
+      "to": "N1200",
+      "label": "프로그램 제공"
+    },
+    {
+      "from": "N1200",
+      "to": "N1300",
+      "label": "문장 제공"
+    },
+    {
+      "from": "N1200",
+      "to": "N1210",
+      "label": "학습 요청"
+    },
+    {
+      "from": "N1210",
+      "to": "N1220",
+      "label": "모델 정보"
+    }
+  ]
+}

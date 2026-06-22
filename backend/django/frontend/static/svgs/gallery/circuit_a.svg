@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="560" viewBox="0 0 700 560">
+<defs>
+  <marker id="ca-arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#222"/></marker>
+  <pattern id="ca-hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+    <line x1="0" y1="0" x2="0" y2="5" stroke="#ccc" stroke-width="0.7"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="700" height="560" fill="#fff"/>
+<rect x="4" y="4" width="692" height="552" fill="#fff" stroke="#444" stroke-width="1.8"/>
+<rect x="10" y="10" width="680" height="540" fill="none" stroke="#ccc" stroke-width="0.6"/>
+<text x="350" y="33" font-family="'Courier New',monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="#111">도 3  회로 블록 구성도</text>
+<line x1="14" y1="43" x2="686" y2="43" stroke="#999" stroke-width="0.8"/>
+<!-- VCC 전원 라인 -->
+<line x1="30" y1="80" x2="670" y2="80" stroke="#555" stroke-width="2" stroke-dasharray="12 4"/>
+<text x="40" y="73" font-family="'Courier New',monospace" font-size="9" fill="#888">VCC (+5V)</text>
+<!-- GND 라인 -->
+<line x1="30" y1="460" x2="670" y2="460" stroke="#555" stroke-width="2" stroke-dasharray="12 4"/>
+<text x="40" y="472" font-family="'Courier New',monospace" font-size="9" fill="#888">GND (0V)</text>
+<!-- 입력부 IC -->
+<rect x="50" y="120" width="130" height="180" rx="2" fill="#f8f8f8" stroke="#222" stroke-width="1.8"/>
+<text x="115" y="145" font-family="'Courier New',monospace" font-size="10" font-weight="bold" text-anchor="middle" fill="#111">IC-101</text>
+<text x="115" y="160" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">입력 제어 IC</text>
+<line x1="50" y1="170" x2="40" y2="170" stroke="#333" stroke-width="1.3"/><text x="36" y="174" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">IN1</text>
+<line x1="50" y1="195" x2="40" y2="195" stroke="#333" stroke-width="1.3"/><text x="36" y="199" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">IN2</text>
+<line x1="50" y1="220" x2="40" y2="220" stroke="#333" stroke-width="1.3"/><text x="36" y="224" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">CLK</text>
+<line x1="50" y1="245" x2="40" y2="245" stroke="#333" stroke-width="1.3"/><text x="36" y="249" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">RST</text>
+<line x1="180" y1="195" x2="195" y2="195" stroke="#333" stroke-width="1.3"/><text x="198" y="199" font-family="'Courier New',monospace" font-size="8" fill="#666">OUT</text>
+<!-- VCC/GND 연결선 -->
+<line x1="115" y1="120" x2="115" y2="80" stroke="#aaa" stroke-width="1"/>
+<circle cx="115" cy="80" r="3" fill="#555"/>
+<line x1="115" y1="300" x2="115" y2="460" stroke="#aaa" stroke-width="1"/>
+<circle cx="115" cy="460" r="3" fill="#555"/>
+<!-- MCU (가운데 큰 IC) -->
+<rect x="270" y="100" width="160" height="260" rx="2" fill="#efefef" stroke="#111" stroke-width="2.4"/>
+<text x="350" y="125" font-family="'Courier New',monospace" font-size="11" font-weight="bold" text-anchor="middle" fill="#111">MCU-200</text>
+<text x="350" y="142" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">주 처리 장치</text>
+<!-- MCU 핀들 -->
+<line x1="270" y1="165" x2="255" y2="165" stroke="#333" stroke-width="1.3"/><text x="252" y="169" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">PA0</text>
+<line x1="270" y1="190" x2="255" y2="190" stroke="#333" stroke-width="1.3"/><text x="252" y="194" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">PA1</text>
+<line x1="270" y1="215" x2="255" y2="215" stroke="#333" stroke-width="1.3"/><text x="252" y="219" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">PB0</text>
+<line x1="270" y1="240" x2="255" y2="240" stroke="#333" stroke-width="1.3"/><text x="252" y="244" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">PB1</text>
+<line x1="430" y1="165" x2="445" y2="165" stroke="#333" stroke-width="1.3"/><text x="448" y="169" font-family="'Courier New',monospace" font-size="8" fill="#666">TX</text>
+<line x1="430" y1="190" x2="445" y2="190" stroke="#333" stroke-width="1.3"/><text x="448" y="194" font-family="'Courier New',monospace" font-size="8" fill="#666">RX</text>
+<line x1="430" y1="215" x2="445" y2="215" stroke="#333" stroke-width="1.3"/><text x="448" y="219" font-family="'Courier New',monospace" font-size="8" fill="#666">SDA</text>
+<line x1="430" y1="240" x2="445" y2="240" stroke="#333" stroke-width="1.3"/><text x="448" y="244" font-family="'Courier New',monospace" font-size="8" fill="#666">SCL</text>
+<!-- MCU VCC/GND -->
+<line x1="350" y1="100" x2="350" y2="80" stroke="#aaa" stroke-width="1"/>
+<circle cx="350" cy="80" r="3" fill="#555"/>
+<line x1="350" y1="360" x2="350" y2="460" stroke="#aaa" stroke-width="1"/>
+<circle cx="350" cy="460" r="3" fill="#555"/>
+<!-- 출력 IC -->
+<rect x="520" y="120" width="130" height="180" rx="2" fill="#f8f8f8" stroke="#222" stroke-width="1.8"/>
+<text x="585" y="145" font-family="'Courier New',monospace" font-size="10" font-weight="bold" text-anchor="middle" fill="#111">IC-301</text>
+<text x="585" y="160" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#555">출력 드라이버</text>
+<line x1="520" y1="175" x2="505" y2="175" stroke="#333" stroke-width="1.3"/><text x="502" y="179" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#666">IN</text>
+<line x1="650" y1="195" x2="665" y2="195" stroke="#333" stroke-width="1.3"/><text x="668" y="199" font-family="'Courier New',monospace" font-size="8" fill="#666">OUT</text>
+<!-- IC-101 → MCU 연결선 -->
+<line x1="195" y1="195" x2="255" y2="195" stroke="#222" stroke-width="1.4" marker-end="url(#ca-arr)"/>
+<!-- MCU TX → IC-301 -->
+<line x1="445" y1="165" x2="505" y2="175" stroke="#222" stroke-width="1.4" marker-end="url(#ca-arr)"/>
+<!-- IC-301 VCC/GND -->
+<line x1="585" y1="120" x2="585" y2="80" stroke="#aaa" stroke-width="1"/>
+<circle cx="585" cy="80" r="3" fill="#555"/>
+<line x1="585" y1="300" x2="585" y2="460" stroke="#aaa" stroke-width="1"/>
+<circle cx="585" cy="460" r="3" fill="#555"/>
+<!-- 커패시터 C1 (MCU 근처 바이패스) -->
+<line x1="350" y1="390" x2="350" y2="400" stroke="#333" stroke-width="1.2"/>
+<line x1="335" y1="400" x2="365" y2="400" stroke="#333" stroke-width="2"/>
+<line x1="335" y1="406" x2="365" y2="406" stroke="#333" stroke-width="2"/>
+<line x1="350" y1="406" x2="350" y2="418" stroke="#333" stroke-width="1.2"/>
+<text x="372" y="405" font-family="'Courier New',monospace" font-size="9" fill="#777">C1 100nF</text>
+<!-- 저항 R1 -->
+<line x1="195" y1="220" x2="215" y2="220" stroke="#333" stroke-width="1.2"/>
+<rect x="215" y="213" width="36" height="14" fill="#fff" stroke="#444" stroke-width="1.2"/>
+<line x1="251" y1="220" x2="255" y2="220" stroke="#333" stroke-width="1.2"/>
+<text x="233" y="204" font-family="'Courier New',monospace" font-size="8" text-anchor="middle" fill="#777">R1 10kΩ</text>
+<!-- 참조번호 -->
+<circle cx="660" cy="210" r="12" fill="#fff" stroke="#555" stroke-width="1.1"/>
+<text x="660" y="214" font-family="Arial,sans-serif" font-size="9" font-weight="bold" text-anchor="middle" fill="#333">200</text>
+<!-- 타이틀 블록 -->
+<line x1="14" y1="512" x2="686" y2="512" stroke="#888" stroke-width="0.8"/>
+<line x1="234" y1="512" x2="234" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<line x1="468" y1="512" x2="468" y2="550" stroke="#ccc" stroke-width="0.5"/>
+<text x="22" y="528" font-family="'Courier New',monospace" font-size="11" font-weight="bold" fill="#333">도 3</text>
+<text x="22" y="543" font-family="Arial,sans-serif" font-size="9" fill="#777">회로 블록 구성도</text>
+<text x="350" y="528" font-family="Arial,sans-serif" font-size="9" text-anchor="middle" fill="#999">SCALE : N.T.S  |  UNIT : —</text>
+<text x="678" y="528" font-family="'Courier New',monospace" font-size="8" text-anchor="end" fill="#aaa">PYPI AI · 특허청 기준</text>
+<text x="678" y="543" font-family="Arial,sans-serif" font-size="7" text-anchor="end" fill="#bbb">AUTO GENERATED</text>
+</svg>

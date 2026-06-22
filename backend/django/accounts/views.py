@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .serializers import UserSerializer
@@ -78,3 +79,72 @@ def me_api(request):
         user.save()
         
     return Response({'user': UserSerializer(user).data})
+
+
+def about(request):
+    return render(request, 'pages/about.html')
+
+
+def features(request):
+    return render(request, 'pages/features.html')
+
+
+def team(request):
+    return render(request, 'pages/team.html')
+
+
+def agents_overview(request):
+    return render(request, 'pages/agents_overview.html')
+
+
+AGENTS = {
+    'consulting': {
+        'num': 'I',
+        'name': '상담 에이전트',
+        'en': 'Consulting Agent',
+        'desc': '발명자와 대화하며 특허 작성에 필요한 핵심 정보를 수집합니다.',
+        'detail': '대화 기반으로 발명의 문제점, 해결방법, 차별성, 기대효과를 정리합니다.',
+        'inputs': ['발명 아이디어', '첨부 파일'],
+        'outputs': ['상담 요약', '구조화된 발명 정보'],
+        'steps': [],
+        'active': True,
+        'action_url': 'dashboard',
+        'action_label': '대시보드로 이동',
+    },
+}
+
+
+def agent_detail(request, slug):
+    agent = AGENTS.get(slug)
+    if not agent:
+        from django.http import Http404
+        raise Http404
+    return render(request, 'pages/agent_detail.html', {'agent': agent, 'slug': slug})
+
+
+def drawing_gallery(request):
+    return render(request, 'pages/drawing_gallery.html')
+
+
+def insights(request):
+    return render(request, 'pages/insights.html')
+
+
+QNA_SECTIONS = [
+    {
+        'id': 'basics',
+        'section': '출원 기초',
+        'en': 'Filing Basics',
+        'items': [
+            ('특허 출원이란 무엇인가요?', '발명을 특허청에 제출해 권리를 확보하는 절차입니다.'),
+        ],
+    },
+]
+
+
+def qna(request):
+    total_count = sum(len(section['items']) for section in QNA_SECTIONS)
+    return render(request, 'pages/qna.html', {
+        'qna_sections': QNA_SECTIONS,
+        'total_count': total_count,
+    })

@@ -1,0 +1,195 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}{{ member.name }} | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <!-- ── Profile Hero ─────────────────────────────────── -->
+  <section class="pg-hero" style="padding:80px 0 60px;">
+    <div class="pg-container">
+      <div class="mb-hero">
+        {% load static %}
+      <div class="mb-avatar">
+        {% if member.photo %}
+        <img src="{% static member.photo %}" alt="{{ member.name }}" onerror="this.parentElement.innerHTML='{{ member.initial }}'">
+        {% else %}{{ member.initial }}{% endif %}
+      </div>
+        <div class="mb-intro">
+          <p class="mb-role-tag">{{ member.role }}</p>
+          <h1 class="mb-name">{{ member.name }}</h1>
+          <div class="mb-rule"></div>
+          <p class="mb-role-ko">{{ member.role_ko }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Body ─────────────────────────────────────────── -->
+  <div class="pg-body">
+    <div class="pg-container">
+      <div class="mb-layout">
+
+        <!-- Main: 상세 내용 -->
+        <div class="mb-main">
+          <div class="mb-section">
+            <p class="mb-section-label">담당 업무</p>
+            <p class="mb-text">{{ member.detail }}</p>
+          </div>
+
+          <!-- 담당 에이전트 연결 -->
+          {% if member.agent_url %}
+          <div class="mb-agent-link">
+            <div class="mb-agent-num">{{ member.agent }}</div>
+            <div class="mb-agent-body">
+              <p class="mb-agent-name">{{ member.agent_name }}</p>
+              <p class="mb-agent-sub">이 팀원이 개발한 에이전트입니다</p>
+            </div>
+            <a href="{% url member.agent_url %}" class="mb-agent-btn">에이전트 상세 →</a>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Aside: 스킬 + 팀 링크 -->
+        <aside class="mb-aside">
+
+          <div class="mb-skill-card">
+            <p class="mb-section-label">기술 스택</p>
+            <div class="mb-skills">
+              {% for skill in member.skills %}
+              <span class="mb-skill-tag">{{ skill }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mb-team-nav">
+            <p class="mb-section-label" style="margin-bottom:1rem;">팀원 목록</p>
+            <a href="{% url 'accounts:team_member' 'kwon-gayoung' %}" class="mb-nav-item {% if member.slug == 'kwon-gayoung' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">권</span><span>권가영</span>
+            </a>
+            <a href="{% url 'accounts:team_member' 'kim-seohyun' %}" class="mb-nav-item {% if member.slug == 'kim-seohyun' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">김</span><span>김서현</span>
+            </a>
+            <a href="{% url 'accounts:team_member' 'kim-hongik' %}" class="mb-nav-item {% if member.slug == 'kim-hongik' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">김</span><span>김홍익</span>
+            </a>
+            <a href="{% url 'accounts:team_member' 'park-beomsoo' %}" class="mb-nav-item {% if member.slug == 'park-beomsoo' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">박</span><span>박범수</span>
+            </a>
+            <a href="{% url 'accounts:team_member' 'jo-eunseok' %}" class="mb-nav-item {% if member.slug == 'jo-eunseok' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">조</span><span>조은석</span>
+            </a>
+            <a href="{% url 'accounts:team_member' 'choi-hyunwoo' %}" class="mb-nav-item {% if member.slug == 'choi-hyunwoo' %}mb-nav-item--active{% endif %}">
+              <span class="mb-nav-init">최</span><span>최현우</span>
+            </a>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── Profile Hero ── */
+.mb-hero { display: flex; align-items: center; gap: 48px; }
+.mb-avatar {
+  width: 100px; height: 100px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(154,120,64,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 36px; font-weight: 300; color: var(--lf-gold);
+  overflow: hidden; background: var(--lf-bg3);
+  box-shadow: 0 0 0 5px rgba(154,120,64,.06);
+}
+.mb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.mb-role-tag {
+  font-size: 9px; font-weight: 500; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); opacity: .7;
+  margin-bottom: 10px;
+}
+.mb-name {
+  font-family: var(--lf-serif); font-size: clamp(32px,4vw,52px);
+  font-weight: 300; color: var(--lf-navy); letter-spacing: -1px; margin-bottom: 16px;
+}
+.mb-rule { width: 40px; height: 1px; background: rgba(154,120,64,.4); margin-bottom: 12px; }
+.mb-role-ko { font-size: 13px; font-weight: 300; color: var(--lf-mid); }
+
+/* ── Layout ── */
+.mb-layout { display: grid; grid-template-columns: 1fr 280px; gap: 4rem; align-items: start; }
+
+.mb-section { margin-bottom: 3rem; }
+.mb-section-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--lf-gold); margin-bottom: 16px;
+}
+.mb-text { font-size: 14.5px; font-weight: 300; color: var(--lf-body); line-height: 2; }
+
+/* ── Agent link ── */
+.mb-agent-link {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--lf-bg2); border: 1px solid var(--lf-border);
+  border-left: 3px solid var(--lf-gold);
+  padding: 1.5rem 1.75rem; margin-top: 2rem;
+}
+.mb-agent-num {
+  font-family: var(--lf-serif); font-size: 28px; font-weight: 300;
+  font-style: italic; color: var(--lf-gold); opacity: .7; flex-shrink: 0;
+}
+.mb-agent-body { flex: 1; }
+.mb-agent-name { font-family: var(--lf-serif); font-size: 18px; color: var(--lf-navy); margin-bottom: 4px; }
+.mb-agent-sub { font-size: 11.5px; color: var(--lf-muted); font-weight: 300; }
+.mb-agent-btn {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lf-gold); text-decoration: none;
+  white-space: nowrap; transition: opacity .2s;
+}
+.mb-agent-btn:hover { opacity: .7; }
+
+/* ── Skill card ── */
+.mb-skill-card {
+  background: var(--lf-bg2); border: 1px solid var(--lf-border); padding: 1.5rem; margin-bottom: 1.25rem;
+}
+.mb-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0; }
+.mb-skill-tag {
+  font-size: 10.5px; font-weight: 500; letter-spacing: .3px;
+  padding: .35rem .8rem; background: var(--lf-bg); border: 1px solid var(--lf-border);
+  color: var(--lf-body);
+}
+
+/* ── Team nav ── */
+.mb-team-nav { background: var(--lf-bg2); border: 1px solid var(--lf-border); padding: 1.5rem; }
+.mb-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: .6rem .75rem; text-decoration: none;
+  color: var(--lf-mid); font-size: 12.5px; font-weight: 300;
+  transition: background .15s, color .15s;
+}
+.mb-nav-item:hover { background: rgba(154,120,64,.05); color: var(--lf-navy); }
+.mb-nav-item--active { background: rgba(154,120,64,.07); color: var(--lf-navy); font-weight: 500; }
+.mb-nav-init {
+  width: 26px; height: 26px; flex-shrink: 0;
+  border: 1px solid rgba(154,120,64,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--lf-serif); font-size: 13px; color: var(--lf-gold);
+}
+.mb-nav-item--active .mb-nav-init { border-color: rgba(154,120,64,.5); }
+
+@media (max-width: 768px) {
+  .mb-hero { flex-direction: column; gap: 24px; }
+  .mb-layout { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

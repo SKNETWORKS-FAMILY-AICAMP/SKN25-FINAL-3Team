@@ -1,0 +1,62 @@
+{
+  "fig_number": "도 3",
+  "title": "시스템 간 통신 시퀀스",
+  "diagram_type": "sequence",
+  "purpose": "통신 흐름",
+  "figure_source_text": "자동 추가",
+  "elements": [
+    {
+      "id": "A0",
+      "ref_no": "A0",
+      "name": "사용자",
+      "type": "actor",
+      "description": "",
+      "source_text": ""
+    },
+    {
+      "id": "A1",
+      "ref_no": "A1",
+      "name": "서버",
+      "type": "actor",
+      "description": "",
+      "source_text": ""
+    }
+  ],
+  "relations": [
+    {
+      "from": "A0",
+      "to": "A1",
+      "label": "축약어 입력",
+      "msg_type": "sync",
+      "source_text": ""
+    },
+    {
+      "from": "A0",
+      "to": "A0",
+      "label": "상황 정보 획득",
+      "msg_type": "sync",
+      "source_text": ""
+    },
+    {
+      "from": "A0",
+      "to": "A1",
+      "label": "프로세스 종료",
+      "msg_type": "async",
+      "source_text": ""
+    },
+    {
+      "from": "A0",
+      "to": "A0",
+      "label": "문장 제공",
+      "msg_type": "sync",
+      "source_text": ""
+    },
+    {
+      "from": "A0",
+      "to": "A1",
+      "label": "프로세스 종료",
+      "msg_type": "sync",
+      "source_text": ""
+    }
+  ]
+}

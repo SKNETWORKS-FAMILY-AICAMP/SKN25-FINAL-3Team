@@ -32,21 +32,21 @@
     <nav class="lf-gnb" aria-label="Main navigation">
       {# PYPI 소개 #}
       <div class="lf-gnb-item">
-        <a href="#" class="lf-gnb-a">
+        <a href="{% url 'accounts:about' %}" class="lf-gnb-a">
           <span data-i18n="nav_about_top">PYPI 소개</span>
           {% include 'components/_chev.html' %}
         </a>
         <div class="lf-drop"><div class="lf-drop-inner">
-          <a href="#" class="lf-drop-a" data-i18n="nav_about">서비스 소개</a>
-          <a href="#" class="lf-drop-a" data-i18n="nav_features">특징 및 원칙</a>
+          <a href="{% url 'accounts:about' %}" class="lf-drop-a" data-i18n="nav_about">서비스 소개</a>
+          <a href="{% url 'accounts:features' %}" class="lf-drop-a" data-i18n="nav_features">특징 및 원칙</a>
           <div class="lf-drop-sep"></div>
-          <a href="#" class="lf-drop-a" data-i18n="nav_team">팀 소개</a>
+          <a href="{% url 'accounts:team' %}" class="lf-drop-a" data-i18n="nav_team">팀 소개</a>
         </div></div>
       </div>
 
       {# 서비스 #}
       <div class="lf-gnb-item">
-        <a href="#" class="lf-gnb-a">
+        <a href="{% url 'dashboard' %}" class="lf-gnb-a">
           <span data-i18n="nav_service">서비스</span>
           {% include 'components/_chev.html' %}
         </a>
@@ -58,32 +58,32 @@
 
       {# 에이전트 #}
       <div class="lf-gnb-item">
-        <a href="#" class="lf-gnb-a">
+        <a href="{% url 'accounts:agents_overview' %}" class="lf-gnb-a">
           <span data-i18n="nav_agents">에이전트</span>
           {% include 'components/_chev.html' %}
         </a>
         <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">I</span><span data-i18n="agent_I">상담 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">II</span><span data-i18n="agent_II">요약 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">III</span><span data-i18n="agent_III">선행기술조사 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">IV</span><span data-i18n="agent_IV">청구항 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">V</span><span data-i18n="agent_V">도면 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">VI</span><span data-i18n="agent_VI">명세서 에이전트</span></a>
-          <a href="#" class="lf-drop-a"><span class="lf-drop-num">VII</span><span data-i18n="agent_VII">컴포저 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'consulting' %}" class="lf-drop-a"><span class="lf-drop-num">I</span><span data-i18n="agent_I">상담 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'summary' %}" class="lf-drop-a"><span class="lf-drop-num">II</span><span data-i18n="agent_II">요약 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'prior-art' %}" class="lf-drop-a"><span class="lf-drop-num">III</span><span data-i18n="agent_III">선행기술조사 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'claim' %}" class="lf-drop-a"><span class="lf-drop-num">IV</span><span data-i18n="agent_IV">청구항 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'drawing' %}" class="lf-drop-a"><span class="lf-drop-num">V</span><span data-i18n="agent_V">도면 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'specification' %}" class="lf-drop-a"><span class="lf-drop-num">VI</span><span data-i18n="agent_VI">명세서 에이전트</span></a>
+          <a href="{% url 'accounts:agent_detail' 'composer' %}" class="lf-drop-a"><span class="lf-drop-num">VII</span><span data-i18n="agent_VII">컴포저 에이전트</span></a>
         </div></div>
       </div>
 
       {# 특허법 Q&A #}
       <div class="lf-gnb-item">
-        <a href="#" class="lf-gnb-a">
+        <a href="{% url 'accounts:qna' %}" class="lf-gnb-a">
           <span data-i18n="nav_qna">특허법 Q&amp;A</span>
           {% include 'components/_chev.html' %}
         </a>
         <div class="lf-drop lf-drop--wide"><div class="lf-drop-inner">
-          <a href="#" class="lf-drop-a" data-i18n="nav_qna_basics">출원 기초</a>
-          <a href="#" class="lf-drop-a" data-i18n="nav_qna_claims">청구항 작성</a>
-          <a href="#" class="lf-drop-a" data-i18n="nav_qna_exam">심사·등록</a>
-          <a href="#" class="lf-drop-a lf-drop-a--hl" data-i18n="nav_qna_ai">AI 특허 Q&amp;A</a>
+          <a href="{% url 'accounts:qna' %}#basics" class="lf-drop-a" data-i18n="nav_qna_basics">출원 기초</a>
+          <a href="{% url 'accounts:qna' %}#claims" class="lf-drop-a" data-i18n="nav_qna_claims">청구항 작성</a>
+          <a href="{% url 'accounts:qna' %}#exam" class="lf-drop-a" data-i18n="nav_qna_exam">심사·등록</a>
+          <a href="{% url 'accounts:qna' %}#ai" class="lf-drop-a lf-drop-a--hl" data-i18n="nav_qna_ai">AI 특허 Q&amp;A</a>
         </div></div>
       </div>
     </nav>
@@ -109,7 +109,7 @@
       </form>
       {% else %}
       <a href="{% url 'login' %}" class="lf-login" data-i18n="nav_login">로그인</a>
-      <a href="{% url 'signup' %}" class="lf-login lf-login--cta">회원가입</a>
+      <a href="{% url 'accounts:signup' %}" class="lf-login lf-login--cta">회원가입</a>
       {% endif %}
     </div>
   </div>

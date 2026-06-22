@@ -1,0 +1,130 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}서비스 소개 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  {% include "pages/_pg_header.html" %}
+
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag" data-i18n="about_tag">About PYPI</span>
+      <h1 class="pg-hero-h1"><span data-i18n="about_h1_1">특허 출원의 전 과정을</span><br><em data-i18n="about_h1_2">AI가 대신합니다</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc" data-i18n="about_desc">PYPI는 발명 아이디어를 입력하면 7개 전문 에이전트가 순차적으로 협력하여 특허청에 제출 가능한 완성 명세서를 자동 생성하는 AI 기반 특허 자동화 시스템입니다.</p>
+    </div>
+  </section>
+
+  <div class="pg-body">
+    <div class="pg-container">
+
+      <div class="ab-grid">
+        <div class="ab-block">
+          <p class="ab-label" data-i18n="about_l1">문제 인식</p>
+          <h2 class="ab-h2" data-i18n="about_h2_1">특허 출원은 왜 이렇게 어려운가</h2>
+          <p class="ab-body" data-i18n="about_b1">특허 명세서 작성은 특허청 규정·법률 용어·기술 표현이 복잡하게 얽혀 있어 전문 변리사 없이는 진행하기 어렵습니다.</p>
+          <p class="ab-body" data-i18n="about_b2">PYPI는 이 장벽을 AI로 낮춥니다. 아이디어를 자연어로 입력하면 나머지를 자동화합니다.</p>
+        </div>
+        <div class="ab-block">
+          <p class="ab-label" data-i18n="about_l2">해결 방식</p>
+          <h2 class="ab-h2" data-i18n="about_h2_2">7개 에이전트의 파이프라인 협력</h2>
+          <p class="ab-body" data-i18n="about_b3">상담→요약→선행기술조사→청구항→도면→명세서→통합까지 7개 전문 AI 에이전트가 LangGraph 파이프라인으로 순차 협력합니다.</p>
+          <p class="ab-body" data-i18n="about_b4">최종 출력은 특허청에 바로 제출 가능한 완성 명세서 DOCX 파일입니다.</p>
+        </div>
+      </div>
+
+      <div class="ab-divider"></div>
+
+      <div class="ab-stats">
+        <div class="ab-stat"><span class="ab-stat-n">7</span><span class="ab-stat-l" data-i18n="stat_agents">전문 AI 에이전트</span></div>
+        <div class="ab-stat"><span class="ab-stat-n">4</span><span class="ab-stat-l" data-i18n="stat_lang">지원 언어</span></div>
+        <div class="ab-stat"><span class="ab-stat-n">100%</span><span class="ab-stat-l" data-i18n="stat_auto">AI 자동 생성</span></div>
+        <div class="ab-stat"><span class="ab-stat-phrase" data-i18n="stat_phrase">제출 가능한 완성 명세서</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── About grid ── */
+.ab-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; background: var(--lf-border); border: 1px solid var(--lf-border);
+  margin-bottom: 80px;
+}
+.ab-block {
+  background: var(--lf-bg); padding: 56px 52px;
+  position: relative; overflow: hidden; transition: background .2s;
+}
+.ab-block::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
+  background: var(--lf-gold); transform: scaleY(0); transform-origin: top;
+  transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+}
+.ab-block:hover { background: rgba(154,120,64,.02); }
+.ab-block:hover::before { transform: scaleY(1); }
+
+.ab-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--lf-gold); display: block; margin-bottom: 20px; opacity: .8;
+}
+.ab-h2 {
+  font-family: var(--lf-serif); font-size: clamp(22px,2.4vw,30px);
+  font-weight: 300; color: var(--lf-navy); line-height: 1.35; margin-bottom: 28px;
+}
+.ab-body {
+  font-size: 15.5px; font-weight: 300; color: var(--lf-body);
+  line-height: 2; margin-bottom: 0;
+}
+.ab-body + .ab-body { margin-top: 16px; }
+
+/* ── Stats ── */
+.ab-divider { height: 1px; background: var(--lf-border); margin-bottom: 64px; }
+.ab-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--lf-border);
+}
+.ab-stat {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 52px 24px;
+  border-right: 1px solid var(--lf-border);
+  text-align: center;
+}
+.ab-stat:last-child { border-right: none; }
+.ab-stat-n {
+  font-family: var(--lf-serif); font-size: 52px; font-weight: 300;
+  color: var(--lf-gold); letter-spacing: -2px; line-height: 1;
+}
+.ab-stat-l {
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lf-muted);
+}
+.ab-stat-phrase {
+  font-family: var(--lf-serif); font-size: 16px; font-weight: 400;
+  color: var(--lf-navy); line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .ab-grid { grid-template-columns: 1fr; }
+  .ab-stats { grid-template-columns: 1fr 1fr; }
+  .ab-stat { padding: 36px 16px; border-bottom: 1px solid var(--lf-border); }
+}
+@media (max-width: 480px) {
+  .ab-block { padding: 40px 28px; }
+  .ab-stats { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

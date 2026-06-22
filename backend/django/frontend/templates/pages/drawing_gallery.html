@@ -1,0 +1,293 @@
+{% extends 'pages/base_page.html' %}
+{% block title %}도면 갤러리 | PYPI{% endblock %}
+
+{% block content %}
+<div class="pg">
+
+  <header class="pg-header">
+    <div class="pg-nav">
+      <a href="{% url 'accounts:landing' %}" class="pg-logo">
+        <span class="pg-logo-mark">Pi</span>
+        <span class="pg-logo-name">PYPI</span>
+      </a>
+      {% include "pages/_nav.html" %}
+      <div class="pg-util">
+        <a href="{% url 'accounts:agent_detail' 'drawing' %}" class="pg-btn-back">← 도면 에이전트</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="pg-hero">
+    {% include "pages/_hero_deco.html" %}
+    <div class="pg-container">
+      <span class="pg-hero-tag">Drawing Gallery · 300+ 특허 원문 추출</span>
+      <h1 class="pg-hero-h1"><em>도면 갤러리</em></h1>
+      <div class="pg-hero-rule"></div>
+      <p class="pg-hero-desc">KIPRIS·Google Patents 등록 특허 PDF에서 PYPI 도면 에이전트가 직접 추출·재현한 도면입니다.<br>분야별로 필터하고, 카드를 클릭하면 원본 특허 정보를 확인할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="dg-section">
+    <div class="pg-container">
+
+      <!-- 모달 -->
+      <div class="dg-modal-bg" id="dg-modal-bg" onclick="if(event.target===this)dgCloseModal()">
+        <div class="dg-modal" id="dg-modal" style="position:relative;">
+          <button class="dg-modal-close" onclick="dgCloseModal()">✕</button>
+          <div class="dg-modal-drawing" id="dg-modal-svg">
+            <button class="dg-zoom-btn" id="dg-zoom-btn" onclick="dgOpenZoom()" title="전체화면으로 보기">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
+          </div>
+          <div class="dg-modal-info" id="dg-modal-info"></div>
+        </div>
+      </div>
+
+      <!-- 전체화면 줌 오버레이 -->
+      <div class="dg-zoom-overlay" id="dg-zoom-overlay" onclick="dgCloseZoom()">
+        <button class="dg-zoom-overlay-close" onclick="dgCloseZoom()">✕ 닫기</button>
+        <div class="dg-zoom-content" id="dg-zoom-content" onclick="event.stopPropagation()"></div>
+      </div>
+
+      <!-- 필터 -->
+      <div class="dg-filters">
+        <button class="dg-filter-btn {% if active_cat == '전체' %}active{% endif %}" onclick="dgFilter(this,'전체')">
+          전체 ({{ gallery_data|length }})
+        </button>
+        {% for cat in gallery_cats %}{% if cat != '전체' %}
+        <button class="dg-filter-btn {% if active_cat == cat %}active{% endif %}" onclick="dgFilter(this,'{{ cat }}')">
+          {{ cat }}
+        </button>
+        {% endif %}{% endfor %}
+      </div>
+      <p class="dg-count" id="dg-count">{{ gallery_data|length }}개 도면 · 특허 원문 추출</p>
+
+      <!-- 그리드 -->
+      <div class="dg-grid" id="dg-auto-grid">
+        {% for d in gallery_data %}
+        <div class="dg-card" data-cat="{{ d.cat }}"
+             onclick="dgOpenModal('{{ d.num }}','{{ d.name }}','{{ d.pno }}','{{ d.assignee }}','{{ d.ipc }}','{{ d.year }}','{{ d.fig }}','{{ d.cat }}','{{ d.svg_type }}')">
+          <div class="dg-thumb">
+            <img src="{{ d.svg_url }}" alt="{{ d.name }}" loading="lazy">
+          </div>
+          <div class="dg-info">
+            <span class="dg-num">{{ d.num }} · {{ d.cat }}</span>
+            <p class="dg-name">{{ d.name }}</p>
+            <div class="dg-meta">
+              <span class="dg-meta-row"><b>특허번호</b> {{ d.pno }}</span>
+              <span class="dg-meta-row"><b>출원인</b> {{ d.assignee }}</span>
+              <span class="dg-meta-row"><b>IPC</b> {{ d.ipc }}</span>
+              <span class="dg-meta-row"><b>출원</b> {{ d.year }}년 · {{ d.fig }}</span>
+            </div>
+            <span class="dg-extracted">PYPI AI 추출</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="pg-footer">
+    <div class="pg-container">
+      <div class="pg-footer-inner">
+        <span class="pg-footer-logo">PYPI</span>
+        <span class="pg-footer-copy" data-i18n="footer_copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.dg-section { padding: 60px 0 80px; background: var(--lf-bg); border-top: 1px solid var(--lf-border); }
+.dg-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  background: var(--lf-border); border: 1px solid var(--lf-border);
+}
+.dg-card {
+  background: var(--lf-bg); cursor: pointer; transition: background .2s;
+  position: relative; overflow: hidden;
+}
+.dg-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--lf-gold); transform: scaleX(0); transform-origin: left; transition: transform .3s;
+}
+.dg-card:hover { background: #faf7f2; }
+.dg-card:hover::before { transform: scaleX(1); }
+.dg-thumb {
+  padding: 16px; border-bottom: 1px solid var(--lf-border);
+  background: #fafafa; aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.dg-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.dg-info { padding: 16px 18px; }
+.dg-num { font-size: 8.5px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--lf-gold); opacity: .7; }
+.dg-name { font-size: 12px; font-weight: 500; color: var(--lf-navy); margin: 5px 0 4px; line-height: 1.4; }
+.dg-meta { display: flex; flex-direction: column; gap: 3px; margin-top: 8px; }
+.dg-meta-row { font-size: 10px; color: var(--lf-mid); line-height: 1.4; }
+.dg-meta-row b { color: var(--lf-gold); font-weight: 600; margin-right: 4px; font-size: 8.5px; letter-spacing: .5px; }
+.dg-extracted {
+  display: inline-block; margin-top: 5px;
+  font-size: 8px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--lf-gold); opacity: .7;
+  border: 1px solid rgba(154,120,64,.25); padding: 2px 7px; border-radius: 2px;
+}
+.dg-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.dg-filter-btn {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 6px 16px; border: 1px solid var(--lf-border); border-radius: 2px;
+  background: transparent; color: var(--lf-mid); cursor: pointer; transition: all .2s;
+}
+.dg-filter-btn:hover, .dg-filter-btn.active {
+  border-color: var(--lf-gold); color: var(--lf-gold); background: rgba(154,120,64,.05);
+}
+.dg-count { font-size: 11px; color: var(--lf-muted); margin-bottom: 20px; }
+
+/* Modal */
+.dg-modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(18,16,14,.78); z-index: 9000;
+  align-items: center; justify-content: center;
+}
+.dg-modal-bg.open { display: flex; }
+.dg-modal {
+  background: var(--lf-bg); border: 1px solid var(--lf-border); border-radius: 4px;
+  max-width: 780px; width: 92%; max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,.45);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+}
+.dg-modal-drawing {
+  padding: 24px; border-right: 1px solid var(--lf-border);
+  background: var(--lf-bg); display: flex; align-items: center; justify-content: center;
+}
+.dg-modal-drawing img { width: 100%; max-width: 320px; height: auto; display: block; }
+.dg-modal-info { padding: 32px 28px; }
+.dg-modal-close { position: absolute; top: 14px; right: 18px; font-size: 20px; background: none; border: none; cursor: pointer; color: var(--lf-muted); }
+
+/* 줌 버튼 (모달 도면 영역 우상단) */
+.dg-modal-drawing { position: relative; }
+.dg-zoom-btn {
+  position: absolute; top: 10px; right: 10px;
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  background: var(--lf-bg); border: 1px solid var(--lf-border); border-radius: 3px;
+  color: var(--lf-mid); cursor: pointer; transition: all .2s; z-index: 10;
+  opacity: 0;
+}
+.dg-modal-drawing:hover .dg-zoom-btn { opacity: 1; }
+.dg-zoom-btn:hover { border-color: var(--lf-gold); color: var(--lf-gold); }
+
+/* 전체화면 줌 오버레이 */
+.dg-zoom-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(12,10,8,.92); z-index: 9500;
+  align-items: center; justify-content: center;
+  cursor: zoom-out;
+}
+.dg-zoom-overlay.open { display: flex; }
+.dg-zoom-overlay-close {
+  position: absolute; top: 20px; right: 24px;
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+  color: rgba(255,255,255,.5); background: none; border: 1px solid rgba(255,255,255,.15);
+  border-radius: 3px; padding: 6px 14px; cursor: pointer; transition: all .2s;
+}
+.dg-zoom-overlay-close:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+.dg-zoom-content {
+  max-width: 90vw; max-height: 88vh;
+  background: #fff; border-radius: 4px;
+  padding: 24px; overflow: auto; cursor: default;
+  box-shadow: 0 40px 120px rgba(0,0,0,.6);
+}
+.dg-zoom-content img { width: 80vw; max-width: 1100px; height: auto; display: block; }
+.dg-modal-tag { font-size: 8.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--lf-gold); margin-bottom: 10px; }
+.dg-modal-title { font-family: var(--lf-serif); font-size: 19px; color: var(--lf-navy); margin-bottom: 18px; line-height: 1.35; }
+.dg-modal-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+.dg-modal-table tr { border-bottom: 1px solid var(--lf-border); }
+.dg-modal-table td { padding: 8px 0; font-size: 12px; line-height: 1.5; }
+.dg-modal-table td:first-child { color: var(--lf-gold); font-weight: 600; font-size: 9.5px; letter-spacing: .5px; width: 85px; }
+.dg-modal-badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border: 1px solid rgba(154,120,64,.35); color: var(--lf-gold); border-radius: 2px; margin-top: 6px; }
+@media (max-width: 1100px) { .dg-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 768px) { .dg-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .dg-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .dg-modal { grid-template-columns: 1fr; } .dg-modal-drawing { border-right: none; border-bottom: 1px solid var(--lf-border); } }
+</style>
+<script>
+var IPC_DESC = {
+  'F16H':'기어·전동','F15B':'유체압','F16C':'축·베어링',
+  'H02M':'전력변환','H01Q':'안테나','H03K':'스위칭회로',
+  'G06N':'컴퓨팅모델','G06F':'디지털처리','H04L':'정보전송',
+  'C12Q':'생물측정','A61B':'진단기기','G01N':'물질분석',
+  'B01D':'분리공정','B01J':'화학공정','C12M':'생물반응',
+  'E04B':'건물구조','E04C':'구조부재','E01D':'교량',
+  'H02K':'전동기','H01L':'반도체','B25J':'로봇',
+};
+
+function dgFilter(btn, cat) {
+  document.querySelectorAll('.dg-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var cards = document.querySelectorAll('#dg-auto-grid .dg-card');
+  var count = 0;
+  cards.forEach(function(card){
+    var show = (cat === '전체' || card.dataset.cat === cat);
+    card.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  var el = document.getElementById('dg-count');
+  if (el) el.textContent = count + '개 도면 · 특허 원문 추출';
+}
+
+var _currentSvgUrl = '';
+var _currentSvgName = '';
+
+function dgOpenModal(num, name, pno, assignee, ipc, year, fig, cat, svg_type) {
+  _currentSvgUrl = '/static/svgs/gallery/' + svg_type + '.svg';
+  _currentSvgName = name;
+  document.getElementById('dg-modal-svg').innerHTML =
+    '<button class="dg-zoom-btn" id="dg-zoom-btn" onclick="dgOpenZoom()" title="전체화면으로 보기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>' +
+    '<img src="' + _currentSvgUrl + '" alt="' + name + '" style="width:100%;max-width:320px;height:auto;display:block;margin:auto;" onclick="dgOpenZoom()" title="클릭하여 확대" style="cursor:zoom-in;">';
+  var ipcDesc = IPC_DESC[(ipc||'').split(' ')[0]] || '특허 분류';
+  document.getElementById('dg-modal-info').innerHTML =
+    '<div class="dg-modal-tag">PYPI AI 추출 · ' + cat + '</div>' +
+    '<div class="dg-modal-title">' + name + '</div>' +
+    '<table class="dg-modal-table">' +
+      '<tr><td>특허번호</td><td><b>' + pno + '</b></td></tr>' +
+      '<tr><td>출원인</td><td>' + assignee + '</td></tr>' +
+      '<tr><td>IPC</td><td>' + ipc + ' <span style="color:var(--lf-muted);font-size:10px;">(' + ipcDesc + ')</span></td></tr>' +
+      '<tr><td>출원</td><td>' + year + '년</td></tr>' +
+      '<tr><td>도면</td><td>' + fig + '</td></tr>' +
+      '<tr><td>출처</td><td>KIPRIS / Google Patents</td></tr>' +
+    '</table>' +
+    '<span class="dg-modal-badge">PYPI AI 도면 추출 완료</span>';
+  document.getElementById('dg-modal-bg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function dgCloseModal() {
+  document.getElementById('dg-modal-bg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function dgOpenZoom() {
+  document.getElementById('dg-zoom-content').innerHTML =
+    '<img src="' + _currentSvgUrl + '" alt="' + _currentSvgName + '">';
+  document.getElementById('dg-zoom-overlay').classList.add('open');
+}
+function dgCloseZoom() {
+  document.getElementById('dg-zoom-overlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (document.getElementById('dg-zoom-overlay').classList.contains('open')) {
+      dgCloseZoom();
+    } else {
+      dgCloseModal();
+    }
+  }
+});
+</script>
+{% endblock %}
