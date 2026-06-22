@@ -10,6 +10,9 @@ from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
 from fastapi.concurrency import run_in_threadpool
 import asyncio
 
+import uuid
+from backend.fastapi.judge.claim_evaluator import background_llm_judge
+
 logger = logging.getLogger(__name__)
 router = APIRouter()  # 💡 app = FastAPI() 대신 APIRouter()를 사용합니다!
 
@@ -26,6 +29,16 @@ async def generate_claims_worker(request: Request):
     data = await request.json()
     initial_state = data.get("initial_state")
 
+    # 1. ⭐️ 이번 실행(Trace)의 고유 ID를 직접 생성합니다.
+    import uuid
+    current_run_id = uuid.uuid4()
+
+    # 이 config를 graph.stream에 넘겨주면 LangSmith가 이 ID로 로그를 기록합니다.
+    config = {
+        "run_id": current_run_id,
+        "run_name": "Patent_Claims_Generation" 
+    }
+
     def is_valid(val):
         return bool(val and val.strip() != "미파악")
 
@@ -39,7 +52,7 @@ async def generate_claims_worker(request: Request):
 
 
             def run_graph():
-                for output in compiled_graph.stream(initial_state):
+                for output in compiled_graph.stream(initial_state, config=config):
                     for node_name, state_update in output.items():
                         queue.put_nowait((node_name, state_update))
                 queue.put_nowait(None) 
@@ -112,7 +125,15 @@ async def generate_claims_worker(request: Request):
                         "cited_claim_no": getattr(c, 'cited_claim_no', []),
                         "category": getattr(c, 'category', ''),
                         "content": c.content
-                    })  
+                    })
+
+            # ⭐️ 사용자에게 응답을 완료하기 직전, 백그라운드 태스크로 Judge를 실행합니다.
+            # await를 쓰지 않고 태스크만 생성해 두면, 사용자는 기다리지 않고 즉시 응답을 받습니다.
+            asyncio.create_task(background_llm_judge(
+                run_id=current_run_id, 
+                input_data=initial_state["mock_input_data"],
+                generated_claims=claims_list
+            ))
 
             yield json.dumps({
                 "step": "done",
