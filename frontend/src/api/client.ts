@@ -11,12 +11,12 @@ const AUTH_BASE = import.meta.env.VITE_AUTH_BASE_URL ?? null
 // /auth/api/auth/login/ 같은 경로를 환경에 맞게 변환합니다.
 // 개발: 그대로 (Vite proxy가 /auth 접두어 인식)
 // 운영: /auth 접두어 제거 후 AUTH_BASE 붙임
-function resolveAuthUrl(path: string): string {
+export function resolveAuthUrl(path: string): string {
   if (AUTH_BASE) return `${AUTH_BASE}${path.replace(/^\/auth/, '')}`
   return path
 }
 
-function getAuthHeader(): Record<string, string> {
+export function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('access_token')
   return token ? { Authorization: `Bearer ${token}` } : {}
 }

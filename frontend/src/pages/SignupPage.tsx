@@ -1,10 +1,12 @@
 import { FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function SignupPage() {
   const { signup } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = (location.state as { from?: string })?.from ?? '/dashboard'
 
   const [form, setForm] = useState({ username: '', name: '', age: '', password: '', password2: '', gender: 'M' })
   const [error, setError] = useState('')
@@ -21,7 +23,7 @@ export default function SignupPage() {
     setIsLoading(true)
     try {
       await signup({ ...form, age: form.age ? Number(form.age) : undefined })
-      navigate('/dashboard', { replace: true })
+      navigate(from, { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : '회원가입에 실패했습니다.')
     } finally {
@@ -91,7 +93,7 @@ export default function SignupPage() {
 
           <p className="muted-text" style={{ textAlign: 'center', marginTop: 28, borderTop: '1px solid var(--lf-border)', paddingTop: 24 }}>
             이미 계정이 있으신가요?{' '}
-            <Link to="/login" style={{ color: 'var(--lf-gold)', fontWeight: 500 }}>로그인</Link>
+            <Link to="/login" state={{ from }} style={{ color: 'var(--lf-gold)', fontWeight: 500 }}>로그인</Link>
           </p>
         </div>
       </div>

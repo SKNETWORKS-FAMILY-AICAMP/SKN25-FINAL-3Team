@@ -1,12 +1,14 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 interface Props {
   children: React.ReactNode
+  redirectTo?: string
 }
 
-export default function ProtectedRoute({ children }: Props) {
+export default function ProtectedRoute({ children, redirectTo = '/login' }: Props) {
   const { user, isLoading } = useAuth()
+  const location = useLocation()
 
   if (isLoading) {
     return (
@@ -17,7 +19,7 @@ export default function ProtectedRoute({ children }: Props) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to={redirectTo} replace state={{ from: `${location.pathname}${location.search}` }} />
   }
 
   return <>{children}</>

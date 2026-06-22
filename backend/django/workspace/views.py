@@ -585,6 +585,55 @@ async def generate_claims_api(request, project_id):
     response['Cache-Control'] = 'no-cache'
     return response  
 
+
+@csrf_exempt
+async def review_claims_api(request):
+    """JWT 인증 후 사용자 청구항을 FastAPI 심사 워커로 중계한다."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    # 기존 generate_claims_api와 같은 JWT 인증 흐름을 재사용합니다.
+    jwt_auth = JWTAuthentication()
+    try:
+        auth_result = await sync_to_async(jwt_auth.authenticate)(request)
+        if auth_result is None:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+    except Exception:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        payload = json.loads(request.body or b'{}')
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if not payload.get('claim_text'):
+        return JsonResponse({'error': 'Claim text is required'}, status=400)
+
+    async def event_stream():
+        fastapi_url = "http://fastapi_worker:8001/api/v1/review-claims"
+        try:
+            async with httpx.AsyncClient(timeout=None) as client:
+                async with client.stream("POST", fastapi_url, json=payload) as response:
+                    if response.status_code >= 400:
+                        yield (json.dumps({
+                            "step": "error",
+                            "message": "AI 심사 서버가 요청을 처리하지 못했습니다."
+                        }, ensure_ascii=False) + "\n").encode()
+                        return
+                    async for chunk in response.aiter_bytes():
+                        if chunk:
+                            yield chunk
+        except httpx.RequestError as exc:
+            yield (json.dumps({
+                "step": "error",
+                "message": f"AI 서버 통신 오류: {exc}"
+            }, ensure_ascii=False) + "\n").encode()
+
+    response = StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
+    response['X-Accel-Buffering'] = 'no'
+    response['Cache-Control'] = 'no-cache'
+    return response
+
 @csrf_exempt
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])

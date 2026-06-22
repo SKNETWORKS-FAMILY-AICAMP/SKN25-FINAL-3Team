@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.getcwd(), 'backend', 'django'))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-from backend.fastapi.routers import claims, drawings, specification
+from backend.fastapi.routers import claim_review, claims, drawings, specification
 
 app = FastAPI(
     title="Patent AI Worker", 
@@ -18,6 +18,7 @@ app = FastAPI(
 )
 
 app.include_router(claims.router, prefix="/api/v1", tags=["Claims & Prior Art"])
+app.include_router(claim_review.router, prefix="/api/v1", tags=["Claim Review"])
 app.include_router(drawings.router, prefix="/api/v1", tags=["Drawings"])
 app.include_router(patent_search.router, prefix="/api/v1", tags=["Patent Search"])
 app.include_router(specification.router, prefix="/api/v1", tags=["Specification"])

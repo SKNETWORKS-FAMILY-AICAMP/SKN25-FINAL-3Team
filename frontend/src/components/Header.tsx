@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { label: '서비스 소개', hash: 'intro' },
   { label: 'AI 에이전트', hash: 'pipeline' },
   { label: '기능',        hash: 'features' },
+  { label: '청구항 심사', path: '/claim-review', badge: 'BETA' },
 ] as const
 
 export default function Header() {
@@ -66,17 +67,31 @@ export default function Header() {
         </Link>
 
         {/* GNB */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {NAV_ITEMS.map(({ label, hash }) => (
-            <button key={hash} onClick={() => handleNavClick(hash)} className="nav-text" style={{
-              color: 'var(--lf-mid)',
+        <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+          {NAV_ITEMS.map((item) => 'path' in item ? (
+            <Link key={item.path} to={item.path} style={{
+              fontSize: 10, fontWeight: 500, letterSpacing: '1.5px',
+              textTransform: 'uppercase', color: location.pathname === item.path ? 'var(--lf-gold)' : 'var(--lf-mid)',
+              padding: '0 18px', height: 70, display: 'flex', alignItems: 'center', gap: 7,
+              transition: 'color .2s', whiteSpace: 'nowrap',
+            }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--lf-gold)')}
+              onMouseLeave={e => (e.currentTarget.style.color = location.pathname === item.path ? 'var(--lf-gold)' : 'var(--lf-mid)')}
+            >
+              {item.label}
+              <span style={{ fontSize: 6.5, fontWeight: 700, letterSpacing: 1, color: '#b24f3f', background: 'rgba(178,79,63,.08)', border: '1px solid rgba(178,79,63,.32)', padding: '2px 4px' }}>{item.badge}</span>
+            </Link>
+          ) : (
+            <button key={item.hash} onClick={() => handleNavClick(item.hash)} style={{
+              fontSize: 10, fontWeight: 500, letterSpacing: '1.8px',
+              textTransform: 'uppercase', color: 'var(--lf-mid)',
               background: 'none', border: 'none', padding: '0 18px', height: 70,
               display: 'flex', alignItems: 'center', transition: 'color .2s',
               cursor: 'pointer', 
             }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--lf-navy)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--lf-mid)')}
-            >{label}</button>
+            >{item.label}</button>
           ))}
         </div>
 
