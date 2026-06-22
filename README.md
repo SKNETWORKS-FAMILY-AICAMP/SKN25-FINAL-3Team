@@ -1,83 +1,292 @@
-# SKN25-FINAL-3Team
+# 🌸 꽃보다특허
 
-## 💡 꽃보다특허
+> 발명 아이디어를 청구항, 선행기술조사, 특허 도면, 명세서 초안으로 연결하는 AI 기반 Multi-Agent 특허 작성 플랫폼
 
-**AI 기반 다중 에이전트 특허 명세서 자동 작성 플랫폼**
+## 📌 프로젝트 소개
 
+**꽃보다특허**는 발명자가 입력하거나 논문에서 추출한 기술 정보를 바탕으로 특허 문서 작성 과정을 지원합니다.
 
+React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고, FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다. Summary, Claim, Examiner, Rewrite, Prior Art, Drawing, Specification 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
 
-## 📌 Project Overview
+## ✨ 주요 기능
 
-**꽃보다특허**는 발명자의 아이디어를 바탕으로 특허 청구범위 및 명세서 초안을 자동으로 작성해 주는 **Multi-Agent 시스템**입니다. 
+<table>
+<tr>
+<td width="50%" valign="top">
 
-**LangGraph 기반의 여러 AI 에이전트**(청구항 작성, 심사관 검토, 도면 기획 등)가 유기적으로 협력하여 논리적이고 견고한 특허 문서를 생성합니다.
+### 💡 1. 발명 입력·구체화
 
-## ✨ Key Features
+- 발명 프로젝트 생성 및 관리
+- AI 변리사 상담과 채팅 기록
+- PDF·DOCX·HWP 논문 분석
+- 발명 핵심 요소 자동 구조화
 
-* **자동 청구항 생성 (Claim Agent):** 사용자 입력을 바탕으로 바탕으로 독립항과 종속항의 위계 및 카테고리(장치/방법 등)를 엄밀하게 설계.
-* **선행 기술 조사 (Prior Art Agent):** 사용자 발명의 신규성, 진보성 검토. 유사 선행 기술 Top-5 제공.
-* **심사관 교차 검증 (Examiner Agent):** 생성된 청구항의 명확성을 파인튜닝된 에이전트가 검토하고 보정 방향성을 제시.
-* **도면 기획 (Drawing Agent):** 발명 구성 요소 간의 연결성을 파악하여 블록도 및 흐름도 등의 도면 명세 초안 작성.
+</td>
+<td width="50%" valign="top">
 
-## 🛠️ Tech Stack
+### 📝 2. 특허 문서 생성
 
-* **Backend Core:** Python 3.12, Django
-* **AI & Workflow:** LangChain, LangGraph, OpenAI
-* **Infrastructure & Env:** Docker, Docker Compose, uv
-* **Database:** SQLite (개발용) / PostgreSQL (운영용) / pgvector (VectorDB)
+- 독립항·종속항 자동 작성
+- 방법·시스템·CRM 청구항 구성
+- Graphviz 기반 특허 도면 생성
+- 청구항·도면 기반 명세서 작성
 
-## 🚀 Getting Started
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
-#### 1. Prerequisites
+### ⚖️ 3. 심사·검증·보정
 
-* [Docker](https://www.docker.com/) 및 [Docker Compose](https://docs.docker.com/compose/) 설치 (또는 Docker Desktop)
-* uv 패키지 매니저 설치 (`pip install uv`)
+- AI Examiner의 청구항 명확성 심사
+- 거절 사유 기반 자동 보정
+- LangGraph 재심사 반복 흐름
+- 사용자 작성 청구항 실시간 심사
 
-#### 2. Installation
+</td>
+<td width="50%" valign="top">
+
+### 🔍 4. 조사·저장·보고
+
+- PostgreSQL·pgvector 유사 특허 검색
+- KIPRIS 외부 선행기술조사
+- 신규성·진보성 위험도 분석
+- 청구항·도면·명세서 통합 보고서
+
+</td>
+</tr>
+</table>
+
+```text
+발명 입력 → AI 상담 → 청구항 생성 → 심사·보정
+        → 선행기술조사 → 도면·명세서 생성 → 보고서
+```
+
+## 🧭 시스템 구조
+
+```mermaid
+flowchart LR
+    U["사용자"] --> FE["React + Vite<br/>Frontend :3000"]
+    FE -->|"JWT 인증 / Workspace API"| DJ["Django + DRF<br/>Main Server :8000"]
+    DJ -->|"AI 작업 요청 / NDJSON 중계"| FA["FastAPI<br/>AI Worker :8001"]
+    FA --> LG["LangGraph Workflow"]
+
+    LG --> SA["Summary Agent"]
+    LG --> CA["Claim Agent"]
+    LG --> EA["Examiner Agent"]
+    LG --> RA["Rewrite Agent"]
+    LG --> PA["Prior Art Agent"]
+    LG --> DA["Drawing Agent"]
+    LG --> SPA["Specification Agent"]
+
+    DJ --> DB["Django DB"]
+    PA --> PG["PostgreSQL + pgvector"]
+    FA --> EXT["OpenAI / RunPod / KIPRIS"]
+    DA --> S3["AWS S3"]
+    FA --> LS["LangSmith"]
+```
+
+## 🛠️ 기술 스택
+
+### Frontend
+
+<p>
+  <img src="https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white" alt="React 18.3.1">
+  <img src="https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5.5.3">
+  <img src="https://img.shields.io/badge/Vite-5.4.1-646CFF?logo=vite&logoColor=white" alt="Vite 5.4.1">
+  <img src="https://img.shields.io/badge/React_Router-6.26.0-CA4245?logo=reactrouter&logoColor=white" alt="React Router 6.26.0">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.3.0-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4.3.0">
+  <img src="https://img.shields.io/badge/PostCSS-8.5.15-DD3A0A?logo=postcss&logoColor=white" alt="PostCSS 8.5.15">
+  <img src="https://img.shields.io/badge/Autoprefixer-10.5.0-DD3735?logo=autoprefixer&logoColor=white" alt="Autoprefixer 10.5.0">
+</p>
+
+### Backend
+
+<p>
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/Django-6.0.6-092E20?logo=django&logoColor=white" alt="Django 6.0.6">
+  <img src="https://img.shields.io/badge/Django_REST_Framework-3.17.1-A30000?logo=django&logoColor=white" alt="Django REST Framework 3.17.1">
+  <img src="https://img.shields.io/badge/FastAPI-0.136.3-009688?logo=fastapi&logoColor=white" alt="FastAPI 0.136.3">
+  <img src="https://img.shields.io/badge/Uvicorn-0.49.0-499848?logo=gunicorn&logoColor=white" alt="Uvicorn 0.49.0">
+  <img src="https://img.shields.io/badge/SimpleJWT-5.5.1-000000?logo=jsonwebtokens&logoColor=white" alt="SimpleJWT 5.5.1">
+  <img src="https://img.shields.io/badge/drf--spectacular-0.29.0-7B1FA2?logo=swagger&logoColor=white" alt="drf-spectacular 0.29.0">
+</p>
+
+### AI / Agent
+
+<p>
+  <img src="https://img.shields.io/badge/OpenAI-2.41.0-412991?logo=openai&logoColor=white" alt="OpenAI 2.41.0">
+  <img src="https://img.shields.io/badge/LangChain-1.3.4-1C3C3C?logo=langchain&logoColor=white" alt="LangChain 1.3.4">
+  <img src="https://img.shields.io/badge/LangGraph-1.2.4-1C3C3C?logo=langchain&logoColor=white" alt="LangGraph 1.2.4">
+  <img src="https://img.shields.io/badge/LangChain_OpenAI-1.2.2-412991?logo=openai&logoColor=white" alt="LangChain OpenAI 1.2.2">
+  <img src="https://img.shields.io/badge/LangSmith-0.8.11-2E7D32?logo=langchain&logoColor=white" alt="LangSmith 0.8.11">
+  <img src="https://img.shields.io/badge/Pydantic-2.13.4-E92063?logo=pydantic&logoColor=white" alt="Pydantic 2.13.4">
+  <img src="https://img.shields.io/badge/RunPod-vLLM-673AB7?logo=runpod&logoColor=white" alt="RunPod vLLM">
+</p>
+
+### Data
+
+<p>
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/pgvector-0.4.2-336791?logo=postgresql&logoColor=white" alt="pgvector 0.4.2">
+  <img src="https://img.shields.io/badge/SQLAlchemy-2.0.50-D71F00?logo=sqlalchemy&logoColor=white" alt="SQLAlchemy 2.0.50">
+  <img src="https://img.shields.io/badge/psycopg2-2.9.12-336791?logo=postgresql&logoColor=white" alt="psycopg2 2.9.12">
+  <img src="https://img.shields.io/badge/SQLite-Local_%2F_Test-003B57?logo=sqlite&logoColor=white" alt="SQLite Local and Test">
+  <img src="https://img.shields.io/badge/AWS_S3-Storage-569A31?logo=amazons3&logoColor=white" alt="AWS S3">
+  <img src="https://img.shields.io/badge/boto3-1.43.32-FF9900?logo=amazonaws&logoColor=white" alt="boto3 1.43.32">
+</p>
+
+### Infrastructure
+
+<p>
+  <img src="https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Docker_Compose-Orchestration-2496ED?logo=docker&logoColor=white" alt="Docker Compose">
+  <img src="https://img.shields.io/badge/uv-0.9.17-DE5FE9?logo=astral&logoColor=white" alt="uv 0.9.17">
+  <img src="https://img.shields.io/badge/pytest-9.1.1-0A9EDC?logo=pytest&logoColor=white" alt="pytest 9.1.1">
+  <img src="https://img.shields.io/badge/Graphviz-0.21-2596BE?logo=graphviz&logoColor=white" alt="Graphviz 0.21">
+  <img src="https://img.shields.io/badge/PyGraphviz-1.14-2596BE?logo=graphviz&logoColor=white" alt="PyGraphviz 1.14">
+  <img src="https://img.shields.io/badge/PyMuPDF-1.27.2.3-00897B?logo=adobeacrobatreader&logoColor=white" alt="PyMuPDF 1.27.2.3">
+  <img src="https://img.shields.io/badge/python--docx-1.2.0-2B579A?logo=microsoftword&logoColor=white" alt="python-docx 1.2.0">
+</p>
+
+### External API
+
+<p>
+  <img src="https://img.shields.io/badge/OpenAI_API-LLM-412991?logo=openai&logoColor=white" alt="OpenAI API">
+  <img src="https://img.shields.io/badge/RunPod_API-vLLM-673AB7?logo=runpod&logoColor=white" alt="RunPod API">
+  <img src="https://img.shields.io/badge/KIPRIS_API-Patent_Search-005BAC?logo=searchengin&logoColor=white" alt="KIPRIS API">
+  <img src="https://img.shields.io/badge/LangSmith-Tracing-2E7D32?logo=langchain&logoColor=white" alt="LangSmith">
+  <img src="https://img.shields.io/badge/AWS-RDS_%2F_S3-FF9900?logo=amazonaws&logoColor=white" alt="AWS RDS and S3">
+</p>
+
+## 📂 프로젝트 구조
+
+```text
+SKN25-FINAL-3Team/
+├── agents/
+│   ├── core/                  # Pydantic state와 LangGraph workflow
+│   ├── prior_art_agent/       # pgvector/KIPRIS 선행기술조사
+│   ├── specification/         # 명세서 생성·검증·저장 헬퍼
+│   ├── summary_agent.py       # 발명 정보 구조화
+│   ├── claim_agent.py         # 청구항 생성
+│   ├── examiner.py            # 청구항 심사
+│   ├── claim_rewrite_agent.py # 거절 사유 기반 보정
+│   ├── drawing_agent.py       # 도면 생성
+│   └── paper_analyzer.py      # 논문 분석
+├── backend/
+│   ├── django/
+│   │   ├── accounts/         # JWT 계정 API
+│   │   ├── workspace/        # 프로젝트·상담·문서 저장 API
+│   │   ├── core/             # Django 기본 페이지
+│   │   └── config/           # Django settings, URL, ASGI
+│   └── fastapi/
+│       ├── routers/           # 청구항·심사·도면·명세서·특허검색 worker
+│       ├── judge/             # LangSmith LLM-as-a-Judge
+│       └── main.py            # FastAPI entrypoint
+├── frontend/
+│   └── src/
+│       ├── api/               # Django/FastAPI API client
+│       ├── components/        # 공통 UI와 modal
+│       ├── contexts/          # 인증 context
+│       └── pages/             # Home, Dashboard, Workstation, Report 등
+├── tests/
+│   ├── agents/                # 에이전트·state·graph 단위 테스트
+│   ├── api/                   # FastAPI worker·stream·인증 경계 테스트
+│   ├── django/                # 계정·workspace 모델과 view 테스트
+│   └── README.md              # 테스트 실행법과 파일별 목적
+├── fine-tuning/               # Examiner 모델 파인튜닝 자료
+├── data/                      # 선행기술 데이터
+├── scripts/                   # 데이터·운영 보조 스크립트
+├── pyproject.toml             # Python 의존성
+├── uv.lock                    # Python lock file
+├── Dockerfile                 # Django/FastAPI 공통 이미지
+└── docker-compose.yml         # Django와 FastAPI 서비스 구성
+```
+
+## 🚀 실행 방법
+
+### 1. 사전 준비
+
+- Docker 및 Docker Compose
+- [uv](https://docs.astral.sh/uv/)
+- React 프런트엔드를 실행하려면 Node.js와 npm
+
+### 2. 저장소와 환경변수 준비
 
 ```bash
-# Repository Clone
 git clone https://github.com/sknetworks-family-aicamp/skn25-final-3team.git
 cd skn25-final-3team
-
-# 환경 변수 설정 (.env.example 파일을 복사하여 자신의 API Key 입력)
 cp .env.example .env
 ```
 
-#### 3. Run the Application
+`.env`에는 사용하는 기능에 맞게 다음 값을 설정합니다.
 
-Docker를 이용해 시스템을 빌드하고 실행합니다.
+| 구분 | 주요 환경변수 |
+|---|---|
+| LLM | `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_CHAT_MODEL` |
+| Examiner | `RUNPOD_VLLM_URL`, `RUNPOD_API_KEY` |
+| 선행기술 DB | `RDS_DATABASE_URL`, `PRIOR_ART_ANALYZE_MAX_WORKERS` |
+| Django DB | `DJANGO_DB_ENGINE`, `DJANGO_DB_NAME`, `DJANGO_DB_USER`, `DJANGO_DB_PASSWORD`, `DJANGO_DB_HOST`, `DJANGO_DB_PORT` |
+| 특허 검색 | `KIPRIS_API_KEY` |
+| AWS | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `S3_BUCKET` |
+| 추적 | `LANGCHAIN_TRACING_V2`, `LANGCHAIN_API_KEY` |
+
+> `PRIOR_ART_ANALYZE_MAX_WORKERS`는 `5`처럼 정수로 설정해야 합니다. 비밀키가 포함된 `.env`는 커밋하지 마세요.
+
+### 3. Django와 FastAPI 실행
 
 ```bash
 docker compose up --build
 ```
 
-실행 완료 후, 브라우저에서 `http://localhost:8000`으로 접속하여 작업스페이스를 확인하세요.
+| 서비스 | 주소 |
+|---|---|
+| Django 메인 서버 | `http://localhost:8000` |
+| Django API 문서 | `http://localhost:8000/api/docs/` |
+| FastAPI AI Worker | `http://localhost:8001` |
+| FastAPI API 문서 | `http://localhost:8001/docs` |
 
-## 📂 Project Structure
+### 4. React 프런트엔드 실행
 
-```text
-skn25-final-3team/
-├── agents/             # LangGraph 기반 다중 AI 에이전트 (청구항, 심사관, 명세서 등)
-│   ├── core/           # State, Graph 정의 및 공통 모듈
-│   ├── prior_art_agent/# 선행기술조사 에이전트
-│   └── specification/  # 명세서 작성 에이전트
-├── backend/            # Django/FastAPI 백엔드 서버 및 웹 워크스페이스
-│   ├── accounts/       # 사용자 계정 관리
-│   ├── workspace/      # 프로젝트 및 에이전트 상호작용 UI
-│   └── test_run.py     # 로컬 에이전트 파이프라인 테스트 스크립트
-├── pyproject.toml      # uv 기반 패키지 및 의존성 관리
-├── Dockerfile          # 배포 및 실행 환경 정의
-└── docker-compose.yml  # 컨테이너 오케스트레이션
+현재 `docker-compose.yml`에는 프런트엔드 서비스가 없으므로 별도 터미널에서 실행합니다.
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-## 🔃 Future Work
+브라우저에서 `http://localhost:3000`으로 접속합니다. Vite proxy가 `/auth` 요청은 Django로, `/api` 요청은 FastAPI로 전달합니다.
 
-- FastAPI 추가
-- DB Migration (Sqlite -> PostgreSQL)
-- Agent logic 고도화
-- Test 디렉토리 추가
+## ✅ 테스트
+
+테스트는 외부 LLM, RunPod, LangSmith, S3, KIPRIS, PostgreSQL을 실제 호출하지 않으며 Django는 임시 SQLite DB를 사용합니다.
+
+현재 가상환경에 pytest가 없다면 먼저 설치합니다.
+
+```bash
+uv pip install pytest
+.venv/bin/python -m pytest tests
+```
+
+- 최종 결과: **108 passed, 9 warnings in 6.05s**
+- 통과율: **108/108 (100%)**
+- 상세 구성: [`tests/README.md`](tests/README.md)
+
+## 🔌 주요 API 흐름
+
+| 구분 | Django/FastAPI 경로 | 역할 |
+|---|---|---|
+| 계정 | `/accounts/` | signup, login, logout, me, token refresh |
+| Workspace | `/workspace/` | 프로젝트·상담·청구항·도면·명세서 관리 |
+| 청구항 생성 | `/api/v1/generate-claims` | LangGraph 기반 청구항 생성·심사·선행기술 스트림 |
+| 사용자 청구항 심사 | `/api/v1/review-claims` | 청구항 분석·심사·보정 NDJSON 스트림 |
+| 도면 생성 | `/api/v1/generate-drawings` | Graphviz 도면 생성 및 S3 업로드 |
+| 명세서 생성 | `/api/v1/generate-specification` | 발명의 설명 생성과 검증 |
+| 특허 검색 | `/api/v1/patent-search` | KIPRIS 특허 검색 |
 
 ## 📅 프로젝트 진행 상황
 
+- pytest 테스트 체계 재구성: **108/108 통과**
+- 사용자 작성 청구항 심사·자동 보정 흐름 반영
 - **최종 발표 자료:** [Canva PPT 링크](https://canva.link/7tgiu30dzu4k638)
