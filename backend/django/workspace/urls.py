@@ -13,6 +13,7 @@ urlpatterns = [
     path('workstation/<int:project_id>/upload_api/', views.upload_file_api, name='upload_file_api'),
     path('workstation/<int:project_id>/welcome_api/', views.welcome_api, name='welcome_api'),
     path('workstation/<int:project_id>/generate_claims_api/', views.generate_claims_api, name='generate_claims_api'),
+    path('review_claims_api/', views.review_claims_api, name='review_claims_api'),
     path('workstation/<int:project_id>/save_claims_api/', views.save_claims_api, name='save_claims_api'),
     path('workstation/<int:project_id>/manage_claims_api/', views.manage_claims_api, name='manage_claims_api'),
     path('workstation/bulk_delete/', views.bulk_delete_projects_api, name='bulk_delete_projects_api'),

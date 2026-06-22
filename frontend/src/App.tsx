@@ -9,6 +9,7 @@ import CreateProjectPage from './pages/CreateProjectPage'
 import WorkstationPage from './pages/WorkstationPage'
 import MyPage from './pages/MyPage'
 import ReportPage from './pages/ReportPage'
+import ClaimReviewPage from './pages/ClaimReviewPage'
 
 export default function App() {
   return (
@@ -22,6 +23,14 @@ export default function App() {
         <Route path="/report/:projectId" element={<ReportPage />} />
 
         {/* Protected */}
+        <Route
+          path="/claim-review"
+          element={
+            <ProtectedRoute redirectTo="/signup">
+              <ClaimReviewPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
