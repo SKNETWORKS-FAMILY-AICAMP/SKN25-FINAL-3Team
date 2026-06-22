@@ -47,7 +47,7 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
         
         {/* 헤더 */}
         <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: 18, fontFamily: 'var(--lf-serif)', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <h3 className="panel-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
             {!isDone && <span style={{ width: 10, height: 10, background: '#ef4444', borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />}
             {isDone ? '✅ 분석 및 작성 완료' : 'AI 특허 파이프라인 가동 중'}
           </h3>
@@ -69,15 +69,16 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
                   <div key={step.id} style={{ display: 'flex', gap: 16, opacity: isActive || isPassed ? 1 : 0.4, transition: 'opacity 0.3s' }}>
                     <div style={{
                       width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isActive ? 'var(--lf-gold)' : isPassed ? 'var(--lf-navy)' : '#fff',
-                      border: `1px solid ${isActive || isPassed ? 'transparent' : 'var(--lf-border)'}`,
-                      color: '#fff', fontSize: 12, fontWeight: 'bold'
+                      background: isActive ? '#f59e0b' : isPassed ? '#10b981' : '#fff',
+                      border: `1px solid ${isActive ? '#f59e0b' : isPassed ? '#10b981' : 'var(--lf-border)'}`,
+                      color: isActive || isPassed ? '#fff' : 'var(--lf-text)',
+                      fontSize: 12, fontWeight: 'bold'
                     }}>
                       {isPassed ? '✓' : idx + 1}
                     </div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--lf-gold)' : 'var(--lf-navy)' }}>{step.label}</div>
-                      <div style={{ fontSize: 12, color: 'var(--lf-mid)', marginTop: 2 }}>{step.desc}</div>
+                      <div className="card-title" style={{ fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--lf-gold)' : 'var(--lf-navy)' }}>{step.label}</div>
+                      <div className="muted-text" style={{ color: 'var(--lf-mid)', marginTop: 2 }}>{step.desc}</div>
                     </div>
                   </div>
                 )
@@ -87,17 +88,17 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
 
           {/* 우측: 실시간 작업 로그 */}
           <div style={{ width: '60%', padding: '32px', overflowY: 'auto', background: '#fff', display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h4 style={{ fontSize: 12, color: 'var(--lf-muted)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Live Log</h4>
+            <h4 className="meta-text" style={{ textTransform: 'uppercase', marginBottom: 8 }}>Live Log</h4>
             {logs.map((log, idx) => (
               <div key={idx} style={{ 
-                fontSize: 13, color: log.step === 'error' ? '#ef4444' : 'var(--lf-body)', 
+                color: log.step === 'error' ? '#ef4444' : 'var(--lf-body)', 
                 background: 'var(--lf-bg2)', padding: '12px 16px', borderRadius: 8, lineHeight: 1.5
-              }}>
+              }} className="body-text">
                 {log.message}
               </div>
             ))}
             {!isDone && (
-              <div style={{ fontSize: 13, color: 'var(--lf-mid)', fontStyle: 'italic', padding: '12px 16px' }}>
+              <div className="muted-text" style={{ color: 'var(--lf-mid)', fontStyle: 'italic', padding: '12px 16px' }}>
                 AI가 데이터를 처리하고 있습니다...
               </div>
             )}

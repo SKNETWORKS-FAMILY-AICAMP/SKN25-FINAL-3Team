@@ -65,7 +65,7 @@ export default function HomePage() {
         <div style={{ position: 'relative', zIndex: 5, textAlign: 'center', maxWidth: 760, padding: '0 40px' }}>
           <p style={{
             display: 'inline-flex', alignItems: 'center', gap: 20,
-            fontSize: 7.5, fontWeight: 500, letterSpacing: '4.5px', textTransform: 'uppercase',
+            fontSize: 18, fontWeight: 500, letterSpacing: '4.5px', textTransform: 'uppercase',
             color: 'var(--lf-gold)', opacity: .6, marginBottom: 44,
           }}>Patent Intelligence · AI 특허 자동화 플랫폼</p>
 
@@ -78,7 +78,7 @@ export default function HomePage() {
 
           <div style={{ width: 40, height: 1, background: 'linear-gradient(90deg, transparent, var(--lf-gold), transparent)', margin: '0 auto 28px' }} />
 
-          <p style={{ fontSize: 13.5, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)', letterSpacing: .3, marginBottom: 44, maxWidth: 560, margin: '0 auto 44px' }}>
+          <p style={{ fontSize: 16, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)', letterSpacing: .3, marginBottom: 44, maxWidth: 560, margin: '0 auto 44px' }}>
             7개 전문 AI 에이전트가 특허청 제출 가능한 완성 명세서를 체계적으로 완성합니다
           </p>
 
@@ -105,7 +105,7 @@ export default function HomePage() {
           ].map((item, i) => (
             <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, ...(i > 0 ? { borderLeft: '1px solid var(--lf-border)' } : {}) }}>
               <span style={{ fontFamily: 'var(--lf-serif)', fontSize: 32, fontWeight: 300, color: 'var(--lf-gold)', lineHeight: 1, letterSpacing: -1 }}>{item.n}</span>
-              <span style={{ fontSize: 8, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--lf-muted)' }}>{item.label}</span>
+              <span style={{ fontSize: 19, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--lf-muted)' }}>{item.label}</span>
             </div>
           ))}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, borderLeft: '1px solid var(--lf-border)' }}>
@@ -119,7 +119,7 @@ export default function HomePage() {
       <section id="pipeline" style={{ padding: '120px 0', background: 'var(--lf-bg2)', borderBottom: '1px solid var(--lf-border)' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 64px' }}>
           <div style={{ marginBottom: 80 }}>
-            <span style={{ display: 'block', fontSize: 8.5, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--lf-gold)', opacity: .75, marginBottom: 22 }}>Patent Pipeline</span>
+            <span style={{ display: 'block', fontSize: 20, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--lf-gold)', opacity: .75, marginBottom: 22 }}>Patent Pipeline</span>
             <h2 style={{ fontFamily: 'var(--lf-serif)', fontSize: 'clamp(26px,2.8vw,40px)', fontWeight: 300, color: 'var(--lf-navy)', lineHeight: 1.25, letterSpacing: -.4 }}>
               7개의 전문 AI 에이전트가<br /><em style={{ fontStyle: 'italic', color: 'var(--lf-gold)' }}>체계적으로 협력합니다</em>
             </h2>
@@ -132,13 +132,13 @@ export default function HomePage() {
                 padding: '44px 0 44px 32px', borderBottom: '1px solid rgba(0,0,0,.05)',
                 transition: 'background .2s',
               }}>
-                <span style={{ fontFamily: 'Courier New, monospace', fontSize: 13, color: 'var(--lf-gold)', opacity: .5, letterSpacing: 1 }}>{agent.num}</span>
+                <span style={{ fontFamily: 'Courier New, monospace', fontSize: 28, color: 'var(--lf-gold)', opacity: .5, letterSpacing: 1 }}>{agent.num}</span>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 10 }}>
-                    <span style={{ fontFamily: 'var(--lf-serif)', fontSize: 'clamp(18px,1.8vw,24px)', fontWeight: 400, color: 'var(--lf-navy)' }}>{agent.name}</span>
-                    <span style={{ fontSize: 8.5, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--lf-muted)' }}>{agent.en}</span>
+                    <span style={{ fontFamily: 'var(--lf-serif)', fontSize: 'clamp(20px,2vw,28px)', fontWeight: 400, color: 'var(--lf-navy)' }}>{agent.name}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--lf-muted)' }}>{agent.en}</span>
                   </div>
-                  <p style={{ fontSize: 13, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)', maxWidth: 540 }}>{agent.desc}</p>
+                  <p style={{ fontSize: 18, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)', maxWidth: 540 }}>{agent.desc}</p>
                 </div>
               </div>
             ))}
@@ -150,15 +150,15 @@ export default function HomePage() {
       <section id="features" style={{ padding: '120px 0', background: 'var(--lf-bg)' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 64px' }}>
           <div style={{ marginBottom: 80 }}>
-            <span style={{ display: 'block', fontSize: 8.5, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--lf-gold)', opacity: .75, marginBottom: 22 }}>Features</span>
+            <span style={{ display: 'block', fontSize: 16, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--lf-gold)', opacity: .75, marginBottom: 22 }}>Features</span>
             <h2 style={{ fontFamily: 'var(--lf-serif)', fontSize: 'clamp(26px,2.8vw,40px)', fontWeight: 300, color: 'var(--lf-navy)', lineHeight: 1.25 }}>주요 기능</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--lf-border)', border: '1px solid var(--lf-border)' }}>
             {FEATURES.map((f, i) => (
               <div key={i} style={{ background: 'var(--lf-bg)', padding: '52px 40px 48px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
-                <span style={{ fontFamily: 'Courier New, monospace', fontSize: 10, fontWeight: 700, letterSpacing: 2, color: 'var(--lf-gold)', opacity: .55, marginBottom: 28, borderBottom: '1px solid rgba(154,120,64,.25)', paddingBottom: 8, display: 'inline-block' }}>{f.no}</span>
-                <h3 style={{ fontFamily: 'var(--lf-serif)', fontSize: 20, fontWeight: 400, color: 'var(--lf-navy)', marginBottom: 14 }}>{f.name}</h3>
-                <p style={{ fontSize: 13, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)' }}>{f.desc}</p>
+                <span style={{ fontFamily: 'Courier New, monospace', fontSize: 26, fontWeight: 700, letterSpacing: 2, color: 'var(--lf-gold)', opacity: .55, marginBottom: 28, borderBottom: '1px solid rgba(154,120,64,.25)', paddingBottom: 8, display: 'inline-block' }}>{f.no}</span>
+                <h3 style={{ fontFamily: 'var(--lf-serif)', fontSize: 26, fontWeight: 400, color: 'var(--lf-navy)', marginBottom: 14 }}>{f.name}</h3>
+                <p style={{ fontSize: 17, fontWeight: 300, lineHeight: 2, color: 'var(--lf-mid)' }}>{f.desc}</p>
               </div>
             ))}
           </div>

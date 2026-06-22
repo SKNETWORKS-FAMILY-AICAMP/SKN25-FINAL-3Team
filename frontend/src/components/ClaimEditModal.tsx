@@ -67,27 +67,28 @@ export default function ClaimEditModal({ isOpen, onClose, projectId }: Props) {
         display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid var(--lf-border)'
       }}>
         <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: 18, fontFamily: 'var(--lf-serif)' }}>특허 청구범위 수정</h3>
+          <h3 className="panel-title" style={{ margin: 0 }}>특허 청구범위 수정</h3>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: 'var(--lf-mid)' }}>&times;</button>
         </div>
 
         <div style={{ padding: 32, overflowY: 'auto', flex: 1, background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 24 }}>
           {isLoading ? (
-            <p style={{ color: 'var(--lf-muted)', textAlign: 'center', padding: '40px 0' }}>데이터를 불러오는 중입니다...</p>
+            <p className="muted-text" style={{ textAlign: 'center', padding: '40px 0' }}>데이터를 불러오는 중입니다...</p>
           ) : claims.length === 0 ? (
-            <p style={{ color: 'var(--lf-muted)', textAlign: 'center', padding: '40px 0' }}>아직 저장된 청구항이 없습니다.</p>
+            <p className="muted-text" style={{ textAlign: 'center', padding: '40px 0' }}>아직 저장된 청구항이 없습니다.</p>
           ) : (
             claims.map((claim) => (
               <div key={claim.id} style={{ background: '#fff', border: '1px solid var(--lf-border)', borderRadius: 8, padding: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <strong style={{ color: 'var(--lf-gold)', fontSize: 14 }}>
+                  <strong className="card-title" style={{ color: 'var(--lf-gold)' }}>
                     {`[청구항 ${claim.claim_no}]`} {claim.is_dependent ? `(종속항 - ${claim.category})` : `(독립항 - ${claim.category})`}
                   </strong>
                 </div>
                 <textarea 
                   value={claim.content} 
                   onChange={(e) => handleChange(claim.id, e.target.value)}
-                  style={{ width: '100%', height: 120, padding: 12, border: '1px solid var(--lf-border)', borderRadius: 4, resize: 'vertical', fontFamily: 'var(--lf-sans)', fontSize: 14, lineHeight: 1.6 }}
+                  className="input-area"
+                  style={{ height: 120, resize: 'vertical' }}
                 />
               </div>
             ))

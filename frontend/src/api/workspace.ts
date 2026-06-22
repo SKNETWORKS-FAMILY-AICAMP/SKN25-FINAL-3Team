@@ -8,6 +8,8 @@ export interface Project {
   created_at: string
   status: string
   has_claims: boolean
+  has_drawings: boolean
+  has_spec: boolean
 }
 
 export interface InventionInput {
