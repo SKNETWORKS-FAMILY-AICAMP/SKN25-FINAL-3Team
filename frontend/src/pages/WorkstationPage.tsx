@@ -47,6 +47,11 @@ export default function WorkstationPage() {
   const [pendingClaims, setPendingClaims] = useState<any[] | null>(null) // 방금 AI가 만든 저장 대기 중인 청구항
   const [isSaving, setIsSaving] = useState(false)
   const [isDrawingLoading, setIsDrawingLoading] = useState(false)
+  const [pipelineOverrides, setPipelineOverrides] = useState({
+    hasClaims: false,
+    hasDrawings: false,
+    hasSpec: false,
+  })
 
   const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
   const [priorArtData, setPriorArtData] = useState<any>(null) //
@@ -147,6 +152,7 @@ export default function WorkstationPage() {
     try {
       await workspaceApi.saveClaims(projectId, pendingClaims)
       alert("저장 완료! 🎉")
+      setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
       setPendingClaims(null) // 저장이 끝났으니 버튼을 숨깁니다.
       // 최신 상태 리로드
       workspaceApi.getWorkstation(projectId).then(res => setData(res))
@@ -212,7 +218,10 @@ export default function WorkstationPage() {
         // 모든 작업 완료 시
         if (data.step === 'done') {
           setIsAgentDone(true)
-          if (data.claims) setPendingClaims(data.claims)
+          if (data.claims) {
+            setPendingClaims(data.claims)
+            setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
+          }
           if (data.prior_art_data) setPriorArtData(data.prior_art_data)
           workspaceApi.getWorkstation(projectId).then(res => {
             setData(res)
@@ -238,6 +247,7 @@ export default function WorkstationPage() {
       
       if (res.status === 'success') {
         alert("최종 명세서 작성이 성공적으로 완료되었습니다! 📄")
+        setPipelineOverrides(prev => ({ ...prev, hasSpec: true }))
         
         // 완료 시 최신 워크스테이션 데이터를 다시 불러와서 
         // AI 변리사가 보낸 명세서 완료 메시지를 채팅창에 즉시 업데이트합니다.
@@ -263,6 +273,7 @@ export default function WorkstationPage() {
       
       if (res.status === 'success') {
         alert("특허 도면 생성 및 저장이 완료되었습니다! 🎨")
+        setPipelineOverrides(prev => ({ ...prev, hasDrawings: true }))
         
         // 🚀 핵심: 도면 생성이 완료되면 워크스테이션 데이터를 싹 다시 불러와서 
         // 새 채팅 메시지와 도면 현황을 화면에 즉시 갱신합니다!
@@ -306,6 +317,9 @@ export default function WorkstationPage() {
   if (!data) return <div style={{ padding: 100, textAlign: 'center' }}>프로젝트를 찾을 수 없습니다.</div>
 
   const { project, invention_input, consultation_state, chat_messages } = data
+  const processHasClaims = project.has_claims || pipelineOverrides.hasClaims || Boolean(pendingClaims?.length)
+  const processHasDrawings = project.has_drawings || pipelineOverrides.hasDrawings
+  const processHasSpec = project.has_spec || pipelineOverrides.hasSpec
 
   return (
     <div className="lf-ws-container" style={{ display: 'flex', height: '100vh', paddingTop: 70, boxSizing: 'border-box', overflow: 'hidden' }}>
@@ -313,56 +327,56 @@ export default function WorkstationPage() {
       {/* 왼쪽 사이드바 (원본 데이터) */}
       <aside className="lf-ws-sidebar" style={{ width: 400, flexShrink: 0, borderRight: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', padding: 24, overflowY: 'auto', height: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 18, fontFamily: 'var(--lf-serif)' }}>발명 원본 데이터</h2>
-          <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px', fontSize: 10 }}>리포트 보기</Link>
+          <h2 className="panel-title">발명 원본 데이터</h2>
+          <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px' }}>리포트 보기</Link>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* 1. 해결하고자 하는 과제 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>1. 해결하고자 하는 과제</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.problem_to_solve}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>1. 해결하고자 하는 과제</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.problem_to_solve}</p>
           </div>
           
           {/* 2. 종래 기술의 문제점 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>2. 종래 기술의 문제점</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.prior_art_problem}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>2. 종래 기술의 문제점</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.prior_art_problem}</p>
           </div>
 
           {/* 3. 핵심 기술 구성 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>3. 핵심 기술 구성</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.core_tech}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>3. 핵심 기술 구성</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.core_tech}</p>
           </div>
 
           {/* 4. 기대 효과 */}
           <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>4. 기대 효과</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.expected_effect || "(입력되지 않음)"}</p>
+            <h3 className="card-title" style={{ color: 'var(--lf-gold)', marginBottom: 8 }}>4. 기대 효과</h3>
+            <p className="body-text" style={{ whiteSpace: 'pre-wrap' }}>{invention_input.expected_effect || "(입력되지 않음)"}</p>
           </div>
 
           {/* AI Agent Analysis (이하 동일) */}
           <div style={{ marginTop: 32 }}>
-            <h2 style={{ fontSize: 16, fontFamily: 'var(--lf-serif)', marginBottom: 16 }}>AI Agent Analysis</h2>
+            <h2 className="panel-title" style={{ marginBottom: 16 }}>AI Agent Analysis</h2>
             <div className="card-sm" style={{ background: '#fff' }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 핵심 문제점</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_problem || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 핵심 문제점</h4>
+               <p className="body-text">{consultation_state.ext_problem || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 해결 방법</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_solution || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 해결 방법</h4>
+               <p className="body-text">{consultation_state.ext_solution || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 차별성</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_differentiation || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 차별성</h4>
+               <p className="body-text">{consultation_state.ext_differentiation || "분석 대기 중..."}</p>
             </div>
             
             <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 기대 효과</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_effect || "분석 대기 중..."}</p>
+               <h4 className="meta-text" style={{ color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 기대 효과</h4>
+               <p className="body-text">{consultation_state.ext_effect || "분석 대기 중..."}</p>
             </div>
           </div>
         </div>
@@ -370,33 +384,27 @@ export default function WorkstationPage() {
 
       {/* 오른쪽 메인 (액션 버튼 & 채팅창) */}
       <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <header className="ws-main-header" style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
-          
-          <div className="ws-action-bar" style={{ display: 'flex', gap: 8 }}>
+        <header style={{ padding: '20px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <h2 className="page-title" style={{ margin: 0 }}>{project.title}</h2>
+
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
             {/* 3. 버튼에 onClick 이벤트 연결! */}
-            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line ws-action-button">
-              <span className="ws-action-label">파이프라인<br />상태</span>
-            </button>
-            <button onClick={handleGenerateClaims} className="btn-gold ws-action-button">
-              <span className="ws-action-label">청구항<br />작성</span>
-            </button>
-            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line ws-action-button">
-              <span className="ws-action-label">청구항<br />수정</span>
-            </button>
-            <button 
-              onClick={handleGenerateDrawings} 
-              disabled={isDrawingLoading} 
-              className="btn-line ws-action-button"
-              style={{ opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
+            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line" style={{ whiteSpace: 'nowrap' }}>파이프라인 상태</button>
+            <button onClick={handleGenerateClaims} className="btn-gold" style={{ whiteSpace: 'nowrap' }}>청구항 작성</button>
+            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line" style={{ whiteSpace: 'nowrap' }}>청구항 수정</button>
+            <button
+              onClick={handleGenerateDrawings}
+              disabled={isDrawingLoading}
+              className="btn-line"
+              style={{ whiteSpace: 'nowrap', opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
             >
               <span className="ws-action-label">{isDrawingLoading ? <>도면 생성<br />중...</> : <>도면<br />생성</>}</span>
             </button>
             <button onClick={handleGenerateSpecification} className="btn-fill ws-action-button">
               <span className="ws-action-label">명세서<br />작성</span>
             </button>
-            <button 
-              onClick={() => setIsPaModalOpen(true)} 
+            <button
+              onClick={() => setIsPaModalOpen(true)}
               className="btn-line ws-action-button"
             >
               <span className="ws-action-label">선행기술<br />리포트</span>
@@ -426,7 +434,6 @@ export default function WorkstationPage() {
                 overflowWrap: 'anywhere',
               }}
             >
-              {/* 🎯 일반 렌더링 대신 타자기 컴포넌트를 통과시킵니다! */}
               {msg.role === 'assistant' && msg.content.length > 500 && !msg.content.includes('![') && !hasMarkdownFormatting(msg.content) ? (
                 <TypewriterMessage content={msg.content} renderContent={renderMessageContent} />
               ) : (
@@ -435,7 +442,6 @@ export default function WorkstationPage() {
             </div>
           ))}
 
-          {/* 🎯 로딩 문구가 실시간으로 슉슉 바뀝니다! */}
           {isSending && (
             <div style={{ alignSelf: 'flex-start', color: 'var(--lf-gold)', fontSize: 13, fontWeight: 'bold', padding: '16px 20px', background: '#fff', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
               ⏳ {loadingText}
@@ -449,7 +455,7 @@ export default function WorkstationPage() {
                 onClick={handleSaveClaims} 
                 disabled={isSaving}
                 className="btn-fill" 
-                style={{ padding: '12px 24px', fontSize: 13, background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
+                style={{ padding: '12px 24px', background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
               >
                 {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
               </button>
@@ -467,7 +473,7 @@ export default function WorkstationPage() {
               disabled={isSending}
               placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
               className="input-field" 
-              style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '0 20px', border: '1px solid var(--lf-border)' }} 
+              style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '0 20px', border: '1px solid var(--lf-border)', height: 48 }}
             />
             <button type="submit" disabled={isSending} className="btn-gold" style={{ padding: '0 32px' }}>전송</button>
           </form>
@@ -490,9 +496,9 @@ export default function WorkstationPage() {
       <ProcessMapModal 
         isOpen={isProcessModalOpen} 
         onClose={() => setIsProcessModalOpen(false)} 
-        hasClaims={data?.project.has_claims || false}
-        hasDrawings={false} // 나중에 도면 API 연결 시 업데이트
-        hasSpec={false}     // 나중에 명세서 API 연결 시 업데이트
+        hasClaims={processHasClaims}
+        hasDrawings={processHasDrawings}
+        hasSpec={processHasSpec}
       />
       <PriorArtModal 
         isOpen={isPaModalOpen} 

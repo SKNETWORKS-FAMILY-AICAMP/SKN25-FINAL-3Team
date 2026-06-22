@@ -298,7 +298,9 @@ def workstation(request, project_id):
             "title": project.title,
             "created_at": project.created_at.isoformat(),
             "status": getattr(project, 'status', 'ready'),
-            "has_claims": getattr(project, 'has_claims', False)
+            "has_claims": project.claims.exists(),
+            "has_drawings": project.drawings.exists(),
+            "has_spec": hasattr(project, "specification_doc"),
         },
         "invention_input": {
             "problem_to_solve": invention_input.problem_to_solve if invention_input else "",

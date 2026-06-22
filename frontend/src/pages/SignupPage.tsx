@@ -45,7 +45,7 @@ export default function SignupPage() {
         <div className="card">
           <div style={{ marginBottom: 32 }}>
             <span className="label">New Account</span>
-            <h1 style={{ fontFamily: 'var(--lf-serif)', fontSize: 28, fontWeight: 300, color: 'var(--lf-navy)', margin: 0 }}>회원가입</h1>
+            <h1 className="section-title" style={{ margin:0 }}>회원가입</h1>
           </div>
 
           {error && (
@@ -91,7 +91,7 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <p style={{ textAlign: 'center', fontSize: 12, fontWeight: 300, color: 'var(--lf-muted)', marginTop: 28, borderTop: '1px solid var(--lf-border)', paddingTop: 24 }}>
+          <p className="muted-text" style={{ textAlign: 'center', marginTop: 28, borderTop: '1px solid var(--lf-border)', paddingTop: 24 }}>
             이미 계정이 있으신가요?{' '}
             <Link to="/login" state={{ from }} style={{ color: 'var(--lf-gold)', fontWeight: 500 }}>로그인</Link>
           </p>
