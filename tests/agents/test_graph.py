@@ -1,150 +1,107 @@
-"""agents/graph.py 단위 테스트 (mock adapter 사용)."""
-from __future__ import annotations
-
-from unittest.mock import MagicMock, call
+"""Unit tests for the current patent LangGraph routing."""
 
 import pytest
+from langgraph.graph import END
 
-from agents.graph import (
-    build_agent_state_key_map,
-    build_default_adapters,
-    run_service_pipeline,
+from agents.core import graph
+from agents.core.state import ExaminerResult
+
+
+@pytest.mark.parametrize(
+    "examiner_data",
+    [
+        None,
+        {"is_approved": True, "revision_count": 0},
+        {"is_approved": False, "revision_count": 2},
+        ExaminerResult(is_approved=True, rejections=[], revision_count=1),
+        ExaminerResult(is_approved=False, rejections=[], revision_count=2),
+    ],
 )
-from agents.state import create_initial_state
-from agents.validation import AgentValidationError
+def test_should_continue_ends_for_missing_approved_or_exhausted_result(examiner_data):
+    assert graph.should_continue({"examiner_data": examiner_data}) == END
 
 
-# ── build_default_adapters 테스트 ────────────────────────────────────────────
-
-def test_build_default_adapters_contains_all_six_agents():
-    adapters = build_default_adapters()
-    expected = {"summary", "prior_art", "claim", "drawing", "specification", "composer"}
-    assert set(adapters.keys()) == expected
-
-
-def test_build_default_adapters_values_have_agent_name():
-    adapters = build_default_adapters()
-    for name, adapter in adapters.items():
-        assert adapter.agent_name == name
+@pytest.mark.parametrize(
+    "examiner_data",
+    [
+        {"is_approved": False, "revision_count": 0},
+        ExaminerResult(is_approved=False, rejections=[], revision_count=1),
+    ],
+)
+def test_should_continue_routes_rejected_claims_to_rewrite(examiner_data):
+    assert graph.should_continue({"examiner_data": examiner_data}) == "rewrite_node"
 
 
-# ── build_agent_state_key_map 테스트 ─────────────────────────────────────────
+def test_build_patent_graph_registers_current_nodes(monkeypatch):
+    class DummyAgent:
+        def __init__(self, **_kwargs):
+            pass
 
-def test_build_agent_state_key_map_claim_maps_to_claims():
-    adapters = build_default_adapters()
-    key_map = build_agent_state_key_map(adapters)
-    assert key_map["claim"] == "claims"
+        def run(self, _state):
+            return {}
 
+    for name in ("SummaryAgent", "ClaimAgent", "ExaminerAgent", "ClaimRewriteAgent"):
+        monkeypatch.setattr(graph, name, DummyAgent)
 
-def test_build_agent_state_key_map_summary_maps_to_summary():
-    adapters = build_default_adapters()
-    key_map = build_agent_state_key_map(adapters)
-    assert key_map["summary"] == "summary"
+    compiled = graph.build_patent_graph()
 
-
-def test_build_agent_state_key_map_composer_maps_to_final_package():
-    adapters = build_default_adapters()
-    key_map = build_agent_state_key_map(adapters)
-    assert key_map["composer"] == "final_package"
-
-
-# ── run_service_pipeline 테스트 ───────────────────────────────────────────────
-
-@pytest.fixture
-def full_mock_adapters(make_mock_adapter):
-    """6개 agent mock adapter를 모두 포함한 dict를 반환합니다."""
-    pipeline = [
-        ("summary", "summary"),
-        ("prior_art", "prior_art"),
-        ("claim", "claims"),
-        ("drawing", "drawings"),
-        ("specification", "specification"),
-        ("composer", "final_package"),
-    ]
-    return {name: make_mock_adapter(name, key) for name, key in pipeline}
+    assert set(compiled.get_graph().nodes) == {
+        "__start__",
+        "summary_node",
+        "claim_node",
+        "examiner_node",
+        "rewrite_node",
+        "__end__",
+    }
 
 
-def test_run_pipeline_with_mock_adapters_status_completed(full_mock_adapters):
-    state = run_service_pipeline("충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.", full_mock_adapters)
-    assert state["workflow"]["status"] == "completed"
+def test_compiled_graph_runs_summary_claim_and_examiner_in_order(monkeypatch):
+    calls = []
 
+    class Summary:
+        def __init__(self, **_kwargs):
+            pass
 
-def test_run_pipeline_with_mock_adapters_all_agents_called(full_mock_adapters):
-    run_service_pipeline("충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.", full_mock_adapters)
-    for adapter in full_mock_adapters.values():
-        adapter.run.assert_called_once()
+        def run(self, _state):
+            calls.append("summary")
+            return {"summary_data": None}
 
+    class Claim:
+        def __init__(self, **_kwargs):
+            pass
 
-def test_run_pipeline_results_stored_in_state(full_mock_adapters):
-    state = run_service_pipeline("충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.", full_mock_adapters)
-    assert state["summary"] == {"status": "ok", "summary": "summary 결과"}
-    assert state["claims"] == {"status": "ok", "summary": "claim 결과"}
+        def run(self, _state):
+            calls.append("claim")
+            return {"claims_data": None}
 
+    class Examiner:
+        def __init__(self, **_kwargs):
+            pass
 
-def test_run_pipeline_partial_route_only_runs_specified_agents(full_mock_adapters):
-    run_service_pipeline(
-        "충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.",
-        full_mock_adapters,
-        route=["summary"],
-    )
-    full_mock_adapters["summary"].run.assert_called_once()
-    full_mock_adapters["prior_art"].run.assert_not_called()
-    full_mock_adapters["claim"].run.assert_not_called()
+        def run(self, _state):
+            calls.append("examiner")
+            return {
+                "examiner_data": ExaminerResult(
+                    is_approved=True,
+                    rejections=[],
+                    revision_count=1,
+                )
+            }
 
+    class Rewrite:
+        def __init__(self, **_kwargs):
+            pass
 
-def test_run_pipeline_adapter_validation_error_sets_status_failed(full_mock_adapters):
-    full_mock_adapters["summary"].run.side_effect = AgentValidationError(
-        agent_name="summary",
-        schema_name="SummaryAgentOutput",
-        validation_errors=[{"msg": "field required"}],
-        raw_output={},
-    )
-    state = run_service_pipeline("충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.", full_mock_adapters)
-    assert state["workflow"]["status"] == "failed"
-    assert any("summary" in e for e in state["workflow"]["errors"])
+        def run(self, _state):
+            calls.append("rewrite")
+            return {}
 
+    monkeypatch.setattr(graph, "SummaryAgent", Summary)
+    monkeypatch.setattr(graph, "ClaimAgent", Claim)
+    monkeypatch.setattr(graph, "ExaminerAgent", Examiner)
+    monkeypatch.setattr(graph, "ClaimRewriteAgent", Rewrite)
 
-def test_run_pipeline_unexpected_exception_sets_status_failed(full_mock_adapters):
-    full_mock_adapters["claim"].run.side_effect = RuntimeError("예상치 못한 오류")
-    state = run_service_pipeline(
-        "충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.",
-        full_mock_adapters,
-        route=["summary", "prior_art", "claim"],
-    )
-    assert state["workflow"]["status"] == "failed"
+    result = graph.build_patent_graph().invoke({"mock_input_data": {"title": "발명"}})
 
-
-def test_run_pipeline_progress_callback_called_for_each_agent(full_mock_adapters):
-    callback = MagicMock()
-    run_service_pipeline(
-        "충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.",
-        full_mock_adapters,
-        progress_callback=callback,
-    )
-    called_names = [c.args[0] for c in callback.call_args_list]
-    for name in full_mock_adapters:
-        assert name in called_names
-
-
-def test_run_pipeline_unregistered_adapter_records_error(full_mock_adapters):
-    state = run_service_pipeline(
-        "충분히 긴 발명 설명입니다. 30자 이상이어야 합니다.",
-        full_mock_adapters,
-        route=["nonexistent_agent"],
-    )
-    assert any("nonexistent_agent" in e for e in state["workflow"]["errors"])
-
-
-def test_run_pipeline_continues_from_initial_state(full_mock_adapters):
-    """initial_state를 넘기면 이어서 실행해야 합니다."""
-    existing = create_initial_state("기존 입력")
-    existing["summary"] = {"status": "ok", "summary": "기존 요약"}
-
-    state = run_service_pipeline(
-        "기존 입력",
-        full_mock_adapters,
-        initial_state=existing,
-        route=["prior_art"],
-    )
-    full_mock_adapters["summary"].run.assert_not_called()
-    full_mock_adapters["prior_art"].run.assert_called_once()
+    assert calls == ["summary", "claim", "examiner"]
+    assert result["examiner_data"].is_approved is True

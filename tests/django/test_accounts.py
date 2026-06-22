@@ -1,14 +1,19 @@
+"""Unit tests for the current Django account model and JWT API contract."""
+
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from accounts.models import UserProfile
+
+
 User = get_user_model()
 
-SIGNUP_URL = "/api/auth/signup/"
-LOGIN_URL = "/api/auth/login/"
-LOGOUT_URL = "/api/auth/logout/"
-ME_URL = "/api/auth/me/"
+SIGNUP_URL = "/accounts/signup/"
+LOGIN_URL = "/accounts/login/"
+LOGOUT_URL = "/accounts/logout/"
+ME_URL = "/accounts/me/"
 
 VALID_PAYLOAD = {
     "username": "testuser",
@@ -16,7 +21,6 @@ VALID_PAYLOAD = {
     "gender": "M",
     "age": 30,
     "password": "strongpass123",
-    "password2": "strongpass123",
 }
 
 
@@ -27,13 +31,14 @@ def client():
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(
+    user = User.objects.create_user(
         username="existing",
-        name="기존유저",
-        gender="F",
-        age=25,
+        first_name="기존유저",
+        email="existing@example.com",
         password="pass1234!",
     )
+    UserProfile.objects.create(user=user, gender="F", age=25, role="inventor")
+    return user
 
 
 @pytest.fixture
@@ -44,102 +49,97 @@ def auth_client(user):
     return client, user, str(token)
 
 
-# ── 모델 ───────────────────────────────────────────────────────────────────
+def test_standard_user_password_is_hashed(db):
+    user = User.objects.create_user(username="u1", password="pw")
 
-@pytest.mark.django_db
-def test_create_user():
-    user = User.objects.create_user(username="u1", name="유저", gender="M", age=20, password="pw")
     assert user.username == "u1"
     assert user.check_password("pw")
     assert user.is_active is True
-    assert user.is_staff is False
 
 
-@pytest.mark.django_db
-def test_user_str():
-    user = User.objects.create_user(username="u2", name="테스터", gender="F", age=22, password="pw")
-    assert str(user) == "테스터 (u2)"
+def test_user_profile_string_uses_username(user):
+    assert str(user.profile) == "existing"
 
 
-@pytest.mark.django_db
-def test_create_user_without_username_raises():
-    with pytest.raises(ValueError, match="아이디"):
-        User.objects.create_user(username="", name="이름", gender="M", age=20, password="pw")
+def test_signup_creates_user_profile_and_tokens(client, db):
+    response = client.post(SIGNUP_URL, VALID_PAYLOAD, format="json")
+
+    assert response.status_code == 201
+    assert {"access", "refresh", "user", "message"}.issubset(response.data)
+    created = User.objects.get(username="testuser")
+    assert created.first_name == "홍길동"
+    assert created.profile.role == "inventor"
+    assert created.profile.age == 30
 
 
-# ── 회원가입 API ────────────────────────────────────────────────────────────
+def test_signup_rejects_duplicate_username(client, user):
+    response = client.post(
+        SIGNUP_URL,
+        {**VALID_PAYLOAD, "username": user.username},
+        format="json",
+    )
 
-@pytest.mark.django_db
-def test_signup_success(client):
-    res = client.post(SIGNUP_URL, VALID_PAYLOAD, format="json")
-    assert res.status_code == 201
-    assert "access" in res.data
-    assert res.data["user"]["username"] == "testuser"
-
-
-@pytest.mark.django_db
-def test_signup_duplicate_username(client, user):
-    payload = {**VALID_PAYLOAD, "username": user.username}
-    res = client.post(SIGNUP_URL, payload, format="json")
-    assert res.status_code == 400
+    assert response.status_code == 400
+    assert "이미 존재" in response.data["error"]
 
 
-@pytest.mark.django_db
-def test_signup_password_mismatch(client):
-    payload = {**VALID_PAYLOAD, "password2": "different"}
-    res = client.post(SIGNUP_URL, payload, format="json")
-    assert res.status_code == 400
+def test_login_returns_tokens_and_serialized_user(client, user):
+    response = client.post(
+        LOGIN_URL,
+        {"username": user.username, "password": "pass1234!"},
+        format="json",
+    )
+
+    assert response.status_code == 200
+    assert response.data["user"]["username"] == user.username
+    assert response.data["user"]["name"] == "기존유저"
+    assert response.data["user"]["gender"] == "F"
 
 
-# ── 로그인 API ──────────────────────────────────────────────────────────────
+def test_login_rejects_wrong_password(client, user):
+    response = client.post(
+        LOGIN_URL,
+        {"username": user.username, "password": "wrong"},
+        format="json",
+    )
 
-@pytest.mark.django_db
-def test_login_success(client, user):
-    res = client.post(LOGIN_URL, {"username": user.username, "password": "pass1234!"}, format="json")
-    assert res.status_code == 200
-    assert "access" in res.data
-    assert res.data["user"]["username"] == user.username
-
-
-@pytest.mark.django_db
-def test_login_wrong_password(client, user):
-    res = client.post(LOGIN_URL, {"username": user.username, "password": "wrong"}, format="json")
-    assert res.status_code == 401
+    assert response.status_code == 401
 
 
-@pytest.mark.django_db
-def test_login_nonexistent_user(client):
-    res = client.post(LOGIN_URL, {"username": "nobody", "password": "pw"}, format="json")
-    assert res.status_code == 401
+def test_me_requires_authentication(client, db):
+    assert client.get(ME_URL).status_code == 401
 
 
-# ── Me API ──────────────────────────────────────────────────────────────────
+def test_me_returns_and_updates_current_user(auth_client):
+    client, user, _refresh = auth_client
 
-@pytest.mark.django_db
-def test_me_unauthenticated(client):
-    res = client.get(ME_URL)
-    assert res.status_code == 401
+    get_response = client.get(ME_URL)
+    patch_response = client.patch(
+        ME_URL,
+        {"name": "수정이름", "email": "updated@example.com"},
+        format="json",
+    )
 
-
-@pytest.mark.django_db
-def test_me_returns_user_info(auth_client):
-    client, user, _ = auth_client
-    res = client.get(ME_URL)
-    assert res.status_code == 200
-    assert res.data["user"]["username"] == user.username
-
-
-# ── 로그아웃 API ────────────────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_logout_success(auth_client):
-    client, _, refresh_token = auth_client
-    res = client.post(LOGOUT_URL, {"refresh": refresh_token}, format="json")
-    assert res.status_code == 200
+    assert get_response.status_code == 200
+    assert get_response.data["user"]["username"] == user.username
+    assert patch_response.status_code == 200
+    user.refresh_from_db()
+    assert user.first_name == "수정이름"
+    assert user.email == "updated@example.com"
 
 
-@pytest.mark.django_db
-def test_logout_without_refresh_token(auth_client):
-    client, _, _ = auth_client
-    res = client.post(LOGOUT_URL, {}, format="json")
-    assert res.status_code == 400
+def test_logout_blacklists_valid_refresh_token(auth_client):
+    client, _user, refresh_token = auth_client
+
+    response = client.post(LOGOUT_URL, {"refresh": refresh_token}, format="json")
+
+    assert response.status_code == 200
+    assert response.data["message"] == "로그아웃 성공"
+
+
+def test_logout_rejects_invalid_refresh_token(auth_client):
+    client, _user, _refresh_token = auth_client
+
+    response = client.post(LOGOUT_URL, {"refresh": "not-a-token"}, format="json")
+
+    assert response.status_code == 400
