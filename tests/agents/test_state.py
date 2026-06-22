@@ -1,77 +1,91 @@
-"""agents/state.py 단위 테스트."""
-from __future__ import annotations
+"""Unit tests for the current Pydantic and LangGraph state contracts."""
 
 import pytest
+from pydantic import ValidationError
 
-from agents.state import create_initial_state
-
-
-def test_create_initial_state_workflow_status_is_idle():
-    state = create_initial_state()
-    assert state["workflow"]["status"] == "idle"
-
-
-def test_create_initial_state_stores_user_input():
-    state = create_initial_state("테스트 발명 설명")
-    assert state["user_input"] == "테스트 발명 설명"
+from agents.core.state import (
+    ClaimItem,
+    PatentDrawing,
+    PatentState,
+    PriorArtCandidate,
+    PriorArtResult,
+)
 
 
-def test_create_initial_state_empty_input_by_default():
-    state = create_initial_state()
-    assert state["user_input"] == ""
+def test_parsed_invention_round_trips_without_losing_nested_data(parsed_invention):
+    restored = type(parsed_invention).model_validate(parsed_invention.model_dump())
+
+    assert restored.invention_metadata.title == "센서 데이터를 분석하는 시스템"
+    assert restored.architecture.components[0].id == "COMP_001"
+    assert restored.architecture.processing_steps[0].input_data_ids == ["FLOW_001"]
 
 
-def test_create_initial_state_workflow_current_agent_is_master():
-    state = create_initial_state()
-    assert state["workflow"]["current_agent"] == "master"
+def test_component_parent_id_defaults_to_none(parsed_invention):
+    assert parsed_invention.architecture.components[0].parent_id is None
 
 
-def test_create_initial_state_workflow_next_agent_is_summary():
-    state = create_initial_state()
-    assert state["workflow"]["next_agent"] == "summary"
+@pytest.mark.parametrize("category", ["방법", "시스템", "CRM"])
+def test_claim_item_accepts_supported_categories(category):
+    claim = ClaimItem(
+        claim_no=1,
+        is_dependent=False,
+        cited_claim_no=[],
+        category=category,
+        content="청구항 내용",
+    )
+
+    assert claim.category == category
 
 
-def test_create_initial_state_workflow_trace_is_empty():
-    state = create_initial_state()
-    assert state["workflow"]["trace"] == []
+def test_claim_item_rejects_unknown_category():
+    with pytest.raises(ValidationError):
+        ClaimItem(
+            claim_no=1,
+            is_dependent=False,
+            cited_claim_no=[],
+            category="장치",
+            content="청구항 내용",
+        )
 
 
-def test_create_initial_state_workflow_errors_is_empty():
-    state = create_initial_state()
-    assert state["workflow"]["errors"] == []
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("rank", 0), ("score", -0.1), ("score", 1.1)],
+)
+def test_prior_art_candidate_enforces_rank_and_score_ranges(field, value):
+    data = {"patent_id": 1, "rank": 1, "score": 0.5}
+    data[field] = value
+
+    with pytest.raises(ValidationError):
+        PriorArtCandidate(**data)
 
 
-def test_create_initial_state_agent_slots_are_empty_dicts():
-    state = create_initial_state()
-    for key in ("summary", "prior_art", "claims", "drawings", "specification", "final_package"):
-        assert state[key] == {}, f"{key} should be empty dict"
+def test_prior_art_result_default_lists_are_independent():
+    first = PriorArtResult()
+    second = PriorArtResult()
+
+    first.candidates.append(PriorArtCandidate(patent_id=1, rank=1))
+
+    assert len(first.candidates) == 1
+    assert second.candidates == []
 
 
-def test_create_initial_state_document_links_has_required_keys():
-    state = create_initial_state()
-    links = state["document_links"]
-    for key in ("term_registry", "reference_numeral_map", "claim_to_component_links"):
-        assert key in links
+def test_patent_drawing_rejects_unsupported_diagram_type():
+    with pytest.raises(ValidationError):
+        PatentDrawing(
+            fig_no="도 1",
+            title="구성도",
+            diagram_type="SEQUENCE",
+            dot_code="digraph {}",
+            image_path="/tmp/test.png",
+        )
 
 
-def test_create_initial_state_drafting_options_claim_style():
-    state = create_initial_state()
-    assert state["drafting_options"]["claim_style"] == "korean_patent"
-
-
-def test_create_initial_state_drafting_options_use_reference_numerals():
-    state = create_initial_state()
-    assert state["drafting_options"]["use_reference_numerals"] is True
-
-
-def test_create_initial_state_max_iterations_is_8():
-    state = create_initial_state()
-    assert state["workflow"]["max_iterations"] == 8
-
-
-def test_create_initial_state_returns_independent_objects():
-    """두 번 호출하면 독립적인 객체가 반환돼야 합니다."""
-    s1 = create_initial_state()
-    s2 = create_initial_state()
-    s1["workflow"]["errors"].append("오류")
-    assert s2["workflow"]["errors"] == []
+def test_patent_state_declares_current_pipeline_slots():
+    assert set(PatentState.__annotations__) == {
+        "mock_input_data",
+        "summary_data",
+        "claims_data",
+        "prior_art_data",
+        "examiner_data",
+    }

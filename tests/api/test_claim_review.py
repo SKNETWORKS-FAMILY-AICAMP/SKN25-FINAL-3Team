@@ -1,9 +1,11 @@
-"""사용자 청구항 심사 스트리밍 API 테스트."""
+"""사용자 청구항 심사 스트리밍 API 단위 테스트."""
 
 import json
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
+import pytest
 
 from agents.core.state import ClaimResult, ExaminerResult, RejectionDetail
 from backend.fastapi.routers import claim_review
@@ -81,3 +83,44 @@ def test_parse_claim_text_infers_multiple_claims_and_dependency():
     assert result.claims[0].is_dependent is False
     assert result.claims[1].is_dependent is True
     assert result.claims[1].cited_claim_no == [1]
+
+
+@pytest.mark.parametrize(
+    ("content", "expected"),
+    [
+        ("데이터를 처리하는 방법.", "방법"),
+        ("컴퓨터 판독 가능한 기록 매체.", "CRM"),
+        ("센서와 처리부를 포함하는 장치.", "시스템"),
+    ],
+)
+def test_infer_claim_category_uses_claim_ending(content, expected):
+    assert claim_review.infer_claim_category(content) == expected
+
+
+def test_parse_claim_text_without_header_creates_claim_one():
+    result = claim_review.parse_claim_text("센서 데이터를 분석하는 시스템.")
+
+    assert result.claims[0].claim_no == 1
+    assert result.claims[0].is_dependent is False
+
+
+def test_parse_claim_text_rejects_more_than_twenty_claims():
+    text = "\n".join(f"청구항 {number}. 처리 장치를 포함하는 시스템." for number in range(1, 22))
+
+    with pytest.raises(ValueError, match="최대 20개"):
+        claim_review.parse_claim_text(text)
+
+
+def test_review_claims_streams_error_when_graph_fails(monkeypatch):
+    class BrokenGraph:
+        def stream(self, _state):
+            raise RuntimeError("graph failed")
+            yield
+
+    monkeypatch.setattr(claim_review, "build_claim_review_graph", lambda: BrokenGraph())
+
+    response = make_client().post("/api/v1/review-claims", json=valid_payload())
+    events = [json.loads(line) for line in response.text.splitlines()]
+
+    assert [event["step"] for event in events] == ["start", "error"]
+    assert "graph failed" in events[-1]["message"]
