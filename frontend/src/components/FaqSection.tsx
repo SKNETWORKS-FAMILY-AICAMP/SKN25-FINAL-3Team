@@ -28,7 +28,7 @@ export default function FaqSection({ id, showHeading = false, showHomeLink = fal
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
               <span className="label">FAQ</span>
               <h2 style={{ fontSize: 'clamp(28px,3vw,41px)', color: 'var(--lf-navy)', marginBottom: 14 }}>
-                자주 묻는 <span className="text-gradient">질문</span>
+                자주 묻는 질문
               </h2>
               <p style={{ fontSize: 15.5, color: 'var(--lf-mid)', lineHeight: 1.9 }}>
                 PYPI 사용 중 궁금한 점을 분야별로 확인해보세요.

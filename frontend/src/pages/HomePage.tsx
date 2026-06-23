@@ -430,7 +430,7 @@ export default function HomePage() {
             <div style={{ marginBottom: 40, textAlign: 'center' }}>
               <span className="label">Before / After</span>
               <h2 style={{ fontSize: 'clamp(28px,3vw,41px)', color: 'var(--lf-navy)' }}>
-                PYPI 도입 전과 후는 <span className="text-gradient">다릅니다</span>
+                PYPI 도입 전과 후는 다릅니다
               </h2>
             </div>
           </Reveal>

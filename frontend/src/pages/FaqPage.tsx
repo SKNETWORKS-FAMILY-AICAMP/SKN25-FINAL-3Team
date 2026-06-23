@@ -9,7 +9,7 @@ export default function FaqPage() {
           <Reveal variant="scale">
             <span className="label">FAQ</span>
             <h1 style={{ fontSize: 'clamp(32px,4vw,48px)', color: 'var(--lf-navy)', marginBottom: 16 }}>
-              자주 묻는 <span className="text-gradient">질문</span>
+              자주 묻는 질문
             </h1>
             <p style={{ fontSize: 15.5, color: 'var(--lf-mid)', lineHeight: 1.9, maxWidth: 560, margin: '0 auto' }}>
               PYPI 사용 중 궁금한 점을 분야별로 모았습니다.

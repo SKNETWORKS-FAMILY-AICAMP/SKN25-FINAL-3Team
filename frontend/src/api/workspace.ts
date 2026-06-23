@@ -117,7 +117,7 @@ export const workspaceApi = {
       `/auth/workspace/workstation/${projectId}/generate_specification_api/`,{}
     ),
 
-  generateClaimsStream: async (projectId: string, onMessage: (data: any) => void) => {
+  generateClaimsStream: async (projectId: string, onMessage: (data: any) => void, signal?: AbortSignal) => {
     const token = localStorage.getItem('access_token')
     
     const response = await fetch(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {
@@ -125,7 +125,8 @@ export const workspaceApi = {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      signal,
     })
   
 
