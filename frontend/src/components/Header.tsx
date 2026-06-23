@@ -102,13 +102,18 @@ export default function Header() {
             onMouseEnter={() => setIsFeatureOpen(true)}
             onMouseLeave={() => setIsFeatureOpen(false)}
           >
-            <button style={{
+            <button
+              type="button"
+              aria-expanded={isFeatureOpen}
+              onClick={() => setIsFeatureOpen(open => !open)}
+              style={{
               fontSize: 10, fontWeight: 500, letterSpacing: '1.8px',
               textTransform: 'uppercase', color: isFeatureOpen ? 'var(--lf-navy)' : 'var(--lf-mid)',
               background: 'none', border: 'none', padding: '0 18px', height: 70,
               display: 'flex', alignItems: 'center', gap: 5, transition: 'color .2s',
               cursor: 'pointer', fontFamily: 'var(--lf-sans)',
-            }}>
+              }}
+            >
               기능
               <span style={{ fontSize: 8, transform: isFeatureOpen ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>▾</span>
             </button>

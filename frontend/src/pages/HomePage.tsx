@@ -556,7 +556,9 @@ export default function HomePage() {
           </p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
             <Link to="/create" className="btn-fill" style={{ background: '#fff', color: 'var(--lf-navy)', borderColor: '#fff' }}>명세서 작성하기 →</Link>
-            <Link to="/login" className="btn-line" style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}>로그인</Link>
+            {!user && (
+              <Link to="/login" className="btn-line" style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}>로그인</Link>
+            )}
           </div>
         </Reveal>
       </section>
