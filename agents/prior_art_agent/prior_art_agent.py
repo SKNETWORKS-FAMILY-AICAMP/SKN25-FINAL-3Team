@@ -12,11 +12,11 @@ from pathlib import Path
 import contextvars
 import numpy as np
 from openai import OpenAI
-from langsmith import traceable   #langsmith tracing 데코레이터
-from langsmith.wrappers import wrap_openai  # 💡 추가: OpenAI 클라이언트를 LangSmith용으로 감싸주는 래퍼
-import urllib.parse  # URL 인코딩용 (추가)
-import requests      # 외부 API HTTP 요청용 (추가)
-import xml.etree.ElementTree as ET  # XML 파싱용 (추가)
+from langsmith import traceable  
+from langsmith.wrappers import wrap_openai  
+import urllib.parse  
+import requests      
+import xml.etree.ElementTree as ET  
 from dotenv import load_dotenv
 from sqlalchemy import Text, text
 from agents.core.state import (
@@ -72,7 +72,7 @@ def _build_claim1_query_text(claims_data: ClaimResult) -> str:
 # 3. pgvector 기반 Top-N 검색
 # ─────────────────────────────────────────────────────────────
 
-@traceable(run_type="tool", name="Local_DB_Search")  # 💡 추가: 로컬 DB 검색을 Tool로 명시적 트레이싱
+@traceable(run_type="tool", name="Local_DB_Search")  
 def search_similar_patents(
     query_text: str,
     top_n: int = 5,
@@ -437,7 +437,7 @@ def run_prior_art_agent(
     message = decision_resp.choices[0].message
     top_patents = []
     
-    search_source_val = "UNKNOWN" # 💡 소스 추적용 변수 추가
+    search_source_val = "UNKNOWN" 
 
     # LLM이 도구(Tool) 호출을 결정했는지 확인
     if message.tool_calls:
@@ -449,17 +449,17 @@ def run_prior_art_agent(
         
         if function_name == "search_similar_patents":
             print("[선행기술조사 에이전트] 판단 결과: AI 기술 -> 로컬 pgvector DB 호출")
-            search_source_val = "LOCAL_DB" # 💡 추가
+            search_source_val = "LOCAL_DB" 
             top_patents = search_similar_patents(query_text=function_args.get("query_text", query_text), top_n=top_n)
         elif function_name == "search_external_api":
             print("[선행기술조사 에이전트] 판단 결과: 비-AI 기술 -> 외부 검색 API 호출")
-            search_source_val = "EXTERNAL_API" # 💡 추가
+            search_source_val = "EXTERNAL_API" 
             top_patents = search_external_api(query_text=function_args.get("query_text", query_text), top_n=top_n)
             
         print(f"[선행기술조사] 검색 완료 소요시간: {time.perf_counter() - search_total_started_at:.2f}초")
     else:
         # Tool을 호출하지 않은 예외 상황 (Fallback으로 로컬 DB 검색)
-        search_source_val = "LOCAL_DB"  # 💡 추가
+        search_source_val = "LOCAL_DB"  
         print("[선행기술조사 에이전트] 명시적 툴 호출 실패. 기본 로컬 검색으로 폴백합니다.")
         top_patents = search_similar_patents(query_text, top_n=top_n)
 
@@ -566,8 +566,9 @@ def run_prior_art_agent(
             candidates=candidates,
             overall_risk=overall_risk,
             analysis_summary=analysis_summary,
-            search_source=search_source_val # 💡 추가
-        )
+            search_source=search_source_val 
+        ),
+        "retrieved_patents": top_patents,
     }
 
 
