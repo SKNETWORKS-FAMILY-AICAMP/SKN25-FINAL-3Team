@@ -178,7 +178,7 @@ export default function HomePage() {
           <Reveal variant="scale">
             <h1 style={{ fontSize: 'clamp(36px,4.8vw,62px)', fontWeight: 800, lineHeight: 1.3, letterSpacing: '-1.2px', color: 'var(--lf-navy)', margin: '0 0 22px' }}>
               특허 명세서·청구항·도면 작성,<br />
-              <span className="text-gradient">AI 에이전트가 한 번에 완성합니다</span>
+              <span className="text-gradient text-gradient-anim">AI 에이전트가 한 번에 완성합니다</span>
             </h1>
           </Reveal>
 
@@ -233,7 +233,7 @@ export default function HomePage() {
         <div className="container">
           <Reveal variant="scale">
             <h2 style={{ fontSize: 'clamp(28px,3.2vw,44px)', color: 'var(--lf-navy)', lineHeight: 1.42 }}>
-              더 빠르게, 더 정확하게.<br /><span className="text-gradient">특허 업무 자동화의 시작</span>
+              더 빠르게, 더 정확하게.<br /><span className="text-gradient text-gradient-anim">특허 업무 자동화의 시작</span>
             </h2>
           </Reveal>
 

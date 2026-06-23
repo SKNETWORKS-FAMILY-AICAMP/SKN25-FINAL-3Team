@@ -18,7 +18,7 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <FaqSection showHomeLink />
+      <FaqSection showHomeLink sidebar />
     </div>
   )
 }

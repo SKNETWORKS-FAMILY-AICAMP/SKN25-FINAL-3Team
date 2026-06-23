@@ -47,6 +47,17 @@
     color: transparent;
   }
 
+  /* ── Animated emphasis for key phrases (hero / bold statement) ── */
+  .text-gradient-anim {
+    background-image: linear-gradient(100deg, var(--lf-navy) 0%, var(--lf-gold) 35%, var(--lf-gold-lt) 50%, var(--lf-gold) 65%, var(--lf-navy) 100%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: text-shimmer 6s ease-in-out infinite;
+  }
+
   /* on dark backgrounds the navy-based gradient above is invisible */
   .text-gradient-light {
     background-image: linear-gradient(90deg, var(--lf-gold-lt), #fff8f2);
@@ -242,4 +253,15 @@
 @keyframes breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.035); }
+}
+
+@media (max-width: 760px) {
+  .faq-sidebar-layout { flex-direction: column; }
+  .faq-sidebar-toc { display: none; }
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
