@@ -127,6 +127,62 @@ class SmartDrawingAgent:
         return self._render(dot, "system_block_fig1", fig_no,
                             f"{parsed_data.invention_metadata.title} 구성도",
                             "BLOCK_DIAGRAM")
+    
+    def _build_method_flowchart(
+        self, parsed_data: ParsedInvention, fig_no: str, ref_list: List[ReferenceMapping]
+    ) -> PatentDrawing:
+
+        dot = graphviz.Digraph(comment='Method Flowchart')
+        dot.attr(rankdir='TB', fontname=self.font_name, dpi='300')
+        dot.attr('graph', pad='0.5', nodesep='0.6', ranksep='0.8')
+        dot.attr('node', fontname=self.font_name)
+
+        steps = sorted(parsed_data.architecture.processing_steps, key=lambda x: x.step_number)
+
+        # 시작/종료 터미널 제거, 단계 노드만
+        for idx, step in enumerate(steps):
+            step_id = f"S{210 + idx * 10}"
+            node_id = f"STEP_{step.step_number}"
+
+            subject_comp = next(
+                (c for c in parsed_data.architecture.components if c.id == step.subject_id),
+                None
+            )
+
+            wrapped_desc = "\n".join(textwrap.wrap(step.action_description, width=20))
+
+            if subject_comp:
+                label = f"[{subject_comp.name}]\n{wrapped_desc}\n({step_id})"
+            else:
+                label = f"{wrapped_desc}\n({step_id})"
+
+            dot.node(
+                node_id, label,
+                shape='box',
+                style='rounded',
+                fontname=self.font_name,
+                fixedsize='true',
+                width='3.8',
+                height='1.2',
+                margin='0.1'
+            )
+
+            ref_list.append(ReferenceMapping(
+                component_id=node_id,
+                name=step.action_description,
+                numeral=step_id
+            ))
+
+        # 단계 간 화살표만 (시작/종료 터미널 없음)
+        for i in range(len(steps) - 1):
+            dot.edge(
+                f"STEP_{steps[i].step_number}",
+                f"STEP_{steps[i + 1].step_number}"
+            )
+
+        return self._render(dot, "method_flow_fig2", fig_no,
+                            f"{parsed_data.invention_metadata.title} 방법 흐름도",
+                            "FLOWCHART")
 
     # =========================================================
     # 공통 렌더링 헬퍼
