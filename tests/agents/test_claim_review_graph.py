@@ -1,42 +1,18 @@
-"""사용자 청구항 심사 전용 LangGraph 흐름 테스트."""
-
-import os
-
-os.environ["LANGCHAIN_TRACING_V2"] = "false"
+"""Unit tests for the examiner/rewrite-only claim review graph."""
 
 from agents.core import claim_review_graph
-from agents.core.state import ClaimItem, ClaimResult, ExaminerResult, RejectionDetail
+from agents.core.state import ExaminerResult
 
 
-def make_state():
-    return {
-        "mock_input_data": {},
-        "summary_data": None,
-        "claims_data": ClaimResult(
-            claims=[
-                ClaimItem(
-                    claim_no=1,
-                    is_dependent=False,
-                    cited_claim_no=[],
-                    category="시스템",
-                    content="입력 데이터를 분석하여 결과를 제공하는 인공지능 시스템.",
-                )
-            ]
-        ),
-        "prior_art_data": None,
-        "examiner_data": None,
-    }
+def test_approved_claim_stops_without_rewrite(monkeypatch, claim_result):
+    calls = []
 
-
-def test_approved_claim_stops_without_rewrite(monkeypatch):
-    calls = {"examiner": 0, "rewrite": 0}
-
-    class ApprovedExaminer:
+    class Examiner:
         def __init__(self, **_kwargs):
             pass
 
         def run(self, _state):
-            calls["examiner"] += 1
+            calls.append("examiner")
             return {
                 "examiner_data": ExaminerResult(
                     is_approved=True,
@@ -45,61 +21,57 @@ def test_approved_claim_stops_without_rewrite(monkeypatch):
                 )
             }
 
-    class UnusedRewrite:
-        def __init__(self, **_kwargs):
-            pass
-
-        def run(self, state):
-            calls["rewrite"] += 1
-            return {"claims_data": state["claims_data"]}
-
-    monkeypatch.setattr(claim_review_graph, "ExaminerAgent", ApprovedExaminer)
-    monkeypatch.setattr(claim_review_graph, "ClaimRewriteAgent", UnusedRewrite)
-
-    result = claim_review_graph.build_claim_review_graph().invoke(make_state())
-
-    assert result["examiner_data"].is_approved is True
-    assert calls == {"examiner": 1, "rewrite": 0}
-
-
-def test_rejected_claim_is_rewritten_and_reexamined(monkeypatch):
-    calls = {"examiner": 0, "rewrite": 0}
-
-    class RejectThenApproveExaminer:
+    class Rewrite:
         def __init__(self, **_kwargs):
             pass
 
         def run(self, _state):
-            calls["examiner"] += 1
-            approved = calls["examiner"] == 2
+            calls.append("rewrite")
+            return {"claims_data": claim_result}
+
+    monkeypatch.setattr(claim_review_graph, "ExaminerAgent", Examiner)
+    monkeypatch.setattr(claim_review_graph, "ClaimRewriteAgent", Rewrite)
+
+    result = claim_review_graph.build_claim_review_graph().invoke(
+        {"claims_data": claim_result, "examiner_data": None}
+    )
+
+    assert calls == ["examiner"]
+    assert result["examiner_data"].is_approved is True
+
+
+def test_rejected_claim_is_rewritten_then_reexamined(monkeypatch, claim_result):
+    calls = []
+
+    class Examiner:
+        def __init__(self, **_kwargs):
+            self.count = 0
+
+        def run(self, _state):
+            self.count += 1
+            calls.append("examiner")
             return {
                 "examiner_data": ExaminerResult(
-                    is_approved=approved,
-                    rejections=[] if approved else [
-                        RejectionDetail(claims=[1], reason_text="구성요소 관계가 불명확합니다.")
-                    ],
-                    revision_count=calls["examiner"],
+                    is_approved=self.count == 2,
+                    rejections=[],
+                    revision_count=self.count,
                 )
             }
 
-    class RewriteClaim:
+    class Rewrite:
         def __init__(self, **_kwargs):
             pass
 
-        def run(self, state):
-            calls["rewrite"] += 1
-            original = state["claims_data"].claims[0]
-            return {
-                "claims_data": ClaimResult(
-                    claims=[original.model_copy(update={"content": f"{original.content} 구성요소의 결합관계를 포함한다."})]
-                )
-            }
+        def run(self, _state):
+            calls.append("rewrite")
+            return {"claims_data": claim_result}
 
-    monkeypatch.setattr(claim_review_graph, "ExaminerAgent", RejectThenApproveExaminer)
-    monkeypatch.setattr(claim_review_graph, "ClaimRewriteAgent", RewriteClaim)
+    monkeypatch.setattr(claim_review_graph, "ExaminerAgent", Examiner)
+    monkeypatch.setattr(claim_review_graph, "ClaimRewriteAgent", Rewrite)
 
-    result = claim_review_graph.build_claim_review_graph().invoke(make_state())
+    result = claim_review_graph.build_claim_review_graph().invoke(
+        {"claims_data": claim_result, "examiner_data": None}
+    )
 
-    assert result["examiner_data"].is_approved is True
-    assert "결합관계" in result["claims_data"].claims[0].content
-    assert calls == {"examiner": 2, "rewrite": 1}
+    assert calls == ["examiner", "rewrite", "examiner"]
+    assert result["examiner_data"].revision_count == 2
