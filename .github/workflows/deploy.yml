@@ -21,10 +21,13 @@ jobs:
             # 1. 서버의 프로젝트 폴더로 이동
             cd /home/ubuntu/SKN25-FINAL-3Team
             
-            # 2. 최신 코드 받아오기
-            git pull origin main
+            # 2. 최신 코드 받아오기 (충돌 방지를 위한 강제 동기화)
+            echo "📥 GitHub 최신 코드 동기화 중..."
+            git fetch origin
+            git reset --hard origin/main
+            git clean -fd
             
-            # 🌟 3. 리액트(Vite) 프론트엔드 자동 빌드 (새로 추가된 부분!)
+            # 3. 리액트(Vite) 프론트엔드 자동 빌드
             echo "🚀 React 프론트엔드 빌드 시작..."
             cd frontend
             npm install
@@ -35,13 +38,28 @@ jobs:
             echo "🐳 백엔드 도커 컨테이너 재시작..."
             sudo docker-compose down --remove-orphans
             sudo docker-compose up -d --build 
-
+            
             # 5. django 마이그레이션
+            echo "🗄️ 데이터베이스 마이그레이션..."
             sudo docker exec patent_django_web python backend/django/manage.py migrate
             
-            # 6. 정적 파일 다시 모으기 (관리자 페이지 디자인 깨짐 방지)
+            # 6. 정적 파일 다시 모으기
+            echo "📁 정적 파일 수집..."
             sudo docker exec patent_django_web python backend/django/manage.py collectstatic --noinput
 
-            # 🌟 7. NGINX 재시작 (새로 빌드된 리액트 화면과 라우팅 설정 즉시 반영)
+            # 🌟 7. NGINX 설정 파일 자동 동기화 (새로 추가된 핵심 구역)
+            echo "⚙️ NGINX 설정 파일 업데이트..."
+            # GitHub에서 받아온 nginx.conf를 EC2의 실제 Nginx 폴더로 덮어쓰기
+            sudo cp /home/ubuntu/SKN25-FINAL-3Team/nginx.conf /etc/nginx/sites-available/patent_app
+            
+            # 심볼릭 링크가 혹시라도 풀려있을 경우를 대비해 확실하게 다시 연결
+            sudo ln -sf /etc/nginx/sites-available/patent_app /etc/nginx/sites-enabled/patent_app
+            
+            # Nginx 문법 검사 (여기서 오타가 발견되면 에러를 내고 배포를 중단하여 서버 다운 방지)
+            sudo nginx -t
+
+            # 8. NGINX 재시작
+            echo "🔄 NGINX 서비스 재시작..."
             sudo service nginx restart
-            echo "✅ 프론트엔드 및 백엔드 자동 배포가 성공적으로 완료되었습니다!"
+            
+            echo "✅ 프론트엔드, 백엔드, Nginx 인프라 자동 배포가 성공적으로 완료되었습니다!"
