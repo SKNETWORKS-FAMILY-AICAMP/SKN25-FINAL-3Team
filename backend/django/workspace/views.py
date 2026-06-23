@@ -38,6 +38,9 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from asgiref.sync import async_to_sync
+from rest_framework.decorators import api_view
+from rest_framework import serializers
+from drf_spectacular.utils import extend_schema, inline_serializer, OpenApiResponse
 
 logger = logging.getLogger(__name__)
 
@@ -156,6 +159,35 @@ def dashboard(request):
 
     return render(request, template_name, {'projects': projects})
 
+@extend_schema(
+    summary="새 프로젝트(워크스페이스) 생성",
+    description="사용자가 입력한 발명 정보를 바탕으로 새로운 특허 프로젝트를 생성합니다.",
+    
+    # 1. 프론트엔드에서 보내야 할 데이터 (Request Body)
+    request=inline_serializer(
+        name='CreateProjectRequest',
+        fields={
+            'title': serializers.CharField(help_text="프로젝트(발명) 명칭"),
+            'problem_to_solve': serializers.CharField(required=False, help_text="해결하고자 하는 과제"),
+            'prior_art_problem': serializers.CharField(required=False, help_text="종래 기술의 문제점"),
+            'core_tech': serializers.CharField(required=False, help_text="핵심 기술 구성"),
+            'expected_effect': serializers.CharField(required=False, help_text="기대 효과"),
+        }
+    ),
+    
+    # 2. 백엔드가 프론트엔드로 돌려줄 데이터 (Response)
+    responses={
+        201: inline_serializer(
+            name='CreateProjectResponse',
+            fields={
+                'status': serializers.CharField(default="success"),
+                'project_id': serializers.IntegerField(help_text="생성된 프로젝트 ID"),
+                'message': serializers.CharField(),
+            }
+        ),
+        400: OpenApiResponse(description="잘못된 입력값 에러")
+    }
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
 def create_project(request):

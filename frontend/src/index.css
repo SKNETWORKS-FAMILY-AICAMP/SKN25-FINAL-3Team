@@ -2,16 +2,18 @@
 
 @layer base {
   :root {
-    --lf-bg:       #ffffff;
-    --lf-bg2:      #faf8f4;
-    --lf-bg3:      #f4f0e8;
-    --lf-navy:     #12100e;
-    --lf-body:     #3d3830;
-    --lf-mid:      #7c756e;
-    --lf-muted:    #b8b0a8;
-    --lf-gold:     #9a7840;
-    --lf-gold-lt:  #b8935a;
-    --lf-border:   rgba(0,0,0,.08);
+    --lf-bg:       #fdfbf6;
+    --lf-bg2:      #fdfbf6;
+    --lf-bg3:      #fdfbf6;
+    --lf-navy:     #211b17;
+    --lf-dark:     #3d0e16;
+    --lf-dark-lt:  #5e1825;
+    --lf-body:     #4a4641;
+    --lf-mid:      #6e6864;
+    --lf-muted:    #aca59e;
+    --lf-gold:     #e8290d;
+    --lf-gold-lt:  #ff5840;
+    --lf-border:   rgba(232,41,13,.18);
     --lf-serif:    'DM Serif Display', 'Noto Serif KR', Georgia, serif;
     --lf-sans:     'Noto Sans KR', -apple-system, sans-serif;
     --lf-ease:     cubic-bezier(.25,.46,.45,.94);
@@ -23,58 +25,74 @@
     background: var(--lf-bg);
     color: var(--lf-navy);
     font-family: var(--lf-sans);
-    /* 수정 사항 */
-    font-size: 15px; 
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.75;
     overflow-x: hidden;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   a { color: inherit; text-decoration: none; }
 
-  h1, h2, h3, h4 { font-family: var(--lf-serif); font-weight: 300; }
+  h1, h2, h3, h4 { font-family: var(--lf-sans); font-weight: 800; letter-spacing: -.8px; word-break: keep-all; }
 }
 
 @layer components {
+  /* ── Gradient text (brand accent) ── */
+  .text-gradient {
+    background-image: linear-gradient(90deg, var(--lf-navy), var(--lf-gold) 55%, var(--lf-gold-lt));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* on dark backgrounds the navy-based gradient above is invisible */
+  .text-gradient-light {
+    background-image: linear-gradient(90deg, var(--lf-gold-lt), #fff8f2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
   /* ── Buttons ── */
   .btn-fill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 14px 36px;
+    padding: 14px 30px;
+    border-radius: 980px;
     font-family: var(--lf-sans);
     font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
+    font-weight: 700;
     color: #fff;
-    background: var(--lf-navy);
-    border: 1px solid var(--lf-navy);
+    background: var(--lf-dark);
+    border: 1px solid var(--lf-dark);
     cursor: pointer;
-    transition: background .2s, letter-spacing .2s;
+    transition: background .2s, transform .2s;
     text-decoration: none;
     text-align: center;
   }
-  .btn-fill:hover { background: var(--lf-gold); border-color: var(--lf-gold); }
+  .btn-fill:hover { background: var(--lf-dark-lt); border-color: var(--lf-dark-lt); transform: translateY(-1px); }
 
   .btn-line {
     display: inline-flex;
     align-items: center;
-    padding: 14px 32px;
+    padding: 14px 28px;
+    border-radius: 980px;
     font-family: var(--lf-sans);
     font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--lf-mid);
-    background: transparent;
+    font-weight: 600;
+    color: var(--lf-navy);
+    background: var(--lf-bg);
     border: 1px solid var(--lf-border);
     cursor: pointer;
-    transition: color .2s, border-color .2s;
+    transition: color .2s, border-color .2s, background .2s;
     text-decoration: none;
     text-align: center;
   }
-  .btn-line:hover { color: var(--lf-navy); border-color: rgba(154,120,64,.4); }
+  .btn-line:hover { color: var(--lf-gold); border-color: rgba(232,41,13,.4); background: var(--lf-bg2); }
 
   .btn-gold {
     display: inline-flex;
@@ -82,84 +100,18 @@
     gap: 6px;
     padding: 10px 24px;
     font-family: var(--lf-sans);
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #fff;
-    background: var(--lf-gold);
-    border: 1px solid var(--lf-gold);
+    background: var(--lf-dark);
+    border: 1px solid var(--lf-dark);
     cursor: pointer;
     transition: background .2s;
     text-decoration: none;
   }
-  .btn-gold:hover { background: var(--lf-gold-lt); border-color: var(--lf-gold-lt); }
-
-  .ws-main-header {
-    gap: 24px;
-    flex-wrap: nowrap;
-  }
-
-  .ws-main-header h2 {
-    flex: 1 1 auto;
-    min-width: 0;
-    line-height: 1.35;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .ws-action-bar {
-    flex: 0 0 auto;
-    flex-wrap: nowrap;
-    justify-content: flex-end;
-    align-items: stretch;
-    max-width: 100%;
-  }
-
-  .ws-action-button {
-    width: 92px;
-    min-height: 58px;
-    justify-content: center;
-    padding: 0 10px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
-    line-height: 1.35;
-    word-break: keep-all;
-    white-space: normal;
-    transition:
-      transform .18s var(--lf-ease),
-      box-shadow .18s var(--lf-ease),
-      background .18s var(--lf-ease),
-      border-color .18s var(--lf-ease),
-      color .18s var(--lf-ease);
-  }
-
-  .ws-action-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(18, 16, 14, .08);
-  }
-
-  .ws-action-label {
-    display: inline-block;
-    text-align: center;
-  }
-
-  @media (max-width: 1100px) {
-    .ws-main-header {
-      align-items: flex-start !important;
-      flex-direction: column;
-      flex-wrap: nowrap;
-    }
-
-    .ws-action-bar {
-      width: 100%;
-      max-width: none;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
-  }
+  .btn-gold:hover { background: var(--lf-dark-lt); border-color: var(--lf-dark-lt); }
 
   .btn-danger {
     display: inline-flex;
@@ -189,6 +141,20 @@
     background: var(--lf-bg);
     border: 1px solid var(--lf-border);
     padding: 24px;
+  }
+
+  .feature-card {
+    background: var(--lf-bg2);
+    border-radius: 18px;
+    padding: 30px 28px;
+    transition: transform .2s var(--lf-ease), box-shadow .2s var(--lf-ease);
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -18px rgba(33,27,23,.18); }
+
+  .stat-card {
+    background: var(--lf-bg2);
+    border-radius: 20px;
+    padding: 36px;
   }
 
   /* ── Form elements ── */
@@ -222,77 +188,17 @@
     line-height: 2;
     transition: border-color .2s;
   }
-  .input-area:focus { border-color: rgba(154,120,64,.4); }
+  .input-area:focus { border-color: rgba(232,41,13,.4); }
 
   .label {
     display: block;
-    font-size: 22px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--lf-gold);
     opacity: .75;
     margin-bottom: 12px;
-  }
-
-    /* ── Typography ── */
-  .page-title {
-    font-family: var(--lf-serif);
-    font-size: 36px;
-    font-weight: 300;
-    color: var(--lf-navy);
-    letter-spacing: 0;
-  }
-
-  .section-title {
-    font-family: var(--lf-serif);
-    font-size: 30px;
-    font-weight: 300;
-    color: var(--lf-navy);
-    letter-spacing: 0;
-  }
-
-  .panel-title {
-    font-family: var(--lf-serif);
-    font-size: 25px;
-    font-weight: 300;
-    color: var(--lf-navy);
-    letter-spacing: 0;
-  }
-
-  .card-title {
-    font-size: 23px;
-    font-weight: 600;
-    color: var(--lf-navy);
-  }
-
-  .body-text {
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 1.7;
-    color: var(--lf-body);
-  }
-
-  .muted-text {
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 1.6;
-    color: var(--lf-muted);
-  }
-
-  .meta-text {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: 1.2px;
-    color: var(--lf-muted);
-  }
-
-  .nav-text {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    font-family: var(--lf-sans);
   }
 
   /* ── Page container ── */
@@ -310,4 +216,25 @@
 }
 
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-@keyframes paper-spin { to { transform: rotate(360deg); } }
+
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+@keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+@keyframes redraw {
+  0%, 80% { stroke-dashoffset: 0; opacity: 1; }
+  90% { stroke-dashoffset: 240; opacity: .3; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .55; transform: scale(1.25); }
+}
+
+@keyframes flow { to { stroke-dashoffset: -76; } }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
