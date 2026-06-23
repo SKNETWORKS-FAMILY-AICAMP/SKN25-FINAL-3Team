@@ -1,17 +1,17 @@
 // src/pages/WorkstationPage.tsx
 import { FormEvent, useEffect, useState, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useLocation, useParams, Link } from 'react-router-dom'
 import { workspaceApi, WorkstationData, ChatMessage } from '../api/workspace'
 import AgentModal, { AgentLog } from '../components/AgentModal'
 import ClaimEditModal from '../components/ClaimEditModal'
 import ProcessMapModal from '../components/ProcessMapModal'
 import PriorArtModal from '../components/PriorArtModal'
-
-
+import MarkdownContent from '../components/MarkdownContent'
+import ProjectLoadingOverlay, { ProjectLoadingVariant } from '../components/ProjectLoadingOverlay'
+import './WorkstationPage.css' // 💡 방금 만든 CSS 임포트
 
 const STEP_TO_PIPELINE: Record<string, string> = {
   start: 'summary',
-  //log_and_state: currentStep,  // ← 이건 제거
   summary: 'summary',
   claim: 'claim',
   rewrite: 'examiner',
@@ -22,398 +22,565 @@ const STEP_TO_PIPELINE: Record<string, string> = {
   done: 'prior_art',
 }
 
+type PreviewImage = { src: string; alt: string }
+
 export default function WorkstationPage() {
   const { projectId } = useParams<{ projectId: string }>()
+  const location = useLocation()
+  const loadingVariant = ((location.state as { loadingVariant?: ProjectLoadingVariant } | null)?.loadingVariant ?? 'workspace')
   
-  // 상태 관리 (데이터 로딩, 채팅, 에러 등)
+  // 상태 관리
   const [data, setData] = useState<WorkstationData | null>(null)
   const [loading, setLoading] = useState(true)
   const [chatInput, setChatInput] = useState('')
   const [isSending, setIsSending] = useState(false)
   const chatBoxRef = useRef<HTMLDivElement>(null)
+  
+  // 레이아웃 토글 상태
+  const [isSourceCollapsed, setIsSourceCollapsed] = useState(false)
+  const [isStudioCollapsed, setIsStudioCollapsed] = useState(false)
+
+  // 모달 관리
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false)
-  
-  // (모달 관리용)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAgentModalMinimized, setIsAgentModalMinimized] = useState(false)
   const [agentLogs, setAgentLogs] = useState<AgentLog[]>([])
   const [currentStep, setCurrentStep] = useState<string>('summary')
   const [isAgentDone, setIsAgentDone] = useState(false)
- //const [isReportOpen, setIsReportOpen] = useState(false);
-  
-  const [pendingClaims, setPendingClaims] = useState<any[] | null>(null) // 방금 AI가 만든 저장 대기 중인 청구항
-  const [isSaving, setIsSaving] = useState(false)
-  const [isDrawingLoading, setIsDrawingLoading] = useState(false)
+  const [isPaModalOpen, setIsPaModalOpen] = useState(false)
+  const [priorArtData, setPriorArtData] = useState<any>(null)
+  const [previewImage, setPreviewImage] = useState<PreviewImage | null>(null)
+  const claimAbortControllerRef = useRef<AbortController | null>(null)
 
-  const [isPaModalOpen, setIsPaModalOpen] = useState(false) // 
-  const [priorArtData, setPriorArtData] = useState<any>(null) //
+  const [pendingClaims, setPendingClaims] = useState<any[] | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isDrawingLoading, setIsDrawingLoading] = useState(false)
+  const [pipelineOverrides, setPipelineOverrides] = useState({
+    hasClaims: false,
+    hasDrawings: false,
+    hasSpec: false,
+  })
+  const [loadingText, setLoadingText] = useState("AI 변리사가 명세서 구조를 기획하고 있습니다...")
+
+  const hasMarkdownFormatting = (content: string) => /(^|\n)#{1,3}\s/.test(content) || /\*\*[^*]+\*\*/.test(content)
 
   const renderMessageContent = (content: string) => {
-    // ![alt](url) 패턴을 찾아서 쪼갭니다.
-    const parts = content.split(/(!\[.*?\]\(.*?\))/g);
+    const imageRegex = /!\[(.*?)\]\((.*?)\)/g
+    const images = Array.from(content.matchAll(imageRegex)).map(match => ({ alt: match[1], src: match[2] }))
 
-    return parts.map((part, i) => {
-      const match = part.match(/!\[(.*?)\]\((.*?)\)/);
-      if (match) {
-        // 이미지를 찾으면 예쁜 img 태그로 변환!
-        return (
-          <div key={i} style={{ margin: '16px 0', textAlign: 'center' }}>
-            <img 
-              src={match[2]} 
-              alt={match[1]} 
-              style={{ maxWidth: '100%', borderRadius: 8, border: '1px solid var(--lf-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} 
-            />
-            <div style={{ fontSize: 11, color: 'var(--lf-muted)', marginTop: 8 }}>{match[1]}</div>
-          </div>
-        );
-      }
-      // 이미지가 아니면 그냥 텍스트 출력
-      return <span key={i}>{part}</span>;
-    });
+    if (images.length === 0) return <MarkdownContent content={content} variant="chat" />
+
+    const textOnly = content.replace(imageRegex, '').replace(/\n{3,}/g, '\n\n').trim()
+    return (
+      <>
+        {textOnly && <MarkdownContent content={textOnly} variant="chat" />}
+        <DrawingThumbnailStrip images={images} onOpen={setPreviewImage} />
+      </>
+    )
   }
 
-  // 1. 초기 데이터 로드
   useEffect(() => {
     if (!projectId) return
-    workspaceApi.getWorkstation(projectId)
-      .then(res => {
+    workspaceApi.getWorkstation(projectId).then(res => {
       setData(res)
-      if (res.prior_art_data) {          
-        setPriorArtData(res.prior_art_data)
-      }
-    })
-      .catch(err => alert("데이터를 불러오는데 실패했습니다: " + err.message))
-      .finally(() => setLoading(false))
+      if (res.prior_art_data) setPriorArtData(res.prior_art_data)
+    }).catch(err => alert("데이터를 불러오는데 실패했습니다: " + err.message)).finally(() => setLoading(false))
   }, [projectId])
 
-  
-
-  // 스크롤 맨 아래로 자동 이동
   useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
-    }
-  }, [data?.chat_messages])
+    if (chatBoxRef.current) chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
+  }, [data?.chat_messages, isSending])
 
-  // 2. 채팅 전송 핸들러
-  const handleSendMessage = async (e: FormEvent) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (!previewImage) return
+    const previousOverflow = document.body.style.overflow
+    const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') setPreviewImage(null) }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [previewImage])
+
+  useEffect(() => () => claimAbortControllerRef.current?.abort(), [])
+
+  const handleSendMessage = async (e?: FormEvent) => {
+    if (e) e.preventDefault()
     if (!chatInput.trim() || !projectId || !data) return
 
     const newMessage = chatInput
     setChatInput('')
     setIsSending(true)
 
-    // 낙관적 UI 업데이트 (사용자 메시지 먼저 화면에 띄우기)
-    const newChat: ChatMessage = { role: 'user', content: newMessage }
-    setData({ ...data, chat_messages: [...data.chat_messages, newChat] })
+    setData({ ...data, chat_messages: [...data.chat_messages, { role: 'user', content: newMessage }] })
 
     try {
       const res = await workspaceApi.sendMessage(projectId, newMessage)
-      // AI 응답 추가
       setData(prev => prev ? {
         ...prev,
         chat_messages: [...prev.chat_messages, { role: 'assistant', content: res.ai_message }],
         consultation_state: res.extracted_data 
       } : prev)
+      if (res.action === 'GENERATE_CLAIMS') {
+        setTimeout(() => {
+          handleGenerateClaims();
+        }, 1500);
+      }
     } catch (err) {
       alert("메시지 전송 실패")
     } finally {
       setIsSending(false)
     }
   }
-  //  "저장해럇!" 버튼 클릭 시 실행
+
   const handleSaveClaims = async () => {
     if (!pendingClaims || !projectId) return
     setIsSaving(true)
     try {
       await workspaceApi.saveClaims(projectId, pendingClaims)
       alert("저장 완료! 🎉")
-      setPendingClaims(null) // 저장이 끝났으니 버튼을 숨깁니다.
-      // 최신 상태 리로드
+      setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
+      setPendingClaims(null)
       workspaceApi.getWorkstation(projectId).then(res => setData(res))
-    } catch (err) {
-      alert("저장에 실패했습니다.")
-    } finally {
-      setIsSaving(false)
-    }
+    } catch (err) { alert("저장에 실패했습니다.") } 
+    finally { setIsSaving(false) }
   }
-  const [isGenerating, setIsGenerating] = useState(false)
-  // 3. 파이프라인 액션 핸들러 (예시: 청구항 작성)
+
   const handleGenerateClaims = async () => {
-    if (isGenerating) return  // ← 추가
-    if (!projectId || !confirm("청구항 작성을 시작하시겠습니까?")) return
-    // 모달 초기화 및 열기
+    if (isGenerating || !projectId || !confirm("청구항 작성을 시작하시겠습니까?")) return
+    const abortController = new AbortController()
+    claimAbortControllerRef.current = abortController
     setIsGenerating(true) 
     setAgentLogs([{ step: 'system', message: '파이프라인 초기화 중...' }])
     setCurrentStep('summary')
     setIsAgentDone(false)
+    setIsAgentModalMinimized(false)
     setIsModalOpen(true)
     try {
-      await workspaceApi.generateClaimsStream(projectId, (data) => {
-        console.log('SSE data:', data) // 디버깅용 로그
-      // 에러나 경고가 백엔드에서 온 경우 (4대 요소 부족 등)
-        if (data.status === 'warning' || data.status === 'error') {
-          
-          setAgentLogs(prev => [...prev, { step: 'error', message: data.message }])
+      await workspaceApi.generateClaimsStream(projectId, (streamData) => {
+        if (abortController.signal.aborted) return
+        if (streamData.status === 'warning' || streamData.status === 'error') {
+          setAgentLogs(prev => [...prev, { step: 'error', message: streamData.message }])
           setIsAgentDone(true)
           return
         }
-
-        // 실시간 로그와 단계 업데이트
-        if (data.step && data.message) {
-          setAgentLogs(prev => [...prev, { step: data.step, message: data.message }])
-          console.log('setCurrentStep 호출:', STEP_TO_PIPELINE[data.step] ?? data.step) 
-          setCurrentStep(STEP_TO_PIPELINE[data.step] ?? data.step)
+        if (streamData.step && streamData.message) {
+          setAgentLogs(prev => [...prev, { step: streamData.step, message: streamData.message }])
+          setCurrentStep(STEP_TO_PIPELINE[streamData.step] ?? streamData.step)
         }
-
-        // 모든 작업 완료 시
-        if (data.step === 'done') {
+        if (streamData.step === 'prior_art_done' && streamData.prior_art_data) {
+          const source = streamData.prior_art_data.search_source;
+          setAgentLogs(prev => {
+            const updatedLogs = prev.map(log => log.step === 'prior_art_start' ? { ...log, message: source === 'EXTERNAL_API' ? 'KIPRIS 외부 API 가동 완료' : '내부 벡터 DB 가동 완료' } : log);
+            return [...updatedLogs, { step: 'prior_art_info', message: source === 'EXTERNAL_API' ? '💡 KIPRIS 공공데이터망을 조회했습니다.' : '💡 내부 벡터 DB를 조회했습니다.' }];
+          });
+        }
+        if (streamData.step === 'done') {
           setIsAgentDone(true)
-          if (data.claims) setPendingClaims(data.claims)
-          if (data.prior_art_data) setPriorArtData(data.prior_art_data)
-          workspaceApi.getWorkstation(projectId).then(res => {
-            setData(res)
-            if (res.prior_art_data) setPriorArtData(res.prior_art_data) 
-          })
+          if (streamData.claims) {
+            setPendingClaims(streamData.claims)
+            setPipelineOverrides(prev => ({ ...prev, hasClaims: true }))
+          }
+          if (streamData.prior_art_data) setPriorArtData(streamData.prior_art_data)
+          workspaceApi.getWorkstation(projectId).then(res => setData(res))
         }
-      })
+      }, abortController.signal)
     } catch (err) {
+      if (abortController.signal.aborted) return
       setAgentLogs(prev => [...prev, { step: 'error', message: "통신 중 오류가 발생했습니다." }])
       setIsAgentDone(true)
-    }finally {
-      setIsGenerating(false) 
+    } finally {
+      if (claimAbortControllerRef.current === abortController) claimAbortControllerRef.current = null
+      setIsGenerating(false)
     }
   }
-  // 🎯 명세서 작성 핸들러
+
+  const handleMinimizeAgentModal = () => {
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(true)
+  }
+
+  const handleRestoreAgentModal = () => {
+    setIsAgentModalMinimized(false)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseAgentModal = () => {
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(false)
+  }
+
+  const handleCancelAgentPipeline = () => {
+    claimAbortControllerRef.current?.abort()
+    setAgentLogs(prev => [...prev, { step: 'cancelled', message: '사용자에 의해 작업이 중단되었습니다.' }])
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(false)
+  }
+
   const handleGenerateSpecification = async () => {
-    if (!projectId || !confirm("최종 특허 명세서(상세 설명) 작성을 시작하시겠습니까?\n본문 텍스트량이 많아 완료까지 약 1~2분이 소요될 수 있습니다.")) return
-
-    setIsSending(true) // 👈 채팅창 하단에 "AI가 입력 중입니다..." 활성화!
-
+    if (!projectId || !confirm("최종 특허 명세서 작성을 시작하시겠습니까? (약 1~2분 소요)")) return
+    setIsSending(true)
     try {
       const res = await workspaceApi.generateSpecification(projectId)
-      
       if (res.status === 'success') {
-        alert("최종 명세서 작성이 성공적으로 완료되었습니다! 📄")
-        
-        // 완료 시 최신 워크스테이션 데이터를 다시 불러와서 
-        // AI 변리사가 보낸 명세서 완료 메시지를 채팅창에 즉시 업데이트합니다.
+        alert("최종 명세서 작성이 완료되었습니다! 📄")
+        setPipelineOverrides(prev => ({ ...prev, hasSpec: true }))
         const updatedData = await workspaceApi.getWorkstation(projectId)
         setData(updatedData)
-      } else {
-        alert(`명세서 작성 실패: ${res.message}`)
-      }
-    } catch (err) {
-      alert("명세서 작성 중 통신 오류가 발생했습니다.")
-    } finally {
-      setIsSending(false) // 👈 로딩 종료
-    }
+      } else alert(`실패: ${res.message}`)
+    } catch (err) { alert("명세서 작성 중 통신 오류가 발생했습니다.") } 
+    finally { setIsSending(false) }
   }
+
   const handleGenerateDrawings = async () => {
-    if (!projectId || !confirm("AI 특허 도면(구성도/흐름도) 생성을 시작하시겠습니까?\n이 작업은 최대 1분이 소요될 수 있습니다.")) return
-
+    if (!projectId || !confirm("AI 특허 도면 생성을 시작하시겠습니까?")) return
     setIsDrawingLoading(true)
-    setIsSending(true) // 채팅창에 "AI가 입력 중입니다..." 띄우기
-
+    setIsSending(true)
     try {
       const res = await workspaceApi.generateDrawings(projectId)
-      
       if (res.status === 'success') {
-        alert("특허 도면 생성 및 저장이 완료되었습니다! 🎨")
-        
-        // 🚀 핵심: 도면 생성이 완료되면 워크스테이션 데이터를 싹 다시 불러와서 
-        // 새 채팅 메시지와 도면 현황을 화면에 즉시 갱신합니다!
+        alert("특허 도면 생성이 완료되었습니다! 🎨")
+        setPipelineOverrides(prev => ({ ...prev, hasDrawings: true }))
         const updatedData = await workspaceApi.getWorkstation(projectId)
         setData(updatedData)
-      } else {
-        alert(`도면 생성 실패: ${res.message}`)
-      }
-    } catch (err) {
-      alert("도면 생성 중 통신 오류가 발생했습니다.")
-    } finally {
-      setIsDrawingLoading(false)
-      setIsSending(false)
-    }
-
-  
+      } else alert(`실패: ${res.message}`)
+    } catch (err) { alert("도면 생성 중 통신 오류가 발생했습니다.") } 
+    finally { setIsDrawingLoading(false); setIsSending(false) }
   }
 
+  useEffect(() => {
+    if (isSending) {
+      const texts = ["문맥을 분석하고 있습니다...", "특허 데이터를 처리 중입니다...", "응답을 생성하고 있습니다..."]
+      let i = 0
+      const timer = setInterval(() => { i = (i + 1) % texts.length; setLoadingText(texts[i]) }, 3000)
+      return () => { clearInterval(timer); setLoadingText("AI가 입력 중입니다...") }
+    }
+  }, [isSending])
 
-  if (loading) return <div style={{ padding: 100, textAlign: 'center' }}>데이터 로딩 중...</div>
+  if (loading) return <ProjectLoadingOverlay variant={loadingVariant} />
   if (!data) return <div style={{ padding: 100, textAlign: 'center' }}>프로젝트를 찾을 수 없습니다.</div>
 
   const { project, invention_input, consultation_state, chat_messages } = data
+  const processHasClaims = project.has_claims || pipelineOverrides.hasClaims || Boolean(pendingClaims?.length)
+  const processHasDrawings = project.has_drawings || pipelineOverrides.hasDrawings
+  const processHasSpec = project.has_spec || pipelineOverrides.hasSpec
 
   return (
-    <div className="lf-ws-container" style={{ display: 'flex', height: '100vh', paddingTop: 70, boxSizing: 'border-box', overflow: 'hidden' }}>
-      
-      {/* 왼쪽 사이드바 (원본 데이터) */}
-      <aside className="lf-ws-sidebar" style={{ width: 400, flexShrink: 0, borderRight: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', padding: 24, overflowY: 'auto', height: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 18, fontFamily: 'var(--lf-serif)' }}>발명 원본 데이터</h2>
-          <Link to={`/report/${project.id}`} target="_blank" className="btn-line" style={{ padding: '6px 12px', fontSize: 10 }}>리포트 보기</Link>
+    <div className="nb-app">
+      {/* ── 상단 네비게이션 ── */}
+      <header className="nb-topbar">
+        <div className="nb-topbar-l">
+          <Link to="/" className="nb-logo" style={{ textDecoration: 'none', color: 'var(--lf-navy)', fontWeight: 'bold' }}>PYPI Workstation</Link>
+          <span className="nb-topbar-sep"></span>
+          <span className="nb-notebook-title">{project.title}</span>
         </div>
+      </header>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* 1. 해결하고자 하는 과제 */}
-          <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>1. 해결하고자 하는 과제</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.problem_to_solve}</p>
-          </div>
-          
-          {/* 2. 종래 기술의 문제점 */}
-          <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>2. 종래 기술의 문제점</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.prior_art_problem}</p>
-          </div>
-
-          {/* 3. 핵심 기술 구성 */}
-          <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>3. 핵심 기술 구성</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.core_tech}</p>
-          </div>
-
-          {/* 4. 기대 효과 */}
-          <div className="card-sm">
-            <h3 style={{ fontSize: 12, color: 'var(--lf-gold)', marginBottom: 8 }}>4. 기대 효과</h3>
-            <p style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{invention_input.expected_effect || "(입력되지 않음)"}</p>
-          </div>
-
-          {/* AI Agent Analysis (이하 동일) */}
-          <div style={{ marginTop: 32 }}>
-            <h2 style={{ fontSize: 16, fontFamily: 'var(--lf-serif)', marginBottom: 16 }}>AI Agent Analysis</h2>
-            <div className="card-sm" style={{ background: '#fff' }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 핵심 문제점</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_problem || "분석 대기 중..."}</p>
-            </div>
-            
-            <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 해결 방법</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_solution || "분석 대기 중..."}</p>
-            </div>
-            
-            <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 차별성</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_differentiation || "분석 대기 중..."}</p>
-            </div>
-            
-            <div className="card-sm" style={{ background: '#fff', marginTop: 12 }}>
-               <h4 style={{ fontSize: 11, color: 'var(--lf-mid)', marginBottom: 4 }}>추출된 기대 효과</h4>
-               <p style={{ fontSize: 13 }}>{consultation_state.ext_effect || "분석 대기 중..."}</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* 오른쪽 메인 (액션 버튼 & 채팅창) */}
-      <main className="lf-ws-main" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <header style={{ padding: '24px 32px', borderBottom: '1px solid var(--lf-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: 24, fontFamily: 'var(--lf-serif)', margin: 0 }}>{project.title}</h2>
-          
-          <div style={{ display: 'flex', gap: 8 }}>
-            {/* 3. 버튼에 onClick 이벤트 연결! */}
-            <button onClick={() => setIsProcessModalOpen(true)} className="btn-line">파이프라인 상태</button>
-            <button onClick={handleGenerateClaims} className="btn-gold">청구항 작성</button>
-            <button onClick={() => setIsClaimModalOpen(true)} className="btn-line">청구항 수정</button> 
-            <button 
-              onClick={handleGenerateDrawings} 
-              disabled={isDrawingLoading} 
-              className="btn-line"
-              style={{ opacity: isDrawingLoading ? 0.6 : 1, cursor: isDrawingLoading ? 'not-allowed' : 'pointer' }}
-            >
-              {isDrawingLoading ? "도면 생성 중..." : "도면 생성"}
-            </button>
-            <button onClick={handleGenerateSpecification} className="btn-fill">명세서 작성</button>
-            <button 
-              onClick={() => setIsPaModalOpen(true)} 
-              className="btn-action" 
-              style={{ background: 'var(--lf-bg2)', border: '1px solid var(--lf-border)', padding: '0 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, color: 'var(--lf-navy)', cursor: 'pointer' }}
-            >
-              선행기술 리포트
+      <div className={`nb-layout ${isSourceCollapsed ? 'source-collapsed' : ''} ${isStudioCollapsed ? 'studio-collapsed' : ''}`}>
+        
+        {/* ── 좌측: 발명 데이터 패널 ── */}
+        <aside className="nb-col nb-col--source" style={{ opacity: isSourceCollapsed ? 0 : 1, display: isSourceCollapsed ? 'none' : 'flex' }}>
+          <div className="nb-col-hd">
+            <span className="nb-col-title">발명 원본 데이터</span>
+            <button className="nb-col-icon-btn" onClick={() => setIsSourceCollapsed(true)}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
             </button>
           </div>
-        </header>
-
-        {/* 채팅 내역 */}
-        <div ref={chatBoxRef} style={{ flex: 1, minHeight: 0, padding: 32, overflowY: 'auto', background: 'var(--lf-bg)', display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {chat_messages.map((msg, idx) => (
-            <div key={idx} style={{ 
-              alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-              background: msg.role === 'user' ? 'var(--lf-navy)' : '#fff', // 👈 AI 메시지 배경을 하얗게 하면 도면이 더 돋보입니다.
-              color: msg.role === 'user' ? '#fff' : 'var(--lf-navy)',
-              border: msg.role === 'assistant' ? '1px solid var(--lf-border)' : 'none',
-              padding: '16px 20px', borderRadius: 8, maxWidth: '75%', whiteSpace: 'pre-wrap', fontSize: 14,
-              boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
-            }}>
-              {/* 🎯 그냥 출력하지 않고, 함수를 통과시킵니다! */}
-              {renderMessageContent(msg.content)}
+          <div style={{ overflowY: 'auto', padding: '0 16px 16px' }}>
+            {/* 1~4: 원본 입력 데이터 */}
+            <div className="data-card">
+              <div className="data-card-title">1. 해결하고자 하는 과제</div>
+              <div className="data-card-content">{invention_input.problem_to_solve || "미파악"}</div>
             </div>
-          ))}
-          {isSending && <div style={{ alignSelf: 'flex-start', color: 'var(--lf-muted)', fontSize: 12 }}>AI가 입력 중입니다...</div>}
-        </div>
+            <div className="data-card">
+              <div className="data-card-title">2. 종래 기술의 문제점</div>
+              <div className="data-card-content">{invention_input.prior_art_problem || "미파악"}</div>
+            </div>
+            <div className="data-card">
+              <div className="data-card-title">3. 핵심 기술 구성</div>
+              <div className="data-card-content">{invention_input.core_tech || "미파악"}</div>
+            </div>
+            <div className="data-card">
+              <div className="data-card-title">4. 기대 효과</div>
+              <div className="data-card-content">{invention_input.expected_effect || "미파악"}</div>
+            </div>
 
-        {pendingClaims && (
-            <div style={{ alignSelf: 'flex-end', marginTop: 12, marginBottom: 24 }}>
-              <button 
-                onClick={handleSaveClaims} 
-                disabled={isSaving}
-                className="btn-fill" 
-                style={{ padding: '12px 24px', fontSize: 13, background: 'var(--lf-navy)', color: '#fff', borderRadius: 8, cursor: 'pointer' }}
-              >
-                {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--lf-border)' }}>
+              <span className="nb-col-title" style={{ display: 'block', marginBottom: 12 }}>AI Agent Analysis</span>
+              
+              <div className="data-card">
+                <div className="data-card-title">추출된 핵심 문제점</div>
+                <div className="data-card-content">{consultation_state.ext_problem || "분석 대기 중..."}</div>
+              </div>
+              
+              <div className="data-card">
+                <div className="data-card-title">추출된 해결 방법</div>
+                <div className="data-card-content">{consultation_state.ext_solution || "분석 대기 중..."}</div>
+              </div>
+              
+              <div className="data-card">
+                <div className="data-card-title">추출된 차별성</div>
+                <div className="data-card-content">{consultation_state.ext_differentiation || "분석 대기 중..."}</div>
+              </div>
+              
+              <div className="data-card">
+                <div className="data-card-title">추출된 기대 효과</div>
+                <div className="data-card-content">{consultation_state.ext_effect || "분석 대기 중..."}</div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        {/* 좌측 열기 버튼 */}
+        <button className="nb-col-restore" style={{ display: isSourceCollapsed ? 'flex' : 'none' }} onClick={() => setIsSourceCollapsed(false)}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          <span>데이터</span>
+        </button>
+
+        {/* ── 중앙: 채팅 패널 ── */}
+        <main className="nb-col nb-col--chat">
+          <div className="nb-col-hd" style={{ padding: '28px 24px 16px', display: 'block' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--lf-navy)', margin: 0, letterSpacing: '-0.5px', wordBreak: 'keep-all' }}>
+              {project.title}
+            </h1>
+          </div>
+
+          <div className="nb-msgs" ref={chatBoxRef}>
+            {chat_messages.map((msg, idx) => (
+              <div key={idx} className={`nb-msg nb-msg--${msg.role}`}>
+                {msg.role === 'assistant' && <div className="nb-ai-avatar">Pi</div>}
+                <div className="nb-bubble-wrap">
+                  <div className="nb-bubble">
+                    {msg.role === 'assistant' && msg.content.length > 500 && !msg.content.includes('![') && !hasMarkdownFormatting(msg.content) ? (
+                      <TypewriterMessage content={msg.content} renderContent={renderMessageContent} />
+                    ) : renderMessageContent(msg.content)}
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {isSending && (
+              <div className="nb-msg nb-msg--ai">
+                <div className="nb-ai-avatar">Pi</div>
+                <div className="nb-bubble-wrap">
+                  <div className="nb-bubble" style={{ color: 'var(--lf-gold)', fontWeight: 600 }}>
+                    ⏳ {loadingText}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {pendingClaims && (
+              <div className="nb-msg nb-msg--user" style={{ marginTop: 12 }}>
+                <button onClick={handleSaveClaims} disabled={isSaving} style={{ padding: '10px 16px', background: 'var(--lf-gold)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
+                  {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="nb-input-area">
+            <form onSubmit={handleSendMessage} className="nb-input-box">
+              <textarea 
+                className="nb-textarea" 
+                value={chatInput}
+                onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
+                disabled={isSending}
+                rows={1}
+              />
+              <button type="submit" className="nb-send" disabled={isSending || !chatInput.trim()}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </button>
-            </div>
-          )}
+            </form>
+          </div>
+        </main>
 
-        {/* 채팅 입력 폼 */}
-        <footer style={{ padding: 24, borderTop: '1px solid var(--lf-border)', background: 'var(--lf-bg2)', flexShrink: 0 }}>
-          <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: 12 }}>
-            <button type="button" className="btn-line" style={{ padding: '0 20px' }}>📎</button>
-            <input 
-              type="text" 
-              value={chatInput} 
-              onChange={e => setChatInput(e.target.value)} 
-              disabled={isSending}
-              placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요..." 
-              className="input-field" 
-              style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '0 20px', border: '1px solid var(--lf-border)' }} 
-            />
-            <button type="submit" disabled={isSending} className="btn-gold" style={{ padding: '0 32px' }}>전송</button>
-          </form>
-        </footer>
-      </main>
+        {/* 우측 열기 버튼 */}
+        <button className="nb-col-restore nb-col-restore--studio" style={{ display: isStudioCollapsed ? 'flex' : 'none' }} onClick={() => setIsStudioCollapsed(false)}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          <span>스튜디오</span>
+        </button>
 
-      <AgentModal 
+        {/* ── 우측: 스튜디오(파이프라인) 패널 ── */}
+        <aside className="nb-col nb-col--studio" style={{ opacity: isStudioCollapsed ? 0 : 1, display: isStudioCollapsed ? 'none' : 'flex' }}>
+          <div className="nb-col-hd">
+            <span className="nb-col-title">특허 파이프라인</span>
+            <button className="nb-col-icon-btn" onClick={() => setIsStudioCollapsed(true)}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            </button>
+          </div>
+          
+          <div className="nb-studio-section">
+            <button onClick={() => setIsProcessModalOpen(true)} className="nb-action-card">
+              <div className="nb-action-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <span className="nb-action-name">진행 현황 보기</span>
+            </button>
+
+            <button onClick={handleGenerateClaims} disabled={isGenerating} className="nb-action-card primary">
+              <div className="nb-action-icon" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>
+              <span className="nb-action-name">AI 청구항 작성</span>
+            </button>
+
+            <button onClick={() => setIsClaimModalOpen(true)} className="nb-action-card">
+              <div className="nb-action-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+              <span className="nb-action-name">청구항 직접 수정</span>
+            </button>
+
+            <button onClick={handleGenerateDrawings} disabled={isDrawingLoading} className="nb-action-card">
+              <div className="nb-action-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+              <span className="nb-action-name">{isDrawingLoading ? "도면 생성 중..." : "AI 도면 생성"}</span>
+            </button>
+
+            <button onClick={handleGenerateSpecification} className="nb-action-card">
+              <div className="nb-action-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+              <span className="nb-action-name">최종 명세서 작성</span>
+            </button>
+
+            <button onClick={() => setIsPaModalOpen(true)} className="nb-action-card">
+              <div className="nb-action-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+              <span className="nb-action-name">선행기술 리포트</span>
+            </button>
+
+            <div style={{ height: 1, background: 'var(--lf-border)', margin: '12px 0' }}></div>
+
+            <Link to={`/report/${project.id}`} target="_blank" className="nb-action-card" style={{ textDecoration: 'none' }}>
+              <div className="nb-action-icon" style={{ background: 'rgba(232,41,13,.07)', color: 'var(--lf-mid)' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <span className="nb-action-name" style={{ color: 'var(--lf-navy)' }}>최종 리포트 보기</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lf-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 'auto' }}>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </Link>
+
+          </div>
+        </aside>
+      </div>
+
+      {isAgentModalMinimized && (
+        <button
+          type="button"
+          onClick={handleRestoreAgentModal}
+          aria-label="최소화된 에이전트 작업 창 열기"
+          style={{
+            position: 'fixed', right: 28, bottom: 28, zIndex: 900,
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '12px 18px', borderRadius: 999,
+            background: 'var(--lf-dark)', color: '#fff', border: '1px solid rgba(232,41,13,.35)',
+            boxShadow: '0 12px 30px rgba(61,14,22,.2)', cursor: 'pointer',
+            fontFamily: 'var(--lf-sans)', fontSize: 12, fontWeight: 700,
+          }}
+        >
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: isAgentDone ? '#10b981' : 'var(--lf-gold)',
+            animation: isAgentDone ? 'none' : 'pulse 1.5s infinite',
+          }} />
+          {isAgentDone ? '청구항 작성 완료 · 열기' : 'AI 청구항 작성 중 · 열기'}
+        </button>
+      )}
+
+      {/* 모달 컴포넌트들 유지 */}
+      <AgentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseAgentModal}
+        onMinimize={handleMinimizeAgentModal}
+        onCancel={handleCancelAgentPipeline}
         logs={agentLogs}
         currentStep={currentStep}
         isDone={isAgentDone}
       />
-      <ClaimEditModal 
-        isOpen={isClaimModalOpen} 
-        onClose={() => setIsClaimModalOpen(false)} 
-        projectId={projectId!} 
-      />
-      
-      <ProcessMapModal 
-        isOpen={isProcessModalOpen} 
-        onClose={() => setIsProcessModalOpen(false)} 
-        hasClaims={data?.project.has_claims || false}
-        hasDrawings={false} // 나중에 도면 API 연결 시 업데이트
-        hasSpec={false}     // 나중에 명세서 API 연결 시 업데이트
-      />
-      <PriorArtModal 
-        isOpen={isPaModalOpen} 
-        onClose={() => setIsPaModalOpen(false)} 
-        data={priorArtData} 
-      />
-      {/* <ReportViewer 
-        isOpen={isReportOpen} 
-        onClose={() => setIsReportOpen(false)} 
-        data={data} // 백엔드에서 받아온 전체 데이터를 그대로 던져줍니다!
-      /> */}
+      <ClaimEditModal isOpen={isClaimModalOpen} onClose={() => setIsClaimModalOpen(false)} projectId={projectId!} />
+      <ProcessMapModal isOpen={isProcessModalOpen} onClose={() => setIsProcessModalOpen(false)} hasClaims={processHasClaims} hasDrawings={processHasDrawings} hasSpec={processHasSpec} />
+      <PriorArtModal isOpen={isPaModalOpen} onClose={() => setIsPaModalOpen(false)} data={priorArtData} />
+      {previewImage && (
+        <DrawingPreviewModal
+          key={previewImage.src}
+          image={previewImage}
+          onClose={() => setPreviewImage(null)}
+        />
+      )}
+    </div>
+  )
+}
+
+const TypewriterMessage = ({ content, renderContent }: { content: string, renderContent: (str: string) => React.ReactNode }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  useEffect(() => {
+    if (content.length < 200) { setDisplayedText(content); return; }
+    let i = 0;
+    const intervalId = setInterval(() => {
+      setDisplayedText(content.slice(0, i)); i += 8;
+      if (i > content.length) { clearInterval(intervalId); setDisplayedText(content); }
+    }, 10);
+    return () => clearInterval(intervalId);
+  }, [content]);
+  return <>{renderContent(displayedText)}</>;
+}
+
+function DrawingThumbnailStrip({ images, onOpen }: { images: PreviewImage[]; onOpen: (image: PreviewImage) => void }) {
+  return (
+    <div style={{ marginTop: 16, padding: '14px 4px 18px 4px', overflowX: 'auto', overflowY: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', minHeight: 152, paddingLeft: 2, paddingRight: 26 }}>
+        {images.map((image, index) => (
+          <button key={`${image.src}-${index}`} type="button" onClick={() => onOpen(image)} title="클릭해서 크게 보기" style={{ position: 'relative', zIndex: index + 1, width: 205, height: 142, flex: '0 0 205px', marginLeft: index === 0 ? 0 : -26, padding: 0, overflow: 'hidden', border: '1px solid rgba(232,41,13,.24)', borderRadius: 8, background: '#fff', boxShadow: '0 12px 28px rgba(61,14,22,.14)', cursor: 'zoom-in', transform: `translateY(${index % 2 === 0 ? 0 : 8}px) rotate(${index % 2 === 0 ? '-1.4deg' : '1.2deg'})` }}>
+            <img src={image.src} alt={image.alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }} />
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function DrawingPreviewModal({ image, onClose }: { image: PreviewImage; onClose: () => void }) {
+  const [isZoomed, setIsZoomed] = useState(false)
+
+  return (
+    <div
+      className="drawing-preview-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${image.alt || '특허 도면'} 확대 보기`}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <button
+        type="button"
+        className="drawing-preview-modal__close"
+        onClick={onClose}
+        aria-label="도면 확대 보기 닫기"
+        title="닫기 (Esc)"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <div className="drawing-preview-modal__stage">
+        <img
+          className={`drawing-preview-modal__image ${isZoomed ? 'is-zoomed' : ''}`}
+          src={image.src}
+          alt={image.alt}
+          draggable={false}
+          onDoubleClick={() => setIsZoomed(current => !current)}
+          title={isZoomed ? '더블클릭하여 원래 크기로 보기' : '더블클릭하여 확대하기'}
+        />
+      </div>
+
+      <div className="drawing-preview-modal__caption">
+        <span>{image.alt || '특허 도면'}</span>
+        <span className="drawing-preview-modal__hint">
+          {isZoomed ? '더블클릭하면 원래 크기로 돌아갑니다.' : '도면을 더블클릭하면 확대됩니다.'}
+        </span>
+      </div>
     </div>
   )
 }

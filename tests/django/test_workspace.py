@@ -1,29 +1,27 @@
+"""Unit tests for the current Workspace model relations and persistence rules."""
+
 import pytest
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError, transaction
 
 from workspace.models import (
-    PatentProject,
-    InventionInput,
-    ConsultationState,
     ChatMessage,
+    ConsultationState,
+    InventionInput,
     PatentClaim,
     PatentDrawingFile,
+    PatentProject,
     PriorArtReport,
     SpecificationDocument,
 )
+
 
 User = get_user_model()
 
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(
-        username="owner",
-        name="발명자",
-        gender="M",
-        age=35,
-        password="pw",
-    )
+    return User.objects.create_user(username="owner", first_name="발명자", password="pw")
 
 
 @pytest.fixture
@@ -31,117 +29,110 @@ def project(user):
     return PatentProject.objects.create(title="AI 분류 시스템", owner=user)
 
 
-# ── PatentProject ───────────────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_project_default_status(project):
+def test_project_defaults_and_owner_reverse_relation(project, user):
     assert project.status == "draft"
-
-
-@pytest.mark.django_db
-def test_project_owner_relation(project, user):
     assert project.owner == user
-    assert user.projects.count() == 1
+    assert list(user.projects.all()) == [project]
 
 
-@pytest.mark.django_db
-def test_project_cascade_delete(project, user):
+def test_deleting_owner_cascades_project_and_messages(project, user):
     ChatMessage.objects.create(project=project, role="user", content="안녕")
+
     user.delete()
+
     assert PatentProject.objects.count() == 0
     assert ChatMessage.objects.count() == 0
 
 
-# ── InventionInput ──────────────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_invention_input_one_to_one(project):
-    inv = InventionInput.objects.create(
+def test_invention_input_is_one_to_one_with_project(project):
+    invention = InventionInput.objects.create(
         project=project,
-        problem_to_solve="수동 분류의 낮은 정확도",
-        prior_art_problem="기존 룰 기반 시스템 한계",
-        core_tech="딥러닝 멀티모달 분류 모델",
-        expected_effect="정확도 95% 이상",
+        problem_to_solve="낮은 정확도",
+        prior_art_problem="룰 기반 시스템 한계",
+        core_tech="멀티모달 분류 모델",
+        expected_effect="정확도 향상",
     )
-    assert inv.project == project
-    assert project.inventioninput == inv
+
+    assert project.inventioninput == invention
+
+    with pytest.raises(IntegrityError):
+        with transaction.atomic():
+            InventionInput.objects.create(
+                project=project,
+                problem_to_solve="중복",
+                prior_art_problem="중복",
+                core_tech="중복",
+            )
 
 
-@pytest.mark.django_db
-def test_invention_input_duplicate_raises(project):
-    InventionInput.objects.create(
-        project=project,
-        problem_to_solve="문제1",
-        prior_art_problem="기존 문제",
-        core_tech="기술",
-    )
-    with pytest.raises(Exception):
-        InventionInput.objects.create(
-            project=project,
-            problem_to_solve="문제2",
-            prior_art_problem="기존 문제2",
-            core_tech="기술2",
-        )
+def test_consultation_state_defaults_to_phase_one(project):
+    state = ConsultationState.objects.create(project=project)
+
+    assert state.phase == 1
+    assert state.collecting_steps is False
+    assert project.consultation_state == state
 
 
-# ── ChatMessage ─────────────────────────────────────────────────────────────
+def test_chat_message_uses_project_reverse_relation(project):
+    message = ChatMessage.objects.create(project=project, role="assistant", content="응답")
 
-@pytest.mark.django_db
-def test_chat_message_created(project):
-    msg = ChatMessage.objects.create(project=project, role="user", content="내용")
-    assert msg.role == "user"
-    assert project.chat_messages.count() == 1
+    assert project.chat_messages.get() == message
 
 
-@pytest.mark.django_db
-def test_chat_messages_cascade_on_project_delete(project):
-    ChatMessage.objects.create(project=project, role="assistant", content="응답")
-    project.delete()
-    assert ChatMessage.objects.count() == 0
-
-
-# ── PatentClaim ─────────────────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_patent_claim_str(project):
-    claim = PatentClaim.objects.create(
+def test_patent_claims_are_ordered_and_stringified(project):
+    PatentClaim.objects.create(project=project, claim_no=3, category="방법", content="c")
+    first = PatentClaim.objects.create(
         project=project,
         claim_no=1,
-        is_dependent=False,
         category="시스템",
-        content="독립항 내용",
+        content="a",
     )
-    assert str(claim) == "[AI 분류 시스템] 청구항 1"
-
-
-@pytest.mark.django_db
-def test_patent_claims_ordered_by_claim_no(project):
-    PatentClaim.objects.create(project=project, claim_no=3, category="방법", content="c")
-    PatentClaim.objects.create(project=project, claim_no=1, category="시스템", content="a")
     PatentClaim.objects.create(project=project, claim_no=2, category="방법", content="b")
-    nos = list(project.claims.values_list("claim_no", flat=True))
-    assert nos == [1, 2, 3]
+
+    assert list(project.claims.values_list("claim_no", flat=True)) == [1, 2, 3]
+    assert first.cited_claim_no == []
+    assert str(first) == "[AI 분류 시스템] 청구항 1"
 
 
-# ── PriorArtReport ──────────────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_prior_art_report_str(project):
+def test_drawing_report_and_specification_string_contracts(project):
+    drawing = PatentDrawingFile.objects.create(
+        project=project,
+        title="구성도",
+        image_url="https://example.com/drawing.png",
+    )
     report = PriorArtReport.objects.create(
         project=project,
-        risk_level="낮음",
+        risk_level="low",
         analysis_summary="유사 선행기술 없음",
         full_json_data={"results": []},
     )
-    assert str(report) == "AI 분류 시스템 - 선기조 리포트"
-
-
-# ── SpecificationDocument ───────────────────────────────────────────────────
-
-@pytest.mark.django_db
-def test_specification_document_str(project):
-    spec = SpecificationDocument.objects.create(
+    specification = SpecificationDocument.objects.create(
         project=project,
-        markdown_content="# 발명의 명칭\n...",
+        markdown_content="# 발명의 명칭",
     )
-    assert str(spec) == "AI 분류 시스템 - 명세서 본문"
+
+    assert str(drawing) == "AI 분류 시스템 - 구성도"
+    assert str(report) == "AI 분류 시스템 - 선기조 리포트"
+    assert str(specification) == "AI 분류 시스템 - 명세서 본문"
+
+
+def test_one_to_one_reports_are_replaced_through_update_or_create(project):
+    PriorArtReport.objects.update_or_create(
+        project=project,
+        defaults={
+            "risk_level": "medium",
+            "analysis_summary": "첫 분석",
+            "full_json_data": {},
+        },
+    )
+    PriorArtReport.objects.update_or_create(
+        project=project,
+        defaults={
+            "risk_level": "low",
+            "analysis_summary": "재분석",
+            "full_json_data": {"updated": True},
+        },
+    )
+
+    assert PriorArtReport.objects.count() == 1
+    assert PriorArtReport.objects.get(project=project).risk_level == "low"

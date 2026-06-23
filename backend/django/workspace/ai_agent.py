@@ -11,7 +11,6 @@ load_dotenv()
 #logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 PHASE1_INITIAL_PROMPT = """
 당신은 특허법률사무소의 베테랑 변리사입니다. 발명가가 입력한 초기 데이터를 바탕으로 발명의 4대 핵심 요소를 특허 명세서 및 청구항 작성에 최적화된 형태로 재구조화하고, 첫 인사와 함께 이 분석이 정확한지 확인하는 질문을 작성하세요.
 
@@ -77,16 +76,19 @@ PHASE1_CHAT_PROMPT = """
 """
 
 PHASE2_QUESTION = """
-독립항 핵심 내용 확인이 완료되었습니다. 
-이제 청구항을 더욱 탄탄하게 만들 심화 정보를 여쭤볼게요. 아시는 항목만 편하게 답해 주시면 됩니다.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. 구체적인 구현 수단 (예: YOLO v8, Python 등)
-2. 데이터 파라미터 (예: 사용자 알레르기 정보 등)
-3. 핵심 로직 및 수식 (예: 스코어링 가중치 함수 등)
-4. 부가적/선택적 기능 (예: 자동 주문 연동 등)
-5. 예외 처리 (예: 인식 실패 시 수동 입력 UI 등)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-모르시는 항목은 '없음' 또는 패스라고 하셔도 됩니다.
+발명의 4대 핵심 요소가 완벽하게 정리되었습니다! 
+이제 특허의 권리 범위를 튼튼하게 설계하기 위해, 발명이 실제로 어떻게 굴러가는지 **'뼈대(아키텍처)'**를 세워볼 차례입니다.
+
+아래 질문들을 가볍게 이야기해 주시면, 제가 특허 명세서용 기술 용어(모듈, 데이터, 단계)로 예쁘게 변환하겠습니다.
+
+1. 🧩 **주요 구성 요소**: 이 발명을 구현하려면 어떤 장치나 모듈이 필요한가요?
+   (예: 사용자 단말, 데이터 수집 모듈, 특징 벡터 추출부, 매칭 엔진 등)
+2. 🔄 **데이터의 흐름**: 사용자가 입력한 데이터는 시스템 내부에서 어떻게 가공되고 전달되나요?
+   (예: 음성 데이터가 텍스트로 변환되어 검색 DB로 전달됨 등)
+3. ⚙️ **핵심 작동 순서**: 시스템이 작동하는 첫 단계부터 최종 결과물이 나올 때까지의 과정을 순서대로 설명해 주신다면?
+
+기술적인 용어나 코드가 아니어도 좋습니다. 아시는 만큼만 줄글로 편하게 설명해 주세요! 
+(만약 이미 앞서 충분히 설명하셨다면, "바로 청구항 작성해줘"라고 말씀해 주셔도 됩니다.)
 """
 
 PHASE2_EXTRACT_PROMPT = """ 
@@ -95,14 +97,15 @@ PHASE2_EXTRACT_PROMPT = """
 [지침]
 1. 사용자의 설명에서 발명의 기술적 구조(컴포넌트, 데이터 흐름, 처리 단계)가 파악되면 추출하세요. 기술적인 추가 내용이 없다면 빈 배열([])을 반환하세요.
 2. 'ai_reply'에는 기계적인 답변이 아닌, 자연스럽고 전문적인 대화를 작성하세요.
-3. 🚨 [중요: 건너뛰기 및 대화 처리]:
-   - 사용자가 "모르겠다", "없다", "패스", "넘어가자" 등의 의사를 밝히면: "네, 괜찮습니다! 지금까지 수집된 정보만으로도 충분히 훌륭한 청구항을 작성할 수 있습니다. 화면 상단의 **'청구항 작성'** 버튼을 눌러주시면 바로 초안 작성을 시작하겠습니다."라고 자연스럽게 안내하세요.
-   - 새로운 기술 정보를 제공했다면: 해당 정보를 잘 기록하겠다고 피드백한 뒤, "추가로 덧붙일 내용이 있으신가요? 내용이 충분하다면 화면 상단의 **'청구항 작성'** 버튼을 눌러주세요!"라고 안내하세요.
+3. 🚨 [중요: 대화 처리 및 액션 트리거]:
+   - 사용자가 "모르겠다", "없다", "패스" 등으로 추가 설명이 없다고 하거나, "청구항 작성해줘"라고 명시적으로 요청하면: 'ai_reply'에 "알겠습니다! 지금까지 수집된 정보를 바탕으로 바로 청구항 작성을 시작하겠습니다. 잠시만 기다려주세요 🚀"라고 자연스럽게 작성하세요. (🚨주의: 화면의 버튼을 누르라는 말은 절대 하지 마세요.)
+   - 새로운 기술 정보를 제공했다면: 해당 정보를 잘 기록하겠다고 피드백한 뒤, "내용이 충분하다면 '청구항 작성해줘'라고 말씀해 주세요!"라고 안내하세요.
    - 단순한 질문이라면 추출 필드는 비워두고 친절하게 답변해 주세요.
 4. 반드시 아래 JSON 형식으로만 응답하세요.
 
 {{
     "ai_reply": "자연스러운 답변 텍스트",
+    "action": "사용자가 청구항 작성을 명시적으로 동의/요청하면 'GENERATE_CLAIMS', 아니면 null",
     "components": [
         {{"id": "COMP_001", "name": "명사형 명칭", "type": "MODULE", "description": "설명"}}
     ],
@@ -113,6 +116,39 @@ PHASE2_EXTRACT_PROMPT = """
         {{"step_number": 1, "subject_id": "COMP_001", "action_description": "~하는 단계", "input_data_ids": ["FLOW_001"], "output_data_ids": ["FLOW_002"]}}
     ]
 }}
+"""
+
+PHASE2_PROACTIVE_DRAFT_PROMPT = """
+당신은 특허청 심사관 출신의 수석 특허 아키텍트입니다.
+발명가가 앞서 대답한 핵심 4대 요소를 바탕으로, 이 발명이 실제로 작동하기 위한 '가상의 표준 시스템 구조(Architecture) 초안'을 먼저 스케치하여 제안하세요.
+
+[발명 4대 요소]
+- 문제점: {problem}
+- 해결방법: {solution}
+- 차별성: {differentiation}
+- 기대효과: {effect}
+
+[작성 지침]
+위 해결방법을 구현하기 위해 아주 합리적이고 전형적인 시스템 뼈대를 아래 3가지 파트로 스케치하세요.
+(너무 지엽적인 코드 라이브러리 언급은 피하고 '데이터 수집부', '분석 엔진', '저장 DB', '사용자 매핑부' 등의 기능적 명사를 사용하세요)
+
+출력 포맷:
+---
+💡 **AI 변리사가 스케치해 본 시스템 구조 초안**
+
+1. 🧩 **주요 구성 요소 (Modules)**
+   - **[모듈명 A]**: (역할 한 줄 설명)
+   - **[모듈명 B]**: (역할 한 줄 설명)
+
+2. 🔄 **데이터의 흐름 (Data Flow)**
+   - [입력 데이터] ➔ (모듈 A) ➔ [중간 산출물] ➔ (모듈 B) ➔ [최종 결과]
+
+3. ⚙️ **핵심 작동 순서 (Step-by-step)**
+   - **S100**: (1단계 로직)
+   - **S200**: (2단계 로직)
+---
+
+오직 위 포맷의 마크다운 텍스트만 깔끔하게 출력하세요. JSON 껍데기를 씌우지 마세요.
 """
 
 class DjangoPatentConsultant:
@@ -201,26 +237,46 @@ class DjangoPatentConsultant:
             ChatMessage.objects.create(project=self.project, role='assistant', content=fallback)
             return fallback
 
-    def interact(self, user_input: str) -> str:
+    def interact(self, user_input: str) -> tuple[str, str]:
         ChatMessage.objects.create(project=self.project, role='user', content=user_input)
 
-        has_claims = self.project.claims.exists()
-        if has_claims and self.state.phase < 3:
+        if self.project.claims.exists() and self.state.phase < 3:
             self.state.phase = 3
             self.state.save()
 
         response = ""
+        action = None
 
         if self.state.phase == 1:
             response = self._handle_phase_1(user_input)
         elif self.state.phase == 2:
-            response = self._handle_phase_2(user_input)
+            response, action = self._handle_phase_2(user_input)
         elif self.state.phase == 3:
-            response = self._handle_phase_3(user_input) 
+            response, action = self._handle_phase_3(user_input) 
 
         ChatMessage.objects.create(project=self.project, role='assistant', content=response)
-        return response
+        return response, action
     
+    def _generate_proactive_sketch(self) -> str:
+            prompt = PHASE2_PROACTIVE_DRAFT_PROMPT.format(
+                problem=self.state.ext_problem,
+                solution=self.state.ext_solution,
+                differentiation=self.state.ext_differentiation,
+                effect=self.state.ext_effect
+            )
+            try:
+                resp = self.client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": "당신은 특허 명세서용 아키텍처 초안을 작성하는 수석 변리사입니다. 평문 마크다운으로만 답하세요."},
+                        {"role": "user", "content": prompt}
+                    ]
+                )
+                return resp.choices[0].message.content.strip()
+            except Exception as e:
+                logger.error(f"가상 아키텍처 초안 생성 실패: {e}")
+                return "> *(시스템 구성도 초안을 스케치하는 중 오류가 발생했습니다. 머릿속에 그리신 시스템의 주요 모듈들을 자유롭게 말씀해 주세요!)*"
+
     def _handle_phase_1(self, user_input: str) -> str:
         extract_prompt = PHASE1_EXTRACT_PROMPT.format(
             problem=self.state.ext_problem or "미파악",
@@ -266,11 +322,27 @@ class DjangoPatentConsultant:
         if all_filled:
             self.state.phase = 2
             self.state.save()
-            return f"{ai_reply}\n\n발명의 핵심 요소 파악이 모두 완료되었습니다!\n\n{PHASE2_QUESTION}"    
+            #return f"{ai_reply}\n\n발명의 핵심 요소 파악이 모두 완료되었습니다!\n\n{PHASE2_QUESTION}"    
+        
+            # 뇌빼고 대답할 수 있게 초안을 미리 그려서 던져줌!
+            proactive_architecture_draft = self._generate_proactive_sketch()
 
-        return ai_reply # + "\n\n" + next_question
+            return (
+                f"{ai_reply}\n\n"
+                "🎉 **발명의 핵심 4대 요소 파악이 모두 완료되었습니다!**\n\n"
+                "이제 특허의 권리 범위를 튼튼하게 지키기 위해 시스템의 **'뼈대(아키텍처)'**를 설계할 차례입니다. "
+                "설명하시기 편하도록, **지금까지 주신 정보를 바탕으로 제가 표준 시스템 구성도 초안을 먼저 스케치해 보았습니다.**\n\n"
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                f"{proactive_architecture_draft}\n"
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                "위 구조에서 **수정하거나 더 추가하고 싶은 모듈/단계**가 있다면 편하게 말씀해 주세요!\n"
+                "*(예: '여기서 회원 DB 조회하는 모듈 하나 추가해줘', '데이터 흐름 2번 단계 뒤에 암호화 거치는 거 넣어줘')*\n\n"
+                "만약 이 뼈대 그대로 가도 충분하다면, **'이대로 청구항 작성해줘'**라고 말씀해 주시면 바로 초안을 뽑겠습니다! 🚀"
+            )
+
+        return ai_reply
     
-    def _handle_phase_2(self, user_input: str) -> str:
+    def _handle_phase_2(self, user_input: str) -> tuple[str, str | None]:
         # 1. 이전 대화 기록 가져오기 (문맥 파악용)
         recent_messages = self.project.chat_messages.all().order_by('-created_at')[1:5] 
         chat_history = []
@@ -295,10 +367,14 @@ class DjangoPatentConsultant:
             res = json.loads(resp.choices[0].message.content)
         except Exception as e:
             logger.error(f"Phase 2 파싱 에러: {e}")
-            return "심화 정보 분석 중 오류가 발생했습니다. 다시 한 번 말씀해 주시겠어요?"
+            return (
+                "심화 정보 분석 중 오류가 발생했습니다. 다시 한 번 말씀해 주시겠어요?",
+                None
+            )
         
         # 3. AI가 문맥에 맞게 알아서 작성한 답변 꺼내기
-        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다. 준비되셨다면 상단의 '청구항 작성' 버튼을 눌러주세요.")
+        ai_reply = res.get("ai_reply", "말씀하신 내용을 잘 확인했습니다. 지금 바로 청구항 작성을 시작하겠습니다")
+        action = res.get("action")
         detail_elements_to_create = []
         
         # 4. 기술 정보가 있으면 DB에 저장 (빈 배열이면 자연스럽게 패스됨)
@@ -321,15 +397,27 @@ class DjangoPatentConsultant:
         if detail_elements_to_create:
             DetailElement.objects.bulk_create(detail_elements_to_create)
 
-        return ai_reply
+        return ai_reply, action
         
-    def _handle_phase_3(self, user_input: str) -> str:
+    def _handle_phase_3(self, user_input: str) -> tuple[str, str | None]:
         recent_messages = self.project.chat_messages.all().order_by('-created_at')[1:7] 
         chat_history = []
         for msg in reversed(recent_messages):
             if msg.role in ['user', 'assistant']:
                 chat_history.append({"role": msg.role, "content": msg.content})
 
+        tools = [{
+            "type": "function",
+            "function": {
+                "name": "trigger_generate_claims",
+                "description": "사용자가 청구항 작성을 명시적으로 지시하거나 승인했을 때 호출합니다.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {}
+                }
+            }
+        }]
+        action = None
         try:
             messages = [
                 {"role": "system", "content": self._get_dynamic_system_prompt(is_extraction=False)}, 
@@ -353,11 +441,25 @@ class DjangoPatentConsultant:
 
             resp = self.client.chat.completions.create(
                 model="gpt-4o", 
-                messages=messages
+                messages=messages,
+                tools=tools
             )
-            raw_reply = resp.choices[0].message.content.strip()
+            msg = resp.choices[0].message
+            
+            #raw_reply = resp.choices[0].message.content.strip()
 
-            # 🛡️ [철통 방어] 껍데기 강제 제거기 (유지)
+            if msg.tool_calls:
+                for tool_call in msg.tool_calls:
+                    if tool_call.function.name == "trigger_generate_claims":
+                        action = "GENERATE_CLAIMS"
+                raw_reply = (
+                    "훌륭합니다! 지금까지 준비된 정보를 바탕으로 "
+                    "청구항 초안을 작성해 보겠습니다!"
+                )
+            else:
+                raw_reply = (msg.content or "").strip()
+
+            # [철통 방어] 껍데기 강제 제거기 (유지)
             if raw_reply.startswith("```json") or raw_reply.startswith("{"):
                 try:
                     import re
@@ -365,14 +467,14 @@ class DjangoPatentConsultant:
                     if json_match:
                         parsed = json.loads(json_match.group())
                         if "ai_reply" in parsed:
-                            return parsed["ai_reply"]
-                        return list(parsed.values())[0]
-                except:
-                    pass
+                            return parsed["ai_reply"], action
+                        return list(parsed.values())[0], action
+                except Exception as e:
+                    logger.warning(f"JSON 제거기 파싱 실패: {e}")
                 raw_reply = raw_reply.replace("```json", "").replace("```", "").strip()
 
-            return raw_reply
+            return raw_reply, action
 
         except Exception as e:
             logger.error(f"Phase 3 마스터 응답 실패: {e}")
-            return "말씀하신 내용을 잘 들었습니다. 작성된 청구항을 검토 후 직접 수정하시거나, 화면 상단의 '도면 생성'을 진행해 보시는 것은 어떨까요?"
+            return "말씀하신 내용을 잘 들었습니다. 작성된 청구항을 검토 후 직접 수정하시거나, 화면 상단의 '도면 생성'을 진행해 보시는 것은 어떨까요?", action

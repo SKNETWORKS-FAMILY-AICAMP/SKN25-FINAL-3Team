@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // Vite 서버 사이드 프록시: Docker 내부에서는 컨테이너 이름으로 라우팅됨
-const FASTAPI_URL = process.env.FASTAPI_URL ?? 'http://localhost:8080'
+const FASTAPI_URL = process.env.FASTAPI_URL ?? 'http://localhost:8001'
 const DJANGO_URL  = process.env.DJANGO_URL  ?? 'http://localhost:8000'
 
 export default defineConfig({

@@ -97,7 +97,7 @@ class PatentDrawingSpecification(BaseModel):
 # 4. 선행기술 조사(Prior Art) 관련 State
 # ---------------------------------------------------------
 class PriorArtCandidate(BaseModel):
-    patent_id : int 
+    patent_id : int
     rank: int = Field(ge=1)
     register_number: str = ""
     title: str = ""
@@ -118,6 +118,7 @@ class PriorArtResult(BaseModel):
     candidates: list[PriorArtCandidate] = Field(default_factory=list)
     overall_risk: dict = Field(default_factory=dict)
     analysis_summary: str = ""
+    search_source: Literal["LOCAL_DB", "EXTERNAL_API", "UNKNOWN"] = "UNKNOWN"
 
 # ---------------------------------------------------------
 # Master Graph State

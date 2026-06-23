@@ -11,12 +11,14 @@ from django.core.files.storage import FileSystemStorage
 from .utils import extract_text_from_pdf, extract_text_from_docx, extract_text_from_hwp
 import os
 import logging
+import tempfile
 #from agents.core.graph import build_patent_graph
 #from agents.core.graph import app as patent_graph
 #from agents.core.graph import build_patent_graph as patent_graph
 #from agents.core.state import PatentState, ParsedInvention
 #from agents.summary_agent import SummaryAgent 
 #from agents.drawing_agent import SmartDrawingAgent 
+from agents.paper_analyzer import PaperAnalyzerAgent
 from django.conf import settings
 #from agents.specification.specification_agent import run_specification_agent
 #from agents.specification.specification_storage import convert_to_markdown_format
@@ -24,6 +26,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import httpx
 from asgiref.sync import sync_to_async
+from django.db import transaction
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
@@ -35,12 +38,34 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from asgiref.sync import async_to_sync
-
-
-
-
+from rest_framework.decorators import api_view
+from rest_framework import serializers
+from drf_spectacular.utils import extend_schema, inline_serializer, OpenApiResponse
 
 logger = logging.getLogger(__name__)
+
+SUPPORTED_PAPER_EXTENSIONS = {'.pdf', '.docx', '.hwp'}
+
+def extract_text_from_uploaded_document(uploaded_file):
+    ext = os.path.splitext(uploaded_file.name)[1].lower()
+    if ext not in SUPPORTED_PAPER_EXTENSIONS:
+        raise ValueError('PDF, DOCX, HWP 파일만 지원합니다.')
+
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_file:
+            for chunk in uploaded_file.chunks():
+                temp_file.write(chunk)
+            temp_path = temp_file.name
+
+        if ext == '.pdf':
+            return extract_text_from_pdf(temp_path)
+        if ext == '.docx':
+            return extract_text_from_docx(temp_path)
+        return extract_text_from_hwp(temp_path)
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
 
 # 헬퍼 함수 (비동기 처리)
 @sync_to_async
@@ -67,6 +92,7 @@ def save_final_data(project, data):
                 'full_json_data': pa_data
             }
         )
+
 @sync_to_async
 def save_prior_art_data_only(project, data):
     """스트리밍 도중 prior_art_done 스텝이 오면 선기조 데이터만 즉시 DB에 저장합니다."""
@@ -133,8 +159,37 @@ def dashboard(request):
 
     return render(request, template_name, {'projects': projects})
 
+@extend_schema(
+    summary="새 프로젝트(워크스페이스) 생성",
+    description="사용자가 입력한 발명 정보를 바탕으로 새로운 특허 프로젝트를 생성합니다.",
+    
+    # 1. 프론트엔드에서 보내야 할 데이터 (Request Body)
+    request=inline_serializer(
+        name='CreateProjectRequest',
+        fields={
+            'title': serializers.CharField(help_text="프로젝트(발명) 명칭"),
+            'problem_to_solve': serializers.CharField(required=False, help_text="해결하고자 하는 과제"),
+            'prior_art_problem': serializers.CharField(required=False, help_text="종래 기술의 문제점"),
+            'core_tech': serializers.CharField(required=False, help_text="핵심 기술 구성"),
+            'expected_effect': serializers.CharField(required=False, help_text="기대 효과"),
+        }
+    ),
+    
+    # 2. 백엔드가 프론트엔드로 돌려줄 데이터 (Response)
+    responses={
+        201: inline_serializer(
+            name='CreateProjectResponse',
+            fields={
+                'status': serializers.CharField(default="success"),
+                'project_id': serializers.IntegerField(help_text="생성된 프로젝트 ID"),
+                'message': serializers.CharField(),
+            }
+        ),
+        400: OpenApiResponse(description="잘못된 입력값 에러")
+    }
+)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # JWT 토큰이 유효한 로그인 유저만 접근 가능하게 보호
+@permission_classes([IsAuthenticated]) 
 def create_project(request):
     # React(Axios/Fetch)에서 보낸 JSON 데이터는 request.POST가 아니라 request.data로 받습니다.
     data = request.data
@@ -173,7 +228,76 @@ def create_project(request):
         # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def create_project_from_paper(request):
+    uploaded_file = request.FILES.get('file')
+    if not uploaded_file:
+        return Response({"error": "논문 파일을 첨부해 주세요."}, status=status.HTTP_400_BAD_REQUEST)
 
+    try:
+        paper_text = extract_text_from_uploaded_document(uploaded_file)
+    except ValueError as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        logger.exception("논문 파일 텍스트 추출 실패")
+        return Response({"error": f"파일에서 텍스트를 추출하지 못했습니다: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not paper_text or not paper_text.strip():
+        return Response({"error": "파일에서 텍스트를 추출하지 못했습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    analyzer = PaperAnalyzerAgent()
+    paper_data = analyzer.extract_from_paper(paper_text)
+    required_fields = ['title', 'prior_art_problem', 'problem_to_solve', 'core_tech', 'expected_effect']
+    missing_fields = [field for field in required_fields if not paper_data.get(field)]
+
+    if missing_fields:
+        return Response({
+            "error": "논문 내용을 특허 프로젝트 입력값으로 변환하지 못했습니다.",
+            "missing_fields": missing_fields,
+        }, status=status.HTTP_502_BAD_GATEWAY)
+
+    title_override = str(request.data.get('title') or '').strip()
+    project_title = title_override or paper_data['title']
+
+    try:
+        with transaction.atomic():
+            project = PatentProject.objects.create(title=project_title, owner=request.user)
+            InventionInput.objects.create(
+                project=project,
+                problem_to_solve=paper_data['problem_to_solve'],
+                prior_art_problem=paper_data['prior_art_problem'],
+                core_tech=paper_data['core_tech'],
+                expected_effect=paper_data['expected_effect'],
+            )
+            ChatMessage.objects.create(
+                project=project,
+                role='user',
+                content=f"[논문 파일 첨부]\n{uploaded_file.name}"
+            )
+
+        agent = DjangoPatentConsultant(project)
+        ai_message = agent.generate_welcome_message()
+        state = ConsultationState.objects.filter(project=project).first()
+
+        return Response({
+            "message": "논문 분석을 바탕으로 프로젝트가 생성되었습니다.",
+            "project_id": project.id,
+            "title": project.title,
+            "source_file": uploaded_file.name,
+            "ai_message": ai_message,
+            "paper_data": paper_data,
+            "extracted_data": {
+                "ext_problem": state.ext_problem if state else "",
+                "ext_solution": state.ext_solution if state else "",
+                "ext_differentiation": state.ext_differentiation if state else "",
+                "ext_effect": state.ext_effect if state else "",
+            },
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        logger.exception("논문 기반 프로젝트 생성 실패")
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -198,7 +322,9 @@ def workstation(request, project_id):
             "title": project.title,
             "created_at": project.created_at.isoformat(),
             "status": getattr(project, 'status', 'ready'),
-            "has_claims": getattr(project, 'has_claims', False)
+            "has_claims": project.claims.exists(),
+            "has_drawings": project.drawings.exists(),
+            "has_spec": hasattr(project, "specification_doc"),
         },
         "invention_input": {
             "problem_to_solve": invention_input.problem_to_solve if invention_input else "",
@@ -260,11 +386,9 @@ def welcome_api(request, project_id):
         }
     })
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def chat_api(request, project_id):
-    # 1. request.body(json.loads) 대신 DRF의 request.data를 사용합니다.
     user_input = request.data.get('message')
     
     if not user_input:
@@ -274,7 +398,7 @@ def chat_api(request, project_id):
     
     # 2. AI 상담원과 상호작용하여 답변을 받아옵니다.
     agent = DjangoPatentConsultant(project)
-    ai_response = agent.interact(user_input)
+    ai_response, action_signal = agent.interact(user_input)
     
     # 3. AI가 방금 업데이트한 상태를 안전하게 가져옵니다. (역참조 에러 방지)
     state = ConsultationState.objects.filter(project=project).first()
@@ -283,6 +407,7 @@ def chat_api(request, project_id):
     return Response({
         'status': 'success',
         'ai_message': ai_response,
+        'action': action_signal,
         'extracted_data': {
             'ext_problem': state.ext_problem if state and state.ext_problem else '미파악',
             'ext_solution': state.ext_solution if state and state.ext_solution else '미파악',
@@ -395,7 +520,6 @@ def upload_file_api(request, project_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-
 @csrf_exempt
 async def generate_claims_api(request, project_id):
     if request.method != 'POST':
@@ -455,7 +579,7 @@ async def generate_claims_api(request, project_id):
     }
 
     async def event_stream():
-        fastapi_url = "http://127.0.0.1:8001/api/v1/generate-claims"
+        fastapi_url = "http://fastapi_worker:8001/api/v1/generate-claims"
         payload = {"initial_state": initial_state}
         try:
             async with httpx.AsyncClient(timeout=None) as client:
@@ -482,6 +606,54 @@ async def generate_claims_api(request, project_id):
     response['X-Accel-Buffering'] = 'no'
     response['Cache-Control'] = 'no-cache'
     return response  
+
+@csrf_exempt
+async def review_claims_api(request):
+    """JWT 인증 후 사용자 청구항을 FastAPI 심사 워커로 중계한다."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    # 기존 generate_claims_api와 같은 JWT 인증 흐름을 재사용합니다.
+    jwt_auth = JWTAuthentication()
+    try:
+        auth_result = await sync_to_async(jwt_auth.authenticate)(request)
+        if auth_result is None:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+    except Exception:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        payload = json.loads(request.body or b'{}')
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if not payload.get('claim_text'):
+        return JsonResponse({'error': 'Claim text is required'}, status=400)
+
+    async def event_stream():
+        fastapi_url = "http://fastapi_worker:8001/api/v1/review-claims"
+        try:
+            async with httpx.AsyncClient(timeout=None) as client:
+                async with client.stream("POST", fastapi_url, json=payload) as response:
+                    if response.status_code >= 400:
+                        yield (json.dumps({
+                            "step": "error",
+                            "message": "AI 심사 서버가 요청을 처리하지 못했습니다."
+                        }, ensure_ascii=False) + "\n").encode()
+                        return
+                    async for chunk in response.aiter_bytes():
+                        if chunk:
+                            yield chunk
+        except httpx.RequestError as exc:
+            yield (json.dumps({
+                "step": "error",
+                "message": f"AI 서버 통신 오류: {exc}"
+            }, ensure_ascii=False) + "\n").encode()
+
+    response = StreamingHttpResponse(event_stream(), content_type='application/x-ndjson')
+    response['X-Accel-Buffering'] = 'no'
+    response['Cache-Control'] = 'no-cache'
+    return response
 
 @csrf_exempt
 @api_view(['POST'])
@@ -558,7 +730,6 @@ def bulk_delete_projects_api(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
     
-
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -601,7 +772,6 @@ def patent_report_api(request, project_id):
         }
     })
 
-
 @csrf_exempt
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
@@ -623,7 +793,7 @@ def generate_drawings_api(request, project_id):
         "expected_effect": inv_input.expected_effect if inv_input else state.ext_effect
     }
 
-    fastapi_url = "http://127.0.0.1:8001/api/v1/generate-drawings"
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-drawings"
     payload = {
         "mock_input_data": mock_input_data,
         "user_id": str(request.user.id),
@@ -671,8 +841,6 @@ def generate_drawings_api(request, project_id):
         logger.error(f"도면 API 에러: {e}")
         return Response({"status": "error", "message": f"도면 생성 중 서버 오류 발생: {str(e)}"})
     
-
-
 def convert_to_markdown_format(invention_title: str, spec_dict: dict) -> str:
     """FastAPI에서 받아온 명세서 dict를 Markdown 문자열로 변환합니다."""
     
@@ -716,7 +884,6 @@ def convert_to_markdown_format(invention_title: str, spec_dict: dict) -> str:
 
     return markdown_content
 
-
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -759,7 +926,7 @@ def generate_specification_api(request, project_id):
         }
     }
 
-    fastapi_url = "http://127.0.0.1:8001/api/v1/generate-specification"
+    fastapi_url = "http://fastapi_worker:8001/api/v1/generate-specification"
 
     try:
         # 3. 명세서 작성은 양이 많으므로 타임아웃을 넉넉히 300초(5분) 설정하여 호출합니다.

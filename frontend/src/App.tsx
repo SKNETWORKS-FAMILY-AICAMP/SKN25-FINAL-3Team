@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
+import FaqPage from './pages/FaqPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
@@ -9,6 +10,7 @@ import CreateProjectPage from './pages/CreateProjectPage'
 import WorkstationPage from './pages/WorkstationPage'
 import MyPage from './pages/MyPage'
 import ReportPage from './pages/ReportPage'
+import ClaimReviewPage from './pages/ClaimReviewPage'
 
 export default function App() {
   return (
@@ -17,11 +19,20 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/faq" element={<FaqPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/report/:projectId" element={<ReportPage />} />
 
         {/* Protected */}
+        <Route
+          path="/claim-review"
+          element={
+            <ProtectedRoute redirectTo="/signup">
+              <ClaimReviewPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={

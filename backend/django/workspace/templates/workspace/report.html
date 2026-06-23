@@ -94,11 +94,41 @@
             transition: 0.2s;
         }
         .print-btn:hover { background: var(--gold); }
+
+        .drawing-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+        .drawing-figure {
+            width: 100%;
+            margin: 0;
+            text-align: center;
+        }
+        .drawing-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 900px;
+            object-fit: contain;
+            background: #fff;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+        .drawing-caption {
+            margin: 12px 0 0;
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 700;
+        }
         
         @media print {
             body { background: white; padding: 0; }
             .report-container { box-shadow: none; padding: 0; max-width: 100%; border-top: none; }
             .print-btn { display: none; }
+            .drawing-list { gap: 28px; }
+            .drawing-figure { break-inside: avoid; page-break-inside: avoid; }
+            .drawing-image { max-height: none; }
         }
     </style>
 </head>
@@ -146,12 +176,12 @@
 
         {% if drawings %}
         <div class="section-title">III. 첨부 도면</div>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="drawing-list">
             {% for drawing in drawings %}
-            <div style="background: #f8f9fa; padding: 15px; border: 1px solid var(--border); text-align: center; width: 220px;">
-                <img src="{{ drawing.image_url }}" alt="{{ drawing.title }}" style="max-width: 100%; border: 1px solid var(--border);">
-                <p style="font-size: 12px; font-weight: bold; margin-top: 10px;">{{ drawing.title }}</p>
-            </div>
+            <figure class="drawing-figure">
+                <img class="drawing-image" src="{{ drawing.image_url }}" alt="{{ drawing.title }}">
+                <figcaption class="drawing-caption">도면 {{ forloop.counter }}. {{ drawing.title }}</figcaption>
+            </figure>
             {% endfor %}
         </div>
         {% endif %}

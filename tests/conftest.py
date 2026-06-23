@@ -1,118 +1,240 @@
-"""pytest 공유 fixture 모음.
+"""Shared pytest fixtures for the current patent-drafting application.
 
-DATABASE_URL을 임포트 전에 설정해야 db.py의 RuntimeError를 피할 수 있습니다.
+The suite never calls real LLM, AWS, patent-search, or PostgreSQL services.
+Django tests use a disposable SQLite database because pytest-django is not a
+project dependency.
 """
+
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-# 프로젝트 루트를 sys.path에 추가합니다.
-# pyproject.toml의 pythonpath 설정보다 conftest.py가 먼저 로딩되는 경우를 대비합니다.
-_ROOT = Path(__file__).resolve().parent.parent
-# 중복을 허용하고 무조건 삽입합니다 (pytest의 로딩 순서 관계없이 동작 보장)
-sys.path.insert(0, str(_ROOT))
-
 import os
-
-# db.py가 임포트될 때 DATABASE_URL이 없으면 RuntimeError가 발생합니다.
-# 실제 DB에 연결하지 않으므로 dummy 값으로 충분합니다.
-os.environ.setdefault("DATABASE_URL", "postgresql://test:test@localhost/test_db")
-os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
-
-from datetime import datetime, timezone
-from typing import Any
-from unittest.mock import MagicMock
+import sys
+import tempfile
+import types
+import xml.etree.ElementTree as ElementTree
+from pathlib import Path
+from typing import Iterator
 
 import pytest
 
-from agents.state import PatentAgentState, create_initial_state
+
+ROOT = Path(__file__).resolve().parents[1]
+DJANGO_ROOT = ROOT / "backend" / "django"
+
+for path in (ROOT, DJANGO_ROOT):
+    path_text = str(path)
+    if path_text not in sys.path:
+        sys.path.insert(0, path_text)
+
+TEST_DB_PATH = Path(tempfile.gettempdir()) / f"skn25_pytest_{os.getpid()}.sqlite3"
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ["DJANGO_DB_ENGINE"] = "django.db.backends.sqlite3"
+os.environ["DJANGO_DB_NAME"] = str(TEST_DB_PATH)
+os.environ.setdefault("OPENAI_API_KEY", "test-openai-key")
+os.environ.setdefault("RUNPOD_API_KEY", "test-runpod-key")
+os.environ.setdefault("RDS_DATABASE_URL", "sqlite+pysqlite:///:memory:")
+os.environ["LANGSMITH_TRACING"] = "false"
+os.environ["LANGCHAIN_TRACING_V2"] = "false"
+os.environ["LANGSMITH_API_KEY"] = ""
+os.environ["LANGCHAIN_API_KEY"] = ""
+os.environ.setdefault("AWS_ACCESS_KEY_ID", "test-access-key")
+os.environ.setdefault("AWS_SECRET_ACCESS_KEY", "test-secret-key")
+os.environ.setdefault("AWS_DEFAULT_REGION", "ap-northeast-2")
+os.environ.setdefault("AWS_EC2_METADATA_DISABLED", "true")
+os.environ.setdefault("S3_BUCKET", "test-bucket")
 
 
-# ── State fixtures ─────────────────────────────────────────────────────────
+# pyproject.toml declares xmltodict, but the checked-in virtual environment can
+# be older than the lock file.  Keep test collection deterministic in that
+# local-only case; a correctly synced environment uses the real dependency.
+try:
+    import xmltodict  # noqa: F401
+except ModuleNotFoundError:
+    def _element_to_value(element):
+        children = list(element)
+        if not children:
+            return (element.text or "").strip()
+
+        result = {}
+        for child in children:
+            value = _element_to_value(child)
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(value)
+            else:
+                result[child.tag] = value
+        return result
+
+    xmltodict_fallback = types.ModuleType("xmltodict")
+    xmltodict_fallback.parse = lambda text: {
+        ElementTree.fromstring(text).tag: _element_to_value(ElementTree.fromstring(text))
+    }
+    sys.modules["xmltodict"] = xmltodict_fallback
+
+
+# The production prior-art module is decorated for LangSmith. Unit tests replace
+# those decorators before project imports so even a developer's active .env
+# cannot start a tracing background thread.
+import langsmith
+import langsmith.wrappers
+
+
+def _no_traceable(function=None, **_kwargs):
+    if callable(function):
+        return function
+
+    def decorator(inner):
+        return inner
+
+    return decorator
+
+
+class _NoopLangSmithClient:
+    def __init__(self, *_args, **_kwargs):
+        pass
+
+    def create_feedback(self, *_args, **_kwargs):
+        return None
+
+
+langsmith.traceable = _no_traceable
+langsmith.Client = _NoopLangSmithClient
+langsmith.wrappers.wrap_openai = lambda client: client
+
+import django
+
+django.setup()
+
+from django.conf import settings
+from django.core.management import call_command
+from django.db import connections
+
+from agents.core.state import (
+    Architecture,
+    ClaimItem,
+    ClaimResult,
+    Component,
+    DataFlow,
+    ExaminerResult,
+    InventionMetadata,
+    ParsedInvention,
+    ProcessingStep,
+    RejectionDetail,
+    TechnicalContext,
+)
+
+
+settings.MEDIA_URL = getattr(settings, "MEDIA_URL", "/media/")
+settings.MEDIA_ROOT = getattr(settings, "MEDIA_ROOT", str(ROOT / ".test-media"))
+
+
+@pytest.fixture(scope="session")
+def django_schema() -> Iterator[None]:
+    """Create the real Django schema once in an isolated SQLite database."""
+    if TEST_DB_PATH.exists():
+        TEST_DB_PATH.unlink()
+    call_command("migrate", verbosity=0, interactive=False)
+    yield
+    connections.close_all()
+    if TEST_DB_PATH.exists():
+        TEST_DB_PATH.unlink()
+
 
 @pytest.fixture
-def empty_state() -> PatentAgentState:
-    return create_initial_state()
+def db(django_schema) -> Iterator[None]:
+    """Provide clean tables without relying on pytest-django's db fixture."""
+    call_command("flush", verbosity=0, interactive=False)
+    yield
 
 
 @pytest.fixture
-def state_with_input() -> PatentAgentState:
-    return create_initial_state(
-        "AI 기반 문서 자동 분류 시스템으로 정확도와 처리 속도를 동시에 향상시킨다."
+def parsed_invention() -> ParsedInvention:
+    return ParsedInvention(
+        invention_metadata=InventionMetadata(
+            title="센서 데이터를 분석하는 시스템",
+            category="SYSTEM",
+        ),
+        technical_context=TechnicalContext(
+            problem_to_solve="센서 이상을 늦게 탐지하는 문제를 해결한다.",
+            expected_effect="이상 탐지 시간을 단축한다.",
+        ),
+        architecture=Architecture(
+            components=[
+                Component(
+                    id="COMP_001",
+                    name="분석 모듈",
+                    type="MODULE",
+                    description="센서 데이터를 분석한다.",
+                )
+            ],
+            data_flows=[
+                DataFlow(
+                    flow_id="FLOW_001",
+                    source="INPUT",
+                    target="COMP_001",
+                    data_name="센서 데이터",
+                )
+            ],
+            processing_steps=[
+                ProcessingStep(
+                    step_number=1,
+                    subject_id="COMP_001",
+                    action_description="센서 데이터를 분석하는 단계",
+                    input_data_ids=["FLOW_001"],
+                    output_data_ids=[],
+                )
+            ],
+        ),
     )
 
 
 @pytest.fixture
-def state_with_summary(state_with_input: PatentAgentState) -> PatentAgentState:
-    """summary agent 결과가 채워진 state."""
-    state_with_input["summary"] = {
-        "status": "ok",
-        "project_name": "AI 문서 분류 시스템",
-        "problem_to_solve": "기존 수동 분류의 낮은 정확도",
-        "core_technology": "딥러닝 기반 분류 모델",
-        "expected_effect": "정확도 95% 이상",
-        "readable_summary": "AI 기반 문서 자동 분류 시스템",
-        "structured_invention": {
-            "title": "AI 문서 분류 시스템",
-            "problem": "기존 수동 분류의 낮은 정확도",
-            "solution": "딥러닝 기반 분류 모델",
-            "clarification_questions": [],
+def claim_result() -> ClaimResult:
+    return ClaimResult(
+        claims=[
+            ClaimItem(
+                claim_no=1,
+                is_dependent=False,
+                cited_claim_no=[],
+                category="시스템",
+                content="센서 데이터를 분석하는 분석 모듈을 포함하는 시스템.",
+            ),
+            ClaimItem(
+                claim_no=2,
+                is_dependent=True,
+                cited_claim_no=[1],
+                category="시스템",
+                content="제1항에 있어서, 상기 분석 모듈은 이상을 탐지하는 시스템.",
+            ),
+        ]
+    )
+
+
+@pytest.fixture
+def rejected_examiner_result() -> ExaminerResult:
+    return ExaminerResult(
+        is_approved=False,
+        rejections=[
+            RejectionDetail(claims=[1], reason_text="구성요소 관계가 불명확합니다.")
+        ],
+        revision_count=1,
+    )
+
+
+@pytest.fixture
+def patent_state(parsed_invention, claim_result, rejected_examiner_result) -> dict:
+    return {
+        "mock_input_data": {
+            "title": "센서 데이터를 분석하는 시스템",
+            "prior_art_problem": "탐지가 늦다.",
+            "problem_to_solve": "탐지 시간을 줄인다.",
+            "core_tech": "분석 모듈이 센서 데이터를 분석한다.",
+            "expected_effect": "탐지 시간이 단축된다.",
         },
-        "warnings": [],
+        "summary_data": parsed_invention,
+        "claims_data": claim_result,
+        "prior_art_data": None,
+        "examiner_data": rejected_examiner_result,
     }
-    return state_with_input
-
-
-@pytest.fixture
-def full_pipeline_state(state_with_summary: PatentAgentState) -> PatentAgentState:
-    """모든 agent 결과가 채워진 state."""
-    state_with_summary["prior_art"] = {"status": "ok", "summary": "선행기술 결과"}
-    state_with_summary["claims"] = {"status": "ok", "summary": "청구항 결과"}
-    state_with_summary["drawings"] = {"status": "ok", "summary": "도면 결과"}
-    state_with_summary["specification"] = {"status": "ok", "summary": "명세서 결과"}
-    state_with_summary["final_package"] = {"status": "ok", "summary": "최종 패키지"}
-    return state_with_summary
-
-
-# ── Mock DB/Redis fixtures ──────────────────────────────────────────────────
-
-@pytest.fixture
-def mock_db_session() -> MagicMock:
-    """SQLAlchemy Session mock."""
-    session = MagicMock()
-    session.query.return_value.filter.return_value.first.return_value = None
-    return session
-
-
-@pytest.fixture
-def mock_run_record() -> MagicMock:
-    """DB에서 조회된 Run 레코드 mock."""
-    run = MagicMock()
-    run.run_id = "test-run-id-1234"
-    run.status = "completed"
-    run.user_input = "테스트 발명 설명"
-    run.errors = []
-    run.state = {
-        "workflow": {
-            "status": "completed",
-            "current_agent": "composer",
-            "trace": [{"agent": "summary", "action": "run"}],
-            "errors": [],
-        },
-        "master_decision": {"status": "completed", "next_agent": "end"},
-    }
-    run.created_at = datetime(2025, 1, 1, tzinfo=timezone.utc)
-    run.updated_at = datetime(2025, 1, 2, tzinfo=timezone.utc)
-    return run
-
-
-@pytest.fixture
-def make_mock_adapter():
-    def _factory(agent_name: str, state_key: str, result: dict[str, Any] | None = None) -> MagicMock:
-        adapter = MagicMock()
-        adapter.agent_name = agent_name
-        adapter.state_key = state_key
-        adapter.run.return_value = result or {"status": "ok", "summary": f"{agent_name} 결과"}
-        return adapter
-    return _factory

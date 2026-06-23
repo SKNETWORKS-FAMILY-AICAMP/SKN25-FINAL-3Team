@@ -56,7 +56,7 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid var(--lf-border)', paddingBottom: 32, marginBottom: 48 }}>
           <div>
             <span className="label" style={{ marginBottom: 12 }}>My Projects</span>
-            <h1 style={{ fontFamily: 'var(--lf-serif)', fontSize: 'clamp(28px,3vw,36px)', fontWeight: 300, color: 'var(--lf-navy)', letterSpacing: -.4, margin: 0 }}>내 특허 프로젝트</h1>
+            <h1 className="page-title" style={{ margin: 0 }}>내 특허 프로젝트</h1>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
             {!deleteMode ? (
@@ -76,7 +76,7 @@ export default function DashboardPage() {
         {/* List */}
         {projects.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '80px 40px' }}>
-            <p style={{ color: 'var(--lf-muted)', fontSize: 14, fontWeight: 300, marginBottom: 32 }}>아직 진행 중인 프로젝트가 없습니다.</p>
+            <p className="muted-text"style={{ marginBottom: 32 }}>아직 진행 중인 프로젝트가 없습니다.</p>
             <Link to="/create" className="btn-fill">첫 번째 특허 프로젝트 시작하기 →</Link>
           </div>
         ) : (
@@ -102,11 +102,11 @@ export default function DashboardPage() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <Link to={`/workstation/${project.run_id}`} style={{ fontFamily: 'var(--lf-serif)', fontSize: 18, fontWeight: 400, color: 'var(--lf-navy)', display: 'block', marginBottom: 4, transition: 'color .2s' }}
+                  <Link to={`/workstation/${project.run_id}`} className="panel-title" style={{ display: 'block', marginBottom: 4, transition: 'color .2s' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--lf-gold)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'var(--lf-navy)')}
                   >{project.title}</Link>
-                  <p style={{ fontSize: 11, color: 'var(--lf-muted)', letterSpacing: .5 }}>생성일: {new Date(project.created_at).toLocaleDateString('ko-KR')}</p>
+                  <p className="meta-text">생성일: {new Date(project.created_at).toLocaleDateString('ko-KR')}</p>
                 </div>
                 <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: STATUS_COLOR[project.status] ?? 'var(--lf-muted)', flexShrink: 0 }}>
                   {STATUS_LABELS[project.status] ?? project.status}
@@ -125,3 +125,4 @@ export default function DashboardPage() {
     </div>
   )
 }
+ 

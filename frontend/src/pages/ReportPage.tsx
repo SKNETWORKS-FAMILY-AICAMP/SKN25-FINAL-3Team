@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { workspaceApi } from '../api/workspace';
+import MarkdownContent from '../components/MarkdownContent';
 
 export default function ReportPage() {
   //const { id } = useParams<{ id: string }>();
@@ -43,6 +44,9 @@ export default function ReportPage() {
             body { background: white; }
             .no-print { display: none !important; }
             .report-container { box-shadow: none !important; padding: 0 !important; margin: 0 !important; border: none !important; max-width: 100% !important; }
+            .report-drawing-list { gap: 28px !important; }
+            .report-drawing-figure { break-inside: avoid; page-break-inside: avoid; }
+            .report-drawing-image { max-height: none !important; }
           }
         `}
       </style>
@@ -99,12 +103,36 @@ export default function ReportPage() {
         {drawings && drawings.length > 0 && (
           <>
             <h3 style={sectionTitleStyle}>III. 첨부 도면</h3>
-            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            <div className="report-drawing-list" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 32 }}>
               {drawings.map((drawing: any, idx: number) => (
-                <div key={idx} style={{ background: '#f8f9fa', padding: 15, border: '1px solid #e2e8f0', textAlign: 'center', width: 220 }}>
-                  <img src={drawing.image_url} alt={drawing.title} style={{ maxWidth: '100%', border: '1px solid #e2e8f0' }} />
-                  <p style={{ fontSize: 12, fontWeight: 'bold', marginTop: 10 }}>{drawing.title}</p>
-                </div>
+                <figure
+                  key={idx}
+                  className="report-drawing-figure"
+                  style={{
+                    margin: 0,
+                    textAlign: 'center',
+                    width: '100%'
+                  }}
+                >
+                  <img
+                    className="report-drawing-image"
+                    src={drawing.image_url}
+                    alt={drawing.title}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: 900,
+                      objectFit: 'contain',
+                      border: '1px solid #e2e8f0',
+                      background: '#fff',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                  <figcaption style={{ fontSize: 14, fontWeight: 700, marginTop: 12, lineHeight: 1.5 }}>
+                    도면 {idx + 1}. {drawing.title}
+                  </figcaption>
+                </figure>
               ))}
             </div>
           </>
@@ -113,8 +141,8 @@ export default function ReportPage() {
         {specification && specification.markdown_content && (
           <>
             <h3 style={sectionTitleStyle}>IV. 발명의 설명</h3>
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', padding: 40, borderRadius: 2, fontSize: 15, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-              {specification.markdown_content}
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', padding: 40, borderRadius: 2 }}>
+              <MarkdownContent content={specification.markdown_content} variant="report" />
             </div>
           </>
         )}

@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),    
     path('create/', views.create_project, name='create_project'),
+    path('create/from-paper/', views.create_project_from_paper, name='create_project_from_paper'),
     path('workstation/<int:project_id>/', views.workstation, name='workstation'),
     path('workstation/<int:project_id>/chat_api/', views.chat_api, name='chat_api'),
     path('mypage/', views.my_page, name='my_page'),
@@ -12,6 +13,7 @@ urlpatterns = [
     path('workstation/<int:project_id>/upload_api/', views.upload_file_api, name='upload_file_api'),
     path('workstation/<int:project_id>/welcome_api/', views.welcome_api, name='welcome_api'),
     path('workstation/<int:project_id>/generate_claims_api/', views.generate_claims_api, name='generate_claims_api'),
+    path('review_claims_api/', views.review_claims_api, name='review_claims_api'),
     path('workstation/<int:project_id>/save_claims_api/', views.save_claims_api, name='save_claims_api'),
     path('workstation/<int:project_id>/manage_claims_api/', views.manage_claims_api, name='manage_claims_api'),
     path('workstation/bulk_delete/', views.bulk_delete_projects_api, name='bulk_delete_projects_api'),

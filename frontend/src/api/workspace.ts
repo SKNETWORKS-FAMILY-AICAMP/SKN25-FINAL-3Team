@@ -8,6 +8,8 @@ export interface Project {
   created_at: string
   status: string
   has_claims: boolean
+  has_drawings: boolean
+  has_spec: boolean
 }
 
 export interface InventionInput {
@@ -38,8 +40,43 @@ export interface WorkstationData {
   prior_art_data: any | null
 }
 
+export interface CreateProjectResult {
+  project_id: number
+  title?: string
+  message: string
+}
+
+export interface CreateFromPaperResult extends CreateProjectResult {
+  source_file: string
+  ai_message?: string
+  paper_data?: {
+    title: string
+    prior_art_problem: string
+    problem_to_solve: string
+    core_tech: string
+    expected_effect: string
+  }
+  extracted_data?: ConsultationState
+}
+
 // --- API Functions ---
 export const workspaceApi = {
+  createProject: (payload: {
+    title: string
+    problem_to_solve: string
+    prior_art_problem: string
+    core_tech: string
+    expected_effect: string
+  }) =>
+    api.post<CreateProjectResult>('/auth/workspace/create/', payload),
+
+  createFromPaper: async (file: File, title?: string) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    if (title?.trim()) formData.append('title', title.trim())
+    return api.postForm<CreateFromPaperResult>('/auth/workspace/create/from-paper/', formData)
+  },
+
   // 1. 워크스테이션 초기 데이터 불러오기 (GET)
   getWorkstation: (projectId: string) =>
     api.get<WorkstationData>(`/auth/workspace/workstation/${projectId}/`),
@@ -49,7 +86,7 @@ export const workspaceApi = {
 
   // 2. 채팅 메시지 전송 (POST)
   sendMessage: (projectId: string, message: string) =>
-    api.post<{ status: string, ai_message: string, extracted_data: ConsultationState }>(
+    api.post<{ status: string, ai_message: string, action?: string, extracted_data: ConsultationState }>(
       `/auth/workspace/workstation/${projectId}/chat_api/`, 
       { message }
     ),
@@ -68,14 +105,7 @@ export const workspaceApi = {
   uploadFile: (projectId: string, file: File) => {
     const formData = new FormData()
     formData.append('file', file)
-    // api.post 대신 fetch를 직접 사용하거나, client.ts를 확장해야 할 수 있습니다. 
-    // 임시로 fetch 기반 구현
-    const token = localStorage.getItem('access_token')
-    return fetch(`/auth/workspace/workstation/${projectId}/upload_api/`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    }).then(res => res.json())
+    return api.postForm<any>(`/auth/workspace/workstation/${projectId}/upload_api/`, formData)
   },
 
   // 4. 파이프라인 액션들 (POST)
@@ -87,7 +117,7 @@ export const workspaceApi = {
       `/auth/workspace/workstation/${projectId}/generate_specification_api/`,{}
     ),
 
-  generateClaimsStream: async (projectId: string, onMessage: (data: any) => void) => {
+  generateClaimsStream: async (projectId: string, onMessage: (data: any) => void, signal?: AbortSignal) => {
     const token = localStorage.getItem('access_token')
     
     const response = await fetch(`/auth/workspace/workstation/${projectId}/generate_claims_api/`, {
@@ -95,7 +125,8 @@ export const workspaceApi = {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      signal,
     })
   
 

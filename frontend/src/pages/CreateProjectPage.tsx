@@ -1,7 +1,8 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { pipelineApi, projectStore } from '../api/pipeline'
-import { api } from '../api/client'
+import { projectStore } from '../api/pipeline'
+import { workspaceApi } from '../api/workspace'
+import ProjectLoadingOverlay from '../components/ProjectLoadingOverlay'
 
 const STEPS = 3
 const DEMO = {
@@ -14,10 +15,21 @@ const DEMO = {
 
 const GUIDES: Record<string, { title: string; content: string }> = {
   title:           { title: '프로젝트 명칭 가이드', content: '발명의 핵심 기술 요소와 목적이 잘 드러나는 직관적인 명칭을 입력해 주세요.' },
-  problem:         { title: '과제 가이드', content: '기존 기술이 가지고 있던 명확한 한계점, 비효율성, 또는 기술적 단점을 기재해 주세요.' },
-  prior_art:       { title: '종래기술 가이드', content: '"기존 기술 구성 → 그 한계 → 발생 문제" 순서로 논리적으로 작성해주세요.' },
-  core_tech:       { title: '핵심 구성 가이드', content: '발명 대상 / 주요 구성요소 / 입력값 / 처리 방식 / 출력값 순서로 상세히 기술해 주세요.' },
-  expected_effect: { title: '기대 효과 가이드', content: '속도 향상, 정확도 향상, 자원 절감, 오류 감소, 자동화 등으로 구체화해주세요.' },
+  problem:         { title: '과제 가이드', content: '기존 기술(또는 경쟁 제품)이 가지고 있던 명확한 한계점, 비효율성, 또는 기술적 단점을 기재해 주세요.' },
+  prior_art:       { title: '종래기술 가이드', content: '가능하면 "1. 발명의 대상 → 2. 주요 구성요소 → 3. 입력값 → 4. 처리 방식 → 5. 출력값" 순서로 작성해주세요. 특히 각 구성요소가 어떤 데이터를 입력받아 어떤 처리를 수행하고 어떤 결과를 출력하는지 구체적으로 설명해주세요.'},
+  core_tech:       { title: '핵심 구성 가이드', content: `
+1. 발명의 대상: 시스템 / 방법 / 장치 / 서버 / 프로그램 중 무엇인가요?
+
+2. 주요 구성요소: 어떤 모듈, 신경망, 데이터베이스가 포함되나요?
+
+3. 입력값: 무엇을 입력받나요?
+
+4. 처리 방식: 입력값을 어떤 순서와 방식으로 처리하나요?
+
+5. 출력값: 최종적으로 무엇을 생성하거나 제어하나요?
+`
+},
+  expected_effect: { title: '기대 효과 가이드', content: '가능하면 속도 향상, 정확도 향상, 자원 절감, 오류 감소, 자동화, 안정성 향상 등으로 구체화해주세요. 수치가 있으면 더 좋지만, 없어도 됩니다.' },
 }
 
 const STEP_LABELS = ['명칭', '과제 · 종래기술', '구성 · 효과']
@@ -28,7 +40,11 @@ export default function CreateProjectPage() {
   const [form, setForm] = useState({ title: '', problem: '', prior_art: '', core_tech: '', expected_effect: '' })
   const [openGuide, setOpenGuide] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPaperLoading, setIsPaperLoading] = useState(false)
+  const [paperFile, setPaperFile] = useState<File | null>(null)
   const [error, setError] = useState('')
+  const paperInputRef = useRef<HTMLInputElement>(null)
+  const isSubmitting = isLoading || isPaperLoading
 
   function update(field: keyof typeof form, value: string) {
     setForm(f => ({ ...f, [field]: value }))
@@ -38,6 +54,11 @@ export default function CreateProjectPage() {
     if (step === 1) update('title', DEMO.title)
     if (step === 2) { update('problem', DEMO.problem); update('prior_art', DEMO.prior_art) }
     if (step === 3) { update('core_tech', DEMO.core_tech); update('expected_effect', DEMO.expected_effect) }
+  }
+
+  function clearPaperFile() {
+    setPaperFile(null)
+    if (paperInputRef.current) paperInputRef.current.value = ''
   }
 
   // async function handleSubmit(e: FormEvent) {
@@ -64,6 +85,25 @@ export default function CreateProjectPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    if (paperFile) {
+      setIsPaperLoading(true); setError('')
+      try {
+        const result = await workspaceApi.createFromPaper(paperFile, form.title)
+        projectStore.add({
+          run_id: String(result.project_id),
+          title: result.title || result.paper_data?.title || form.title || paperFile.name,
+          created_at: new Date().toISOString(),
+          status: 'running'
+        })
+        navigate(`/workstation/${result.project_id}`, { state: { runResult: result, loadingVariant: 'paper' } })
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '논문 분석에 실패했습니다.')
+      } finally {
+        setIsPaperLoading(false)
+      }
+      return
+    }
+
     if (step < STEPS) { setStep(s => s + 1); return }
     setIsLoading(true); setError('')
     try {
@@ -77,18 +117,18 @@ export default function CreateProjectPage() {
       }
 
       // 2. 파이프라인 API 대신, 방금 연결한 Django 백엔드 주소로 직접 쏩니다.
-      const result = await api.post<{ project_id: number, message: string }>('/auth/workspace/create/', payload)      
+      const result = await workspaceApi.createProject(payload)      
       
       // 3. 백엔드가 run_id가 아니라 project_id를 주므로, 이에 맞춰서 스토어와 라우터를 수정합니다.
       projectStore.add({ 
         run_id: String(result.project_id), 
-        title: form.title, 
+        title: form.title,
         created_at: new Date().toISOString(), 
         status: 'running' 
       })
       
       // 4. 생성된 프로젝트의 워크스테이션 페이지로 이동
-      navigate(`/workstation/${result.project_id}`, { state: { runResult: result } })
+      navigate(`/workstation/${result.project_id}`, { state: { runResult: result, loadingVariant: 'manual' } })
       
     } catch (err) {
       setError(err instanceof Error ? err.message : '프로젝트 생성에 실패했습니다.')
@@ -138,8 +178,54 @@ export default function CreateProjectPage() {
           <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {step === 1 && (
               <div>
+                <div style={{ marginBottom: 32 }}>
+                  <span className="label">논문 파일 첨부</span>
+                  <div style={{
+                    border: `1px dashed ${paperFile ? 'var(--lf-gold)' : 'var(--lf-border)'}`,
+                    background: paperFile ? 'rgba(154,120,64,.06)' : 'var(--lf-bg2)',
+                    padding: '18px 20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 16,
+                  }}>
+                    <input
+                      ref={paperInputRef}
+                      type="file"
+                      accept=".pdf,.docx,.hwp"
+                      style={{ display: 'none' }}
+                      onChange={e => setPaperFile(e.target.files?.[0] ?? null)}
+                    />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{
+                        fontSize: 13,
+                        color: paperFile ? 'var(--lf-navy)' : 'var(--lf-mid)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        marginBottom: 4,
+                      }}>
+                        {paperFile ? paperFile.name : 'PDF, DOCX, HWP'}
+                      </p>
+                      <p style={{ fontSize: 11, color: 'var(--lf-muted)', lineHeight: 1.6 }}>
+                        논문을 첨부하면 AI가 발명 입력값을 자동으로 구성합니다.
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      <button type="button" onClick={() => paperInputRef.current?.click()} className="btn-line" style={{ padding: '10px 18px' }}>
+                        파일 선택
+                      </button>
+                      {paperFile && (
+                        <button type="button" onClick={clearPaperFile} className="btn-line" style={{ padding: '10px 18px' }}>
+                          선택 해제
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <FieldHeader label="프로젝트 명칭" guideKey="title" openGuide={openGuide} setOpenGuide={setOpenGuide} fillDemo={fillDemo} />
-                <input type="text" value={form.title} onChange={e => update('title', e.target.value)} placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required className="input-field" />
+                <input type="text" value={form.title} onChange={e => update('title', e.target.value)} placeholder="예: 셀프 어텐션 기반 시퀀스 변환 신경망 시스템" required={!paperFile} className="input-field" />
                 <GuideBox guideKey="title" openGuide={openGuide} />
               </div>
             )}
@@ -179,13 +265,16 @@ export default function CreateProjectPage() {
               {step > 1 && (
                 <button type="button" onClick={() => setStep(s => s - 1)} className="btn-line" style={{ flex: 1 }}>← 이전</button>
               )}
-              <button type="submit" disabled={isLoading} className="btn-fill" style={{ flex: 2, opacity: isLoading ? .6 : 1 }}>
-                {step < STEPS ? '다음 단계로 →' : isLoading ? 'AI 분석 요청 중...' : '프로젝트 생성 및 AI 분석 시작 →'}
+              <button type="submit" disabled={isSubmitting} className="btn-fill" style={{ flex: 2, opacity: isSubmitting ? .6 : 1 }}>
+                {paperFile ? (isPaperLoading ? '논문 분석 중...' : '논문으로 즉시 시작 →') : step < STEPS ? '다음 단계로 →' : isLoading ? 'AI 분석 요청 중...' : '프로젝트 생성 및 AI 분석 시작 →'}
               </button>
             </div>
           </div>
         </form>
       </div>
+
+      {isPaperLoading && <ProjectLoadingOverlay variant="paper" />}
+      {isLoading && <ProjectLoadingOverlay variant="manual" />}
     </div>
   )
 }
