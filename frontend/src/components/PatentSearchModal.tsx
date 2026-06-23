@@ -19,15 +19,29 @@ export default function PatentSearchModal({ isOpen, query, onClose }: Props) {
   const [selected, setSelected] = useState<PatentResult | null>(null)
   const [results, setResults] = useState<PatentResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
 
   useEffect(() => {
     if (!isOpen || !query) return
     setIsLoading(true)
+    setError('')
+    setSelected(null)
     fetch(`/api/v1/patent-search?query=${encodeURIComponent(query)}`)
-      .then(res => res.json())
-      .then(data => setResults(data))
-      .catch(() => setResults([]))
+      .then(async res => {
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data?.detail?.message || '특허 검색 요청에 실패했습니다.')
+        }
+        if (!Array.isArray(data)) {
+          throw new Error('특허 검색 응답 형식이 올바르지 않습니다.')
+        }
+        setResults(data)
+      })
+      .catch(err => {
+        setResults([])
+        setError(err instanceof Error ? err.message : '특허 검색 중 오류가 발생했습니다.')
+      })
     .finally(() => setIsLoading(false))
   }, [isOpen, query])
 
@@ -60,9 +74,24 @@ export default function PatentSearchModal({ isOpen, query, onClose }: Props) {
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           {/* 결과 리스트 */}
           <div style={{ width: selected ? '45%' : '100%', overflowY: 'auto', borderRight: selected ? '1px solid var(--lf-border)' : 'none', transition: 'width 0.2s' }}>
+            {isLoading && (
+              <div style={{ padding: '32px 28px', color: 'var(--lf-muted)', fontSize: 13 }}>
+                검색 중...
+              </div>
+            )}
+            {!isLoading && error && (
+              <div style={{ padding: '32px 28px', color: '#dc2626', fontSize: 13, lineHeight: 1.7 }}>
+                {error}
+              </div>
+            )}
+            {!isLoading && !error && results.length === 0 && (
+              <div style={{ padding: '32px 28px', color: 'var(--lf-muted)', fontSize: 13 }}>
+                검색 결과가 없습니다.
+              </div>
+            )}
             {results.map(result => (
               <div
-                key={result.id}
+                key={result.id || result.applicationNumber}
                 onClick={() => setSelected(result)}
                 style={{
                   padding: '20px 28px', borderBottom: '1px solid var(--lf-border)', cursor: 'pointer',

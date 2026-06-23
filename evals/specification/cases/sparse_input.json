@@ -1,0 +1,55 @@
+{
+  "case_id": "sparse_input_001",
+  "description": "입력 정보가 부족할 때 환각 없이 한계를 보고하는지 확인하는 사례",
+  "filing_date": "2026-06-23",
+  "technology_profile": "general",
+  "skilled_person": {
+    "field": "센서 기반 제어 시스템",
+    "experience": "일반적인 센서와 제어기를 연결해 본 경험이 있는 기술자",
+    "common_general_knowledge": [
+      "센서 신호를 제어기로 전달하는 일반적인 연결 방식"
+    ]
+  },
+  "agent_state": {
+    "consultation": {
+      "invention_title": "센서 기반 제어 시스템",
+      "problem": "센서 상태에 따라 장치를 제어할 필요가 있다.",
+      "solution": "센서의 출력에 따라 제어부가 구동부를 제어한다.",
+      "differentiation": "",
+      "effect": "센서 상태에 대응하여 장치를 제어할 수 있다."
+    },
+    "claims": {
+      "draft_claims": [
+        {
+          "claim_no": 1,
+          "text": "센서부; 상기 센서부의 출력에 따라 제어 신호를 생성하는 제어부; 및 상기 제어 신호에 따라 동작하는 구동부를 포함하는 센서 기반 제어 시스템.",
+          "type": "independent",
+          "category": "시스템"
+        }
+      ]
+    },
+    "drawings": {
+      "figures": [],
+      "reference_numerals": {}
+    },
+    "drafting_options": {
+      "use_subheadings_in_detailed_description": false,
+      "brief_drawing_description": true,
+      "strict_grounding": true,
+      "avoid_reference_numerals_in_means": true,
+      "method_step_format": {"enabled": false}
+    }
+  },
+  "expected": {
+    "must_cover": [
+      "센서부, 제어부 및 구동부의 기본 관계",
+      "구체적인 센서 종류와 제어 조건이 입력에 없다는 한계"
+    ],
+    "must_not_invent": [
+      "센서의 구체적인 종류",
+      "제어 임계값",
+      "구동부의 구체적인 기계 구조",
+      "정량적인 성능 효과"
+    ]
+  }
+}

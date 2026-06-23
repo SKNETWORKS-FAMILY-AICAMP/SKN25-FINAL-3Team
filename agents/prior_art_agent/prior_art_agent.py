@@ -12,11 +12,11 @@ from pathlib import Path
 import contextvars
 import numpy as np
 from openai import OpenAI
-from langsmith import traceable   #langsmith tracing 데코레이터
-from langsmith.wrappers import wrap_openai  # 💡 추가: OpenAI 클라이언트를 LangSmith용으로 감싸주는 래퍼
-import urllib.parse  # URL 인코딩용 (추가)
-import requests      # 외부 API HTTP 요청용 (추가)
-import xml.etree.ElementTree as ET  # XML 파싱용 (추가)
+from langsmith import traceable  
+from langsmith.wrappers import wrap_openai  
+import urllib.parse  
+import requests      
+import xml.etree.ElementTree as ET  
 from dotenv import load_dotenv
 from sqlalchemy import Text, text
 from agents.core.state import (
@@ -27,7 +27,7 @@ from agents.core.state import (
 )
 from agents.prior_art_agent.patent_db import PatentCorpus, SessionLocal
 
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 client = wrap_openai(OpenAI(api_key=os.getenv("OPENAI_API_KEY")))
 
@@ -72,7 +72,7 @@ def _build_claim1_query_text(claims_data: ClaimResult) -> str:
 # 3. pgvector 기반 Top-N 검색
 # ─────────────────────────────────────────────────────────────
 
-@traceable(run_type="tool", name="Local_DB_Search")  # 💡 추가: 로컬 DB 검색을 Tool로 명시적 트레이싱
+@traceable(run_type="tool", name="Local_DB_Search")  
 def search_similar_patents(
     query_text: str,
     top_n: int = 5,
@@ -301,12 +301,14 @@ def _analyze_patent(claims_data: ClaimResult, patent: dict) -> dict:
 2. 청구항 문언 기준으로 판단하세요.
 3. 추측하지 말고 텍스트에 명시된 내용만 사용하세요.
 4. risk_level: high(본원 청구항의 핵심 구성이 대부분 개시됨), medium(일부 핵심 구성이 유사함), low(관련성 낮음)
+5. overlap_points: 반드시 본원 청구항의 구성요소 용어를 그대로 인용하여 "본원의 [용어]는 선행특허의 [용어]와 [동일|유사]하다" 형식으로 작성하세요.
+6. difference_points: 반드시 본원 청구항의 구성요소 용어를 그대로 인용하여 선행특허와 다른 점을 구체적으로 서술하세요.
 
 반드시 아래 JSON만 출력하세요:
 {{
   "summary": "선행특허 핵심 요약",
-  "overlap_points": ["본원 청구항 1과 겹치는 점"],
-  "difference_points": ["본원 청구항 1과 다른 점"],
+  "overlap_points": ["본원의 [구성요소]는 선행특허의 [구성요소]와 [동일|유사]하다"],
+  "difference_points": ["본원의 [구성요소]는 선행특허에 없는/다른 [설명]"],
   "limitations": ["선행기술 또는 종래기술의 한계"],
   "evidence_sentences": [
     {{
@@ -437,7 +439,7 @@ def run_prior_art_agent(
     message = decision_resp.choices[0].message
     top_patents = []
     
-    search_source_val = "UNKNOWN" # 💡 소스 추적용 변수 추가
+    search_source_val = "UNKNOWN" 
 
     # LLM이 도구(Tool) 호출을 결정했는지 확인
     if message.tool_calls:
@@ -449,17 +451,17 @@ def run_prior_art_agent(
         
         if function_name == "search_similar_patents":
             print("[선행기술조사 에이전트] 판단 결과: AI 기술 -> 로컬 pgvector DB 호출")
-            search_source_val = "LOCAL_DB" # 💡 추가
+            search_source_val = "LOCAL_DB" 
             top_patents = search_similar_patents(query_text=function_args.get("query_text", query_text), top_n=top_n)
         elif function_name == "search_external_api":
             print("[선행기술조사 에이전트] 판단 결과: 비-AI 기술 -> 외부 검색 API 호출")
-            search_source_val = "EXTERNAL_API" # 💡 추가
+            search_source_val = "EXTERNAL_API" 
             top_patents = search_external_api(query_text=function_args.get("query_text", query_text), top_n=top_n)
             
         print(f"[선행기술조사] 검색 완료 소요시간: {time.perf_counter() - search_total_started_at:.2f}초")
     else:
         # Tool을 호출하지 않은 예외 상황 (Fallback으로 로컬 DB 검색)
-        search_source_val = "LOCAL_DB"  # 💡 추가
+        search_source_val = "LOCAL_DB"  
         print("[선행기술조사 에이전트] 명시적 툴 호출 실패. 기본 로컬 검색으로 폴백합니다.")
         top_patents = search_similar_patents(query_text, top_n=top_n)
 
@@ -566,8 +568,9 @@ def run_prior_art_agent(
             candidates=candidates,
             overall_risk=overall_risk,
             analysis_summary=analysis_summary,
-            search_source=search_source_val # 💡 추가
-        )
+            search_source=search_source_val 
+        ),
+        "retrieved_patents": top_patents,
     }
 
 
