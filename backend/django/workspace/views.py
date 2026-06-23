@@ -39,14 +39,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from asgiref.sync import async_to_sync
 
-
-
-
-
 logger = logging.getLogger(__name__)
 
 SUPPORTED_PAPER_EXTENSIONS = {'.pdf', '.docx', '.hwp'}
-
 
 def extract_text_from_uploaded_document(uploaded_file):
     ext = os.path.splitext(uploaded_file.name)[1].lower()
@@ -68,7 +63,6 @@ def extract_text_from_uploaded_document(uploaded_file):
     finally:
         if temp_path and os.path.exists(temp_path):
             os.remove(temp_path)
-
 
 # 헬퍼 함수 (비동기 처리)
 @sync_to_async
@@ -95,6 +89,7 @@ def save_final_data(project, data):
                 'full_json_data': pa_data
             }
         )
+
 @sync_to_async
 def save_prior_art_data_only(project, data):
     """스트리밍 도중 prior_art_done 스텝이 오면 선기조 데이터만 즉시 DB에 저장합니다."""
@@ -162,7 +157,7 @@ def dashboard(request):
     return render(request, template_name, {'projects': projects})
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # JWT 토큰이 유효한 로그인 유저만 접근 가능하게 보호
+@permission_classes([IsAuthenticated]) 
 def create_project(request):
     # React(Axios/Fetch)에서 보낸 JSON 데이터는 request.POST가 아니라 request.data로 받습니다.
     data = request.data
@@ -200,7 +195,6 @@ def create_project(request):
     except Exception as e:
         # DB 저장 중 오류가 발생하면 500 에러와 함께 원인 반환
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
@@ -272,8 +266,6 @@ def create_project_from_paper(request):
     except Exception as e:
         logger.exception("논문 기반 프로젝트 생성 실패")
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -362,11 +354,9 @@ def welcome_api(request, project_id):
         }
     })
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def chat_api(request, project_id):
-    # 1. request.body(json.loads) 대신 DRF의 request.data를 사용합니다.
     user_input = request.data.get('message')
     
     if not user_input:
@@ -376,7 +366,7 @@ def chat_api(request, project_id):
     
     # 2. AI 상담원과 상호작용하여 답변을 받아옵니다.
     agent = DjangoPatentConsultant(project)
-    ai_response = agent.interact(user_input)
+    ai_response, action_signal = agent.interact(user_input)
     
     # 3. AI가 방금 업데이트한 상태를 안전하게 가져옵니다. (역참조 에러 방지)
     state = ConsultationState.objects.filter(project=project).first()
@@ -385,6 +375,7 @@ def chat_api(request, project_id):
     return Response({
         'status': 'success',
         'ai_message': ai_response,
+        'action': action_signal,
         'extracted_data': {
             'ext_problem': state.ext_problem if state and state.ext_problem else '미파악',
             'ext_solution': state.ext_solution if state and state.ext_solution else '미파악',
@@ -497,7 +488,6 @@ def upload_file_api(request, project_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-
 @csrf_exempt
 async def generate_claims_api(request, project_id):
     if request.method != 'POST':
@@ -584,7 +574,6 @@ async def generate_claims_api(request, project_id):
     response['X-Accel-Buffering'] = 'no'
     response['Cache-Control'] = 'no-cache'
     return response  
-
 
 @csrf_exempt
 async def review_claims_api(request):
@@ -709,7 +698,6 @@ def bulk_delete_projects_api(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
     
-
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -751,7 +739,6 @@ def patent_report_api(request, project_id):
             "markdown_content": specification.markdown_content if specification else ""
         }
     })
-
 
 @csrf_exempt
 @api_view(['POST'])
@@ -822,8 +809,6 @@ def generate_drawings_api(request, project_id):
         logger.error(f"도면 API 에러: {e}")
         return Response({"status": "error", "message": f"도면 생성 중 서버 오류 발생: {str(e)}"})
     
-
-
 def convert_to_markdown_format(invention_title: str, spec_dict: dict) -> str:
     """FastAPI에서 받아온 명세서 dict를 Markdown 문자열로 변환합니다."""
     
@@ -866,7 +851,6 @@ def convert_to_markdown_format(invention_title: str, spec_dict: dict) -> str:
 {detailed_description}"""
 
     return markdown_content
-
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])

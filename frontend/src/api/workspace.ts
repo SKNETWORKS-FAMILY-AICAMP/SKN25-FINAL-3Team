@@ -86,7 +86,7 @@ export const workspaceApi = {
 
   // 2. 채팅 메시지 전송 (POST)
   sendMessage: (projectId: string, message: string) =>
-    api.post<{ status: string, ai_message: string, extracted_data: ConsultationState }>(
+    api.post<{ status: string, ai_message: string, action?: string, extracted_data: ConsultationState }>(
       `/auth/workspace/workstation/${projectId}/chat_api/`, 
       { message }
     ),
