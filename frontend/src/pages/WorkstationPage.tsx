@@ -95,9 +95,14 @@ export default function WorkstationPage() {
 
   useEffect(() => {
     if (!previewImage) return
+    const previousOverflow = document.body.style.overflow
     const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') setPreviewImage(null) }
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [previewImage])
 
   useEffect(() => () => claimAbortControllerRef.current?.abort(), [])
@@ -494,7 +499,13 @@ export default function WorkstationPage() {
       <ClaimEditModal isOpen={isClaimModalOpen} onClose={() => setIsClaimModalOpen(false)} projectId={projectId!} />
       <ProcessMapModal isOpen={isProcessModalOpen} onClose={() => setIsProcessModalOpen(false)} hasClaims={processHasClaims} hasDrawings={processHasDrawings} hasSpec={processHasSpec} />
       <PriorArtModal isOpen={isPaModalOpen} onClose={() => setIsPaModalOpen(false)} data={priorArtData} />
-      {/* 도면 팝업 부분 유지 (생략 없이 원본 파일과 동일) */}
+      {previewImage && (
+        <DrawingPreviewModal
+          key={previewImage.src}
+          image={previewImage}
+          onClose={() => setPreviewImage(null)}
+        />
+      )}
     </div>
   )
 }
@@ -522,6 +533,53 @@ function DrawingThumbnailStrip({ images, onOpen }: { images: PreviewImage[]; onO
             <img src={image.src} alt={image.alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }} />
           </button>
         ))}
+      </div>
+    </div>
+  )
+}
+
+function DrawingPreviewModal({ image, onClose }: { image: PreviewImage; onClose: () => void }) {
+  const [isZoomed, setIsZoomed] = useState(false)
+
+  return (
+    <div
+      className="drawing-preview-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${image.alt || '특허 도면'} 확대 보기`}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <button
+        type="button"
+        className="drawing-preview-modal__close"
+        onClick={onClose}
+        aria-label="도면 확대 보기 닫기"
+        title="닫기 (Esc)"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <div className="drawing-preview-modal__stage">
+        <img
+          className={`drawing-preview-modal__image ${isZoomed ? 'is-zoomed' : ''}`}
+          src={image.src}
+          alt={image.alt}
+          draggable={false}
+          onDoubleClick={() => setIsZoomed(current => !current)}
+          title={isZoomed ? '더블클릭하여 원래 크기로 보기' : '더블클릭하여 확대하기'}
+        />
+      </div>
+
+      <div className="drawing-preview-modal__caption">
+        <span>{image.alt || '특허 도면'}</span>
+        <span className="drawing-preview-modal__hint">
+          {isZoomed ? '더블클릭하면 원래 크기로 돌아갑니다.' : '도면을 더블클릭하면 확대됩니다.'}
+        </span>
       </div>
     </div>
   )
