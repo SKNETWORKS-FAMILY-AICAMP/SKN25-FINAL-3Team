@@ -1,86 +1,126 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { FAQ_CATEGORIES } from '../data/faqs'
-import Reveal from '../components/Reveal'
-
-export default function FaqPage() {
-  const [activeFaqCategory, setActiveFaqCategory] = useState(0)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
-
-  return (
-    <div style={{ paddingTop: 70 }}>
-      <section style={{ padding: '110px 0 0', textAlign: 'center', background: 'var(--lf-bg2)' }}>
-        <div className="container">
-          <Reveal variant="scale">
-            <span className="label">FAQ</span>
-            <h1 style={{ fontSize: 'clamp(32px,4vw,48px)', color: 'var(--lf-navy)', marginBottom: 16 }}>
-              자주 묻는 <span className="text-gradient">질문</span>
-            </h1>
-            <p style={{ fontSize: 15.5, color: 'var(--lf-mid)', lineHeight: 1.9, maxWidth: 560, margin: '0 auto' }}>
-              PYPI 사용 중 궁금한 점을 분야별로 모았습니다.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section style={{ padding: '70px 0 150px' }}>
-        <div className="container" style={{ maxWidth: 820 }}>
-          <Reveal>
-            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 36 }}>
-              {FAQ_CATEGORIES.map((cat, i) => {
-                const isActive = activeFaqCategory === i
-                return (
-                  <button key={cat.category}
-                    onClick={() => { setActiveFaqCategory(i); setOpenFaq(null) }}
-                    style={{
-                      fontSize: 12.5, fontWeight: 700, padding: '9px 18px', borderRadius: 999,
-                      whiteSpace: 'nowrap', cursor: 'pointer', fontFamily: 'var(--lf-sans)',
-                      border: isActive ? '1px solid var(--lf-dark)' : '1px solid var(--lf-border)',
-                      background: isActive ? 'var(--lf-dark)' : 'var(--lf-bg2)',
-                      color: isActive ? '#fff' : 'var(--lf-mid)',
-                      transition: 'background .2s, color .2s, border-color .2s',
-                    }}
-                  >{cat.category}</button>
-                )
-              })}
-            </div>
-          </Reveal>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {FAQ_CATEGORIES[activeFaqCategory].items.map((item, i) => {
-              const isOpen = openFaq === i
-              return (
-                <Reveal key={i} delay={i * 60} style={{ background: 'var(--lf-bg2)', borderRadius: 14, overflow: 'hidden' }}>
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : i)}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
-                      background: 'none', border: 'none', cursor: 'pointer', padding: '20px 24px',
-                      fontFamily: 'var(--lf-sans)', textAlign: 'left',
-                    }}
-                  >
-                    <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--lf-navy)' }}>{item.q}</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lf-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                      style={{ flexShrink: 0, marginLeft: 16, transition: 'transform .2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}
-                    ><path d="M6 9l6 6 6-6" /></svg>
-                  </button>
-                  {isOpen && (
-                    <div style={{ padding: '0 24px 22px' }}>
-                      {item.a.split('\n\n').map((para: string, j: number) => (
-                        <p key={j} style={{ fontSize: 15, lineHeight: 2.05, color: 'var(--lf-mid)', marginTop: j > 0 ? 14 : 0 }}>{para}</p>
-                      ))}
-                    </div>
-                  )}
-                </Reveal>
-              )
-            })}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: 56 }}>
-            <Link to="/" className="btn-line">홈으로</Link>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+export interface FaqItem {
+  q: string
+  a: string
 }
+
+export interface FaqCategory {
+  category: string
+  items: FaqItem[]
+}
+
+export const FAQ_CATEGORIES: FaqCategory[] = [
+  {
+    category: '서비스 전반',
+    items: [
+      {
+        q: 'PYPI는 무엇을 자동화하나요?',
+        a: '발명 분석 → 선행기술조사 → 청구항 작성 → 도면 생성 → 명세서 작성 → 품질 검토로 이어지는 7개 AI 에이전트 파이프라인을 통해, 발명 내용 입력 한 번으로 출원 준비에 필요한 문서를 자동으로 완성합니다.',
+      },
+      {
+        q: '회원가입 없이도 사용할 수 있나요?',
+        a: '홈페이지의 특허 검색(KIPRIS)은 회원가입 없이 누구나 사용할 수 있습니다. 다만 프로젝트 생성·대시보드·워크스테이션 등 실제 작업 공간은 로그인이 필요합니다.',
+      },
+      {
+        q: '어떤 기술 분야를 지원하나요?',
+        a: 'AI/소프트웨어 기술과 비AI(기계·화학·바이오 등) 기술 모두 지원합니다. 선행기술조사 단계에서 청구항 1항을 LLM 라우터(gpt-4o)가 분석해 AI 기술이면 자체 pgvector DB를, 비AI 기술이면 KIPRIS 외부 API를 자동으로 사용합니다.',
+      },
+      {
+        q: '작업한 프로젝트는 어디서 확인하나요?',
+        a: '로그인 후 대시보드에서 프로젝트 목록을 확인할 수 있고, 각 프로젝트를 클릭하면 워크스테이션에서 이어서 작업할 수 있습니다.',
+      },
+    ],
+  },
+  {
+    category: '선행기술조사',
+    items: [
+      {
+        q: '선행기술조사는 어떻게 진행되나요?',
+        a: 'AI 기술로 판별되면 text-embedding-3-small로 임베딩 후 pgvector(IVFFlat, 코사인 거리)로 자체 DB에서 유사 특허를 검색합니다. 비AI 기술이면 청구항을 KIPRIS 검색 쿼리로 변환해 외부 API로 검색합니다.',
+      },
+      {
+        q: '선행기술조사 결과에 근거 자료가 함께 제공되나요?',
+        a: '네. 각 선행특허에 대해 LLM이 본원 청구항과 1:1로 비교해 겹치는 부분(evidence)과 차이점을 함께 제시합니다.',
+      },
+      {
+        q: '위험도는 어떻게 산정되나요?',
+        a: '특허별로 high/medium/low 위험도를 매긴 뒤, 고위험 특허가 2건 이상이면 종합 위험도 high, 고위험 1건 또는 중위험 2건 이상이면 medium, 그 외는 low로 규칙 기반으로 종합합니다.',
+      },
+      {
+        q: '홈페이지의 "특허 검색"과 선행기술조사는 다른가요?',
+        a: '네, 서로 다른 기능입니다. 홈페이지 검색은 KIPRIS 키워드 검색 결과를 그대로 보여주는 단순 조회 기능이고, 선행기술조사는 프로젝트 안에서 본원 발명과 후보 특허를 AI가 정밀 비교·분석하는 기능입니다.',
+      },
+    ],
+  },
+  {
+    category: '청구항 작성·심사',
+    items: [
+      {
+        q: '청구항은 어떻게 자동으로 생성되나요?',
+        a: '구성요소·데이터 흐름·처리 단계 데이터를 바탕으로 방법·시스템·CRM 3개 카테고리의 독립항을 만들고, 각 독립항에 대한 종속항을 함께 생성합니다.',
+      },
+      {
+        q: '종속항은 몇 개나 생성되나요?',
+        a: '구성요소 수와 처리 단계 수 중 더 큰 값을 권장 종속항 수로 프롬프트에 명시해, 발명 규모에 맞춰 종속항 분량이 자동으로 조정됩니다.',
+      },
+      {
+        q: '생성된 청구항이 거절되면 어떻게 되나요?',
+        a: '특허법 제42조 제4항 제2호(명확성 요건) 기준으로 심사한 뒤 거절되면, 지적된 부분만 반영해 자동으로 재작성하고 다시 심사합니다. 이 루프는 최대 2회까지 반복됩니다.',
+      },
+      {
+        q: '청구항을 재작성할 때 청구항 번호나 구조가 바뀌나요?',
+        a: '아니요. 재작성 시 청구항 수·번호·인용관계·카테고리는 그대로 유지하고, 거절 사유로 지적된 부분만 최소한으로 수정합니다.',
+      },
+      {
+        q: '"청구항 심사 BETA"는 일반 명세서 작성 흐름과 다른가요?',
+        a: '네. 일반 흐름(/generate-claims)은 발명 데이터를 입력하면 청구항을 새로 생성한 뒤 심사합니다. 청구항 심사 BETA(/review-claims)는 이미 작성된 청구항을 직접 붙여넣어, 생성 없이 심사·재작성만 받아볼 수 있는 기능입니다.',
+      },
+    ],
+  },
+  {
+    category: '도면 생성',
+    items: [
+      {
+        q: '어떤 도면이 생성되나요?',
+        a: '도1(시스템 블록도)과 도2(방법 흐름도) 2종이 생성됩니다.',
+      },
+      {
+        q: '도면 생성에도 AI(LLM)가 사용되나요?',
+        a: '아니요. 도면은 발명 데이터를 Graphviz DOT 언어 템플릿으로 변환해 그리는 순수 프로그래밍 방식으로 생성되며, LLM을 호출하지 않습니다.',
+      },
+      {
+        q: '도면의 참조부호(번호)는 어떻게 정해지나요?',
+        a: '시스템 블록도는 구성요소마다 110부터 10씩 증가하는 번호를, 방법 흐름도는 처리 단계마다 210부터 10씩 증가하는 번호를 자동으로 부여합니다.',
+      },
+    ],
+  },
+  {
+    category: '명세서 작성',
+    items: [
+      {
+        q: '명세서는 몇 개 항목으로 구성되나요?',
+        a: '기술분야·배경기술·해결과제·해결수단·효과·도면의 간단한 설명·발명을 실시하기 위한 구체적인 내용까지 총 7개 핵심 항목이 생성됩니다.',
+      },
+      {
+        q: '명세서 작성도 검증을 거치나요?',
+        a: '네. 생성 후 필수 항목 누락, IPC 코드 직접 노출, 선행기술조사 보고서식 표현 등을 규칙 기반으로 검증합니다. 문제가 있으면 같은 방식으로 최대 2회까지 재작성합니다.',
+      },
+      {
+        q: '검증을 끝까지 통과하지 못하면 어떻게 되나요?',
+        a: '2회 재작성 후에도 통과하지 못하면, 작업을 중단하지 않고 남은 이슈를 경고로 표시한 채 다음 단계로 진행합니다.',
+      },
+    ],
+  },
+  {
+    category: '계정 및 프로젝트 관리',
+    items: [
+      {
+        q: '여러 프로젝트를 한꺼번에 삭제할 수 있나요?',
+        a: '네. 대시보드에서 여러 프로젝트를 선택해 일괄 삭제할 수 있습니다.',
+      },
+      {
+        q: '대시보드에서 새 프로젝트는 어떻게 시작하나요?',
+        a: '대시보드 좌측의 "+ 새 프로젝트" 버튼을 누르거나, 중앙 입력창에 발명 아이디어를 적고 시작하면 프로젝트 생성 페이지로 이동합니다.',
+      },
+    ],
+  },
+]
