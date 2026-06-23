@@ -1,7 +1,8 @@
-import { Fragment, FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Fragment, FormEvent, useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { FEATURES } from '../data/features'
+import FaqSection from '../components/FaqSection'
 import PatentSearchModal from '../components/PatentSearchModal'
 import Reveal from '../components/Reveal'
 
@@ -145,8 +146,22 @@ function Icon({ name, color = 'var(--lf-gold)', size = 20 }: { name: keyof typeo
 
 export default function HomePage() {
   const { user } = useAuth()
+  const location = useLocation()
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const targetId = location.hash.replace('#', '')
+      if (targetId) {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } else {
+        window.scrollTo({ top: 0 })
+      }
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [location.hash])
 
   function handleSearch(e: FormEvent) {
     e.preventDefault()
@@ -188,25 +203,27 @@ export default function HomePage() {
         </div>
 
         {/* Patent search */}
-        <Reveal variant="scale" delay={320} className="container" style={{ maxWidth: 640 }}>
-          <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--lf-navy)', marginBottom: 22 }}>
-            원하는 특허를 검색해보세요.
-          </h3>
-          <form onSubmit={handleSearch} style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 22, top: '50%', transform: 'translateY(-50%)', display: 'flex' }}>
-              <Icon name="search" color="var(--lf-muted)" />
-            </span>
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="키워드로 특허를 검색해보세요 (예: 인공지능 휠체어)"
-              style={{
-                width: '100%', background: 'var(--lf-bg)', border: '1px solid var(--lf-border)', borderRadius: 999,
-                padding: '16px 24px 16px 52px', fontSize: 16, color: 'var(--lf-navy)', outline: 'none', fontFamily: 'var(--lf-sans)',
-              }}
-            />
-          </form>
-        </Reveal>
+        <div id="patent-search" style={{ scrollMarginTop: 100 }}>
+          <Reveal variant="scale" delay={320} className="container" style={{ maxWidth: 640 }}>
+            <h3 style={{ fontSize: 24, fontWeight: 800, color: 'var(--lf-navy)', marginBottom: 22 }}>
+              원하는 특허를 검색해보세요.
+            </h3>
+            <form onSubmit={handleSearch} style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 22, top: '50%', transform: 'translateY(-50%)', display: 'flex' }}>
+                <Icon name="search" color="var(--lf-muted)" />
+              </span>
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="키워드로 특허를 검색해보세요 (예: 인공지능 휠체어)"
+                style={{
+                  width: '100%', background: 'var(--lf-bg)', border: '1px solid var(--lf-border)', borderRadius: 999,
+                  padding: '16px 24px 16px 52px', fontSize: 16, color: 'var(--lf-navy)', outline: 'none', fontFamily: 'var(--lf-sans)',
+                }}
+              />
+            </form>
+          </Reveal>
+        </div>
 
         <PatentSearchModal isOpen={isSearchOpen} query={searchQuery} onClose={() => setIsSearchOpen(false)} />
       </section>
@@ -413,7 +430,7 @@ export default function HomePage() {
             <div style={{ marginBottom: 40, textAlign: 'center' }}>
               <span className="label">Before / After</span>
               <h2 style={{ fontSize: 'clamp(28px,3vw,41px)', color: 'var(--lf-navy)' }}>
-                PYPI 도입 전과 후는 <span className="text-gradient">다릅니다</span>
+                PYPI 도입 전과 후는 다릅니다
               </h2>
             </div>
           </Reveal>
@@ -518,30 +535,33 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <FaqSection id="faq" showHeading />
+
       {/* Closing CTA */}
-      {!user && (
-        <section style={{ padding: '0 0 150px', textAlign: 'center' }}>
-          <Reveal variant="scale" className="container" style={{
-            maxWidth: 720, borderRadius: 28, padding: '64px 48px',
-            background: 'var(--lf-dark)', color: '#fff',
-          }}>
-            <span style={{
-              display: 'inline-block', fontSize: 13, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
-              color: '#fff', background: 'rgba(255,255,255,.12)', borderRadius: 999, padding: '7px 16px', marginBottom: 24,
-            }}>Get Started</span>
-            <h2 style={{ fontSize: 'clamp(30px,3.8vw,45px)', color: '#fff', lineHeight: 1.32, marginBottom: 18 }}>
-              지금 바로 <span className="text-gradient-light">시작하세요</span>
-            </h2>
-            <p style={{ fontSize: 16.5, color: 'rgba(255,255,255,.75)', lineHeight: 1.95, marginBottom: 36 }}>
-              특허 AI 서비스를 지금 경험해보세요.<br />아이디어만 있으면 명세서가 완성됩니다.
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
-              <Link to="/signup" className="btn-fill" style={{ background: '#fff', color: 'var(--lf-navy)', borderColor: '#fff' }}>명세서 작성하기 →</Link>
+      <section style={{ padding: '130px 0 150px', textAlign: 'center' }}>
+        <Reveal variant="scale" className="container" style={{
+          maxWidth: 900, borderRadius: 28, padding: '80px 48px',
+          background: 'var(--lf-dark)', color: '#fff',
+        }}>
+          <span style={{
+            display: 'inline-block', fontSize: 13, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase',
+            color: '#fff', background: 'rgba(255,255,255,.12)', borderRadius: 999, padding: '7px 16px', marginBottom: 24,
+          }}>Get Started</span>
+          <h2 style={{ fontSize: 'clamp(30px,3.8vw,45px)', color: '#fff', lineHeight: 1.32, marginBottom: 18 }}>
+            지금 바로 <span className="text-gradient-light">시작하세요</span>
+          </h2>
+          <p style={{ fontSize: 16.5, color: 'rgba(255,255,255,.75)', lineHeight: 1.95, marginBottom: 36 }}>
+            특허 AI 서비스를 지금 경험해보세요.<br />아이디어만 있으면 명세서가 완성됩니다.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+            <Link to="/create" className="btn-fill" style={{ background: '#fff', color: 'var(--lf-navy)', borderColor: '#fff' }}>명세서 작성하기 →</Link>
+            {!user && (
               <Link to="/login" className="btn-line" style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}>로그인</Link>
-            </div>
-          </Reveal>
-        </section>
-      )}
+            )}
+          </div>
+        </Reveal>
+      </section>
     </div>
   )
 }

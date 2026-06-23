@@ -9,6 +9,8 @@ export interface AgentLog {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize: () => void;
+  onCancel: () => void;
   logs: AgentLog[];
   currentStep: string;
   isDone: boolean;
@@ -22,7 +24,7 @@ const PIPELINE_STEPS = [
   { id: 'prior_art', label: 'Prior Art Agent', desc: '선행기술 비교 및 차별성 분석' },
 ]
 
-export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone }: Props) {
+export default function AgentModal({ isOpen, onClose, onMinimize, onCancel, logs, currentStep, isDone }: Props) {
   const logEndRef = useRef<HTMLDivElement>(null)
 
   
@@ -51,9 +53,30 @@ export default function AgentModal({ isOpen, onClose, logs, currentStep, isDone 
             {!isDone && <span style={{ width: 10, height: 10, background: '#ef4444', borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />}
             {isDone ? '✅ 분석 및 작성 완료' : 'AI 특허 파이프라인 가동 중'}
           </h3>
-          {isDone && (
-            <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: 'var(--lf-mid)' }}>&times;</button>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              type="button"
+              onClick={onMinimize}
+              title="창 최소화 — 작업은 계속 진행됩니다"
+              aria-label="에이전트 작업 창 최소화"
+              style={{
+                width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'none', border: '1px solid var(--lf-border)', borderRadius: 8,
+                fontSize: 20, lineHeight: 1, cursor: 'pointer', color: 'var(--lf-mid)',
+              }}
+            >−</button>
+            <button
+              type="button"
+              onClick={isDone ? onClose : onCancel}
+              title={isDone ? '창 닫기' : '작업 중지 및 창 닫기'}
+              aria-label={isDone ? '에이전트 작업 창 닫기' : '에이전트 작업 중지'}
+              style={{
+                width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'none', border: '1px solid var(--lf-border)', borderRadius: 8,
+                fontSize: 22, lineHeight: 1, cursor: 'pointer', color: isDone ? 'var(--lf-mid)' : 'var(--lf-gold)',
+              }}
+            >×</button>
+          </div>
         </div>
 
         <div style={{ display: 'flex', height: 460 }}>

@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
+import FaqPage from './pages/FaqPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
@@ -18,6 +19,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/faq" element={<FaqPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/report/:projectId" element={<ReportPage />} />

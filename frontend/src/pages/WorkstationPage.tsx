@@ -1,12 +1,13 @@
 // src/pages/WorkstationPage.tsx
 import { FormEvent, useEffect, useState, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useLocation, useParams, Link } from 'react-router-dom'
 import { workspaceApi, WorkstationData, ChatMessage } from '../api/workspace'
 import AgentModal, { AgentLog } from '../components/AgentModal'
 import ClaimEditModal from '../components/ClaimEditModal'
 import ProcessMapModal from '../components/ProcessMapModal'
 import PriorArtModal from '../components/PriorArtModal'
 import MarkdownContent from '../components/MarkdownContent'
+import ProjectLoadingOverlay, { ProjectLoadingVariant } from '../components/ProjectLoadingOverlay'
 import './WorkstationPage.css' // 💡 방금 만든 CSS 임포트
 
 const STEP_TO_PIPELINE: Record<string, string> = {
@@ -25,6 +26,8 @@ type PreviewImage = { src: string; alt: string }
 
 export default function WorkstationPage() {
   const { projectId } = useParams<{ projectId: string }>()
+  const location = useLocation()
+  const loadingVariant = ((location.state as { loadingVariant?: ProjectLoadingVariant } | null)?.loadingVariant ?? 'workspace')
   
   // 상태 관리
   const [data, setData] = useState<WorkstationData | null>(null)
@@ -41,12 +44,14 @@ export default function WorkstationPage() {
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
   const [isProcessModalOpen, setIsProcessModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAgentModalMinimized, setIsAgentModalMinimized] = useState(false)
   const [agentLogs, setAgentLogs] = useState<AgentLog[]>([])
   const [currentStep, setCurrentStep] = useState<string>('summary')
   const [isAgentDone, setIsAgentDone] = useState(false)
   const [isPaModalOpen, setIsPaModalOpen] = useState(false)
   const [priorArtData, setPriorArtData] = useState<any>(null)
   const [previewImage, setPreviewImage] = useState<PreviewImage | null>(null)
+  const claimAbortControllerRef = useRef<AbortController | null>(null)
 
   const [pendingClaims, setPendingClaims] = useState<any[] | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -95,6 +100,8 @@ export default function WorkstationPage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [previewImage])
 
+  useEffect(() => () => claimAbortControllerRef.current?.abort(), [])
+
   const handleSendMessage = async (e?: FormEvent) => {
     if (e) e.preventDefault()
     if (!chatInput.trim() || !projectId || !data) return
@@ -139,13 +146,17 @@ export default function WorkstationPage() {
 
   const handleGenerateClaims = async () => {
     if (isGenerating || !projectId || !confirm("청구항 작성을 시작하시겠습니까?")) return
+    const abortController = new AbortController()
+    claimAbortControllerRef.current = abortController
     setIsGenerating(true) 
     setAgentLogs([{ step: 'system', message: '파이프라인 초기화 중...' }])
     setCurrentStep('summary')
     setIsAgentDone(false)
+    setIsAgentModalMinimized(false)
     setIsModalOpen(true)
     try {
       await workspaceApi.generateClaimsStream(projectId, (streamData) => {
+        if (abortController.signal.aborted) return
         if (streamData.status === 'warning' || streamData.status === 'error') {
           setAgentLogs(prev => [...prev, { step: 'error', message: streamData.message }])
           setIsAgentDone(true)
@@ -171,11 +182,37 @@ export default function WorkstationPage() {
           if (streamData.prior_art_data) setPriorArtData(streamData.prior_art_data)
           workspaceApi.getWorkstation(projectId).then(res => setData(res))
         }
-      })
+      }, abortController.signal)
     } catch (err) {
+      if (abortController.signal.aborted) return
       setAgentLogs(prev => [...prev, { step: 'error', message: "통신 중 오류가 발생했습니다." }])
       setIsAgentDone(true)
-    } finally { setIsGenerating(false) }
+    } finally {
+      if (claimAbortControllerRef.current === abortController) claimAbortControllerRef.current = null
+      setIsGenerating(false)
+    }
+  }
+
+  const handleMinimizeAgentModal = () => {
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(true)
+  }
+
+  const handleRestoreAgentModal = () => {
+    setIsAgentModalMinimized(false)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseAgentModal = () => {
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(false)
+  }
+
+  const handleCancelAgentPipeline = () => {
+    claimAbortControllerRef.current?.abort()
+    setAgentLogs(prev => [...prev, { step: 'cancelled', message: '사용자에 의해 작업이 중단되었습니다.' }])
+    setIsModalOpen(false)
+    setIsAgentModalMinimized(false)
   }
 
   const handleGenerateSpecification = async () => {
@@ -218,7 +255,7 @@ export default function WorkstationPage() {
     }
   }, [isSending])
 
-  if (loading) return <div style={{ padding: 100, textAlign: 'center' }}>데이터 로딩 중...</div>
+  if (loading) return <ProjectLoadingOverlay variant={loadingVariant} />
   if (!data) return <div style={{ padding: 100, textAlign: 'center' }}>프로젝트를 찾을 수 없습니다.</div>
 
   const { project, invention_input, consultation_state, chat_messages } = data
@@ -231,7 +268,7 @@ export default function WorkstationPage() {
       {/* ── 상단 네비게이션 ── */}
       <header className="nb-topbar">
         <div className="nb-topbar-l">
-          <Link to="/" className="nb-logo" style={{ textDecoration: 'none', color: '#1a1a1a', fontWeight: 'bold' }}>PYPI Workstation</Link>
+          <Link to="/" className="nb-logo" style={{ textDecoration: 'none', color: 'var(--lf-navy)', fontWeight: 'bold' }}>PYPI Workstation</Link>
           <span className="nb-topbar-sep"></span>
           <span className="nb-notebook-title">{project.title}</span>
         </div>
@@ -266,7 +303,7 @@ export default function WorkstationPage() {
               <div className="data-card-content">{invention_input.expected_effect || "미파악"}</div>
             </div>
 
-            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid rgba(0,0,0,.08)' }}>
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--lf-border)' }}>
               <span className="nb-col-title" style={{ display: 'block', marginBottom: 12 }}>AI Agent Analysis</span>
               
               <div className="data-card">
@@ -302,7 +339,7 @@ export default function WorkstationPage() {
         {/* ── 중앙: 채팅 패널 ── */}
         <main className="nb-col nb-col--chat">
           <div className="nb-col-hd" style={{ padding: '28px 24px 16px', display: 'block' }}>
-            <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#1a1a1a', margin: 0, letterSpacing: '-0.5px', wordBreak: 'keep-all' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--lf-navy)', margin: 0, letterSpacing: '-0.5px', wordBreak: 'keep-all' }}>
               {project.title}
             </h1>
           </div>
@@ -334,7 +371,7 @@ export default function WorkstationPage() {
 
             {pendingClaims && (
               <div className="nb-msg nb-msg--user" style={{ marginTop: 12 }}>
-                <button onClick={handleSaveClaims} disabled={isSaving} style={{ padding: '10px 16px', background: '#9a7840', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
+                <button onClick={handleSaveClaims} disabled={isSaving} style={{ padding: '10px 16px', background: 'var(--lf-gold)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>
                   {isSaving ? "저장 중..." : "이 청구항 맘에 들면 저장해럇! 💾"}
                 </button>
               </div>
@@ -405,14 +442,14 @@ export default function WorkstationPage() {
               <span className="nb-action-name">선행기술 리포트</span>
             </button>
 
-            <div style={{ height: 1, background: 'rgba(0,0,0,.07)', margin: '12px 0' }}></div>
+            <div style={{ height: 1, background: 'var(--lf-border)', margin: '12px 0' }}></div>
 
             <Link to={`/report/${project.id}`} target="_blank" className="nb-action-card" style={{ textDecoration: 'none' }}>
-              <div className="nb-action-icon" style={{ background: '#f5f5f5', color: '#555' }}>
+              <div className="nb-action-icon" style={{ background: 'rgba(232,41,13,.07)', color: 'var(--lf-mid)' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               </div>
-              <span className="nb-action-name" style={{ color: '#1a1a1a' }}>최종 리포트 보기</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 'auto' }}>
+              <span className="nb-action-name" style={{ color: 'var(--lf-navy)' }}>최종 리포트 보기</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lf-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 'auto' }}>
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
               </svg>
             </Link>
@@ -421,8 +458,39 @@ export default function WorkstationPage() {
         </aside>
       </div>
 
+      {isAgentModalMinimized && (
+        <button
+          type="button"
+          onClick={handleRestoreAgentModal}
+          aria-label="최소화된 에이전트 작업 창 열기"
+          style={{
+            position: 'fixed', right: 28, bottom: 28, zIndex: 900,
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '12px 18px', borderRadius: 999,
+            background: 'var(--lf-dark)', color: '#fff', border: '1px solid rgba(232,41,13,.35)',
+            boxShadow: '0 12px 30px rgba(61,14,22,.2)', cursor: 'pointer',
+            fontFamily: 'var(--lf-sans)', fontSize: 12, fontWeight: 700,
+          }}
+        >
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: isAgentDone ? '#10b981' : 'var(--lf-gold)',
+            animation: isAgentDone ? 'none' : 'pulse 1.5s infinite',
+          }} />
+          {isAgentDone ? '청구항 작성 완료 · 열기' : 'AI 청구항 작성 중 · 열기'}
+        </button>
+      )}
+
       {/* 모달 컴포넌트들 유지 */}
-      <AgentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} logs={agentLogs} currentStep={currentStep} isDone={isAgentDone} />
+      <AgentModal
+        isOpen={isModalOpen}
+        onClose={handleCloseAgentModal}
+        onMinimize={handleMinimizeAgentModal}
+        onCancel={handleCancelAgentPipeline}
+        logs={agentLogs}
+        currentStep={currentStep}
+        isDone={isAgentDone}
+      />
       <ClaimEditModal isOpen={isClaimModalOpen} onClose={() => setIsClaimModalOpen(false)} projectId={projectId!} />
       <ProcessMapModal isOpen={isProcessModalOpen} onClose={() => setIsProcessModalOpen(false)} hasClaims={processHasClaims} hasDrawings={processHasDrawings} hasSpec={processHasSpec} />
       <PriorArtModal isOpen={isPaModalOpen} onClose={() => setIsPaModalOpen(false)} data={priorArtData} />
@@ -450,7 +518,7 @@ function DrawingThumbnailStrip({ images, onOpen }: { images: PreviewImage[]; onO
     <div style={{ marginTop: 16, padding: '14px 4px 18px 4px', overflowX: 'auto', overflowY: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', minHeight: 152, paddingLeft: 2, paddingRight: 26 }}>
         {images.map((image, index) => (
-          <button key={`${image.src}-${index}`} type="button" onClick={() => onOpen(image)} title="클릭해서 크게 보기" style={{ position: 'relative', zIndex: index + 1, width: 205, height: 142, flex: '0 0 205px', marginLeft: index === 0 ? 0 : -26, padding: 0, overflow: 'hidden', border: '1px solid rgba(154,120,64,.26)', borderRadius: 8, background: '#fff', boxShadow: '0 12px 28px rgba(18,16,14,.14)', cursor: 'zoom-in', transform: `translateY(${index % 2 === 0 ? 0 : 8}px) rotate(${index % 2 === 0 ? '-1.4deg' : '1.2deg'})` }}>
+          <button key={`${image.src}-${index}`} type="button" onClick={() => onOpen(image)} title="클릭해서 크게 보기" style={{ position: 'relative', zIndex: index + 1, width: 205, height: 142, flex: '0 0 205px', marginLeft: index === 0 ? 0 : -26, padding: 0, overflow: 'hidden', border: '1px solid rgba(232,41,13,.24)', borderRadius: 8, background: '#fff', boxShadow: '0 12px 28px rgba(61,14,22,.14)', cursor: 'zoom-in', transform: `translateY(${index % 2 === 0 ? 0 : 8}px) rotate(${index % 2 === 0 ? '-1.4deg' : '1.2deg'})` }}>
             <img src={image.src} alt={image.alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }} />
           </button>
         ))}

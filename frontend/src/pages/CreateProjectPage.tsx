@@ -2,6 +2,7 @@ import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { projectStore } from '../api/pipeline'
 import { workspaceApi } from '../api/workspace'
+import ProjectLoadingOverlay from '../components/ProjectLoadingOverlay'
 
 const STEPS = 3
 const DEMO = {
@@ -94,7 +95,7 @@ export default function CreateProjectPage() {
           created_at: new Date().toISOString(),
           status: 'running'
         })
-        navigate(`/workstation/${result.project_id}`, { state: { runResult: result } })
+        navigate(`/workstation/${result.project_id}`, { state: { runResult: result, loadingVariant: 'paper' } })
       } catch (err) {
         setError(err instanceof Error ? err.message : '논문 분석에 실패했습니다.')
       } finally {
@@ -127,7 +128,7 @@ export default function CreateProjectPage() {
       })
       
       // 4. 생성된 프로젝트의 워크스테이션 페이지로 이동
-      navigate(`/workstation/${result.project_id}`, { state: { runResult: result } })
+      navigate(`/workstation/${result.project_id}`, { state: { runResult: result, loadingVariant: 'manual' } })
       
     } catch (err) {
       setError(err instanceof Error ? err.message : '프로젝트 생성에 실패했습니다.')
@@ -272,37 +273,8 @@ export default function CreateProjectPage() {
         </form>
       </div>
 
-      {isPaperLoading && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 2000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(18,16,14,.42)',
-          backdropFilter: 'blur(7px)',
-          WebkitBackdropFilter: 'blur(7px)',
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#fff', textAlign: 'center', padding: '0 24px' }}>
-            <div style={{
-              width: 56,
-              height: 56,
-              borderRadius: '50%',
-              border: '4px solid rgba(255,255,255,.32)',
-              borderTopColor: 'var(--lf-gold)',
-              animation: 'paper-spin 1s linear infinite',
-              marginBottom: 24,
-            }} />
-            <h2 style={{ fontFamily: 'var(--lf-serif)', fontSize: 26, fontWeight: 300, marginBottom: 10 }}>
-              에이전트가 논문을 파악 중입니다
-            </h2>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,.76)', letterSpacing: 0 }}>
-              논문의 기술 내용을 특허 프로젝트 입력값으로 구조화하고 있습니다.
-            </p>
-          </div>
-        </div>
-      )}
+      {isPaperLoading && <ProjectLoadingOverlay variant="paper" />}
+      {isLoading && <ProjectLoadingOverlay variant="manual" />}
     </div>
   )
 }
