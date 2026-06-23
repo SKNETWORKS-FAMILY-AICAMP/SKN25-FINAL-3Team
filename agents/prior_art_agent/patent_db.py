@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, Column, String, Integer, Text, JSON, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from pgvector.sqlalchemy import Vector
 
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 Base = declarative_base()
 

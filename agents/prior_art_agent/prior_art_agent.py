@@ -27,7 +27,7 @@ from agents.core.state import (
 )
 from agents.prior_art_agent.patent_db import PatentCorpus, SessionLocal
 
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 client = wrap_openai(OpenAI(api_key=os.getenv("OPENAI_API_KEY")))
 
@@ -301,12 +301,14 @@ def _analyze_patent(claims_data: ClaimResult, patent: dict) -> dict:
 2. 청구항 문언 기준으로 판단하세요.
 3. 추측하지 말고 텍스트에 명시된 내용만 사용하세요.
 4. risk_level: high(본원 청구항의 핵심 구성이 대부분 개시됨), medium(일부 핵심 구성이 유사함), low(관련성 낮음)
+5. overlap_points: 반드시 본원 청구항의 구성요소 용어를 그대로 인용하여 "본원의 [용어]는 선행특허의 [용어]와 [동일|유사]하다" 형식으로 작성하세요.
+6. difference_points: 반드시 본원 청구항의 구성요소 용어를 그대로 인용하여 선행특허와 다른 점을 구체적으로 서술하세요.
 
 반드시 아래 JSON만 출력하세요:
 {{
   "summary": "선행특허 핵심 요약",
-  "overlap_points": ["본원 청구항 1과 겹치는 점"],
-  "difference_points": ["본원 청구항 1과 다른 점"],
+  "overlap_points": ["본원의 [구성요소]는 선행특허의 [구성요소]와 [동일|유사]하다"],
+  "difference_points": ["본원의 [구성요소]는 선행특허에 없는/다른 [설명]"],
   "limitations": ["선행기술 또는 종래기술의 한계"],
   "evidence_sentences": [
     {{
