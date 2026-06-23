@@ -180,3 +180,98 @@
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .nb-action-name { font-size: 13px; font-weight: 600; flex: 1; }
+
+/* ── 도면 전체화면 미리보기 ─────────────────────────── */
+.drawing-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(17, 12, 13, .92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.drawing-preview-modal__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 72px 56px 86px;
+  overflow: auto;
+}
+
+.drawing-preview-modal__image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 158px);
+  object-fit: contain;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 24px 72px rgba(0, 0, 0, .4);
+  cursor: zoom-in;
+  user-select: none;
+  transition: transform .22s ease;
+  transform-origin: center;
+}
+
+.drawing-preview-modal__image.is-zoomed {
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+.drawing-preview-modal__close {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+
+.drawing-preview-modal__close:hover {
+  background: var(--lf-gold);
+  transform: scale(1.05);
+}
+
+.drawing-preview-modal__caption {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: calc(100vw - 48px);
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(17, 12, 13, .72);
+  color: #fff;
+  font-size: 13px;
+  transform: translateX(-50%);
+}
+
+.drawing-preview-modal__hint {
+  color: rgba(255, 255, 255, .62);
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .drawing-preview-modal__stage { padding: 68px 16px 94px; }
+  .drawing-preview-modal__caption {
+    width: calc(100vw - 32px);
+    justify-content: center;
+    border-radius: 14px;
+    text-align: center;
+  }
+  .drawing-preview-modal__caption > span:first-child { display: none; }
+}
