@@ -3,16 +3,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 const NAV_ITEMS = [
-  { label: '서비스 소개', hash: 'intro' },
   { label: 'AI 에이전트', hash: 'pipeline' },
   { label: '청구항 심사', path: '/claim-review' },
   { label: 'FAQ', path: '/faq' },
 ] as const
 
 const FEATURE_LINKS = [
-  { label: '특허 검색', path: '/features/patent-search' },
-  { label: '명세서 작성', path: '/features/specification' },
-  { label: '청구항 심사', path: '/features/examiner' },
+  { label: '특허 검색', hash: 'patent-search' },
+  { label: '명세서 작성', path: '/create' },
+  { label: '청구항 심사', path: '/claim-review' },
 ] as const
 
 export default function Header() {
@@ -28,10 +27,17 @@ export default function Header() {
 
   function handleNavClick(hash: string) {
     if (location.pathname === '/') {
-      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+      navigate(`/#${hash}`)
+      requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
     } else {
-      navigate('/')
-      setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' }), 100)
+      navigate(`/#${hash}`)
+    }
+  }
+
+  function handleLogoClick() {
+    setIsFeatureOpen(false)
+    if (location.pathname === '/') {
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
     }
   }
 
@@ -47,7 +53,7 @@ export default function Header() {
         height: 70, display: 'flex', alignItems: 'center',
       }}>
         {/* Logo */}
-        <Link to="/" style={{
+        <Link to="/" onClick={handleLogoClick} style={{
           display: 'flex', alignItems: 'center', gap: 11,
           textDecoration: 'none', marginRight: 48, flexShrink: 0,
         }}>
@@ -113,8 +119,10 @@ export default function Header() {
                 background: 'var(--lf-bg)', border: '1px solid var(--lf-border)',
                 boxShadow: '0 18px 40px -16px rgba(33,27,23,.18)', padding: '8px 0',
               }}>
-                {FEATURE_LINKS.map(item => (
-                  <Link key={item.label} to={item.path}
+                {FEATURE_LINKS.map(item => 'path' in item ? (
+                  <Link
+                    key={item.label}
+                    to={item.path}
                     onClick={() => setIsFeatureOpen(false)}
                     style={{
                       display: 'block', padding: '12px 22px', fontSize: 13, fontWeight: 500,
@@ -124,6 +132,22 @@ export default function Header() {
                     onMouseEnter={e => (e.currentTarget.style.background = 'var(--lf-bg2)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                   >{item.label}</Link>
+                ) : (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => {
+                      setIsFeatureOpen(false)
+                      handleNavClick(item.hash)
+                    }}
+                    style={{
+                      display: 'block', width: '100%', padding: '12px 22px', fontSize: 13, fontWeight: 500,
+                      color: 'var(--lf-navy)', background: 'none', border: 'none', textAlign: 'left',
+                      cursor: 'pointer', transition: 'background .15s', fontFamily: 'var(--lf-sans)',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--lf-bg2)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                  >{item.label}</button>
                 ))}
               </div>
             )}
