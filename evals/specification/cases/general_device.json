@@ -1,0 +1,93 @@
+{
+  "case_id": "general_device_001",
+  "description": "작업자의 위험 구역 진입을 감지하고 경고하는 장치",
+  "filing_date": "2026-06-23",
+  "technology_profile": "general",
+  "skilled_person": {
+    "field": "산업 안전용 센서 및 제어 장치",
+    "experience": "센서 기반 제어 장치를 설계한 경험이 있는 일반적인 전자·제어 기술자",
+    "common_general_knowledge": [
+      "거리 센서의 일반적인 신호 취득 방식",
+      "임계값 비교에 의한 제어 신호 생성",
+      "경광등과 경고음 출력 회로의 통상적인 구동 방식"
+    ]
+  },
+  "agent_state": {
+    "consultation": {
+      "invention_title": "작업자 위험 구역 진입 경고 장치",
+      "technical_field_natural": "산업 현장에서 작업자의 위험 구역 진입을 감지하여 경고하는 센서 기반 안전 장치",
+      "problem": "작업자가 설비 주변의 위험 구역에 진입한 사실을 즉시 인지하지 못해 안전사고가 발생할 수 있다.",
+      "solution": "거리 센서로 작업자와 위험 구역 경계 사이의 거리를 측정하고, 제어부가 저장된 임계거리와 비교하여 경고부를 작동시킨다.",
+      "differentiation": "작업자의 실제 거리와 설정된 위험 구역의 임계거리를 비교하여 현장에서 즉시 경고한다.",
+      "effect": "위험 구역 진입 사실을 작업자와 주변 관리자에게 신속하게 알릴 수 있다.",
+      "components": [
+        {"id": "COMP_001", "name": "거리 센서부", "role": "작업자까지의 거리를 측정", "description": "위험 구역 경계를 기준으로 작업자까지의 거리 신호를 생성한다."},
+        {"id": "COMP_002", "name": "제어부", "role": "측정 거리와 임계거리를 비교", "description": "측정 거리가 임계거리 이하인지 판단하여 경고 제어 신호를 생성한다."},
+        {"id": "COMP_003", "name": "경고부", "role": "시각 및 청각 경고 출력", "description": "경고 제어 신호에 따라 경광등과 경고음을 출력한다."},
+        {"id": "COMP_004", "name": "임계값 저장부", "role": "임계거리 저장", "description": "설비별 위험 구역 경계에 대응하는 임계거리를 저장한다."}
+      ],
+      "process_steps": [
+        {"order": 1, "name": "거리 측정", "description": "거리 센서부가 작업자까지의 거리를 측정한다."},
+        {"order": 2, "name": "위험 판단", "description": "제어부가 측정 거리와 임계값 저장부의 임계거리를 비교한다."},
+        {"order": 3, "name": "경고 출력", "description": "측정 거리가 임계거리 이하이면 경고부가 경광등과 경고음을 출력한다."}
+      ]
+    },
+    "claims": {
+      "independent_claim_numbers": [1],
+      "dependent_claim_numbers": [2],
+      "draft_claims": [
+        {
+          "claim_no": 1,
+          "text": "작업자까지의 거리를 측정하는 거리 센서부; 임계거리를 저장하는 임계값 저장부; 측정 거리와 상기 임계거리를 비교하여 경고 제어 신호를 생성하는 제어부; 및 상기 경고 제어 신호에 따라 경고를 출력하는 경고부를 포함하는 작업자 위험 구역 진입 경고 장치.",
+          "type": "independent",
+          "category": "장치",
+          "elements": ["거리 센서부", "임계값 저장부", "제어부", "경고부"]
+        },
+        {
+          "claim_no": 2,
+          "text": "제1항에 있어서, 상기 경고부는 경광등과 경고음을 함께 출력하는 작업자 위험 구역 진입 경고 장치.",
+          "type": "dependent",
+          "category": "장치",
+          "elements": ["경광등", "경고음"]
+        }
+      ]
+    },
+    "drawings": {
+      "figures": [
+        {
+          "fig_no": 1,
+          "title": "작업자 위험 구역 진입 경고 장치의 구성도",
+          "brief_description": "도 1은 작업자 위험 구역 진입 경고 장치의 구성을 나타내는 도면이다.",
+          "description": "거리 센서부가 측정한 거리 신호를 제어부로 전달하고, 제어부가 임계값 저장부를 참조하여 경고부를 제어한다.",
+          "components": ["거리 센서부", "제어부", "경고부", "임계값 저장부"]
+        }
+      ],
+      "reference_numerals": [
+        {"number": "110", "term": "거리 센서부", "figure": "도 1"},
+        {"number": "120", "term": "제어부", "figure": "도 1"},
+        {"number": "130", "term": "경고부", "figure": "도 1"},
+        {"number": "140", "term": "임계값 저장부", "figure": "도 1"}
+      ]
+    },
+    "drafting_options": {
+      "use_subheadings_in_detailed_description": false,
+      "brief_drawing_description": true,
+      "strict_grounding": true,
+      "avoid_reference_numerals_in_means": true,
+      "method_step_format": {"enabled": false}
+    }
+  },
+  "expected": {
+    "must_cover": [
+      "거리 센서부의 거리 측정",
+      "측정 거리와 임계거리의 비교",
+      "비교 결과에 따른 경고 출력",
+      "경광등과 경고음"
+    ],
+    "must_not_invent": [
+      "카메라 영상 분석",
+      "작업자 위치의 GPS 추적",
+      "입력에 없는 정량적인 사고 감소율"
+    ]
+  }
+}
