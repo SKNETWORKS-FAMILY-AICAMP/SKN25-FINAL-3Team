@@ -210,7 +210,7 @@ class DjangoPatentConsultant:
             )
             
             ext_resp = self.client.chat.completions.create(
-                model="gpt-4o", 
+                model="gpt-5.4-mini", 
                 messages=[
                     {"role": "system", "content": self._get_dynamic_system_prompt(is_extraction=True)},
                     {"role": "user", "content": initial_prompt}
@@ -266,7 +266,7 @@ class DjangoPatentConsultant:
             )
             try:
                 resp = self.client.chat.completions.create(
-                    model="gpt-4o",
+                    model="gpt-5.4-mini",
                     messages=[
                         {"role": "system", "content": "당신은 특허 명세서용 아키텍처 초안을 작성하는 수석 변리사입니다. 평문 마크다운으로만 답하세요."},
                         {"role": "user", "content": prompt}
@@ -288,7 +288,7 @@ class DjangoPatentConsultant:
 
         try:
             ext_resp = self.client.chat.completions.create(
-                model="gpt-4o", 
+                model="gpt-5.4-mini", 
                 messages=[
                     {"role": "system", "content": self._get_dynamic_system_prompt(is_extraction=True)},
                     {"role": "user", "content": f"{extract_prompt}\n\n사용자 입력: {user_input}"}],
@@ -360,7 +360,7 @@ class DjangoPatentConsultant:
             messages.append({"role": "user", "content": user_input})
 
             resp = self.client.chat.completions.create(
-                model="gpt-4o", 
+                model="gpt-5.4-mini", 
                 messages=messages, 
                 response_format={"type": "json_object"}
             )
@@ -440,7 +440,7 @@ class DjangoPatentConsultant:
             messages.append({"role": "user", "content": user_input})
 
             resp = self.client.chat.completions.create(
-                model="gpt-4o", 
+                model="gpt-5.4-mini", 
                 messages=messages,
                 tools=tools
             )
