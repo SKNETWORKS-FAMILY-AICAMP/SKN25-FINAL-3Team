@@ -6,50 +6,48 @@
 
 **꽃보다특허**는 발명자가 입력하거나 논문에서 추출한 기술 정보를 바탕으로 특허 문서 작성 과정을 지원합니다.
 
-React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고, FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다. Summary, Claim, Examiner, Rewrite, Prior Art, Drawing, Specification 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
+- React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고,
+- FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다.
+- Claim(청구항), Examiner(심사관), Prior Art(선행기술조사), Drawing(도면), Specification(발명의 설명)등의 **멀티 에이전트**가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
 
 ## ✨ 주요 기능
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 💡 1. 발명 입력·구체화
 
 - 발명 프로젝트 생성 및 관리
-- AI 변리사 상담과 채팅 기록
 - PDF·DOCX·HWP 논문 분석
 - 발명 핵심 요소 자동 구조화
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 📝 2. 특허 문서 생성
 
 - 독립항·종속항 자동 작성
-- 방법·시스템·CRM 청구항 구성
 - Graphviz 기반 특허 도면 생성
 - 청구항·도면 기반 명세서 작성
 
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### ⚖️ 3. 심사·검증·보정
 
-- AI Examiner의 청구항 명확성 심사
+- AI 심사관 청구항 명확성 심사
 - 거절 사유 기반 자동 보정
-- LangGraph 재심사 반복 흐름
 - 사용자 작성 청구항 실시간 심사
 
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 🔍 4. 조사·저장·보고
 
-- PostgreSQL·pgvector 유사 특허 검색
-- KIPRIS 외부 선행기술조사
+- pgvector·KIPRIS 유사특허 검색
 - 신규성·진보성 위험도 분석
 - 청구항·도면·명세서 통합 보고서
 
@@ -57,34 +55,11 @@ React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관
 </tr>
 </table>
 
-```text
-발명 입력 → AI 상담 → 청구항 생성 → 심사·보정
-        → 선행기술조사 → 도면·명세서 생성 → 보고서
-```
 
 ## 🧭 시스템 구조
 
-```mermaid
-flowchart LR
-    U["사용자"] --> FE["React + Vite<br/>Frontend :3000"]
-    FE -->|"JWT 인증 / Workspace API"| DJ["Django + DRF<br/>Main Server :8000"]
-    DJ -->|"AI 작업 요청 / NDJSON 중계"| FA["FastAPI<br/>AI Worker :8001"]
-    FA --> LG["LangGraph Workflow"]
+<img width="2109" height="947" alt="시스템" src="https://github.com/user-attachments/assets/c54f835a-3faf-469b-b16c-2a9f6e6f8fd7" />
 
-    LG --> SA["Summary Agent"]
-    LG --> CA["Claim Agent"]
-    LG --> EA["Examiner Agent"]
-    LG --> RA["Rewrite Agent"]
-    LG --> PA["Prior Art Agent"]
-    LG --> DA["Drawing Agent"]
-    LG --> SPA["Specification Agent"]
-
-    DJ --> DB["Django DB"]
-    PA --> PG["PostgreSQL + pgvector"]
-    FA --> EXT["OpenAI / RunPod / KIPRIS"]
-    DA --> S3["AWS S3"]
-    FA --> LS["LangSmith"]
-```
 
 ## 🛠️ 기술 스택
 
@@ -231,8 +206,6 @@ cp .env.example .env
 | AWS | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `S3_BUCKET` |
 | 추적 | `LANGCHAIN_TRACING_V2`, `LANGCHAIN_API_KEY` |
 
-> `PRIOR_ART_ANALYZE_MAX_WORKERS`는 `5`처럼 정수로 설정해야 합니다. 비밀키가 포함된 `.env`는 커밋하지 마세요.
-
 ### 3. Django와 FastAPI 실행
 
 ```bash
@@ -258,20 +231,6 @@ npm run dev
 
 브라우저에서 `http://localhost:3000`으로 접속합니다. Vite proxy가 `/auth` 요청은 Django로, `/api` 요청은 FastAPI로 전달합니다.
 
-## ✅ 테스트
-
-테스트는 외부 LLM, RunPod, LangSmith, S3, KIPRIS, PostgreSQL을 실제 호출하지 않으며 Django는 임시 SQLite DB를 사용합니다.
-
-현재 가상환경에 pytest가 없다면 먼저 설치합니다.
-
-```bash
-uv pip install pytest
-.venv/bin/python -m pytest tests
-```
-
-- 최종 결과: **108 passed, 9 warnings in 6.05s**
-- 통과율: **108/108 (100%)**
-- 상세 구성: [`tests/README.md`](tests/README.md)
 
 ## 🔌 주요 API 흐름
 
