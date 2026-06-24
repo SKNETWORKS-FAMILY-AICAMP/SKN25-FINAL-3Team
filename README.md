@@ -40,7 +40,7 @@
 
 - AI 심사관 청구항 명확성 심사
 - 거절 사유 기반 자동 보정
-- 사용자 작성 청구항 실시간 심사
+- 사용자작성 청구항 실시간 심사
 
 </td>
 <td width="50%" valign="top" style="word-break: keep-all;">
