@@ -206,8 +206,6 @@ cp .env.example .env
 | AWS | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `S3_BUCKET` |
 | 추적 | `LANGCHAIN_TRACING_V2`, `LANGCHAIN_API_KEY` |
 
-> `PRIOR_ART_ANALYZE_MAX_WORKERS`는 `5`처럼 정수로 설정해야 합니다. 비밀키가 포함된 `.env`는 커밋하지 마세요.
-
 ### 3. Django와 FastAPI 실행
 
 ```bash
