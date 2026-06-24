@@ -41,7 +41,10 @@ pytest_cache/
 .mypy_cache/
 
 # Node
-node_modules/
+**/node_modules/
+
+# TypeScript 빌드 캐시 (충돌 방지!)
+*.tsbuildinfo
 
 # SQLite
 *.sqlite3

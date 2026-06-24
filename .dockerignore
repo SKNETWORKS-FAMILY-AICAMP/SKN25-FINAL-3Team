@@ -11,9 +11,10 @@ __pycache__
 .env.*
 !.env.example
 .DS_Store
-fronetnd/node_modules
+frontend/.svelte-kit
 frontend/dist
 **/node_modules
+*.tsbuildinfo
 npm-debug.log
 coverage
 htmlcov
