@@ -8,7 +8,7 @@
 
 - React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고,
 - FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다.
-- Summary(요약), Claim(청구항), Examiner(심사관), Prior Art(선행기술조사), Drawing(도면), Specification(발명의 설명)등의 멀티 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
+- Claim(청구항), Examiner(심사관), Prior Art(선행기술조사), Drawing(도면), Specification(발명의 설명)등의 멀티 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
 
 ## ✨ 주요 기능
 
