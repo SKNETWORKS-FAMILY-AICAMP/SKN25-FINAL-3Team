@@ -11,7 +11,9 @@ __pycache__
 .env.*
 !.env.example
 .DS_Store
-node_modules
+fronetnd/node_modules
+frontend/dist
+**/node_modules
 npm-debug.log
 coverage
 htmlcov
