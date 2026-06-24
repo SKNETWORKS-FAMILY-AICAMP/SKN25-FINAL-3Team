@@ -6,7 +6,8 @@
 
 **꽃보다특허**는 발명자가 입력하거나 논문에서 추출한 기술 정보를 바탕으로 특허 문서 작성 과정을 지원합니다.
 
-React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고, FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다. Summary, Claim, Examiner, Rewrite, Prior Art, Drawing, Specification 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
+- React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관리하고, FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다.
+- Summary, Claim, Examiner, Rewrite, Prior Art, Drawing, Specification 에이전트가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
 
 ## ✨ 주요 기능
 
@@ -64,27 +65,8 @@ React 워크스페이스와 Django API가 사용자·프로젝트·문서를 관
 
 ## 🧭 시스템 구조
 
-```mermaid
-flowchart LR
-    U["사용자"] --> FE["React + Vite<br/>Frontend :3000"]
-    FE -->|"JWT 인증 / Workspace API"| DJ["Django + DRF<br/>Main Server :8000"]
-    DJ -->|"AI 작업 요청 / NDJSON 중계"| FA["FastAPI<br/>AI Worker :8001"]
-    FA --> LG["LangGraph Workflow"]
+<img width="2109" height="947" alt="시스템" src="https://github.com/user-attachments/assets/c54f835a-3faf-469b-b16c-2a9f6e6f8fd7" />
 
-    LG --> SA["Summary Agent"]
-    LG --> CA["Claim Agent"]
-    LG --> EA["Examiner Agent"]
-    LG --> RA["Rewrite Agent"]
-    LG --> PA["Prior Art Agent"]
-    LG --> DA["Drawing Agent"]
-    LG --> SPA["Specification Agent"]
-
-    DJ --> DB["Django DB"]
-    PA --> PG["PostgreSQL + pgvector"]
-    FA --> EXT["OpenAI / RunPod / KIPRIS"]
-    DA --> S3["AWS S3"]
-    FA --> LS["LangSmith"]
-```
 
 ## 🛠️ 기술 스택
 
@@ -258,20 +240,6 @@ npm run dev
 
 브라우저에서 `http://localhost:3000`으로 접속합니다. Vite proxy가 `/auth` 요청은 Django로, `/api` 요청은 FastAPI로 전달합니다.
 
-## ✅ 테스트
-
-테스트는 외부 LLM, RunPod, LangSmith, S3, KIPRIS, PostgreSQL을 실제 호출하지 않으며 Django는 임시 SQLite DB를 사용합니다.
-
-현재 가상환경에 pytest가 없다면 먼저 설치합니다.
-
-```bash
-uv pip install pytest
-.venv/bin/python -m pytest tests
-```
-
-- 최종 결과: **108 passed, 9 warnings in 6.05s**
-- 통과율: **108/108 (100%)**
-- 상세 구성: [`tests/README.md`](tests/README.md)
 
 ## 🔌 주요 API 흐름
 
