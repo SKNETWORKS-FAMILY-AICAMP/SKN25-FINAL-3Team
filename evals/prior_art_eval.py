@@ -25,7 +25,6 @@ if "langchain_community.chat_models.vertexai" not in sys.modules:
     _mod.ChatVertexAI = ChatVertexAI
     sys.modules["langchain_community.chat_models.vertexai"] = _mod
 
-from sqlalchemy import func
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import faithfulness
@@ -35,25 +34,36 @@ from openai import OpenAI
 
 from agents.core.state import PatentState, ClaimResult
 from agents.prior_art_agent.prior_art_agent import run_prior_art_agent
-from agents.prior_art_agent.patent_db import PatentCorpus, SessionLocal
 
 oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
-def load_test_cases(limit: int = 3) -> list[dict]:
-    db = SessionLocal()
-    try:
-        rows = (
-            db.query(PatentCorpus)
-            .filter(PatentCorpus.examiner_cited.isnot(None))
-            .filter(PatentCorpus.claim1.isnot(None))
-            .order_by(func.random())
-            .limit(limit)
-            .all()
-        )
-        return [{"question": row.claim1.strip()} for row in rows if row.claim1]
-    finally:
-        db.close()
+TEST_CLAIMS = [
+    {
+        "label": "AI-댓글통합",
+        "question": (
+            "복수의 사용자 댓글을 입력받는 입력부; 상기 복수의 사용자 댓글 각각을 "
+            "의미 벡터로 변환하는 댓글 임베딩부; 상기 의미 벡터 간의 유사도를 산출하여 "
+            "유사 댓글 그룹을 생성하는 군집화부; 및 상기 유사 댓글 그룹별로 대표 댓글을 "
+            "생성하여 출력하는 대표 댓글 생성부를 포함하는 의미 기반 댓글 통합 시스템."
+        ),
+    },
+    {
+        "label": "AI-언어모델학습",
+        "question": (
+            "학습 데이터를 수신하는 단계; 트랜스포머 기반 언어 모델에 상기 학습 데이터를 "
+            "입력하여 파라미터를 업데이트하는 미세조정 단계; 및 미세조정된 모델을 이용하여 "
+            "자연어 질의에 대한 응답을 생성하는 단계를 포함하는 대화형 AI 모델 학습 방법."
+        ),
+    },
+    {
+        "label": "AI-이미지분류",
+        "question": (
+            "입력 이미지를 수신하는 수신부; 합성곱 신경망을 이용하여 상기 입력 이미지에서 "
+            "특징 맵을 추출하는 특징 추출부; 및 상기 특징 맵을 복수의 카테고리로 분류하는 "
+            "분류부를 포함하는 딥러닝 기반 이미지 분류 시스템."
+        ),
+    },
+]
 
 
 def build_ragas_answer(prior_art) -> str:
@@ -106,21 +116,17 @@ def eval_answer_relevance(query: str, candidates: list) -> float:
         return 0.0
 
 
-def run(limit: int = 3):
+def run():
     print("=" * 65)
     print("선행기술조사 에이전트 통합 평가 (faithfulness + answer_relevance)")
     print("=" * 65)
 
-    test_cases = load_test_cases(limit=limit)
-    if not test_cases:
-        print("테스트 케이스를 DB에서 불러오지 못했습니다.")
-        return
+    questions, ragas_answers, contexts_list, ar_scores, labels = [], [], [], [], []
 
-    questions, ragas_answers, contexts_list, ar_scores = [], [], [], []
-
-    for i, tc in enumerate(test_cases, 1):
+    for i, tc in enumerate(TEST_CLAIMS, 1):
         question = tc["question"]
-        print(f"\n▶ [케이스 {i}] {question[:50]}...")
+        label    = tc["label"]
+        print(f"\n▶ [{label}] {question[:50]}...")
 
         state: PatentState = {
             "mock_input_data": {},
@@ -136,7 +142,7 @@ def run(limit: int = 3):
             "examiner_data": None,
         }
 
-        agent_result = run_prior_art_agent(state, top_n=3)
+        agent_result = run_prior_art_agent(state, top_n=1)
         prior_art    = agent_result.get("prior_art_data")
         candidates   = prior_art.candidates if prior_art else []
 
@@ -154,6 +160,7 @@ def run(limit: int = 3):
         ragas_answers.append(build_ragas_answer(prior_art))
         contexts_list.append(ctx)
         ar_scores.append(ar)
+        labels.append(label)
 
     # faithfulness 평가 (RAGAS)
     print("\n[RAGAS faithfulness 평가 중...]")
@@ -167,26 +174,26 @@ def run(limit: int = 3):
     df = ragas_result.to_pandas()
 
     # 최종 요약
-    print("\n" + "=" * 65)
-    print(f"{'케이스':<6} {'faithfulness':^14} {'answer_relevance':^16} {'종합':^8}")
-    print("-" * 65)
+    print("\n" + "=" * 70)
+    print(f"{'케이스':<20} {'faithfulness':^14} {'answer_relevance':^16} {'종합':^8}")
+    print("-" * 70)
     total_f, total_ar = 0.0, 0.0
-    for i, (f_score, ar_score) in enumerate(zip(df["faithfulness"], ar_scores), 1):
+    for label, f_score, ar_score in zip(labels, df["faithfulness"], ar_scores):
         f_score = f_score if f_score is not None else 0.0
         avg = (f_score + ar_score) / 2
         total_f += f_score
         total_ar += ar_score
-        print(f"{i:<6} {f_score:^14.2f} {ar_score:^16.2f} {avg:^8.2f}")
+        print(f"{label:<20} {f_score:^14.2f} {ar_score:^16.2f} {avg:^8.2f}")
     n = len(ar_scores)
-    print("-" * 65)
+    print("-" * 70)
     avg_f  = total_f / n
     avg_ar = total_ar / n
-    print(f"{'평균':<6} {avg_f:^14.2f} {avg_ar:^16.2f} {(avg_f + avg_ar) / 2:^8.2f}")
-    print("=" * 65)
+    print(f"{'평균':<20} {avg_f:^14.2f} {avg_ar:^16.2f} {(avg_f + avg_ar) / 2:^8.2f}")
+    print("=" * 70)
 
 
 if __name__ == "__main__":
     if not os.getenv("OPENAI_API_KEY"):
         print("OPENAI_API_KEY가 없습니다.")
         sys.exit(1)
-    run(limit=3)
+    run()

@@ -32,7 +32,7 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 client = wrap_openai(OpenAI(api_key=os.getenv("OPENAI_API_KEY")))
 
 EMBED_MODEL   = "text-embedding-3-small"
-ANALYZE_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+ANALYZE_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 ANALYZE_MAX_WORKERS = int(os.getenv("PRIOR_ART_ANALYZE_MAX_WORKERS", "5"))
 
 
@@ -77,7 +77,6 @@ def search_similar_patents(
     query_text: str,
     top_n: int = 5,
     ipc_prefix: str = None,
-    bm25_pool: int = 500,
 ) -> list[dict]:
     embed_started_at = time.perf_counter()
     query_vec = embed_texts([query_text])[0].tolist()
@@ -86,31 +85,11 @@ def search_similar_patents(
     db = SessionLocal()
     try:
         search_started_at = time.perf_counter()
-        # 거리값을 결과와 함께 가져오기 위해 label로 추가
-        # 이렇게 해야 각 결과별 similarity_score를 정확히 계산 가능
         distance_col = PatentCorpus.embedding.cosine_distance(query_vec).label("distance")
 
-        trgm_query = query_text[:500]
-        pre_filter_sql = text("""
-            SELECT id FROM patent_corpus
-            WHERE (title || ' ' || abstract || ' ' || claim1) % :q
-                OR similarity(title || ' ' || abstract || ' ' || claim1, :q) > 0.05
-            ORDER BY similarity(title || ' ' || abstract || ' ' || claim1, :q) DESC
-            LIMIT :limit
-        """)
-        pre_ids = [
-            row[0]
-            for row in db.execute(pre_filter_sql, {"q": trgm_query, "limit": bm25_pool})
-        ]
-        print(f"[선행기술조사] trigram 후보 {len(pre_ids)}건 필터링")
-
-
+        db.execute(text("SET ivfflat.probes = 10"))
         q = db.query(PatentCorpus, distance_col)
 
-        if pre_ids:
-            q = q.filter(PatentCorpus.id.in_(pre_ids))
-
-        # IPC 필터: 기술 분야가 명확하면 관련 없는 특허 미리 제거
         if ipc_prefix:
             q = q.filter(
                 PatentCorpus.ipc_codes.cast(Text).like(f"%{ipc_prefix}%")
