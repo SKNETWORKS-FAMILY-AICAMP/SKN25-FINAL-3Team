@@ -14,7 +14,7 @@
 
 <table>
 <tr>
-<td width="50%" valign="top" style="word-break: keep-all;">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 💡 1. 발명 입력·구체화
 
@@ -23,7 +23,7 @@
 - 발명 핵심 요소 자동 구조화
 
 </td>
-<td width="50%" valign="top" style="word-break: keep-all;">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 📝 2. 특허 문서 생성
 
@@ -34,7 +34,7 @@
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top" style="word-break: keep-all;">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### ⚖️ 3. 심사·검증·보정
 
@@ -43,7 +43,7 @@
 - 사용자 작성 청구항 실시간 심사
 
 </td>
-<td width="50%" valign="top" style="word-break: keep-all;">
+<td width="50%" valign="top" style="white-space: nowrap;">
 
 ### 🔍 4. 조사·저장·보고
 
