@@ -10,6 +10,21 @@
 - FastAPI AI Worker가 LangGraph 기반 에이전트 파이프라인을 실행합니다.
 - Claim(청구항), Examiner(심사관), Prior Art(선행기술조사), Drawing(도면), Specification(발명의 설명)등의 **멀티 에이전트**가 구조화된 상태를 공유하며 청구항 작성부터 검토·보정까지 연결합니다.
 
+## 🎬 시연 영상
+
+<!-- GitHub README 편집 화면에 `SKN 3팀 시연 영상.mov`를 드래그해 생성되는 user-attachments URL로 아래 링크를 교체하세요. -->
+[시연 영상 보기](https://github.com/user-attachments/assets/VIDEO_UPLOAD_URL)
+
+## 👥 팀원 소개
+
+| 이름   | GitHub                               | 역할                           | 담당 영역                                    |
+| ------ | ------------------------------------ | ------------------------------ | -------------------------------------------- |
+| 권가영 | [@Gayoung03](https://github.com/Gayoung03) | Project Manager / Full Stack   | 프로젝트 기획, 기능 통합, 발표               |
+| 팀원 2 | [GitHub](https://github.com/userid)  | Frontend                       | React 화면, 사용자 흐름, API 연동            |
+| 팀원 3 | [GitHub](https://github.com/userid)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
+| 팀원 4 | [GitHub](https://github.com/userid)  | FastAPI / AI Agent             | LangGraph worker, 청구항·심사·도면 생성       |
+| 팀원 5 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
+
 ## ✨ 주요 기능
 
 <table>
@@ -140,7 +155,9 @@
 SKN25-FINAL-3Team/
 ├── agents/
 │   ├── core/                  # Pydantic state와 LangGraph workflow
+│   ├── consultation/          # 상담 흐름 보조 로직
 │   ├── prior_art_agent/       # pgvector/KIPRIS 선행기술조사
+│   ├── schemas/               # 에이전트 공통 schema
 │   ├── specification/         # 명세서 생성·검증·저장 헬퍼
 │   ├── summary_agent.py       # 발명 정보 구조화
 │   ├── claim_agent.py         # 청구항 생성
@@ -153,12 +170,15 @@ SKN25-FINAL-3Team/
 │   │   ├── accounts/         # JWT 계정 API
 │   │   ├── workspace/        # 프로젝트·상담·문서 저장 API
 │   │   ├── core/             # Django 기본 페이지
+│   │   ├── static/           # Django 정적 파일
+│   │   ├── templates/        # Django 공통 템플릿
 │   │   └── config/           # Django settings, URL, ASGI
 │   └── fastapi/
 │       ├── routers/           # 청구항·심사·도면·명세서·특허검색 worker
 │       ├── judge/             # LangSmith LLM-as-a-Judge
 │       └── main.py            # FastAPI entrypoint
 ├── frontend/
+│   ├── public/                # favicon 등 정적 리소스
 │   └── src/
 │       ├── api/               # Django/FastAPI API client
 │       ├── components/        # 공통 UI와 modal
@@ -169,13 +189,18 @@ SKN25-FINAL-3Team/
 │   ├── api/                   # FastAPI worker·stream·인증 경계 테스트
 │   ├── django/                # 계정·workspace 모델과 view 테스트
 │   └── README.md              # 테스트 실행법과 파일별 목적
+├── evals/
+│   └── specification/         # 명세서 생성 품질 평가 case와 judge
 ├── fine-tuning/               # Examiner 모델 파인튜닝 자료
 ├── data/                      # 선행기술 데이터
+├── drawings/                  # 로컬 도면 생성 산출물
 ├── scripts/                   # 데이터·운영 보조 스크립트
+├── .env.example               # 환경변수 예시
 ├── pyproject.toml             # Python 의존성
 ├── uv.lock                    # Python lock file
 ├── Dockerfile                 # Django/FastAPI 공통 이미지
-└── docker-compose.yml         # Django와 FastAPI 서비스 구성
+├── docker-compose.yml         # Django와 FastAPI 서비스 구성
+└── nginx.conf                 # 배포 reverse proxy 설정
 ```
 
 ## 🚀 실행 방법
@@ -229,7 +254,7 @@ npm install
 npm run dev
 ```
 
-브라우저에서 `http://localhost:3000`으로 접속합니다. Vite proxy가 `/auth` 요청은 Django로, `/api` 요청은 FastAPI로 전달합니다.
+브라우저에서 `http://localhost:3000`으로 접속합니다. Vite proxy가 `/auth`와 `/api/v1/workspace` 요청은 Django로, 그 외 `/api` 요청은 FastAPI로 전달합니다.
 
 
 ## 🔌 주요 API 흐름
@@ -248,4 +273,5 @@ npm run dev
 
 - pytest 테스트 체계 재구성: **108/108 통과**
 - 사용자 작성 청구항 심사·자동 보정 흐름 반영
+- **시연 영상:** README 상단의 GitHub 업로드 URL로 연결
 - **최종 발표 자료:** [Canva PPT 링크](https://canva.link/7tgiu30dzu4k638)
