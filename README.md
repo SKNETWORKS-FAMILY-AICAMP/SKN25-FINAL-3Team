@@ -32,6 +32,7 @@ https://github.com/user-attachments/assets/f180f1c0-1f70-4c0d-b356-a14f2b1cdf15
 | 팀원 3 | [GitHub](https://github.com/userid)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
 | 팀원 4 | [GitHub](https://github.com/userid)  | FastAPI / AI Agent             | LangGraph worker, 청구항·심사·도면 생성       |
 | 팀원 5 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
+| 팀원 6 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
 
 ## ✨ 주요 기능
 
