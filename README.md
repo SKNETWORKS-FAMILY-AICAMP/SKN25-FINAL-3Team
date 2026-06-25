@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/f180f1c0-1f70-4c0d-b356-a14f2b1cdf15
 | 김서현 | [@bizseohyunkim](https://github.com/bizseohyunkim)  | Frontend / AI Agent                       | 도면(Drawing) 에이전트 개발, 웹 UI 개발     |
 | 팀원 3 | [GitHub](https://github.com/userid)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
 | 박범수 | [@bumwater](https://github.com/bumwater)  | DB / AI Agent             | 선행기술 데이터 적재, 선행기술 조사 기능 구현, RAGAS 평가 지표 구현       |
-| 팀원 5 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
+| 조은석 | [@silverstone-1004](https://github.com/silverstone-1004)  | AI Agent / Infra      | Langchain, Langgraph, Langsmith, fintetuning, 배포·운영 환경        |
 | 팀원 6 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
 
 ## ✨ 주요 기능
