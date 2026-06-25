@@ -28,7 +28,7 @@ https://github.com/user-attachments/assets/f180f1c0-1f70-4c0d-b356-a14f2b1cdf15
 | 이름   | GitHub                               | 역할                           | 담당 영역                                    |
 | ------| ------------------------------------ | ------------------------------ | -------------------------------------------- |
 | 권가영  | [@Gayoung03](https://github.com/Gayoung03) | Frontend / AI Agent  | React 화면, 명세서 Agent 연동, 청구항 단독 심사 기능 구현, 사용자 편의 기능 기획 및 개선, pytest 기반 테스트 코드 작성               |
-| 김서현 | [@bizseohyunkim](https://github.com/bizseohyunkim)  | Frontend                       | 도면(Drawing) 에이전트 개발, 웹 UI 개발     |
+| 김서현 | [@bizseohyunkim](https://github.com/bizseohyunkim)  | Frontend / AI Agent                       | 도면(Drawing) 에이전트 개발, 웹 UI 개발     |
 | 팀원 3 | [GitHub](https://github.com/userid)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
 | 박범수 | [@bumwater](https://github.com/bumwater)  | DB / AI Agent             | 선행기술 데이터 적재, 선행기술 조사 기능 구현, RAGAS 평가 지표 구현       |
 | 팀원 5 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
