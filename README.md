@@ -26,8 +26,8 @@ https://github.com/user-attachments/assets/f180f1c0-1f70-4c0d-b356-a14f2b1cdf15
 ## 👥 팀원 소개
 
 | 이름   | GitHub                               | 역할                           | 담당 영역                                    |
-| ------ | ------------------------------------ | ------------------------------ | -------------------------------------------- |
-| 권가영 | [@Gayoung03](https://github.com/Gayoung03) | Frontend / AI Agent  | React 화면, 명세서 Agent 연동, 청구항 단독 심사 기능 구현, 사용자 편의 기능 기획 및 개선               |
+| ------| ------------------------------------ | ------------------------------ | -------------------------------------------- |
+| 권가영  | [@Gayoung03](https://github.com/Gayoung03) | Frontend / AI Agent  | React 화면, 명세서 Agent 연동, 청구항 단독 심사 기능 구현, 사용자 편의 기능 기획 및 개선, pytest 기반 테스트 코드 작성               |
 | 팀원 2 | [GitHub](https://github.com/userid)  | Frontend                       | React 화면, 사용자 흐름, API 연동            |
 | 팀원 3 | [GitHub](https://github.com/userid)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
 | 팀원 4 | [GitHub](https://github.com/userid)  | FastAPI / AI Agent             | LangGraph worker, 청구항·심사·도면 생성       |
