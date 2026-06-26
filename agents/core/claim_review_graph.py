@@ -13,7 +13,7 @@ def build_claim_review_graph():
     workflow = StateGraph(PatentState)
 
     examiner_agent = ExaminerAgent(model_name="gpt-4o")
-    rewrite_agent = ClaimRewriteAgent(model_name="gpt-4o")
+    rewrite_agent = ClaimRewriteAgent(model_name="gpt-5.4-mini")
 
     workflow.add_node("examiner_node", examiner_agent.run)
     workflow.add_node("rewrite_node", rewrite_agent.run)

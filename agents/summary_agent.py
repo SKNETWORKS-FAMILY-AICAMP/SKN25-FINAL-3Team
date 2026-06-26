@@ -6,7 +6,7 @@ from agents.core.state import PatentState, ParsedInvention
 logger = logging.getLogger(__name__)
 
 class SummaryAgent:
-    def __init__(self, model_name: str = "gpt-4o"):
+    def __init__(self, model_name: str = "gpt-5.4-mini"):
         self.llm = ChatOpenAI(model=model_name, temperature=0, max_tokens=4096)
         self.structured_llm = self.llm.with_structured_output(ParsedInvention)
 

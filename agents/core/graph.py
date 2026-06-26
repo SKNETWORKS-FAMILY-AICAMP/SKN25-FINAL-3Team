@@ -33,10 +33,10 @@ def build_patent_graph():
     workflow = StateGraph(PatentState)
 
     # 1. 에이전트 장전
-    summary_agent = SummaryAgent(model_name="gpt-4o-mini")
-    claim_agent = ClaimAgent(model_name="gpt-4o")
+    summary_agent = SummaryAgent(model_name="gpt-5.4-mini")
+    claim_agent = ClaimAgent(model_name="gpt-5.4-mini")
     examiner_agent = ExaminerAgent(model_name="gpt-4o")
-    rewrite_agent = ClaimRewriteAgent(model_name="gpt-4o")
+    rewrite_agent = ClaimRewriteAgent(model_name="gpt-5.4-mini")
     
     # 2. 노드 등록
     workflow.add_node("summary_node", summary_agent.run)

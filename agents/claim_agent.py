@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 class ClaimAgent:
-    def __init__(self, model_name: str = "gpt-4o"):
+    def __init__(self, model_name: str = "gpt-5.4-mini"):
         self.llm = ChatOpenAI(model=model_name, temperature=0.3, max_tokens=8192)
         self.structured_llm = self.llm.with_structured_output(ClaimResult,method="json_schema", 
             strict=True)

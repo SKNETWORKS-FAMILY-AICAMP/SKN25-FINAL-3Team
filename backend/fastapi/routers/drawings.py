@@ -30,7 +30,7 @@ async def generate_drawings_worker(request: Request):
     project_id = data.get("project_id", "unknown")
 
     try:
-        summary_agent = SummaryAgent(model_name="gpt-4o-mini")
+        summary_agent = SummaryAgent(model_name="gpt-5.4-mini")
         summary_state = summary_agent.run({"mock_input_data": mock_input_data})
         
         drawing_agent = SmartDrawingAgent()
