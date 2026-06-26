@@ -47,7 +47,9 @@ PHASE1_EXTRACT_PROMPT = """
 
 [지침]
 1. 사용자 답변에 새로운 기술적 내용이 있다면 기존 요소에 통합하여 요약하세요. (없으면 기존 내용 유지)
-2. 'ai_reply'에는 전문가다운 리액션과 함께, 아직 파악되지 않은 빈칸 항목 중 하나를 자연스럽게 묻는 대화를 작성하세요.
+2. 🚨 ['ai_reply' 작성 규칙]: 
+   - 아직 파악되지 않은 빈칸(미파악) 항목이 있다면 자연스럽게 묻는 대화를 작성하세요.
+   - 만약 4대 요소(문제점, 해결방법, 차별성, 기대효과)가 모두 파악될 만큼 충분한 정보가 모였다면, 절대 질문을 추가하지 말고 "명확히 이해했습니다." 와 같이 사용자의 마지막 답변에 대한 짧은 공감과 리액션만 남기세요.
 3. 🚨 [중요 예외 처리]: 사용자가 "ㅎㅇ", "안녕", "ㅋㅋ" 등 특허와 무관한 짧은 인사나 농담을 건넨 경우:
    - 추출 필드(problem 등)는 절대 건드리지 말고 기존 내용(또는 null)을 그대로 유지하세요.
    - 'ai_reply'에 "안녕하세요! 오늘 어떤 멋진 아이디어를 가지고 오셨나요?" 처럼 다정하게 인사하며 특허 이야기를 먼저 꺼내세요. (절대 에러나 경고를 출력하지 마세요)
@@ -237,7 +239,7 @@ class DjangoPatentConsultant:
             ChatMessage.objects.create(project=self.project, role='assistant', content=fallback)
             return fallback
 
-    def interact(self, user_input: str) -> tuple[str, str]:
+    def interact(self, user_input: str) -> tuple[str, str | None]:
         ChatMessage.objects.create(project=self.project, role='user', content=user_input)
 
         if self.project.claims.exists() and self.state.phase < 3:
@@ -248,7 +250,7 @@ class DjangoPatentConsultant:
         action = None
 
         if self.state.phase == 1:
-            response = self._handle_phase_1(user_input)
+            response, action = self._handle_phase_1(user_input)
         elif self.state.phase == 2:
             response, action = self._handle_phase_2(user_input)
         elif self.state.phase == 3:
@@ -322,25 +324,20 @@ class DjangoPatentConsultant:
         if all_filled:
             self.state.phase = 2
             self.state.save()
-            #return f"{ai_reply}\n\n발명의 핵심 요소 파악이 모두 완료되었습니다!\n\n{PHASE2_QUESTION}"    
-        
+                    
             # 뇌빼고 대답할 수 있게 초안을 미리 그려서 던져줌!
             proactive_architecture_draft = self._generate_proactive_sketch()
 
-            return (
+            response_text = (
                 f"{ai_reply}\n\n"
                 "🎉 **발명의 핵심 4대 요소 파악이 모두 완료되었습니다!**\n\n"
                 "이제 특허의 권리 범위를 튼튼하게 지키기 위해 시스템의 **'뼈대(아키텍처)'**를 설계할 차례입니다. "
-                "설명하시기 편하도록, **지금까지 주신 정보를 바탕으로 제가 표준 시스템 구성도 초안을 먼저 스케치해 보았습니다.**\n\n"
-                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                "지금까지 주신 정보를 바탕으로 표준 시스템 구성도 초안을 스케치함과 동시에, **즉시 청구항 작성을 시작하겠습니다!** 잠시만 기다려주세요 🚀\n\n"
                 f"{proactive_architecture_draft}\n"
-                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-                "위 구조에서 **수정하거나 더 추가하고 싶은 모듈/단계**가 있다면 편하게 말씀해 주세요!\n"
-                "*(예: '여기서 회원 DB 조회하는 모듈 하나 추가해줘', '데이터 흐름 2번 단계 뒤에 암호화 거치는 거 넣어줘')*\n\n"
-                "만약 이 뼈대 그대로 가도 충분하다면, **'이대로 청구항 작성해줘'**라고 말씀해 주시면 바로 초안을 뽑겠습니다! 🚀"
             )
+            return response_text, "GENERATE_CLAIMS"
 
-        return ai_reply
+        return ai_reply, None
     
     def _handle_phase_2(self, user_input: str) -> tuple[str, str | None]:
         # 1. 이전 대화 기록 가져오기 (문맥 파악용)
