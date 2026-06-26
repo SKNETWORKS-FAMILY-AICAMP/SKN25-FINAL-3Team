@@ -531,7 +531,7 @@ def generate_drawings_api(request, project_id):
 
         # 2. 요약 에이전트를 한 번 돌려서 Pydantic 객체(ParsedInvention) 추출
         # (청구항 짤 때와 동일한 데이터 구조 획득)
-        summary_agent = SummaryAgent(model_name="gpt-4o-mini")
+        summary_agent = SummaryAgent(model_name="gpt-5.4-mini")
         summary_state = summary_agent.run({"mock_input_data": mock_input_data})
         
         # 3. 도면 에이전트 가동! (1초 컷)
