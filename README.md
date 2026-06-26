@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/f180f1c0-1f70-4c0d-b356-a14f2b1cdf15
 | ---------------- | ------------------------------------ | ------------------------------ | -------------------------------------------- |
 | 권가영 | [@Gayoung03](https://github.com/Gayoung03) | Frontend / AI Agent  | React 화면, 명세서 Agent 연동, 청구항 단독 심사 기능 구현, 사용자 편의 기능 기획 및 개선, pytest 기반 테스트 코드 작성               |
 | 김서현 | [@bizseohyunkim](https://github.com/bizseohyunkim)  | Frontend / AI Agent                       | 도면(Drawing) 에이전트 개발, 웹 UI 개발     |
-| 김홍익 | [GitHub](https://github.com/skidroww)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
+| 김홍익 | [@skidroww](https://github.com/skidroww)  | Django Backend                 | 계정, 프로젝트, 문서 저장 API                |
 | 박범수 | [@bumwater](https://github.com/bumwater)  | DB / AI Agent             | 선행기술 데이터 적재, 선행기술 조사 기능 구현, RAGAS 평가 지표 구현       |
 | 조은석 | [@silverstone-1004](https://github.com/silverstone-1004)  | AI Agent / Infra      | Langchain, Langgraph, Langsmith, fintetuning, 배포·운영      |
 | 팀원 6 | [GitHub](https://github.com/userid)  | Data / Evaluation / Infra      | 선행기술 데이터, 평가, 배포·운영 환경        |
